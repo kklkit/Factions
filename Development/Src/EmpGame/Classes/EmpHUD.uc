@@ -1,13 +1,15 @@
 class EmpHUD extends UDKHUD;
 
+var Material MinimapMaterial;
+
 function DrawHud()
 {
-	Canvas.SetPos(Canvas.ClipX/2,Canvas.ClipY/2);
-	Canvas.SetDrawColor(255,255,255,255);
-	Canvas.Font = class'Engine'.static.GetMediumFont();
-	Canvas.DrawText("Hello World");
+	super.DrawHud();
+	Canvas.SetPos(Canvas.ClipX-256-10,10);
+	Canvas.DrawMaterialTile(MinimapMaterial, 256, 256, 0, 0, 1, 1);
 }
 
 defaultproperties
 {
+	MinimapMaterial=Material'EmpAssets.HUD.minimap_render'
 }
