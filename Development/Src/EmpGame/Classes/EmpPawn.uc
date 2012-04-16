@@ -12,7 +12,7 @@ event PostBeginPlay()
 
 event Tick(float DeltaTime)
 {
-	MinimapCaptureComponent.SetView(vect(0, 0, 20000), rot(-16384, 0, 0));
+	MinimapCaptureComponent.SetView(vect(0, 0, 20000), rot(-16384, -16384, 0));
 }
 
 defaultproperties
