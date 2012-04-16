@@ -5,7 +5,7 @@ var SceneCapture2DComponent MinimapCaptureComponent;
 event PostBeginPlay()
 {
 	MinimapCaptureComponent = new(self) class'SceneCapture2DComponent';
-	MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'EmpAssets.HUD.minimap_render_texture', , , 0);
+	MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'EmpAssets.HUD.minimap_render_texture', 90, , 0);
 	MinimapCaptureComponent.bUpdateMatrices = false;
 	AttachComponent(MinimapCaptureComponent);
 }
