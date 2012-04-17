@@ -9,8 +9,15 @@ function DrawHud()
 	local Vector LocalCoords;
 	local Vector CameraLocation;
 	local Rotator CameraRotation;
+	local float ActualUnitPositionX, ActualUnitPositionY, GroundUnitPositionX, GroundUnitPositionY;
+	local Color LineColor;
+	local int MinimapOffset, MinimapSize, CameraHeight;
 
 	super.DrawHud();
+
+	CameraHeight = 40000;
+	MinimapSize = 256;
+	MinimapOffset = 10;
 
 	Canvas.SetPos(Canvas.ClipX-256-10, 10);
 	Canvas.DrawMaterialTile(MinimapMaterial, 256, 256, 0, 0, 1, 1);
@@ -18,7 +25,7 @@ function DrawHud()
 	Canvas.bCenter = true;
 	Canvas.SetDrawColor(0, 255, 0);
 	
-	ForEach DynamicActors(class'Actor', LevelActor)
+	ForEach DynamicActors(class'Actor', LevelActor, class'EmpActorInterface')
 	{
 		if (UDKVehicle(LevelActor) != None && PlayerOwner != None && PlayerOwner.Pawn != None)
 		{
@@ -32,8 +39,17 @@ function DrawHud()
 				Canvas.DrawText("Health:" @ LevelVehicle.Health);
 			}
 		}
-		Canvas.SetPos(LevelActor.Location.X / 40000 * 256 + Canvas.ClipX - 128 - 10 - 5, LevelActor.Location.Y / 40000 * 256 + 10 + 128 - 5);
+		GroundUnitPositionX = LevelActor.Location.X / CameraHeight * MinimapSize + Canvas.ClipX - MinimapOffset - (MinimapSize / 2);
+		GroundUnitPositionY = LevelActor.Location.Y / CameraHeight * MinimapSize + MinimapOffset + (MinimapSize / 2);
+		ActualUnitPositionX = LevelActor.Location.X / (CameraHeight - LevelActor.Location.Z * 2) * MinimapSize + Canvas.ClipX - MinimapOffset - (MinimapSize / 2);
+		ActualUnitPositionY = LevelActor.Location.Y / (CameraHeight - LevelActor.Location.Z * 2) * MinimapSize + MinimapOffset + (MinimapSize / 2);
+		Canvas.SetPos(ActualUnitPositionX - 5, ActualUnitPositionY - 5);
 		Canvas.DrawBox(10, 10);
+		LineColor.A = 255;
+		LineColor.B = 0;
+		LineColor.G = 255;
+		LineColor.R = 0;
+		Canvas.Draw2DLine(GroundUnitPositionX, GroundUnitPositionY, ActualUnitPositionX, ActualUnitPositionY, LineColor);
 	}
 }
 
