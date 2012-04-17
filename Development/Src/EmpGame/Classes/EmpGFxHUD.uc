@@ -18,8 +18,8 @@ function SetHealth(float Health, float MaxHealth)
 {
 	local ASDisplayInfo DI;
 
-	DI.hasXScale = true;
-	DI.XScale = Health / MaxHealth * 100;
+	DI.hasX = true;
+	DI.X = -443.30f - 33.30f + (Health / MaxHealth * 443.30f);
 
 	HealthBar.SetDisplayInfo(DI);
 }
