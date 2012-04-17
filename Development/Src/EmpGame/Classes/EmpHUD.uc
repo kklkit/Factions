@@ -25,31 +25,34 @@ function DrawHud()
 	Canvas.bCenter = true;
 	Canvas.SetDrawColor(0, 255, 0);
 	
-	ForEach DynamicActors(class'Actor', LevelActor, class'EmpActorInterface')
+	ForEach DynamicActors(class'Actor', LevelActor)
 	{
-		if (UDKVehicle(LevelActor) != None && PlayerOwner != None && PlayerOwner.Pawn != None)
+		if (UDKVehicle(LevelActor) != None || EmpActorInterface(LevelActor) != None || Projectile(LevelActor) != None)
 		{
-			LevelVehicle = UDKVehicle(LevelActor);
-
-			PlayerOwner.GetPlayerViewPoint(CameraLocation, CameraRotation);
-			if (Normal(LevelVehicle.Location - PlayerOwner.Pawn.Location) dot Vector(CameraRotation) >= 0.f)
+			if (UDKVehicle(LevelActor) != None && PlayerOwner != None && PlayerOwner.Pawn != None)
 			{
-				LocalCoords = Canvas.Project(LevelVehicle.Location);
-				Canvas.SetPos(LocalCoords.X, LocalCoords.Y);
-				Canvas.DrawText("Health:" @ LevelVehicle.Health);
+				LevelVehicle = UDKVehicle(LevelActor);
+
+				PlayerOwner.GetPlayerViewPoint(CameraLocation, CameraRotation);
+				if (Normal(LevelVehicle.Location - PlayerOwner.Pawn.Location) dot Vector(CameraRotation) >= 0.f)
+				{
+					LocalCoords = Canvas.Project(LevelVehicle.Location);
+					Canvas.SetPos(LocalCoords.X, LocalCoords.Y);
+					Canvas.DrawText("Health:" @ LevelVehicle.Health);
+				}
 			}
+			GroundUnitPositionX = LevelActor.Location.X / CameraHeight * MinimapSize + Canvas.ClipX - MinimapOffset - (MinimapSize / 2);
+			GroundUnitPositionY = LevelActor.Location.Y / CameraHeight * MinimapSize + MinimapOffset + (MinimapSize / 2);
+			ActualUnitPositionX = LevelActor.Location.X / (CameraHeight - LevelActor.Location.Z * 2) * MinimapSize + Canvas.ClipX - MinimapOffset - (MinimapSize / 2);
+			ActualUnitPositionY = LevelActor.Location.Y / (CameraHeight - LevelActor.Location.Z * 2) * MinimapSize + MinimapOffset + (MinimapSize / 2);
+			Canvas.SetPos(ActualUnitPositionX - 5, ActualUnitPositionY - 5);
+			Canvas.DrawBox(10, 10);
+			LineColor.A = 255;
+			LineColor.B = 0;
+			LineColor.G = 255;
+			LineColor.R = 0;
+			Canvas.Draw2DLine(GroundUnitPositionX, GroundUnitPositionY, ActualUnitPositionX, ActualUnitPositionY, LineColor);
 		}
-		GroundUnitPositionX = LevelActor.Location.X / CameraHeight * MinimapSize + Canvas.ClipX - MinimapOffset - (MinimapSize / 2);
-		GroundUnitPositionY = LevelActor.Location.Y / CameraHeight * MinimapSize + MinimapOffset + (MinimapSize / 2);
-		ActualUnitPositionX = LevelActor.Location.X / (CameraHeight - LevelActor.Location.Z * 2) * MinimapSize + Canvas.ClipX - MinimapOffset - (MinimapSize / 2);
-		ActualUnitPositionY = LevelActor.Location.Y / (CameraHeight - LevelActor.Location.Z * 2) * MinimapSize + MinimapOffset + (MinimapSize / 2);
-		Canvas.SetPos(ActualUnitPositionX - 5, ActualUnitPositionY - 5);
-		Canvas.DrawBox(10, 10);
-		LineColor.A = 255;
-		LineColor.B = 0;
-		LineColor.G = 255;
-		LineColor.R = 0;
-		Canvas.Draw2DLine(GroundUnitPositionX, GroundUnitPositionY, ActualUnitPositionX, ActualUnitPositionY, LineColor);
 	}
 }
 
