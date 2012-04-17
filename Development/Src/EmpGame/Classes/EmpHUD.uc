@@ -20,7 +20,7 @@ function DrawHud()
 	
 	ForEach DynamicActors(class'Actor', LevelActor)
 	{
-		if (UDKVehicle(LevelActor) != None)
+		if (UDKVehicle(LevelActor) != None && PlayerOwner != None && PlayerOwner.Pawn != None)
 		{
 			LevelVehicle = UDKVehicle(LevelActor);
 
