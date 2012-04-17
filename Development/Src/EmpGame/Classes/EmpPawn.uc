@@ -1,4 +1,5 @@
-class EmpPawn extends UDKPawn;
+class EmpPawn extends UDKPawn
+	Implements(EmpActorInterface);
 
 var SceneCapture2DComponent MinimapCaptureComponent;
 

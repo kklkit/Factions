@@ -1,4 +1,5 @@
 class EmpVehiclePad extends Actor
+	Implements(EmpActorInterface)
 	Placeable
 	AutoExpandCategories(Empires);
 
