@@ -1,5 +1,8 @@
 class EmpVehiclePad extends Actor
-	Placeable;
+	Placeable
+	AutoExpandCategories(Empires);
+
+var(Empires) int VehicleHealth;
 
 event PostBeginPlay()
 {
@@ -8,10 +11,14 @@ event PostBeginPlay()
 
 event Bump(Actor Other, PrimitiveComponent OtherComp, Object.Vector HitNormal)
 {
+	local UTVehicle_Scorpion_Content SpawnedVehicle;
+
 	Super.Bump(Other, OtherComp, HitNormal);
 	if (bool(Other.GetALocalPlayerController()))
 	{
-		Spawn(class'UTVehicle_Scorpion_Content',,,Location + vect(500, 500, 200));
+		SpawnedVehicle = Spawn(class'UTVehicle_Scorpion_Content',,,Location + vect(500, 500, 200));
+		SpawnedVehicle.HealthMax = VehicleHealth;
+		SpawnedVehicle.Health = VehicleHealth;
 	}
 }
 
@@ -24,4 +31,6 @@ defaultproperties
 	
 	bCanStepUpOn=true
 	bCollideComplex=true
+
+	VehicleHealth=100;
 }
