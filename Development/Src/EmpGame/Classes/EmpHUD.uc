@@ -5,7 +5,7 @@ var Material MinimapMaterial;
 function DrawHud()
 {
 	local Actor LevelActor;
-	local UTVehicle_Scorpion_Content LevelVehicle;
+	local UDKVehicle LevelVehicle;
 	local Vector LocalCoords;
 	local Vector CameraLocation;
 	local Rotator CameraRotation;
@@ -20,9 +20,9 @@ function DrawHud()
 	
 	ForEach DynamicActors(class'Actor', LevelActor)
 	{
-		if (UTVehicle_Scorpion_Content(LevelActor) != None)
+		if (UDKVehicle(LevelActor) != None)
 		{
-			LevelVehicle = UTVehicle_Scorpion_Content(LevelActor);
+			LevelVehicle = UDKVehicle(LevelActor);
 
 			PlayerOwner.GetPlayerViewPoint(CameraLocation, CameraRotation);
 			if (Normal(LevelVehicle.Location - PlayerOwner.Pawn.Location) dot Vector(CameraRotation) >= 0.f)

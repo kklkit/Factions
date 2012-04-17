@@ -3,6 +3,7 @@ class EmpVehiclePad extends Actor
 	AutoExpandCategories(Empires);
 
 var(Empires) int VehicleHealth;
+var(Empires) class<UDKVehicle> VehicleClass;
 
 event PostBeginPlay()
 {
@@ -11,12 +12,12 @@ event PostBeginPlay()
 
 event Bump(Actor Other, PrimitiveComponent OtherComp, Object.Vector HitNormal)
 {
-	local UTVehicle_Scorpion_Content SpawnedVehicle;
+	local UDKVehicle SpawnedVehicle;
 
 	Super.Bump(Other, OtherComp, HitNormal);
 	if (bool(Other.GetALocalPlayerController()))
 	{
-		SpawnedVehicle = Spawn(class'UTVehicle_Scorpion_Content',,,Location + vect(500, 500, 200));
+		SpawnedVehicle = Spawn(VehicleClass,,,Location + vect(500, 500, 200));
 		SpawnedVehicle.HealthMax = VehicleHealth;
 		SpawnedVehicle.Health = VehicleHealth;
 	}
@@ -32,5 +33,6 @@ defaultproperties
 	bCanStepUpOn=true
 	bCollideComplex=true
 
-	VehicleHealth=100;
+	VehicleHealth=100
+	VehicleClass=class'UTVehicle_Scorpion_Content'
 }
