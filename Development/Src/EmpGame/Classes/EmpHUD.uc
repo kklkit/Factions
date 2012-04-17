@@ -1,6 +1,15 @@
 class EmpHUD extends UDKHUD;
 
 var Material MinimapMaterial;
+var EmpGFxHUD GFxHUD;
+
+simulated function PostBeginPlay()
+{
+	Super.PostBeginPlay();
+
+	GFxHUD = new class'EmpGFxHUD';
+	GFxHUD.Start();
+}
 
 function DrawHud()
 {
@@ -14,6 +23,11 @@ function DrawHud()
 	local int MinimapOffset, MinimapSize, CameraHeight;
 
 	super.DrawHud();
+
+	if (PlayerOwner != None && PlayerOwner.Pawn != None)
+	{
+		GFxHUD.SetHealth(PlayerOwner.Pawn.Health, PlayerOwner.Pawn.HealthMax);
+	}
 
 	CameraHeight = 40000;
 	MinimapSize = 256;
