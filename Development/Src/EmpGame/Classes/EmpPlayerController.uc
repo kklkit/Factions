@@ -1,6 +1,7 @@
 class EmpPlayerController extends UDKPlayerController;
 
 var bool IsInCommanderView;
+var bool IsInCommanderRotate;
 
 var vector PlayerViewOffset;
 
@@ -8,11 +9,24 @@ var Pawn CommanderPawn;
 
 state CommanderView extends BaseSpectating
 {
-		// WiP, code in here would check if "ALT" is toggled, if so release or lock Rotator
 		function UpdateRotation( float DeltaTime )
 		{
-
+			if( IsInCommanderRotate )
+				super.UpdateRotation( DeltaTime );
 		}		
+}
+
+exec function ToggleCommanderRotate()
+{
+	if( IsInCommanderRotate )
+		IsInCommanderRotate = false;
+	else
+		IsInCommanderRotate = true;
+}
+
+exec function ToggleCommanderHeight()
+{
+
 }
 
 exec function ToggleCommanderView()
@@ -20,7 +34,12 @@ exec function ToggleCommanderView()
 	if( IsInCommanderView )
 	{
 		IsInCommanderView = false;
-		Possess(CommanderPawn,false);
+		
+		if( Vehicle(Pawn) != None )
+			Possess(CommanderPawn,true);
+		else
+			Possess(CommanderPawn,false);
+			
 		GotoState('PlayerWalking');
 	}
 	else
@@ -36,13 +55,9 @@ exec function ToggleCommanderView()
 	}
 }
 
-simulated event GetPlayerViewPoint( out vector out_Location, out Rotator out_Rotation )
-{
-	super.GetPlayerViewPoint(out_Location, out_Rotation );
-}
-
 defaultproperties
 {
 	IsInCommanderView = false;
+	IsInCommanderRotate = false;
 	PlayerViewOffset=(X=-64,Y=0,Z=1024)
 }
