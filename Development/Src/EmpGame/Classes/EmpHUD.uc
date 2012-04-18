@@ -2,13 +2,17 @@ class EmpHUD extends UDKHUD;
 
 var Material MinimapMaterial;
 var EmpGFxHUD GFxHUD;
+var EmpGFxGUI GFxGUI;
 
 simulated function PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
 	GFxHUD = new class'EmpGFxHUD';
-	GFxHUD.Start();
+	GFxHUD.Init();
+
+	GFxGUI = new class'EmpGFxGUI';
+	GFxGUI.Init();
 }
 
 function DrawHud()

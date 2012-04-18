@@ -3,15 +3,12 @@ class EmpGFxHUD extends GFxMoviePlayer;
 var GFxObject HealthBar;
 var GFxObject AmmoBar;
 
-function bool Start(optional bool StartPaused = false)
+function Init(optional LocalPlayer LocPlay)
 {
-	Super.Start(StartPaused);
-	Advance(0);
+	Super.Init(LocPlay);
 
 	HealthBar = GetVariableObject("_root.HealthBar");
 	AmmoBar = GetVariableObject("_root.AmmoBar");
-
-	return true;
 }
 
 function SetHealth(float Health, float MaxHealth)
@@ -27,4 +24,5 @@ function SetHealth(float Health, float MaxHealth)
 defaultproperties
 {
 	MovieInfo=SwfMovie'EmpGUI.emp_hud'
+	bAutoPlay=true
 }
