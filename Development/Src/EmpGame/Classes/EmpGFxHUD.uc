@@ -1,3 +1,6 @@
+/*
+ * In-game HUD to show health, ammo, player messages, etc.
+ */
 class EmpGFxHUD extends GFxMoviePlayer;
 
 var GFxObject HealthBar;

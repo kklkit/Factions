@@ -1,3 +1,6 @@
+/*
+ * In-game menu for selecting team, loadout, squad, etc.
+ */
 class EmpGFxGUI extends GFxMoviePlayer;
 
 function Init(optional LocalPlayer LocPlay)

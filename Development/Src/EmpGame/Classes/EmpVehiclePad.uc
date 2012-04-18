@@ -8,6 +8,8 @@ var(Empires) class<UDKVehicle> VehicleClass;
 
 event PostBeginPlay()
 {
+	Super.PostBeginPlay();
+
 	SetCollision(true, true);
 }
 
@@ -16,9 +18,10 @@ event Bump(Actor Other, PrimitiveComponent OtherComp, Object.Vector HitNormal)
 	local UDKVehicle SpawnedVehicle;
 
 	Super.Bump(Other, OtherComp, HitNormal);
-	if (bool(Other.GetALocalPlayerController()))
+
+	if (Other.GetALocalPlayerController() != None)
 	{
-		SpawnedVehicle = Spawn(VehicleClass,,,Location + vect(500, 500, 200));
+		SpawnedVehicle = Spawn(VehicleClass, , , Location + vect(500, 500, 200));
 		SpawnedVehicle.HealthMax = VehicleHealth;
 		SpawnedVehicle.Health = VehicleHealth;
 	}
