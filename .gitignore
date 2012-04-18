@@ -26,7 +26,6 @@ UDKGame/Autosaves/
 UDKGame/Build/
 UDKGame/Config/
 UDKGame/CookedMac/
-UDKGame/Flash/
 UDKGame/Localization/
 UDKGame/Logs/
 UDKGame/Movies/
@@ -46,3 +45,14 @@ UDKGame/Content/*.checkpoint
 UDKGame/Content/*.journal
 UDKGame/Content/*.bin
 UDKGame/Content/*.upk
+UDKGame/Flash/ActionScript
+UDKGame/Flash/Bomb_UI
+UDKGame/Flash/example
+UDKGame/Flash/example_resources
+UDKGame/Flash/InvokeTest
+UDKGame/Flash/Test
+UDKGame/Flash/UDK*
+UDKGame/Flash/UDN*
+UDKGame/Flash/*.fla
+*.swf
+*.html
