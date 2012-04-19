@@ -11,7 +11,7 @@ This repository contains submodules for Empires UDK development.
 5. Set `Map=TestMap.udk` and `LocalMap=TestMap.udk` under `[URL]` in the same file.
 6. Set `DefaultGame=EmpGame.EmpGame`, `DefaultServerGame=EmpGame.EmpGame`, and `DefaultGameType="EmpGame.EmpGame";` under `[Engine.GameInfo]` in `UDKGame/Config/DefaultGame.ini`.
 
-## Pulling Changes
+## Pulling Updates
 
 1. **IMPORTANT:** Use **rebase** when updating your submodules! Do **not** use merge!
 
