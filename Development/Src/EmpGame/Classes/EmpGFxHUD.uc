@@ -6,6 +6,9 @@ class EmpGFxHUD extends GFxMoviePlayer;
 var GFxObject HealthBar;
 var GFxObject AmmoBar;
 
+const BarLength=443.40f;
+const BarOffset=33.30f;
+
 function Init(optional LocalPlayer LocPlay)
 {
 	Super.Init(LocPlay);
@@ -19,7 +22,7 @@ function SetHealth(float Health, float MaxHealth)
 	local ASDisplayInfo DI;
 
 	DI.hasX = true;
-	DI.X = -443.30f - 33.30f + (Health / MaxHealth * 443.30f);
+	DI.X = -BarLength - BarOffset + (Health / MaxHealth * BarLength);
 
 	HealthBar.SetDisplayInfo(DI);
 }
