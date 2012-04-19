@@ -2,6 +2,13 @@
 
 This repository contains submodules for Empires UDK development.
 
+## Submodules
+
+* [empires-udk-unrealscript](https://bitbucket.org/jephir/empires-udk-unrealscript/overview)
+* [empires-udk-content](https://bitbucket.org/jephir/empires-udk-content)
+* [empires-udk-maps](https://bitbucket.org/jephir/empires-udk-maps/overview)
+* [empires-udk-flash](https://bitbucket.org/jephir/empires-udk-flash)
+
 ## Installation
 
 1. [Download and install UDK](http://udk.com/download).
@@ -19,7 +26,4 @@ This repository contains submodules for Empires UDK development.
 
 1. Use this [commit message template](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
 2. Commit in each submodule that is changed. For example, if you modify the code and content submodules, commit to **and** push both of those submodules. Make each commit message specific to what is being changed in that submodule.
-
-## Miscellaneous
-
 * Send a message to [jephir](https://bitbucket.org/jephir) if you need a new submodule for the folder you're working on.
