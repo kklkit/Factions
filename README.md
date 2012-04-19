@@ -20,10 +20,8 @@ This repository contains submodules for Empires UDK development.
 
 ## Pulling Updates
 
-**IMPORTANT:** Use **rebase** when updating your submodules! Do **not** use merge!
+**IMPORTANT:** Use **rebase** when updating your submodules! Do not use merge!
 
 ## Committing Changes
 
-Commit in each submodule that is changed.
-
-For example, if you modify the code and content submodules, commit to **and** push both of those submodules.
+Commit to and push the submodule where you have made changes.
