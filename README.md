@@ -19,6 +19,7 @@ This repository contains submodules for Empires UDK development.
 6. Set `DefaultGame=EmpGame.EmpGame`, `DefaultServerGame=EmpGame.EmpGame`, and `DefaultGameType="EmpGame.EmpGame";` under `[Engine.GameInfo]` in `UDKGame/Config/DefaultGame.ini`.
 7. Run the UDK editor to compile the scripts.
 
-## Committing Changes
+## Important Information
 
-Commit your changes directly to the submodule you are working in. Do not commit to the top-level repository as it is read-only.
+* Make sure all of your submodules are on branch `master` **before** making changes. If you are in a detached HEAD (no branch), your changes will disappear when the submodules are updated!
+* Do not commit to the top-level repository as it is read-only. Instead commit your changes directly to the appropriate submodules. It is normal for the top-level repository to have un-committed changes.
