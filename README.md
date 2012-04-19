@@ -4,9 +4,9 @@ This repository contains submodules for Empires UDK development.
 
 ## Submodules
 
-* [empires-udk-unrealscript](https://bitbucket.org/jephir/empires-udk-unrealscript/overview)
+* [empires-udk-unrealscript](https://bitbucket.org/jephir/empires-udk-unrealscript)
 * [empires-udk-content](https://bitbucket.org/jephir/empires-udk-content)
-* [empires-udk-maps](https://bitbucket.org/jephir/empires-udk-maps/overview)
+* [empires-udk-maps](https://bitbucket.org/jephir/empires-udk-maps)
 * [empires-udk-flash](https://bitbucket.org/jephir/empires-udk-flash)
 
 ## Installation
@@ -20,9 +20,8 @@ This repository contains submodules for Empires UDK development.
 
 ## Pulling Updates
 
-1. **IMPORTANT:** Use **rebase** when updating your submodules! Do **not** use merge!
+**IMPORTANT:** Use **rebase** when updating your submodules! Do **not** use merge!
 
 ## Committing Changes
 
-1. Use this [commit message template](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
-2. Commit in each submodule that is changed. For example, if you modify the code and content submodules, commit to **and** push both of those submodules. Make each commit message specific to what is being changed in that submodule.
+Commit in each submodule that is changed. For example, if you modify the code and content submodules, commit to **and** push both of those submodules. Make each commit message specific to what is being changed in that submodule.
