@@ -17,6 +17,7 @@ This repository contains submodules for Empires UDK development.
 4. Add `+EditPackages=EmpGame` to the end of the `[UnrealEd.EditorEngine]` section in `UDKGame/Config/DefaultEngine.ini`.
 5. Set `Map=TestMap.udk` and `LocalMap=TestMap.udk` under `[URL]` in the same file.
 6. Set `DefaultGame=EmpGame.EmpGame`, `DefaultServerGame=EmpGame.EmpGame`, and `DefaultGameType="EmpGame.EmpGame";` under `[Engine.GameInfo]` in `UDKGame/Config/DefaultGame.ini`.
+7. Run the UDK editor to compile the scripts.
 
 ## Pulling Updates
 
@@ -24,4 +25,4 @@ This repository contains submodules for Empires UDK development.
 
 ## Committing Changes
 
-Commit to and push the submodule where you have made changes.
+Commit to and push the submodule where you have made changes. Do not commit in the `empiresudk` repository as it is read-only.
