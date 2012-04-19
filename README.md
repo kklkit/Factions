@@ -25,4 +25,4 @@ This repository contains submodules for Empires UDK development.
 
 ## Committing Changes
 
-Commit to and push the submodule where you have made changes. Do not commit in the `empiresudk` repository as it is read-only.
+Commit to and push the submodule where you have made changes. Do not commit to the `empiresudk` repository as it is read-only.
