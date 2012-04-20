@@ -1,4 +1,4 @@
-class EmpGame extends UDKGame;
+class EmpTeamGame extends UDKGame;
 
 var EmpTeamInfo Teams[2];
 
