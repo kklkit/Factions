@@ -13,17 +13,20 @@ This repository contains submodules for Empires UDK development.
 
 1. [Download and install UDK](http://udk.com/download).
 2. Clone this repository to your UDK installation directory (e.g. `C:\UDK\UDK-2012-03`).
-3. Initialize and update all the submodules. In each submodule, set the branch to `master`.
-4. Add `+EditPackages=EmpGame` to the end of the `[UnrealEd.EditorEngine]` section in `UDKGame/Config/DefaultEngine.ini`.
-5. Set `Map=TestMap.udk` and `LocalMap=TestMap.udk` under `[URL]` in the same file.
-6. Set `DefaultGame=EmpGame.EmpGame`, `DefaultServerGame=EmpGame.EmpGame`, and `DefaultGameType="EmpGame.EmpGame";` under `[Engine.GameInfo]` in `UDKGame/Config/DefaultGame.ini`.
-7. Run the UDK editor to compile the scripts.
+3. Initialize and update submodules.
+4. In each submodule, set the branch to `master`.
+5. In `UDKGame/Config/DefaultEngine.ini`, under section `[URL]`, set `Map=TestMap.udk` and `LocalMap=TestMap.udk`. At the end of section `[UnrealEd.EditorEngine]`, add `+EditPackages=EmpGame`. 
+7. In `UDKGame/Config/DefaultGame.ini`, under section `[Engine.GameInfo]`, set `DefaultGame=EmpGame.EmpGame`, `DefaultServerGame=EmpGame.EmpGame`, and `DefaultGameType="EmpGame.EmpGame";`.
+8. Compile the scripts.
 
 ## Committing
 
-1. For each submodule that you've changed, make a commit in the submodule and push it to Bitbucket.
-2. In the top-level repository, commit the changed directories and push the commit.
+1. For each submodule that you've changed, make a commit in the submodule and push it.
+2. Then, in the top-level repository, commit the changed submodules and push the commit.
+
+Committing the submodules in the top-level repository saves the latest commit in each submodule. This allows us to update without having to go into each submodule and running pull.
 
 ## Updating
 
-1. In the top-level repository, pull, and then update all submodules.
+1. Pull at the top-level repository.
+2. Update the submodules. If you are using Git Extensions, you can do this by selecting `Submodules > Update all submodules` while in the top-level repository. Do **not** run pull inside of the submodules because it will fetch changes beyond what was committed in the top-level repository.
