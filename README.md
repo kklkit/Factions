@@ -17,10 +17,10 @@ Send a message to [jephir](https://bitbucket.org/account/notifications/send/?rec
 
 1. [Download and install UDK](http://udk.com/download).
 2. Clone this repository to your UDK installation directory (e.g. `C:\UDK\UDK-2012-03`).
-3. Initialize and update submodules.
+3. Initialize and run submodule update.
 4. In each submodule, set the branch to `master`.
-5. In `UDKGame/Config/DefaultEngine.ini`, under section `[URL]`, set `Map=TestMap.udk` and `LocalMap=TestMap.udk`. At the end of section `[UnrealEd.EditorEngine]`, add `+EditPackages=EmpGame`. 
-7. In `UDKGame/Config/DefaultGame.ini`, under section `[Engine.GameInfo]`, set `DefaultGame=EmpGame.EmpGame`, `DefaultServerGame=EmpGame.EmpGame`, and `DefaultGameType="EmpGame.EmpGame";`.
+5. In `UDKGame/Config/DefaultEngine.ini`, under section [URL], set `Map=TestMap.udk` and `LocalMap=TestMap.udk`. At the end of section [UnrealEd.EditorEngine], add `+EditPackages=EmpGame`. 
+7. In `UDKGame/Config/DefaultGame.ini`, under section [Engine.GameInfo], set `DefaultGame=EmpGame.EmpGame`, `DefaultServerGame=EmpGame.EmpGame`, and `DefaultGameType="EmpGame.EmpGame";`.
 8. Compile the scripts.
 
 ## Committing
@@ -33,5 +33,5 @@ Committing the submodules in the top-level repository saves the latest commit in
 ## Updating
 
 1. Pull in the top-level repository.
-2. Update the submodules. If you are using Git Extensions, you can do this at the top-level repository by selecting `Submodules > Update all submodules`. Do **not** run pull inside of the submodules themselves.
+2. Run submodule update. If you are using Git Extensions, you can do this at the top-level repository by selecting `Submodules > Update all submodules`. Do **not** run pull inside of the submodules themselves.
 3. Solve any rebase errors if necessary.
