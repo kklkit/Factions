@@ -32,6 +32,6 @@ Committing the submodules in the top-level repository saves the latest commit in
 
 ## Updating
 
-1. Pull at the top-level repository.
+1. Pull in the top-level repository.
 2. Update the submodules. If you are using Git Extensions, you can do this at the top-level repository by selecting `Submodules > Update all submodules`. Do **not** run pull inside of the submodules themselves.
 3. Solve any rebase errors if necessary.
