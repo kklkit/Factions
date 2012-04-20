@@ -3,10 +3,7 @@
  */
 class EmpHUD extends UDKHUD;
 
-var EmpGFxHUDTopLeft GFxHUDTopLeft;
-var EmpGFxHUDTopRight GFxHUDTopRight;
-var EmpGFxHUDBottomLeft GFxHUDBottomLeft;
-var EmpGFxHUDBottomRight GFxHUDBottomRight;
+var EmpGFxHUD GFxHUD;
 var EmpGFxHUDMenu GFxHUDMenu;
 
 var Material MinimapMaterial;
@@ -24,21 +21,8 @@ simulated function PostBeginPlay()
 
 	MinimapPadding = vect2d(10, 55);
 
-	GFxHUDTopLeft = new class'EmpGFxHUDTopLeft';
-	GFxHUDTopLeft.Init();
-	GFxHUDTopLeft.SetAlignment(Align_TopLeft);
-
-	GFxHUDTopRight = new class'EmpGFxHUDTopRight';
-	GFxHUDTopRight.Init();
-	GFxHUDTopRight.SetAlignment(Align_TopRight);
-
-	GFxHUDBottomLeft = new class'EmpGFxHUDBottomLeft';
-	GFxHUDBottomLeft.Init();
-	GFxHUDBottomLeft.SetAlignment(Align_BottomLeft);
-
-	GFxHUDBottomRight = new class'EmpGFxHUDBottomRight';
-	GFxHUDBottomRight.Init();
-	GFxHUDBottomRight.SetAlignment(Align_BottomRight);
+	GFxHUD = new class'EmpGFxHUD';
+	GFxHUD.Init();
 
 	GFxHUDMenu = new class'EmpGFxHUDMenu';
 	GFxHUDMenu.Init();
@@ -55,7 +39,7 @@ event Tick(float DeltaTime)
 
 	if (PlayerOwner != None && PlayerOwner.Pawn != None)
 	{
-		GFxHUDBottomLeft.SetHealth(PlayerOwner.Pawn.Health, PlayerOwner.Pawn.HealthMax);
+		GFxHUD.SetHealth(PlayerOwner.Pawn.Health, PlayerOwner.Pawn.HealthMax);
 	}
 }
 

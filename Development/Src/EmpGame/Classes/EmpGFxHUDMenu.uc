@@ -1,7 +1,7 @@
 /*
  * In-game menu for selecting team, loadout, squad, etc.
  */
-class EmpGFxHUDMenu extends EmpGFxHUD;
+class EmpGFxHUDMenu extends GFxMoviePlayer;
 
 function Init(optional LocalPlayer LocPlay)
 {
