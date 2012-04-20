@@ -22,7 +22,7 @@ simulated function PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
-	MinimapPadding = vect2d(10, 10);
+	MinimapPadding = vect2d(10, 55);
 
 	GFxHUDTopLeft = new class'EmpGFxHUDTopLeft';
 	GFxHUDTopLeft.Init();
