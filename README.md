@@ -9,6 +9,10 @@ This repository contains submodules for Empires UDK development.
 * [empires-udk-maps](https://bitbucket.org/jephir/empires-udk-maps)
 * [empires-udk-flash](https://bitbucket.org/jephir/empires-udk-flash)
 
+## Permissions
+
+Send a message to [jephir](https://bitbucket.org/account/notifications/send/?receiver=jephir) if you cannot access a submodule.
+
 ## Installation
 
 1. [Download and install UDK](http://udk.com/download).
