@@ -21,7 +21,7 @@ This repository contains submodules for Empires UDK development.
 
 ## Committing
 
-1. For each submodule that you've changed, make a commit in the submodule and push it.
+1. For each submodule that you've changed, make a commit inside the submodule and push it.
 2. Then, in the top-level repository, commit the changed submodules and push the commit.
 
 Committing the submodules in the top-level repository saves the latest commit in each submodule. This allows us to update without having to go into each submodule and running pull.
@@ -30,3 +30,4 @@ Committing the submodules in the top-level repository saves the latest commit in
 
 1. Pull at the top-level repository.
 2. Update the submodules. If you are using Git Extensions, you can do this by selecting `Submodules > Update all submodules` while in the top-level repository. Do **not** run pull inside of the submodules because it will fetch changes beyond what was committed in the top-level repository.
+3. Solve any rebase errors if necessary.
