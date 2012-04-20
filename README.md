@@ -28,6 +28,12 @@ This repository contains submodules for Empires UDK development.
 
 ## Troubleshooting
 
+### Rebase Error When Updating Submodules
+
+* The fastest way to solve this problem is to reset your working directory (`git reset --HARD`). You will lose your un-committed changes however.
+
+### Compiling Warnings or Errors
+
 * Check each of your submodules and make sure the latest commit matches the one on Bitbucket. The `HEAD` of `master` branch must also be set to the latest commit.
-* Go into the content browser and fully load `EmpAssets` and `EmpFlashAssets`. Then re-compile the scripts.
 * Make sure `UDKGame/Config/DefaultEngine.ini` and `UDKGame/Config/DefaultGame.ini` exist and have valid values.
+* Go into the content browser and fully load `EmpAssets` and `EmpFlashAssets`. Then re-compile the scripts.
