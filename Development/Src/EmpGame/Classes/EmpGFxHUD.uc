@@ -15,11 +15,12 @@ function Init(optional LocalPlayer LocPlay)
 	SetViewScaleMode(SM_NoScale);
 	SetAlignment(Align_TopLeft);
 
-	HealthBar = GetVariableObject("_root.bottomLeftHUD.healthBar");
 	TopLeftHUD = GetVariableObject("_root.topLeftHUD");
 	TopRightHUD = GetVariableObject("_root.topRightHUD");
 	BottomLeftHUD = GetVariableObject("_root.bottomLeftHUD");
 	BottomRightHUD = GetVariableObject("_root.bottomRightHUD");
+
+	HealthBar = GetVariableObject("_root.bottomLeftHUD.healthBar");
 }
 
 function SetHealth(float Health, float MaxHealth)

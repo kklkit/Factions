@@ -41,6 +41,10 @@ event Tick(float DeltaTime)
 	{
 		GFxHUD.SetHealth(PlayerOwner.Pawn.Health, PlayerOwner.Pawn.HealthMax);
 	}
+	else
+	{
+		GFxHUD.SetHealth(0, 1);
+	}
 }
 
 function DrawHud()
