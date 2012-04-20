@@ -23,7 +23,7 @@ This repository contains submodules for Empires UDK development.
 
 * Make sure all of your submodules are on branch `master` **before** making changes. If you are in a detached HEAD (no branch), your changes will disappear when the submodules are updated!
 * Do not commit to the top-level repository as it is read-only. Instead commit your changes directly to the appropriate submodules. It is normal for the top-level repository to have un-committed changes.
-* To check if you have un-committed changes in your submodules, run `git status` (or open the Commit window in Git Extensions) and look for submodules that are listed with `modified content` or `dirty`.
+* To check if you have un-committed changes in your submodules, in the top-level repository run `git status` (or open the Commit window in Git Extensions) and look for submodules that are listed with `modified content` or `dirty`.
 * Remember to update both the top-level repository (using pull) and the submodules (using submodule update).
 
 ## Troubleshooting
