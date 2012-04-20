@@ -10,16 +10,19 @@ var EmpGFxHUDBottomRight GFxHUDBottomRight;
 var EmpGFxHUDMenu GFxHUDMenu;
 
 var Material MinimapMaterial;
+var Vector2d MinimapPadding;
+const MinimapSize=256;
+const MinimapUnitBoxSize=10;
+
 var Color LineColor;
 
-const MinimapOffset=10;
-const MinimapSize=256;
 const CameraHeight=40000;
-const MinimapBoxSize=10;
 
 simulated function PostBeginPlay()
 {
 	Super.PostBeginPlay();
+
+	MinimapPadding = vect2d(10, 10);
 
 	GFxHUDTopLeft = new class'EmpGFxHUDTopLeft';
 	GFxHUDTopLeft.Init();
@@ -67,7 +70,7 @@ function DrawHud()
 	EmpPlayer = EmpPlayerController(PlayerOwner);
 	if (EmpPlayer != none && !EmpPlayer.bViewingMap)
 	{
-		Canvas.SetPos(Canvas.ClipX - MinimapSize - MinimapOffset, MinimapOffset);
+		Canvas.SetPos(Canvas.ClipX - MinimapSize - MinimapPadding.X, MinimapPadding.Y);
 		Canvas.DrawMaterialTile(MinimapMaterial, MinimapSize, MinimapSize, 0, 0, 1, 1);
 
 		Canvas.SetDrawColor(0, 255, 0);
@@ -76,12 +79,12 @@ function DrawHud()
 			if (EmpActorInterface(LevelActor) != None || Projectile(LevelActor) != None || UDKVehicle(LevelActor) != None)
 			{
 				// Calculate the pixel positions to draw the unit on the minimap.
-				UnitPositionX = LevelActor.Location.X / (CameraHeight - LevelActor.Location.Z * 2) * MinimapSize + Canvas.ClipX - MinimapOffset - (MinimapSize / 2);
-				UnitPositionY = LevelActor.Location.Y / (CameraHeight - LevelActor.Location.Z * 2) * MinimapSize + MinimapOffset + (MinimapSize / 2);
-				UnitGroundPositionX = LevelActor.Location.X / CameraHeight * MinimapSize + Canvas.ClipX - MinimapOffset - (MinimapSize / 2);
-				UnitGroundPositionY = LevelActor.Location.Y / CameraHeight * MinimapSize + MinimapOffset + (MinimapSize / 2);
-				Canvas.SetPos(UnitPositionX - (MinimapBoxSize / 2), UnitPositionY - (MinimapBoxSize / 2));
-				Canvas.DrawBox(MinimapBoxSize, MinimapBoxSize);
+				UnitPositionX = LevelActor.Location.X / (CameraHeight - LevelActor.Location.Z * 2) * MinimapSize + Canvas.ClipX - MinimapPadding.X - (MinimapSize / 2);
+				UnitPositionY = LevelActor.Location.Y / (CameraHeight - LevelActor.Location.Z * 2) * MinimapSize + MinimapPadding.Y + (MinimapSize / 2);
+				UnitGroundPositionX = LevelActor.Location.X / CameraHeight * MinimapSize + Canvas.ClipX - MinimapPadding.X - (MinimapSize / 2);
+				UnitGroundPositionY = LevelActor.Location.Y / CameraHeight * MinimapSize + MinimapPadding.Y + (MinimapSize / 2);
+				Canvas.SetPos(UnitPositionX - (MinimapUnitBoxSize / 2), UnitPositionY - (MinimapUnitBoxSize / 2));
+				Canvas.DrawBox(MinimapUnitBoxSize, MinimapUnitBoxSize);
 				Canvas.Draw2DLine(UnitPositionX, UnitPositionY, UnitGroundPositionX, UnitGroundPositionY, LineColor);
 			}
 		}
