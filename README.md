@@ -26,7 +26,7 @@ Send a message to [jephir](https://bitbucket.org/account/notifications/send/?rec
 ## Committing
 
 1. Commit and push the changes inside of each submodule.
-2. Commit and push the changed submodules from the top-level repository.
+2. Commit and push the changed submodules in the top-level repository.
 
 Committing the submodules in the top-level repository saves the latest commit in each submodule. This allows us to update without having to go into each submodule and running pull.
 
