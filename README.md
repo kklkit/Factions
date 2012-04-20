@@ -25,13 +25,13 @@ Send a message to [jephir](https://bitbucket.org/account/notifications/send/?rec
 
 ## Committing
 
-1. For each submodule that you've changed, make a commit inside the submodule and push it.
-2. Then, in the top-level repository, commit the changed submodules and push the commit.
+1. Commit and push the changes inside of each submodule.
+2. Commit and push the changed submodules from the top-level repository.
 
 Committing the submodules in the top-level repository saves the latest commit in each submodule. This allows us to update without having to go into each submodule and running pull.
 
 ## Updating
 
 1. Pull at the top-level repository.
-2. Update the submodules. If you are using Git Extensions, you can do this by selecting `Submodules > Update all submodules` while in the top-level repository. Do **not** run pull inside of the submodules because it will fetch changes beyond what was committed in the top-level repository.
+2. Update the submodules. If you are using Git Extensions, you can do this at the top-level repository by selecting `Submodules > Update all submodules`. Do **not** run pull inside of the submodules themselves.
 3. Solve any rebase errors if necessary.
