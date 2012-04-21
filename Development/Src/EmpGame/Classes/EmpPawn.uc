@@ -33,6 +33,23 @@ function Tick(float DeltaTime)
 	}
 }
 
+function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out Rotator out_CamRot, out float out_FOV)
+{
+	Mesh.GetSocketWorldLocationAndRotation('Eyes', out_CamLoc);
+	out_CamRot = GetViewRotation();
+	return true;
+}
+
 defaultproperties
 {
+	Components.Remove(Sprite);
+
+	begin object Class=SkeletalMeshComponent Name=EmpSkeletalMeshComponent
+		SkeletalMesh=SkeletalMesh'EmpAssets.Mesh.IronGuard'
+		AnimTreeTemplate=AnimTree'CH_AnimHuman_Tree.AT_CH_Human'
+		PhysicsAsset=PhysicsAsset'CH_AnimCorrupt.Mesh.SK_CH_Corrupt_Male_Physics'
+		AnimSets(0)=AnimSet'CH_AnimHuman.Anims.K_AnimHuman_BaseMale'
+	end object
+	Mesh=EmpSkeletalMeshComponent
+	Components.Add(EmpSkeletalMeshComponent)
 }
