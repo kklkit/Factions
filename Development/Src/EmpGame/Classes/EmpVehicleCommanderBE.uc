@@ -1,4 +1,5 @@
-class EmpVehicleCommanderBE extends EmpVehicleBaseCommander;
+class EmpVehicleCommanderBE extends EmpVehicleBaseCommander
+	Placeable;
 
 defaultproperties
 {
