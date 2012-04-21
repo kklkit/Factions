@@ -6,7 +6,8 @@ var GFxObject TopRightHUD;
 var GFxObject BottomLeftHUD;
 var GFxObject BottomRightHUD;
 
-const HealthBarWidth=325;
+var float HealthBarWidth;
+var Vector2D HealthBarPosition;
 
 function Init(optional LocalPlayer LocPlay)
 {
@@ -18,7 +19,9 @@ function Init(optional LocalPlayer LocPlay)
 	BottomRightHUD = GetVariableObject("_root.bottomRightHUD");
 
 	HealthBar = GetVariableObject("_root.bottomLeftHUD.healthBar");
-
+	HealthBar.GetPosition(HealthBarPosition.X, HealthBarPosition.Y);
+	HealthBarWidth = HealthBar.GetFloat("width");
+	
 	ResizeHUD();
 }
 
@@ -27,7 +30,7 @@ function SetHealth(float Health, float MaxHealth)
 	local ASDisplayInfo DI;
 
 	DI.hasX = true;
-	DI.X = -HealthBarWidth + (Health / MaxHealth * HealthBarWidth);
+	DI.X = -HealthBarWidth + HealthBarPosition.X + (Health / MaxHealth * HealthBarWidth);
 
 	HealthBar.SetDisplayInfo(DI);
 }
