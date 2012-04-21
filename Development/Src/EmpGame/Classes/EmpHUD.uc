@@ -1,7 +1,7 @@
 /*
  * Manages displaying the player's HUD and GUI.
  */
-class EmpHUD extends UDKHUD;
+class EmpHUD extends HUD;
 
 var EmpGFxHUD GFxHUD;
 var EmpGFxHUDMenu GFxHUDMenu;

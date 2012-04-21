@@ -1,4 +1,4 @@
-class EmpPlayerController extends UDKPlayerController;
+class EmpPlayerController extends PlayerController;
 
 var bool IsInCommanderView;
 var bool IsInCommanderRotate;

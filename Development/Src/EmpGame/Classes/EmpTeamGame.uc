@@ -1,4 +1,4 @@
-class EmpTeamGame extends UDKGame;
+class EmpTeamGame extends GameInfo;
 
 var EmpTeamInfo Teams[2];
 
@@ -19,4 +19,5 @@ defaultproperties
 	PlayerReplicationInfoClass=class'EmpGame.EmpPlayerReplicationInfo'
 
 	bTeamGame=true
+	bDelayedStart=false
 }

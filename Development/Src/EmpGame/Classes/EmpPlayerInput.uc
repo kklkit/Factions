@@ -1,2 +1,2 @@
-class EmpPlayerInput extends UDKPlayerInput within EmpPlayerController
+class EmpPlayerInput extends PlayerInput within EmpPlayerController
 	config(InputEmp);
