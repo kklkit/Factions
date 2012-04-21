@@ -1,13 +1,9 @@
 class EmpGFxHUD extends GFxMoviePlayer;
 
-var GFxObject HealthBar;
 var GFxObject TopLeftHUD;
 var GFxObject TopRightHUD;
 var GFxObject BottomLeftHUD;
 var GFxObject BottomRightHUD;
-
-var float HealthBarWidth;
-var Vector2D HealthBarPosition;
 
 function Init(optional LocalPlayer LocPlay)
 {
@@ -17,10 +13,6 @@ function Init(optional LocalPlayer LocPlay)
 	TopRightHUD = GetVariableObject("_root.topRightHUD");
 	BottomLeftHUD = GetVariableObject("_root.bottomLeftHUD");
 	BottomRightHUD = GetVariableObject("_root.bottomRightHUD");
-
-	HealthBar = BottomLeftHUD.GetObject("healthBar");
-	HealthBar.GetPosition(HealthBarPosition.X, HealthBarPosition.Y);
-	HealthBarWidth = HealthBar.GetFloat("width");
 	
 	ResizeHUD();
 }
