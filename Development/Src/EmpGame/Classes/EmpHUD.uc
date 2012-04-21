@@ -33,7 +33,7 @@ simulated function PostBeginPlay()
 	LineColor.R = 0;
 }
 
-event Tick(float DeltaTime)
+function Tick(float DeltaTime)
 {
 	Super.Tick(DeltaTime);
 

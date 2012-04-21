@@ -61,9 +61,9 @@ exec function ToggleViewMap()
 	bViewingMap = !bViewingMap;
 }
 
-simulated event GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
+simulated function GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
 {
-	if (bViewingMap)
+	if (Role < ROLE_Authority && bViewingMap)
 	{
 		out_Location = vect(0, 0, 20000);
 		out_Rotation = rot(-16384, -16384, 0);

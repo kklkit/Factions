@@ -19,7 +19,7 @@ function bool Start(optional bool StartPaused)
 	return true;
 }
 
-event OnClose()
+function OnClose()
 {
 	Super.OnClose();
 

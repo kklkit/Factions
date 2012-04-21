@@ -6,14 +6,14 @@ class EmpVehiclePad extends Actor
 var(Empires) int VehicleHealth;
 var(Empires) class<UDKVehicle> VehicleClass;
 
-event PostBeginPlay()
+function PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
 	SetCollision(true, true);
 }
 
-event Bump(Actor Other, PrimitiveComponent OtherComp, Object.Vector HitNormal)
+function Bump(Actor Other, PrimitiveComponent OtherComp, Object.Vector HitNormal)
 {
 	local UDKVehicle SpawnedVehicle;
 
