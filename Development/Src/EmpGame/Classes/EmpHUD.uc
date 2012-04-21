@@ -1,7 +1,8 @@
 /*
  * Manages displaying the player's HUD and GUI.
  */
-class EmpHUD extends UDKHUD;
+class EmpHUD extends UDKHUD
+	config(HUDInput);
 
 var EmpGFxHUD GFxHUD;
 var EmpGFxHUDMenu GFxHUDMenu;
@@ -76,6 +77,18 @@ function DrawHud()
 				Canvas.Draw2DLine(UnitPositionX, UnitPositionY, UnitGroundPositionX, UnitGroundPositionY, LineColor);
 			}
 		}
+	}
+}
+
+exec function ToggleOmniMenu()
+{
+	if (GFxHUDMenu.bMovieIsOpen)
+	{
+		GFxHUDMenu.Close(false);
+	}
+	else
+	{
+		GFxHUDMenu.Start(false);
 	}
 }
 

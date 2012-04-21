@@ -61,26 +61,6 @@ exec function ToggleViewMap()
 	bViewingMap = !bViewingMap;
 }
 
-exec function ToggleMenu()
-{
-	local EmpHUD myEmpHUD;
-	local EmpGFxHUDMenu myEmpGFxHUDMenu;
-
-	myEmpHUD = EmpHUD(myHUD);
-	if (myEmpHUD != none)
-	{
-		myEmpGFxHUDMenu = myEmpHUD.GFxHUDMenu;
-		if (myEmpGFxHUDMenu.bMovieIsOpen)
-		{
-			myEmpGFxHUDMenu.Close(false);
-		}
-		else
-		{
-			myEmpGFxHUDMenu.Start(false);
-		}
-	}
-}
-
 simulated event GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
 {
 	if (bViewingMap)
