@@ -7,7 +7,10 @@ function PreBeginPlay()
 	Super.PreBeginPlay();
 
 	Teams[0] = spawn(class'EmpGame.EmpTeamInfo');
+	GameReplicationInfo.SetTeam(0, Teams[0]);
+
 	Teams[1] = spawn(class'EmpGame.EmpTeamInfo');
+	GameReplicationInfo.SetTeam(1, Teams[1]);
 }
 
 defaultproperties

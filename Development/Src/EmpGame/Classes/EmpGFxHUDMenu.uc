@@ -31,6 +31,11 @@ function CloseInfantryMenu()
 	Close(false);
 }
 
+function SelectTeam(int TeamNumber)
+{
+	GetPC().ServerChangeTeam(TeamNumber);
+}
+
 defaultproperties
 {
 	MovieInfo=SwfMovie'EmpFlashAssets.emp_hud_menu'
