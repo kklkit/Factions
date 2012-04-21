@@ -33,7 +33,7 @@ function Tick(float DeltaTime)
 	}
 }
 
-function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out Rotator out_CamRot, out float out_FOV)
+simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out Rotator out_CamRot, out float out_FOV)
 {
 	Mesh.GetSocketWorldLocationAndRotation('Eyes', out_CamLoc);
 	out_CamRot = GetViewRotation();

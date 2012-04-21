@@ -66,6 +66,7 @@ UDKGame/Flash/Test
 UDKGame/Flash/UDK*
 UDKGame/Flash/UDN*
 UDKGame/Flash/*.fla
+UDKGame/CookedPC/*
 *.swf
 *.html
-
+*.exe
