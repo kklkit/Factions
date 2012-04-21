@@ -74,6 +74,7 @@ simulated event GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rota
 
 defaultproperties
 {
+	InputClass=class'EmpGame.EmpPlayerInput'
 	IsInCommanderView=false
 	IsInCommanderRotate=false
 	bViewingMap=false
