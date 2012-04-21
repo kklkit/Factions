@@ -20,4 +20,5 @@ defaultproperties
 
 	bTeamGame=true
 	bDelayedStart=false
+	bRestartLevel=false
 }
