@@ -11,26 +11,20 @@ simulated function PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
-	if (Role < ROLE_Authority)
-	{
-		MinimapCaptureComponent = new class'SceneCapture2DComponent';
-		MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'EmpAssets.HUD.minimap_render_texture', MinimapCaptureFOV, , 0);
-		MinimapCaptureComponent.bUpdateMatrices = false;
-		AttachComponent(MinimapCaptureComponent);
+	MinimapCaptureComponent = new class'SceneCapture2DComponent';
+	MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'EmpAssets.HUD.minimap_render_texture', MinimapCaptureFOV, , 0);
+	MinimapCaptureComponent.bUpdateMatrices = false;
+	AttachComponent(MinimapCaptureComponent);
 
-		MinimapCapturePosition = vect(0, 0, 20000);
-		MinimapCaptureRotation = rot(-16384, -16384, 0);
-	}
+	MinimapCapturePosition = vect(0, 0, 20000);
+	MinimapCaptureRotation = rot(-16384, -16384, 0);
 }
 
 function Tick(float DeltaTime)
 {
 	Super.Tick(DeltaTime);
 
-	if (Role < ROLE_Authority)
-	{
-		MinimapCaptureComponent.SetView(MinimapCapturePosition, MinimapCaptureRotation);
-	}
+	MinimapCaptureComponent.SetView(MinimapCapturePosition, MinimapCaptureRotation);
 }
 
 defaultproperties
