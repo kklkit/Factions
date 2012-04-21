@@ -6,10 +6,10 @@ class EmpHUD extends UDKHUD;
 var EmpGFxHUD GFxHUD;
 var EmpGFxHUDMenu GFxHUDMenu;
 
-var Material MinimapMaterial;
-var Vector2d MinimapPadding;
 const MinimapSize=256;
 const MinimapUnitBoxSize=10;
+var Material MinimapMaterial;
+var Vector2d MinimapPadding;
 
 var Color LineColor;
 

@@ -19,7 +19,7 @@ event Bump(Actor Other, PrimitiveComponent OtherComp, Object.Vector HitNormal)
 
 	Super.Bump(Other, OtherComp, HitNormal);
 
-	if (Other.GetALocalPlayerController() != None)
+	if (EmpPawn(Other) != none)
 	{
 		SpawnedVehicle = Spawn(VehicleClass, , , Location + vect(500, 500, 200));
 		SpawnedVehicle.HealthMax = VehicleHealth;
@@ -39,4 +39,6 @@ defaultproperties
 
 	VehicleHealth=100
 	VehicleClass=class'UTVehicle_Scorpion_Content'
+
+	RemoteRole=ROLE_SimulatedProxy
 }

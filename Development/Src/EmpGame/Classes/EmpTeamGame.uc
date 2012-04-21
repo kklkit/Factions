@@ -16,6 +16,7 @@ defaultproperties
 	DefaultPawnClass=class'EmpGame.EmpPawn'
 	HUDType=class'EmpGame.EmpHUD'
 	GameReplicationInfoClass=class'EmpGame.EmpGameReplicationInfo'
+	PlayerReplicationInfoClass=class'EmpGame.EmpPlayerReplicationInfo'
 
 	bTeamGame=true
 }

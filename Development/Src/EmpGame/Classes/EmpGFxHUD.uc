@@ -19,7 +19,6 @@ function Init(optional LocalPlayer LocPlay)
 
 function SetPlayerHealth(int Health, int MaxHealth)
 {
-	// TODO Change MaxHealth to 1 if it is 0 (divide by zero)
 	ActionScriptVoid("_root.SetPlayerHealth");
 }
 

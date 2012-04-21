@@ -7,24 +7,30 @@ var Rotator MinimapCaptureRotation;
 
 const MinimapCaptureFOV=90; // This must be 90 degrees otherwise the minimap overlays will be incorrect.
 
-event PostBeginPlay()
+simulated function PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
-	MinimapCaptureComponent = new class'SceneCapture2DComponent';
-	MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'EmpAssets.HUD.minimap_render_texture', MinimapCaptureFOV, , 0);
-	MinimapCaptureComponent.bUpdateMatrices = false;
-	AttachComponent(MinimapCaptureComponent);
+	if (Role < ROLE_Authority)
+	{
+		MinimapCaptureComponent = new class'SceneCapture2DComponent';
+		MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'EmpAssets.HUD.minimap_render_texture', MinimapCaptureFOV, , 0);
+		MinimapCaptureComponent.bUpdateMatrices = false;
+		AttachComponent(MinimapCaptureComponent);
 
-	MinimapCapturePosition = vect(0, 0, 20000);
-	MinimapCaptureRotation = rot(-16384, -16384, 0);
+		MinimapCapturePosition = vect(0, 0, 20000);
+		MinimapCaptureRotation = rot(-16384, -16384, 0);
+	}
 }
 
-event Tick(float DeltaTime)
+function Tick(float DeltaTime)
 {
 	Super.Tick(DeltaTime);
 
-	MinimapCaptureComponent.SetView(MinimapCapturePosition, MinimapCaptureRotation);
+	if (Role < ROLE_Authority)
+	{
+		MinimapCaptureComponent.SetView(MinimapCapturePosition, MinimapCaptureRotation);
+	}
 }
 
 defaultproperties
