@@ -14,4 +14,4 @@ This is the development repository for Empires UDK.
 
 **Important:** Always pull using **rebase**. Do not use merge because this will cause a non-linear history.
 
-If the default key binds were updated, you need to delete all _UDKGame/Config/UDK*.ini_ files (but not the _Default*.ini_ files) for the changes to take effect.
+If the default key binds were updated, you need to delete all _UDKGame/Config/UDK\*.ini_ files (but not the _Default\*.ini_ files) for the changes to take effect.
