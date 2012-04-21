@@ -18,7 +18,7 @@ function Init(optional LocalPlayer LocPlay)
 	BottomLeftHUD = GetVariableObject("_root.bottomLeftHUD");
 	BottomRightHUD = GetVariableObject("_root.bottomRightHUD");
 
-	HealthBar = GetVariableObject("_root.bottomLeftHUD.healthBar");
+	HealthBar = BottomLeftHUD.GetObject("healthBar");
 	HealthBar.GetPosition(HealthBarPosition.X, HealthBarPosition.Y);
 	HealthBarWidth = HealthBar.GetFloat("width");
 	
