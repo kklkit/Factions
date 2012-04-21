@@ -6,6 +6,7 @@
 	import scaleform.gfx.Extensions;
 	import flash.events.Event;
 	import flash.display.DisplayObject;
+	import flash.text.TextField;
 	
 	public class EmpHUD extends MovieClip {
 		public var topLeftHUD:MovieClip;
@@ -28,6 +29,12 @@
 		{
 			var healthBar:DisplayObject = bottomLeftHUD.getChildByName('healthBar');
 			healthBar.x = -healthBar.width + healthBarStartPositionX + (health / maxHealth * healthBar.width);
+		}
+		
+		public function SetResources(resources:int):void
+		{
+			var resourceCount:DisplayObject = topRightHUD.getChildByName('resourceCount');
+			resourceCount.text = resources.toString();
 		}
 	}
 }

@@ -22,6 +22,11 @@ function SetPlayerHealth(int Health, int MaxHealth)
 	ActionScriptVoid("_root.SetPlayerHealth");
 }
 
+function SetResources(int resources)
+{
+	ActionScriptVoid("_root.SetResources");
+}
+
 function ResizeHUD()
 {
 	local float Left, Top, Right, Bottom;
