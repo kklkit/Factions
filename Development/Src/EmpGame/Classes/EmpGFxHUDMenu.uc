@@ -26,9 +26,14 @@ function OnClose()
 	GetGameViewportClient().bDisplayHardwareMouseCursor = false;
 }
 
+function CloseInfantryMenu()
+{
+	Close(false);
+}
+
 defaultproperties
 {
 	MovieInfo=SwfMovie'EmpFlashAssets.emp_hud_menu'
-	bAutoPlay=false
+	bAutoPlay=true
 	bCaptureMouseInput=true
 }
