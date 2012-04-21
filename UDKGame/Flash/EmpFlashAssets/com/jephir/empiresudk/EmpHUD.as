@@ -27,7 +27,7 @@
 		
 		public function SetPlayerHealth(health:int, maxHealth:int):void
 		{
-			var healthBar = bottomLeftHUD.getChildByName('healthBar');
+			var healthBar:DisplayObject = bottomLeftHUD.getChildByName('healthBar');
 			healthBar.x = -healthBar.width + healthBarStartPositionX + (health / maxHealth * healthBar.width);
 		}
 		
