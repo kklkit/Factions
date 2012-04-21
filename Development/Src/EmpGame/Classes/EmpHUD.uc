@@ -39,11 +39,11 @@ event Tick(float DeltaTime)
 
 	if (PlayerOwner != None && PlayerOwner.Pawn != None)
 	{
-		GFxHUD.SetHealth(PlayerOwner.Pawn.Health, PlayerOwner.Pawn.HealthMax);
+		GFxHUD.SetPlayerHealth(PlayerOwner.Pawn.Health, PlayerOwner.Pawn.HealthMax);
 	}
 	else
 	{
-		GFxHUD.SetHealth(0, 1);
+		GFxHUD.SetPlayerHealth(0, 1);
 	}
 }
 

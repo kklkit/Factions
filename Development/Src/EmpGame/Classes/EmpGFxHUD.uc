@@ -25,14 +25,9 @@ function Init(optional LocalPlayer LocPlay)
 	ResizeHUD();
 }
 
-function SetHealth(float Health, float MaxHealth)
+function SetPlayerHealth(int Health, int MaxHealth)
 {
-	local ASDisplayInfo DI;
-
-	DI.hasX = true;
-	DI.X = -HealthBarWidth + HealthBarPosition.X + (Health / MaxHealth * HealthBarWidth);
-
-	HealthBar.SetDisplayInfo(DI);
+	ActionScriptVoid("_root.SetPlayerHealth");
 }
 
 function ResizeHUD()
