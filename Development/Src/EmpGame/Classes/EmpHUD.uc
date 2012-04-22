@@ -40,7 +40,6 @@ function Tick(float DeltaTime)
 	if (PlayerOwner != None && PlayerOwner.Pawn != None)
 	{
 		GFxHUD.SetPlayerHealth(PlayerOwner.Pawn.Health, PlayerOwner.Pawn.HealthMax);
-		GFxHUD.SetResources(9999);
 	}
 	else
 	{
