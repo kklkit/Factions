@@ -26,12 +26,12 @@ function OnClose()
 	GetGameViewportClient().bDisplayHardwareMouseCursor = false;
 }
 
-function CloseInfantryMenu()
+function CloseOmniMenu(string Frame)
 {
 	Close(false);
 }
 
-function SelectTeam(int TeamNumber)
+function SelectPlayerTeam(int TeamNumber)
 {
 	GetPC().ServerChangeTeam(TeamNumber);
 }

@@ -4,7 +4,7 @@
 class FSHUD extends HUD;
 
 var FSGFxHUD GFxHUD;
-var FSGFxOmniMenu GFxHUDMenu;
+var FSGFxOmniMenu GFxOmniMenu;
 
 const MinimapSize=256;
 const MinimapUnitBoxSize=10;
@@ -24,8 +24,8 @@ simulated function PostBeginPlay()
 	GFxHUD = new class'FSGFxHUD';
 	GFxHUD.Init();
 
-	GFxHUDMenu = new class'FSGFxOmniMenu';
-	GFxHUDMenu.Init();
+	GFxOmniMenu = new class'FSGFxOmniMenu';
+	GFxOmniMenu.Init();
 
 	LineColor.A = 255;
 	LineColor.B = 0;
@@ -40,7 +40,7 @@ function Tick(float DeltaTime)
 	if (PlayerOwner != None && PlayerOwner.Pawn != None)
 	{
 		GFxHUD.SetPlayerHealth(PlayerOwner.Pawn.Health, PlayerOwner.Pawn.HealthMax);
-		GFxHUDMenu.SetPlayerTeam(PlayerOwner.Pawn.PlayerReplicationInfo.Team.TeamIndex - 1);
+		GFxOmniMenu.SetPlayerTeam(PlayerOwner.Pawn.PlayerReplicationInfo.Team.TeamIndex);
 	}
 	else
 	{
@@ -82,13 +82,13 @@ function DrawHud()
 
 exec function ToggleOmniMenu()
 {
-	if (GFxHUDMenu.bMovieIsOpen)
+	if (GFxOmniMenu.bMovieIsOpen)
 	{
-		GFxHUDMenu.Close(false);
+		GFxOmniMenu.Close(false);
 	}
 	else
 	{
-		GFxHUDMenu.Start(false);
+		GFxOmniMenu.Start(false);
 	}
 }
 

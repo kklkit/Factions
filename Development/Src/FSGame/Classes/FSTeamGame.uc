@@ -6,13 +6,18 @@ function PreBeginPlay()
 {
 	Super.PreBeginPlay();
 
-	Teams[0] = spawn(class'FSGame.FSTeamInfo');
-	Teams[0].TeamIndex = 1;
-	GameReplicationInfo.SetTeam(0, Teams[0]);
+	CreateTeam(0);
+	CreateTeam(1);
+}
 
-	Teams[1] = spawn(class'FSGame.FSTeamInfo');
-	Teams[1].TeamIndex = 2;
-	GameReplicationInfo.SetTeam(1, Teams[1]);
+function CreateTeam(int TeamIndex)
+{
+	local FSTeamInfo Team;
+
+	Team = spawn(class'FSGame.FSTeamInfo');
+	Team.TeamIndex = TeamIndex;
+	GameReplicationInfo.SetTeam(TeamIndex, Team);
+	Teams[TeamIndex] = Team;
 }
 
 function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
