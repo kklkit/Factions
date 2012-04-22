@@ -24,7 +24,7 @@ Development/Src/WinDrv/
 Engine/
 UDKGame/Autosaves/
 UDKGame/Build/
-UDKGame/Cache/*
+UDKGame/Cache/
 UDKGame/Config/IPhone/
 UDKGame/Config/Mac/
 UDKGame/Config/Mobile/

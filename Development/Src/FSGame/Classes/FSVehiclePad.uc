@@ -1,10 +1,10 @@
-class EmpVehiclePad extends Actor
-	Implements(EmpActorInterface)
+class FSVehiclePad extends Actor
+	Implements(FSActorInterface)
 	Placeable
-	AutoExpandCategories(Empires);
+	AutoExpandCategories(Factions);
 
-var(Empires) int VehicleHealth;
-var(Empires) class<UDKVehicle> VehicleClass;
+var(Factions) int VehicleHealth;
+var(Factions) class<UDKVehicle> VehicleClass;
 
 function PostBeginPlay()
 {
@@ -19,7 +19,7 @@ function Bump(Actor Other, PrimitiveComponent OtherComp, Object.Vector HitNormal
 
 	Super.Bump(Other, OtherComp, HitNormal);
 
-	if (EmpPawn(Other) != none)
+	if (FSPawn(Other) != none)
 	{
 		SpawnedVehicle = Spawn(VehicleClass, , , Location + vect(500, 500, 200));
 		SpawnedVehicle.HealthMax = VehicleHealth;
@@ -30,7 +30,7 @@ function Bump(Actor Other, PrimitiveComponent OtherComp, Object.Vector HitNormal
 defaultproperties
 {
 	Begin Object Class=StaticMeshComponent Name=StructureStaticMesh
-		StaticMesh=StaticMesh'EmpAssets.Structures.VehiclePad'
+		StaticMesh=StaticMesh'FSAssets.Structures.VehiclePad'
 	End Object
 	Components.Add(StructureStaticMesh)
 	

@@ -1,4 +1,4 @@
-﻿package com.jephir.empiresudk {
+﻿package name.jephir.factions {
 	import flash.display.MovieClip;
 	import flash.display.StageScaleMode;
 	import flash.display.StageAlign;
@@ -8,14 +8,14 @@
 	import flash.display.DisplayObject;
 	import flash.text.TextField;
 	
-	public class EmpHUD extends MovieClip {
+	public class FactionsHUD extends MovieClip {
 		public var topLeftHUD:MovieClip;
 		public var topRightHUD:MovieClip;
 		public var bottomLeftHUD:MovieClip;
 		public var bottomRightHUD:MovieClip;
 		public var healthBarStartPositionX:Number = bottomLeftHUD.getChildByName('healthBar').x;
 		
-		public function EmpHUD() {
+		public function FactionsHUD() {
 			Extensions.enabled = true;
 			
 			stage.scaleMode = StageScaleMode.NO_SCALE;

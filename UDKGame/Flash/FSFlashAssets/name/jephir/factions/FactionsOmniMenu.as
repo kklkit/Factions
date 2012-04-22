@@ -1,11 +1,11 @@
-﻿package com.jephir.empiresudk
+﻿package name.jephir.factions
 {
 	import flash.display.MovieClip;
 	import scaleform.clik.data.DataProvider;
 	import scaleform.clik.events.ButtonBarEvent;
 	import scaleform.clik.controls.ButtonBar;
 
-	public class EmpHUDMenu extends MovieClip
+	public class FactionsOmniMenu extends MovieClip
 	{
 		public var menus:Array;
 		public var menuButtonBar:ButtonBar;
@@ -31,7 +31,7 @@
 			gotoAndPlay(menus[e.index]);
 		}
 
-		public function EmpHUDMenu()
+		public function FactionsOmniMenu()
 		{
 			super();
 			

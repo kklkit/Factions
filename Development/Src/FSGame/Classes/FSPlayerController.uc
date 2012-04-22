@@ -1,4 +1,4 @@
-class EmpPlayerController extends PlayerController;
+class FSPlayerController extends PlayerController;
 
 var bool InCommanderView;
 
@@ -37,7 +37,7 @@ simulated function GetPlayerViewPoint(out Vector out_Location, out Rotator out_R
 
 defaultproperties
 {
-	InputClass=class'EmpGame.EmpPlayerInput'
+	InputClass=class'FSGame.FSPlayerInput'
 	InCommanderView=false
 	bViewingMap=false
 }

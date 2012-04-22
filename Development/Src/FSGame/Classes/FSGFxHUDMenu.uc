@@ -1,7 +1,7 @@
 /*
  * In-game menu for selecting team, loadout, squad, etc.
  */
-class EmpGFxHUDMenu extends GFxMoviePlayer;
+class FSGFxHudMenu extends GFxMoviePlayer;
 
 function Init(optional LocalPlayer LocPlay)
 {
@@ -43,7 +43,7 @@ function SetPlayerTeam(int Team)
 
 defaultproperties
 {
-	MovieInfo=SwfMovie'EmpFlashAssets.emp_hud_menu'
+	MovieInfo=SwfMovie'FSFlashAssets.factions_omnimenu'
 	bAutoPlay=true
 	bCaptureMouseInput=true
 }

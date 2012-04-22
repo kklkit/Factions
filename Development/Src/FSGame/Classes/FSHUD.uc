@@ -1,10 +1,10 @@
 /*
  * Manages displaying the player's HUD and GUI.
  */
-class EmpHUD extends HUD;
+class FSHUD extends HUD;
 
-var EmpGFxHUD GFxHUD;
-var EmpGFxHUDMenu GFxHUDMenu;
+var FSGFxHUD GFxHUD;
+var FSGFxHUDMenu GFxHUDMenu;
 
 const MinimapSize=256;
 const MinimapUnitBoxSize=10;
@@ -21,10 +21,10 @@ simulated function PostBeginPlay()
 
 	MinimapPadding = vect2d(10, 55);
 
-	GFxHUD = new class'EmpGFxHUD';
+	GFxHUD = new class'FSGFxHUD';
 	GFxHUD.Init();
 
-	GFxHUDMenu = new class'EmpGFxHUDMenu';
+	GFxHUDMenu = new class'FSGFxHUDMenu';
 	GFxHUDMenu.Init();
 
 	LineColor.A = 255;
@@ -50,14 +50,14 @@ function Tick(float DeltaTime)
 
 function DrawHud()
 {
-	local EmpPlayerController EmpPlayer;
+	local FSPlayerController FSPlayer;
 	local Actor LevelActor;
 	local float UnitPositionX, UnitPositionY, UnitGroundPositionX, UnitGroundPositionY;
 	
 	super.DrawHud();
 
-	EmpPlayer = EmpPlayerController(PlayerOwner);
-	if (EmpPlayer != none && !EmpPlayer.bViewingMap)
+	FSPlayer = FSPlayerController(PlayerOwner);
+	if (FSPlayer != none && !FSPlayer.bViewingMap)
 	{
 		Canvas.SetPos(Canvas.ClipX - MinimapSize - MinimapPadding.X, MinimapPadding.Y);
 		Canvas.DrawMaterialTile(MinimapMaterial, MinimapSize, MinimapSize, 0, 0, 1, 1);
@@ -65,7 +65,7 @@ function DrawHud()
 		Canvas.SetDrawColor(0, 255, 0);
 		ForEach DynamicActors(class'Actor', LevelActor)
 		{
-			if (EmpActorInterface(LevelActor) != None || Projectile(LevelActor) != None || UDKVehicle(LevelActor) != None)
+			if (FSActorInterface(LevelActor) != None || Projectile(LevelActor) != None || UDKVehicle(LevelActor) != None)
 			{
 				// Calculate the pixel positions to draw the unit on the minimap.
 				UnitPositionX = LevelActor.Location.X / (CameraHeight - LevelActor.Location.Z * 2) * MinimapSize + Canvas.ClipX - MinimapPadding.X - (MinimapSize / 2);
@@ -94,5 +94,5 @@ exec function ToggleOmniMenu()
 
 defaultproperties
 {
-	MinimapMaterial=Material'EmpAssets.HUD.minimap_render'
+	MinimapMaterial=Material'FSAssets.HUD.minimap_render'
 }

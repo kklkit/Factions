@@ -1,4 +1,4 @@
-class EmpTeamInfo extends TeamInfo;
+class FSTeamInfo extends TeamInfo;
 
 var int Resources;
 

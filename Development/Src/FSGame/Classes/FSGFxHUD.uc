@@ -1,4 +1,4 @@
-class EmpGFxHUD extends GFxMoviePlayer;
+class FSGFxHUD extends GFxMoviePlayer;
 
 var GFxObject TopLeftHUD;
 var GFxObject TopRightHUD;
@@ -48,7 +48,7 @@ function ResizeHUD()
 
 defaultproperties
 {
-	MovieInfo=SwfMovie'EmpFlashAssets.emp_hud'
+	MovieInfo=SwfMovie'FSFlashAssets.factions_hud'
 	bDisplayWithHudOff=false
 	bAutoPlay=true
 }
