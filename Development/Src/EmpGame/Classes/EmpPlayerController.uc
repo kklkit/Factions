@@ -1,59 +1,22 @@
 class EmpPlayerController extends PlayerController;
 
-var bool IsInCommanderView;
-var bool IsInCommanderRotate;
+var bool InCommanderView;
+
 var bool bViewingMap;
 
-var vector PlayerViewOffset;
-
-var Pawn CommanderPawn;
-
-state CommanderView extends BaseSpectating
-{
-		function UpdateRotation( float DeltaTime )
-		{
-			if( IsInCommanderRotate )
-				super.UpdateRotation( DeltaTime );
-		}		
-}
-
-exec function ToggleCommanderRotate()
-{
-	if( IsInCommanderRotate )
-		IsInCommanderRotate = false;
-	else
-		IsInCommanderRotate = true;
-}
-
-exec function ToggleCommanderHeight()
+state CommanderView extends PlayerWalking
 {
 
 }
 
-exec function ToggleCommanderView()
+exec function ToggleCommanderView2()
 {
-	if( IsInCommanderView )
-	{
-		IsInCommanderView = false;
-		
-		if( Vehicle(Pawn) != None )
-			Possess(CommanderPawn,true);
-		else
-			Possess(CommanderPawn,false);
-			
-		GotoState('PlayerWalking');
-	}
-	else
-	{
-		IsInCommanderView = true;
-
+	InCommanderView = !InCommanderView;
+	
+	if( InCommanderView )
 		GotoState('CommanderView');
-		CommanderPawn = Pawn;
-		UnPossess();
-		
-		bCollideWorld = true;
-		SetLocation(Pawn.Location+PlayerViewOffset);
-	}
+	else
+		GotoState('PlayerWalking');
 }
 
 exec function ToggleViewMap()
@@ -75,8 +38,6 @@ simulated function GetPlayerViewPoint(out Vector out_Location, out Rotator out_R
 defaultproperties
 {
 	InputClass=class'EmpGame.EmpPlayerInput'
-	IsInCommanderView=false
-	IsInCommanderRotate=false
+	InCommanderView=false
 	bViewingMap=false
-	PlayerViewOffset=(X=-64,Y=0,Z=1024)
 }
