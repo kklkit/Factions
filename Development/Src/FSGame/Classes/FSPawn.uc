@@ -105,24 +105,24 @@ simulated singular event Rotator GetBaseAimRotation()
 	}
 	else
    {
-      if( Controller != None && !InFreeCam() )
-      {
-         Controller.GetPlayerViewPoint(POVLoc, POVRot);
-         return POVRot;
-      }
-      else
-      {
-         POVRot = Rotation;
-         
-         if( POVRot.Pitch == 0 )
-         {
-            POVRot.Pitch = RemoteViewPitch << 8;
-         }
-      }
+	  if( Controller != None && !InFreeCam() )
+	  {
+		 Controller.GetPlayerViewPoint(POVLoc, POVRot);
+		 return POVRot;
+	  }
+	  else
+	  {
+		 POVRot = Rotation;
+		 
+		 if( POVRot.Pitch == 0 )
+		 {
+			POVRot.Pitch = RemoteViewPitch << 8;
+		 }
+	  }
    }
 
 	return POVRot;
-}  
+}
 
 defaultproperties
 {
