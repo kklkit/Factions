@@ -33,9 +33,9 @@ simulated function PostBeginPlay()
 	LineColor.R = 0;
 }
 
-function Tick(float DeltaTime)
+function PostRender()
 {
-	Super.Tick(DeltaTime);
+	Super.PostRender();
 
 	if (PlayerOwner != None && PlayerOwner.Pawn != None)
 	{
