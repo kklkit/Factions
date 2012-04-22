@@ -22,7 +22,7 @@ function SetPlayerHealth(int Health, int MaxHealth)
 	ActionScriptVoid("_root.SetPlayerHealth");
 }
 
-function SetResources(int resources)
+function SetResources(int Resources)
 {
 	ActionScriptVoid("_root.SetResources");
 }

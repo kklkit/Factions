@@ -36,6 +36,11 @@ function SelectTeam(int TeamNumber)
 	GetPC().ServerChangeTeam(TeamNumber);
 }
 
+function SetPlayerTeam(int Team)
+{
+	ActionScriptVoid("_root.SetPlayerTeam");
+}
+
 defaultproperties
 {
 	MovieInfo=SwfMovie'EmpFlashAssets.emp_hud_menu'

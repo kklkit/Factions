@@ -40,6 +40,7 @@ function Tick(float DeltaTime)
 	if (PlayerOwner != None && PlayerOwner.Pawn != None)
 	{
 		GFxHUD.SetPlayerHealth(PlayerOwner.Pawn.Health, PlayerOwner.Pawn.HealthMax);
+		GFxHUDMenu.SetPlayerTeam(PlayerOwner.Pawn.PlayerReplicationInfo.Team.TeamIndex - 1);
 	}
 	else
 	{
