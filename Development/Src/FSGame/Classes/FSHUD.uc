@@ -40,7 +40,6 @@ function PostRender()
 	if (PlayerOwner != None && PlayerOwner.Pawn != None)
 	{
 		GFxHUD.SetPlayerHealth(PlayerOwner.Pawn.Health, PlayerOwner.Pawn.HealthMax);
-		GFxOmniMenu.SetPlayerTeam(PlayerOwner.Pawn.PlayerReplicationInfo.Team.TeamIndex);
 	}
 	else
 	{
@@ -90,6 +89,13 @@ exec function ToggleOmniMenu()
 	{
 		GFxOmniMenu.Start(false);
 	}
+}
+
+simulated function NotifyLocalPlayerTeamReceived()
+{
+	Super.NotifyLocalPlayerTeamReceived();
+
+	GFxOmniMenu.SetPlayerTeam(PlayerOwner.PlayerReplicationInfo.Team.TeamIndex);
 }
 
 defaultproperties
