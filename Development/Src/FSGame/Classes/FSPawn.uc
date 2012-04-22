@@ -62,7 +62,7 @@ function Tick(float DeltaTime)
 
 simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out Rotator out_CamRot, out float out_FOV)
 {
-	if ( bInCommanderView )
+	if (bInCommanderView)
 	{
 		out_CamLoc = Location;
 		out_CamLoc.Z += CommanderCamZoom;

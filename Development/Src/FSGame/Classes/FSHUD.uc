@@ -4,7 +4,7 @@
 class FSHUD extends HUD;
 
 var FSGFxHUD GFxHUD;
-var FSGFxHUDMenu GFxHUDMenu;
+var FSGFxOmniMenu GFxHUDMenu;
 
 const MinimapSize=256;
 const MinimapUnitBoxSize=10;
@@ -24,7 +24,7 @@ simulated function PostBeginPlay()
 	GFxHUD = new class'FSGFxHUD';
 	GFxHUD.Init();
 
-	GFxHUDMenu = new class'FSGFxHUDMenu';
+	GFxHUDMenu = new class'FSGFxOmniMenu';
 	GFxHUDMenu.Init();
 
 	LineColor.A = 255;
