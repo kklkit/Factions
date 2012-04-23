@@ -11,9 +11,7 @@ function PreBeginPlay()
 	Super.PreBeginPlay();
 
 	for (i = 0; i < NumTeams; i++)
-	{
 		CreateTeam(i);
-	}
 }
 
 function CreateTeam(int TeamIndex)
@@ -24,6 +22,16 @@ function CreateTeam(int TeamIndex)
 	Team.TeamIndex = TeamIndex;
 	GameReplicationInfo.SetTeam(TeamIndex, Team);
 	Teams[TeamIndex] = Team;
+}
+
+function byte PickTeam(byte Current, Controller C)
+{
+	super.PickTeam(Current, C);
+
+	if (Teams[0].Size <= Teams[1].Size)
+		return 0;
+	else
+		return 1;
 }
 
 function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
@@ -46,7 +54,7 @@ function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
 	if (PC != none)
 	{
 		if (bChangedTeam)
-			PC.ClientMessage("Changed to team" @ N);
+			BroadcastHandler.Broadcast(self, Other.GetHumanReadableName() @ "joined team" @ N);
 		else
 			PC.ClientMessage("Failed to change to team" @ N);
 	}
