@@ -33,7 +33,7 @@ exec function ToggleViewMap()
 {
 	bViewingMap = !bViewingMap;
 	if (bViewingMap)
-		SetFOV(90.0f);
+		SetFOV(90.0);
 	else
 		SetFOV(DefaultFOV);
 }

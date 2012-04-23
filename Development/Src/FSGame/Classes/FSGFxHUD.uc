@@ -37,6 +37,11 @@ function UpdateResources(int Resources)
 	ActionScriptVoid("_root.UpdateResources");
 }
 
+function UpdateIsAlive(bool IsAlive)
+{
+	ActionScriptVoid("_root.UpdateIsAlive");
+}
+
 /**
  * Places the top-level movie clips at their respective corners of the screen.
  */
