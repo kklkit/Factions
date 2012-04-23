@@ -1,12 +1,15 @@
+/**
+ * Base class for Factions game modes.
+ * 
+ * Copyright 2012 Factions Team. All Rights Reserved.
+ */
 class FSTeamGame extends GameInfo;
 
-const NumTeams=2;
+const NumTeams=2; //@todo test to make sure increasing the number of teams actually works
 
 var FSTeamInfo Teams[NumTeams];
 
 /**
- * Sets up the game environment.
- * 
  * @extends
  */
 function PreBeginPlay()
@@ -15,9 +18,14 @@ function PreBeginPlay()
 
 	Super.PreBeginPlay();
 
+	// Set the map info if the mapper didn't do it
 	if (WorldInfo.GetMapInfo() == none)
+	{
+		`log("MAPINFO NOT SET!!!");
 		WorldInfo.SetMapInfo(new class'FSGame.FSMapInfo');
+	}
 
+	// Create the teams
 	for (i = 0; i < NumTeams; i++)
 		CreateTeam(i);
 }
@@ -36,16 +44,12 @@ function CreateTeam(int TeamIndex)
 }
 
 /**
- * Returns the team index with the fewest players.
+ * Override to return the team index for the team with fewest players.
  * 
  * @extends
- * 
- * @return team index
  */
 function byte PickTeam(byte Current, Controller C)
 {
-	super.PickTeam(Current, C);
-
 	//@todo make this work for more than 2 teams
 	if (Teams[0].Size <= Teams[1].Size)
 		return 0;
@@ -54,11 +58,7 @@ function byte PickTeam(byte Current, Controller C)
 }
 
 /**
- * Places the controller on the given team if valid.
- * 
  * @extends
- * 
- * @return if the player changed team
  */
 function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
 {

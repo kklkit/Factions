@@ -1,4 +1,9 @@
-class FSVehiclePad extends Actor
+/**
+ * Creates vehicles.
+ * 
+ * Copyright 2012 Factions Team. All Rights Reserved.
+ */
+class FSVehiclePad extends Actor //@todo this should extend an FS class
 	Implements(FSActorInterface)
 	Placeable
 	AutoExpandCategories(Factions);

@@ -1,4 +1,11 @@
+/**
+ * Factions player controller.
+ * 
+ * Copyright 2012 Factions Team. All Rights Reserved.
+ */
 class FSPlayerController extends PlayerController;
+
+const MapViewRotation=rot(-16384,-16384,0);
 
 var bool InCommanderView;
 
@@ -19,17 +26,28 @@ exec function ToggleCommanderView2()
 		GotoState('PlayerWalking');
 }
 
+/**
+ * Toggles opening and closing the full-screen map.
+ */
 exec function ToggleViewMap()
 {
 	bViewingMap = !bViewingMap;
 }
 
+/**
+ * Override to display the full-screen map if it is open.
+ * 
+ * @extends
+ */
 simulated function GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
 {
+	local Vector V;
+
 	if (Role < ROLE_Authority && bViewingMap)
 	{
-		out_Location = vect(0, 0, 20000);
-		out_Rotation = rot(-16384, -16384, 0);
+		V.Z = FSMapInfo(WorldInfo.GetMapInfo()).MapRadius;
+		out_Location = V;
+		out_Rotation = MapViewRotation;
 	} else {
 		super.GetPlayerViewPoint(out_Location, out_Rotation);
 	}
