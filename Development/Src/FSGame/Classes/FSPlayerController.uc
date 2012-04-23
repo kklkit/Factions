@@ -32,6 +32,10 @@ exec function ToggleCommanderView2()
 exec function ToggleViewMap()
 {
 	bViewingMap = !bViewingMap;
+	if (bViewingMap)
+		SetFOV(90.0f);
+	else
+		SetFOV(DefaultFOV);
 }
 
 /**
@@ -43,7 +47,7 @@ simulated function GetPlayerViewPoint(out Vector out_Location, out Rotator out_R
 {
 	local Vector V;
 
-	if (Role < ROLE_Authority && bViewingMap)
+	if (bViewingMap)
 	{
 		V.Z = FSMapInfo(WorldInfo.GetMapInfo()).MapRadius;
 		out_Location = V;
