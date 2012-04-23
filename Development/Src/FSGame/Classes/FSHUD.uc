@@ -12,14 +12,11 @@ var Material MinimapMaterial;
 var Vector2d MinimapPadding;
 
 var Color LineColor;
-
-const CameraHeight=40000;
+var float MapSize;
 
 simulated function PostBeginPlay()
 {
 	Super.PostBeginPlay();
-
-	MinimapPadding = vect2d(10, 55);
 
 	GFxHUD = new class'FSGFxHUD';
 	GFxHUD.Init();
@@ -31,6 +28,8 @@ simulated function PostBeginPlay()
 	LineColor.B = 0;
 	LineColor.G = 255;
 	LineColor.R = 0;
+
+	MapSize = FSMapInfo(WorldInfo.GetMapInfo()).MapRadius * 2;
 }
 
 function PostRender()
@@ -67,10 +66,10 @@ function DrawHud()
 			if (FSActorInterface(LevelActor) != None || Projectile(LevelActor) != None || UDKVehicle(LevelActor) != None)
 			{
 				// Calculate the pixel positions to draw the unit on the minimap.
-				UnitPositionX = LevelActor.Location.X / (CameraHeight - LevelActor.Location.Z * 2) * MinimapSize + Canvas.ClipX - MinimapPadding.X - (MinimapSize / 2);
-				UnitPositionY = LevelActor.Location.Y / (CameraHeight - LevelActor.Location.Z * 2) * MinimapSize + MinimapPadding.Y + (MinimapSize / 2);
-				UnitGroundPositionX = LevelActor.Location.X / CameraHeight * MinimapSize + Canvas.ClipX - MinimapPadding.X - (MinimapSize / 2);
-				UnitGroundPositionY = LevelActor.Location.Y / CameraHeight * MinimapSize + MinimapPadding.Y + (MinimapSize / 2);
+				UnitPositionX = LevelActor.Location.X / (MapSize - LevelActor.Location.Z * 2) * MinimapSize + Canvas.ClipX - MinimapPadding.X - (MinimapSize / 2);
+				UnitPositionY = LevelActor.Location.Y / (MapSize - LevelActor.Location.Z * 2) * MinimapSize + MinimapPadding.Y + (MinimapSize / 2);
+				UnitGroundPositionX = LevelActor.Location.X / MapSize * MinimapSize + Canvas.ClipX - MinimapPadding.X - (MinimapSize / 2);
+				UnitGroundPositionY = LevelActor.Location.Y / MapSize * MinimapSize + MinimapPadding.Y + (MinimapSize / 2);
 				Canvas.SetPos(UnitPositionX - (MinimapUnitBoxSize / 2), UnitPositionY - (MinimapUnitBoxSize / 2));
 				Canvas.DrawBox(MinimapUnitBoxSize, MinimapUnitBoxSize);
 				Canvas.Draw2DLine(UnitPositionX, UnitPositionY, UnitGroundPositionX, UnitGroundPositionY, LineColor);
@@ -101,4 +100,5 @@ simulated function NotifyLocalPlayerTeamReceived()
 defaultproperties
 {
 	MinimapMaterial=Material'FSAssets.HUD.minimap_render'
+	MinimapPadding=(X=10,Y=55)
 }

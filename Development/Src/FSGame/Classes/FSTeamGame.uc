@@ -12,6 +12,9 @@ function PreBeginPlay()
 
 	for (i = 0; i < NumTeams; i++)
 		CreateTeam(i);
+
+	if (WorldInfo.GetMapInfo() == none)
+		WorldInfo.SetMapInfo(new class'FSGame.FSMapInfo');
 }
 
 function CreateTeam(int TeamIndex)

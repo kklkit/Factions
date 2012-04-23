@@ -3,7 +3,7 @@ class FSPawn extends Pawn
 
 var SceneCapture2DComponent MinimapCaptureComponent;
 var Vector MinimapCapturePosition;
-var Rotator MinimapCaptureRotation;
+const MinimapCaptureRotation=Rot(-16384,-16384,0);
 
 var float CommanderCamZoom;
 var float CommanderCamZoomTick;
@@ -13,6 +13,7 @@ var bool bInCommanderView;
 var bool bCommanderRotation; 
 
 const MinimapCaptureFOV=90; // This must be 90 degrees otherwise the minimap overlays will be incorrect.
+const NinetyDegrees=16384; // 90 degrees in rotator units.
 
 exec function ToggleCommanderView()
 {
@@ -36,17 +37,22 @@ exec function ComRotate()
 
 simulated function PostBeginPlay()
 {
+	local FSMapInfo MI;
+
 	Super.PostBeginPlay();
 
-	if (WorldInfo.NetMode == NM_Client || WorldInfo.NetMode == NM_Standalone)
+	MI = FSMapInfo(WorldInfo.GetMapInfo());
+
+	if (MI != none)
 	{
 		MinimapCaptureComponent = new class'SceneCapture2DComponent';
 		MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'FSAssets.HUD.minimap_render_texture', MinimapCaptureFOV, , 0);
 		MinimapCaptureComponent.bUpdateMatrices = false;
 		AttachComponent(MinimapCaptureComponent);
 
-		MinimapCapturePosition = vect(0, 0, 20000);
-		MinimapCaptureRotation = rot(-16384, -16384, 0);
+		MinimapCapturePosition.X = MI.MapCenter.X;
+		MinimapCapturePosition.Y = MI.MapCenter.Y;
+		MinimapCapturePosition.Z = MI.MapRadius;
 	}
 }
 
@@ -54,10 +60,7 @@ function Tick(float DeltaTime)
 {
 	Super.Tick(DeltaTime);
 
-	if (WorldInfo.NetMode == NM_Client || WorldInfo.NetMode == NM_Standalone)
-	{
-		MinimapCaptureComponent.SetView(MinimapCapturePosition, MinimapCaptureRotation);
-	}
+	MinimapCaptureComponent.SetView(MinimapCapturePosition, MinimapCaptureRotation);
 }
 
 simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out Rotator out_CamRot, out float out_FOV)
