@@ -18,12 +18,14 @@
 		public var chassisList;
 		public var vehicleArmorList;
 		
-		public function SetPlayerTeam(teamIndex:int)
+		private var playerTeam:int = 0;
+		
+		public function SetPlayerTeam(teamIndex:int):void
 		{
-			teamButtonBar.selectedIndex = teamIndex;
+			playerTeam = teamIndex;
 		}
 		
-		private function onItemClick(e:ButtonBarEvent)
+		private function onItemClick(e:ButtonBarEvent):void
 		{
 			gotoAndPlay(menus[e.index]);
 		}
