@@ -3,7 +3,7 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSPawn extends GamePawn
+class FSPawn extends UDKPawn
 	Implements(FSActorInterface);
 
 const MinimapCaptureRotation=Rot(-16384,-16384,0); // Camera needs to be rotated to make up point north.
