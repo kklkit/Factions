@@ -25,13 +25,13 @@
 			});
 		}
 		
-		public function SetPlayerHealth(health:int, maxHealth:int):void
+		public function UpdateHealth(health:int, maxHealth:int):void
 		{
 			var healthBar:DisplayObject = bottomLeftHUD.getChildByName('healthBar');
 			healthBar.x = -healthBar.width + healthBarStartPositionX + (health / maxHealth * healthBar.width);
 		}
 		
-		public function SetResources(resources:int):void
+		public function UpdateResources(resources:int):void
 		{
 			var resourceCount:TextField = topRightHUD.getChildByName('resourceCount') as TextField;
 			resourceCount.text = resources.toString();

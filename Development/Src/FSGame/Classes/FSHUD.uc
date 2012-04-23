@@ -45,9 +45,9 @@ function PostRender()
 
 	//@todo this should use push notifications instead for better performance
 	if (PlayerOwner != None && PlayerOwner.Pawn != None)
-		GFxHUD.SetPlayerHealth(PlayerOwner.Pawn.Health, PlayerOwner.Pawn.HealthMax);
+		GFxHUD.UpdateHealth(PlayerOwner.Pawn.Health, PlayerOwner.Pawn.HealthMax);
 	else
-		GFxHUD.SetPlayerHealth(0, 1);
+		GFxHUD.UpdateHealth(0, 1);
 }
 
 /**

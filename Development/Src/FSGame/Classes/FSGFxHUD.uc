@@ -27,15 +27,14 @@ function Init(optional LocalPlayer LocPlay)
 	ResizeHUD();
 }
 
-//@todo change to updateplayerhealth
-function SetPlayerHealth(int Health, int MaxHealth)
+function UpdateHealth(int Health, int MaxHealth)
 {
-	ActionScriptVoid("_root.SetPlayerHealth");
+	ActionScriptVoid("_root.UpdateHealth");
 }
 
-function SetResources(int Resources)
+function UpdateResources(int Resources)
 {
-	ActionScriptVoid("_root.SetResources");
+	ActionScriptVoid("_root.UpdateResources");
 }
 
 /**
