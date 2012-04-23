@@ -95,7 +95,7 @@ simulated function NotifyLocalPlayerTeamReceived()
 {
 	Super.NotifyLocalPlayerTeamReceived();
 
-	GFxOmniMenu.SetPlayerTeam(PlayerOwner.PlayerReplicationInfo.Team.TeamIndex);
+	GFxOmniMenu.UpdateTeam(PlayerOwner.PlayerReplicationInfo.Team.TeamIndex);
 }
 
 defaultproperties

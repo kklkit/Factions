@@ -26,19 +26,19 @@ function OnClose()
 	GetGameViewportClient().bDisplayHardwareMouseCursor = false;
 }
 
-function CloseOmniMenu(string Frame)
+function CloseOmniMenu(string FrameLabel)
 {
 	Close(false);
 }
 
-function SelectPlayerTeam(int TeamNumber)
+function SelectTeam(int TeamNumber)
 {
 	GetPC().ServerChangeTeam(TeamNumber);
 }
 
-function SetPlayerTeam(int Team)
+function UpdateTeam(int TeamIndex)
 {
-	ActionScriptVoid("_root.SetPlayerTeam");
+	ActionScriptVoid("_root.UpdateTeam");
 }
 
 defaultproperties
