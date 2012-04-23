@@ -49,7 +49,7 @@ function TickHud()
 	{
 		FSV = UDKVehicle(PC.Pawn);
 
-		if ( FSV == None )
+		if (FSV == None)
 		{
 			FWP = UDKWeaponPawn(PC.Pawn);
 			if ( FWP != None )
