@@ -23,12 +23,12 @@
 		private var infantrySmallEquipmentDataProvider:DataProvider = new DataProvider(["Heavy Pistol","Auto Pistol","Omni Tool"]);
 		private var infantryMediumEquipmentDataProvider:DataProvider = new DataProvider(["SMG","Shotgun"]);
 		private var infantryLargeEquipmentDataProvider:DataProvider = new DataProvider(["Heavy Rifle","HMG","Grenade Launcher"]);
-		private var vehicleChassisDataProvider:DataProvider = new DataProvider(["Jeep", "APC", "Light Tank", "Medium Tank", "Heavy Tank", "Artillery Tank", "Gunship", "Bomber", "Dropship", "Blimp"]);
-		private var vehicleArmorDataProvider:DataProvider = new DataProvider(["Reflective", "Absorbent", "Composite", "Reactive", "Regenerative"]);
-		
+		private var vehicleChassisDataProvider:DataProvider = new DataProvider(["Jeep","APC","Light Tank","Medium Tank","Heavy Tank","Artillery Tank","Gunship","Bomber","Dropship","Blimp"]);
+		private var vehicleArmorDataProvider:DataProvider = new DataProvider(["Reflective","Absorbent","Composite","Reactive","Regenerative"]);
+
 		private var teamIndex:int = 2;
 		private var infantryClassIndex:int = 0;
-		private var infantryEquipmentIndicies:Array = [0, 0, 0, 0];
+		private var infantryEquipmentIndicies:Array = [0,0,0,0];
 		private var vehicleChassisIndex:int = 0;
 		private var vehicleArmorIndex:int = 0;
 
