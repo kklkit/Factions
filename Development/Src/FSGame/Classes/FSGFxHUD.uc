@@ -69,28 +69,6 @@ function TickHud()
 }
 
 /**
- * Places the top-level movie clips at their respective corners of the screen.
- */
-function ResizeHUD()
-{
-	local float Left, Top, Right, Bottom;
-	local ASDisplayInfo DI;
-
-	GetVisibleFrameRect(Left, Top, Right, Bottom);
-
-	DI.hasY = true;
-	DI.Y = Bottom;
-	BottomLeftHUD.SetDisplayInfo(DI);
-	BottomRightHUD.SetDisplayInfo(DI);
-	DI.hasY = false;
-
-	DI.hasX = true;
-	DI.X = Right;
-	TopRightHUD.SetDisplayInfo(DI);
-	BottomRightHUD.SetDisplayInfo(DI);
-}
-
-/**
  * Update the displayed health if changed.
  */
 function UpdateHealth(int Health, int HealthMax)
@@ -112,6 +90,31 @@ function UpdateIsAlive(bool IsAlive)
 {
 	ActionScriptVoid("_root.UpdateIsAlive");
 }
+
+// Functions called from ActionScript below.
+
+/**
+ * Places the top-level movie clips at their respective corners of the screen.
+ */
+function ResizeHUD()
+{
+	local float Left, Top, Right, Bottom;
+	local ASDisplayInfo DI;
+
+	GetVisibleFrameRect(Left, Top, Right, Bottom);
+
+	DI.hasY = true;
+	DI.Y = Bottom;
+	BottomLeftHUD.SetDisplayInfo(DI);
+	BottomRightHUD.SetDisplayInfo(DI);
+	DI.hasY = false;
+
+	DI.hasX = true;
+	DI.X = Right;
+	TopRightHUD.SetDisplayInfo(DI);
+	BottomRightHUD.SetDisplayInfo(DI);
+}
+
 
 defaultproperties
 {

@@ -27,6 +27,13 @@ function OnClose()
 	GetGameViewportClient().bDisplayHardwareMouseCursor = false;
 }
 
+function UpdateTeam(int TeamIndex)
+{
+	ActionScriptVoid("_root.UpdateTeam");
+}
+
+// Functions called from ActionScript below.
+
 function CloseOmniMenu(string FrameLabelOnClose)
 {
 	Close(false);
@@ -35,11 +42,6 @@ function CloseOmniMenu(string FrameLabelOnClose)
 function SelectTeam(int TeamIndex)
 {
 	GetPC().ServerChangeTeam(TeamIndex);
-}
-
-function UpdateTeam(int TeamIndex)
-{
-	ActionScriptVoid("_root.UpdateTeam");
 }
 
 defaultproperties
