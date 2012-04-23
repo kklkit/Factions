@@ -10,6 +10,9 @@ var GFxObject TopRightHUD;
 var GFxObject BottomLeftHUD;
 var GFxObject BottomRightHUD;
 
+var float LastHealth;
+var float LastHealthMax;
+
 /**
  * @extends
  */
@@ -27,19 +30,41 @@ function Init(optional LocalPlayer LocPlay)
 	ResizeHUD();
 }
 
-function UpdateHealth(int Health, int MaxHealth)
+/**
+ * Updates the HUD elements.
+ */
+function TickHud()
 {
-	ActionScriptVoid("_root.UpdateHealth");
-}
+	local PlayerController PC;
+	local FSPawn FSP;
+	local UDKVehicle FSV; //@todo change to FSVehicle
+	local UDKWeaponPawn FWP; //@todo change to FSWeaponPawn
 
-function UpdateResources(int Resources)
-{
-	ActionScriptVoid("_root.UpdateResources");
-}
+	PC = GetPC();
 
-function UpdateIsAlive(bool IsAlive)
-{
-	ActionScriptVoid("_root.UpdateIsAlive");
+	FSP = FSPawn(GetPC().Pawn);
+
+	if (FSP == None)
+	{
+		FSV = UDKVehicle(PC.Pawn);
+
+		if ( FSV == None )
+		{
+			FWP = UDKWeaponPawn(PC.Pawn);
+			if ( FWP != None )
+			{
+				FSV = FWP.MyVehicle;
+				FSP = FSPawn(FWP.Driver);
+			}
+		}
+		else
+			FSP = FSPawn(FSV.Driver);
+
+		if (FSV == None)
+			return;
+	}
+
+	UpdateHealth(FSP.Health, FSP.HealthMax);
 }
 
 /**
@@ -64,9 +89,34 @@ function ResizeHUD()
 	BottomRightHUD.SetDisplayInfo(DI);
 }
 
+/**
+ * Update the displayed health if changed.
+ */
+function UpdateHealth(int Health, int HealthMax)
+{
+	if (Health != LastHealth || HealthMax != LastHealthMax)
+	{
+		ActionScriptVoid("_root.UpdateHealth");
+		LastHealth = Health;
+		HealthMax = LastHealthMax;
+	}
+}
+
+function UpdateResources(int Resources)
+{
+	ActionScriptVoid("_root.UpdateResources");
+}
+
+function UpdateIsAlive(bool IsAlive)
+{
+	ActionScriptVoid("_root.UpdateIsAlive");
+}
+
 defaultproperties
 {
 	MovieInfo=SwfMovie'FSFlashAssets.factions_hud'
 	bDisplayWithHudOff=false
 	bAutoPlay=true
+	LastHealth=-110
+	LastHealthMax=-110
 }

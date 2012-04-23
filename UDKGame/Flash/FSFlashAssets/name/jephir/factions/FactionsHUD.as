@@ -25,10 +25,16 @@
 			});
 		}
 		
-		public function UpdateHealth(health:int, maxHealth:int):void
-		{
+		public function UpdateHealth(health:int, healthMax:int):void {
 			var healthBar:DisplayObject = bottomLeftHUD.getChildByName('healthBar');
-			healthBar.x = -healthBar.width + healthBarStartPositionX + (health / maxHealth * healthBar.width);
+			
+			// Divide by zero protection
+			if (healthMax === 0) {
+				health = 0;
+				healthMax = 1;
+			}
+			
+			healthBar.x = -healthBar.width + healthBarStartPositionX + (health / healthMax * healthBar.width);
 		}
 		
 		public function UpdateResources(resources:int):void
