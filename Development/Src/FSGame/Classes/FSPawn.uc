@@ -8,7 +8,7 @@ class FSPawn extends GamePawn
 
 const MinimapCaptureRotation=Rot(-16384,-16384,0); // Camera needs to be rotated to make up point north.
 
-var SceneCapture2DComponent MinimapCaptureComponent;
+var SceneCapture2DComponent MinimapCaptureComponent; //@todo this should really be its own actor
 var Vector MinimapCapturePosition;
 
 var float CommanderCamZoom;
