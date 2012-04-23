@@ -1,9 +1,15 @@
-class FSPawn extends Pawn
+/**
+ * Pawn class for the player.
+ * 
+ * Copyright 2012 Factions Team. All Rights Reserved.
+ */
+class FSPawn extends GamePawn
 	Implements(FSActorInterface);
+
+const MinimapCaptureRotation=Rot(-16384,-16384,0); // Camera needs to be rotated to make up point north.
 
 var SceneCapture2DComponent MinimapCaptureComponent;
 var Vector MinimapCapturePosition;
-const MinimapCaptureRotation=Rot(-16384,-16384,0);
 
 var float CommanderCamZoom;
 var float CommanderCamZoomTick;
@@ -13,7 +19,6 @@ var bool bInCommanderView;
 var bool bCommanderRotation; 
 
 const MinimapCaptureFOV=90; // This must be 90 degrees otherwise the minimap overlays will be incorrect.
-const NinetyDegrees=16384; // 90 degrees in rotator units.
 
 exec function ToggleCommanderView()
 {
@@ -35,6 +40,9 @@ exec function ComRotate()
 	bCommanderRotation = !bCommanderRotation;
 }
 
+/**
+ * @extends
+ */
 simulated function PostBeginPlay()
 {
 	local FSMapInfo MI;
@@ -42,9 +50,9 @@ simulated function PostBeginPlay()
 	Super.PostBeginPlay();
 
 	MI = FSMapInfo(WorldInfo.GetMapInfo());
-
 	if (MI != none)
 	{
+		// Initialize the minimap capture component
 		MinimapCaptureComponent = new class'SceneCapture2DComponent';
 		MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'FSAssets.HUD.minimap_render_texture', MinimapCaptureFOV, , 0);
 		MinimapCaptureComponent.bUpdateMatrices = false;
@@ -56,13 +64,22 @@ simulated function PostBeginPlay()
 	}
 }
 
+/**
+ * @extends
+ */
 function Tick(float DeltaTime)
 {
 	Super.Tick(DeltaTime);
 
+	// Update the capture component's position
 	MinimapCaptureComponent.SetView(MinimapCapturePosition, MinimapCaptureRotation);
 }
 
+/**
+ * Override to calculate the camera.
+ * 
+ * @extends
+ */
 simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out Rotator out_CamRot, out float out_FOV)
 {
 	if (bInCommanderView)
@@ -87,6 +104,7 @@ simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out 
 	}
 	else
 	{
+		// Set the camera to the player's eyes
 		Mesh.GetSocketWorldLocationAndRotation('Eyes', out_CamLoc);
 		out_CamRot = GetViewRotation();
 		return true;

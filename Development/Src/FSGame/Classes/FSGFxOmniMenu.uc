@@ -1,15 +1,13 @@
-/*
- * In-game menu for selecting team, loadout, squad, etc.
+/**
+ * In-game menu for choosing team, selecting infantry loadouts, customizing vehicles, etc.
+ * 
+ * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSGFxOmniMenu extends GFxMoviePlayer;
 
-function Init(optional LocalPlayer LocPlay)
-{
-	Super.Init(LocPlay);
-
-	SetAlignment(Align_Center);
-}
-
+/**
+ * @extends
+ */
 function bool Start(optional bool StartPaused)
 {
 	super.Start(StartPaused);
@@ -19,6 +17,9 @@ function bool Start(optional bool StartPaused)
 	return true;
 }
 
+/**
+ * @extends
+ */
 function OnClose()
 {
 	Super.OnClose();
@@ -26,14 +27,14 @@ function OnClose()
 	GetGameViewportClient().bDisplayHardwareMouseCursor = false;
 }
 
-function CloseOmniMenu(string FrameLabel)
+function CloseOmniMenu(string FrameLabelOnClose)
 {
 	Close(false);
 }
 
-function SelectTeam(int TeamNumber)
+function SelectTeam(int TeamIndex)
 {
-	GetPC().ServerChangeTeam(TeamNumber);
+	GetPC().ServerChangeTeam(TeamIndex);
 }
 
 function UpdateTeam(int TeamIndex)
