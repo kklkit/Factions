@@ -27,10 +27,14 @@ function OnClose()
 	GetGameViewportClient().bDisplayHardwareMouseCursor = false;
 }
 
+// Functions calling ActionScript below.
+
 function UpdateTeam(int TeamIndex)
 {
 	ActionScriptVoid("_root.UpdateTeam");
 }
+
+// End functions calling ActionScript.
 
 // Functions called from ActionScript below.
 
@@ -43,6 +47,8 @@ function SelectTeam(int TeamIndex)
 {
 	GetPC().ServerChangeTeam(TeamIndex);
 }
+
+// End functions called from ActionScript.
 
 defaultproperties
 {

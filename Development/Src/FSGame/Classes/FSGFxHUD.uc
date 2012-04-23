@@ -68,9 +68,8 @@ function TickHud()
 	UpdateHealth(FSP.Health, FSP.HealthMax);
 }
 
-/**
- * Update the displayed health if changed.
- */
+// Functions calling ActionScript below.
+
 function UpdateHealth(int Health, int HealthMax)
 {
 	if (Health != LastHealth || HealthMax != LastHealthMax)
@@ -90,6 +89,8 @@ function UpdateIsAlive(bool IsAlive)
 {
 	ActionScriptVoid("_root.UpdateIsAlive");
 }
+
+// End functions calling ActionScript.
 
 // Functions called from ActionScript below.
 
@@ -115,6 +116,7 @@ function ResizeHUD()
 	BottomRightHUD.SetDisplayInfo(DI);
 }
 
+// End functions called from ActionScript.
 
 defaultproperties
 {
