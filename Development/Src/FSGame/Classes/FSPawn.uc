@@ -7,6 +7,7 @@ class FSPawn extends GamePawn
 	Implements(FSActorInterface);
 
 const MinimapCaptureRotation=Rot(-16384,-16384,0); // Camera needs to be rotated to make up point north.
+const MinimapCaptureFOV=90; // This must be 90 degrees otherwise the minimap overlays will be incorrect.
 
 var SceneCapture2DComponent MinimapCaptureComponent; //@todo this should really be its own actor
 var Vector MinimapCapturePosition;
@@ -18,36 +19,14 @@ var float CommanderComZoomMin;
 var bool bInCommanderView;
 var bool bCommanderRotation; 
 
-const MinimapCaptureFOV=90; // This must be 90 degrees otherwise the minimap overlays will be incorrect.
-
-exec function ToggleCommanderView()
-{
-	bInCommanderView = !bInCommanderView;
-}
-
-exec function ComZoomIn()
-{
-	CommanderCamZoom += CommanderCamZoomTick;
-}
-
-exec function ComZoomOut()
-{
-	CommanderCamZoom -= CommanderCamZoomTick;
-}
-
-exec function ComRotate()
-{
-	bCommanderRotation = !bCommanderRotation;
-}
-
 /**
  * @extends
  */
-simulated function PostBeginPlay()
+simulated event PostBeginPlay()
 {
 	local FSMapInfo MI;
 
-	Super.PostBeginPlay();
+	super.PostBeginPlay();
 
 	MI = FSMapInfo(WorldInfo.GetMapInfo());
 	if (MI != none)
@@ -67,12 +46,46 @@ simulated function PostBeginPlay()
 /**
  * @extends
  */
-function Tick(float DeltaTime)
+simulated event Tick(float DeltaTime)
 {
-	Super.Tick(DeltaTime);
+	super.Tick(DeltaTime);
 
 	// Update the capture component's position
 	MinimapCaptureComponent.SetView(MinimapCapturePosition, MinimapCaptureRotation);
+}
+
+simulated singular event Rotator GetBaseAimRotation()
+{
+   local vector   POVLoc;
+   local rotator   POVRot, tempRot;
+   
+   if ( bInCommanderView )
+   {
+	   tempRot = Rotation;
+	   tempRot.Pitch = 0;
+	   SetRotation(tempRot);
+	   POVRot = Rotation;
+	   POVRot.Pitch = 0;    
+	}
+	else
+   {
+	  if( Controller != None && !InFreeCam() )
+	  {
+		 Controller.GetPlayerViewPoint(POVLoc, POVRot);
+		 return POVRot;
+	  }
+	  else
+	  {
+		 POVRot = Rotation;
+		 
+		 if( POVRot.Pitch == 0 )
+		 {
+			POVRot.Pitch = RemoteViewPitch << 8;
+		 }
+	  }
+   }
+
+	return POVRot;
 }
 
 /**
@@ -111,38 +124,24 @@ simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out 
 	}
 }
 
-simulated singular event Rotator GetBaseAimRotation()
+exec function ToggleCommanderView()
 {
-   local vector   POVLoc;
-   local rotator   POVRot, tempRot;
-   
-   if ( bInCommanderView )
-   {
-	   tempRot = Rotation;
-	   tempRot.Pitch = 0;
-	   SetRotation(tempRot);
-	   POVRot = Rotation;
-	   POVRot.Pitch = 0;    
-	}
-	else
-   {
-	  if( Controller != None && !InFreeCam() )
-	  {
-		 Controller.GetPlayerViewPoint(POVLoc, POVRot);
-		 return POVRot;
-	  }
-	  else
-	  {
-		 POVRot = Rotation;
-		 
-		 if( POVRot.Pitch == 0 )
-		 {
-			POVRot.Pitch = RemoteViewPitch << 8;
-		 }
-	  }
-   }
+	bInCommanderView = !bInCommanderView;
+}
 
-	return POVRot;
+exec function ComZoomIn()
+{
+	CommanderCamZoom += CommanderCamZoomTick;
+}
+
+exec function ComZoomOut()
+{
+	CommanderCamZoom -= CommanderCamZoomTick;
+}
+
+exec function ComRotate()
+{
+	bCommanderRotation = !bCommanderRotation;
 }
 
 defaultproperties

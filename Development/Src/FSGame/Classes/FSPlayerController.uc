@@ -16,6 +16,25 @@ state CommanderView extends PlayerWalking
 
 }
 
+/**
+ * Override to display the full-screen map if it is open.
+ * 
+ * @extends
+ */
+simulated event GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
+{
+	local Vector V;
+
+	if (bViewingMap)
+	{
+		V.Z = FSMapInfo(WorldInfo.GetMapInfo()).MapRadius;
+		out_Location = V;
+		out_Rotation = MapViewRotation;
+	} else {
+		super.GetPlayerViewPoint(out_Location, out_Rotation);
+	}
+}
+
 exec function ToggleCommanderView2()
 {
 	InCommanderView = !InCommanderView;
@@ -36,25 +55,6 @@ exec function ToggleViewMap()
 		SetFOV(90.0);
 	else
 		SetFOV(DefaultFOV);
-}
-
-/**
- * Override to display the full-screen map if it is open.
- * 
- * @extends
- */
-simulated function GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
-{
-	local Vector V;
-
-	if (bViewingMap)
-	{
-		V.Z = FSMapInfo(WorldInfo.GetMapInfo()).MapRadius;
-		out_Location = V;
-		out_Rotation = MapViewRotation;
-	} else {
-		super.GetPlayerViewPoint(out_Location, out_Rotation);
-	}
 }
 
 defaultproperties

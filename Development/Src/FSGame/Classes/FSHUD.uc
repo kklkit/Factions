@@ -21,7 +21,7 @@ var Color LineColor;
 /**
  * @extends
  */
-simulated function PostBeginPlay()
+event PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
@@ -39,11 +39,23 @@ simulated function PostBeginPlay()
 /**
  * @extends
  */
-function PostRender()
+event PostRender()
 {
 	Super.PostRender();
 
 	GFxHUD.TickHud();
+}
+
+/**
+ * Important: In UDK this function is only called during dedicated games. It must be called manually for other modes.
+ * 
+ * @extends
+ */
+simulated function NotifyLocalPlayerTeamReceived()
+{
+	Super.NotifyLocalPlayerTeamReceived();
+
+	GFxOmniMenu.UpdateTeam(PlayerOwner.PlayerReplicationInfo.Team.TeamIndex);
 }
 
 /**
@@ -92,18 +104,6 @@ exec function ToggleOmniMenu()
 		GFxOmniMenu.Close(false);
 	else
 		GFxOmniMenu.Start(false);
-}
-
-/**
- * Important: In UDK this function is only called during dedicated games. It must be called manually for other modes.
- * 
- * @extends
- */
-simulated function NotifyLocalPlayerTeamReceived()
-{
-	Super.NotifyLocalPlayerTeamReceived();
-
-	GFxOmniMenu.UpdateTeam(PlayerOwner.PlayerReplicationInfo.Team.TeamIndex);
 }
 
 defaultproperties

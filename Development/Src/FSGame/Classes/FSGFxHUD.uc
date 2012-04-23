@@ -68,31 +68,9 @@ function TickHud()
 	UpdateHealth(FSP.Health, FSP.HealthMax);
 }
 
-// Functions calling ActionScript below.
-
-function UpdateHealth(int Health, int HealthMax)
-{
-	if (Health != LastHealth || HealthMax != LastHealthMax)
-	{
-		ActionScriptVoid("_root.UpdateHealth");
-		LastHealth = Health;
-		HealthMax = LastHealthMax;
-	}
-}
-
-function UpdateResources(int Resources)
-{
-	ActionScriptVoid("_root.UpdateResources");
-}
-
-function UpdateIsAlive(bool IsAlive)
-{
-	ActionScriptVoid("_root.UpdateIsAlive");
-}
-
-// End functions calling ActionScript.
-
-// Functions called from ActionScript below.
+/*********************************************************************************************
+ Functions called from ActionScript
+**********************************************************************************************/
 
 /**
  * Places the top-level movie clips at their respective corners of the screen.
@@ -116,7 +94,29 @@ function ResizeHUD()
 	BottomRightHUD.SetDisplayInfo(DI);
 }
 
-// End functions called from ActionScript.
+/*********************************************************************************************
+ Functions calling ActionScript
+**********************************************************************************************/
+
+function UpdateHealth(int Health, int HealthMax)
+{
+	if (Health != LastHealth || HealthMax != LastHealthMax)
+	{
+		ActionScriptVoid("_root.UpdateHealth");
+		LastHealth = Health;
+		HealthMax = LastHealthMax;
+	}
+}
+
+function UpdateResources(int Resources)
+{
+	ActionScriptVoid("_root.UpdateResources");
+}
+
+function UpdateIsAlive(bool IsAlive)
+{
+	ActionScriptVoid("_root.UpdateIsAlive");
+}
 
 defaultproperties
 {

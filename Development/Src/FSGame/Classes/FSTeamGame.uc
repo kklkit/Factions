@@ -12,11 +12,11 @@ var FSTeamInfo Teams[NumTeams];
 /**
  * @extends
  */
-function PreBeginPlay()
+event PreBeginPlay()
 {
 	local int i;
 
-	Super.PreBeginPlay();
+	super.PreBeginPlay();
 
 	// Set the map info if the mapper didn't do it
 	if (WorldInfo.GetMapInfo() == none)
@@ -28,33 +28,6 @@ function PreBeginPlay()
 	// Create the teams
 	for (i = 0; i < NumTeams; i++)
 		CreateTeam(i);
-}
-
-/**
- * Creates a new team given the team index.
- */
-function CreateTeam(int TeamIndex)
-{
-	local FSTeamInfo Team;
-	Team = spawn(class'FSGame.FSTeamInfo');
-
-	Team.TeamIndex = TeamIndex;
-	GameReplicationInfo.SetTeam(TeamIndex, Team);
-	Teams[TeamIndex] = Team;
-}
-
-/**
- * Override to return the team index for the team with fewest players.
- * 
- * @extends
- */
-function byte PickTeam(byte Current, Controller C)
-{
-	//@todo make this work for more than 2 teams
-	if (Teams[0].Size <= Teams[1].Size)
-		return 0;
-	else
-		return 1;
 }
 
 /**
@@ -87,6 +60,33 @@ function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
 	}
 
 	return bChangedTeam;
+}
+
+/**
+ * Override to return the team index for the team with fewest players.
+ * 
+ * @extends
+ */
+function byte PickTeam(byte Current, Controller C)
+{
+	//@todo make this work for more than 2 teams
+	if (Teams[0].Size <= Teams[1].Size)
+		return 0;
+	else
+		return 1;
+}
+
+/**
+ * Creates a new team given the team index.
+ */
+function CreateTeam(int TeamIndex)
+{
+	local FSTeamInfo Team;
+	Team = spawn(class'FSGame.FSTeamInfo');
+
+	Team.TeamIndex = TeamIndex;
+	GameReplicationInfo.SetTeam(TeamIndex, Team);
+	Teams[TeamIndex] = Team;
 }
 
 defaultproperties

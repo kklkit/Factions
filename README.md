@@ -15,3 +15,37 @@ This is the development repository for Factions.
 **Important:** Always pull using **rebase**. Do not use merge because this will cause a non-linear history.
 
 You need to delete all _UDKGame/Config/UDK\*.ini_ files if the default scripts are changed in a commit. This will force UDK to reload the new default scripts.
+
+## Coding Standards
+
+### UnrealScript
+
+* **Important:** When extending a function always put the `@extends` annotation in the function comment. If a function is overriding (not calling `super`) be sure to state so in the comment.
+* Use the `event` keyword when extending events.
+* Name a local variable that would have the same name as its class using initials (e.g. `local FSPawn FSP`, `local PlayerController PC`)
+* Don't put spaces around the `=` operator for `defaultproperties` or `const` variables.
+* Don't put a space between the comment and the `@` for todo comments (e.g. `//@todo stuff that has to be done`)
+
+#### Class Organization
+
+1. Constants
+2. Variables
+4. States
+5. Non-State Functions
+6. Default Properties
+
+#### Function Organization
+
+1. Events (e.g. `PostBeginPlay`, `Tick`)
+2. Extended Functions (e.g. `CalcCamera`)
+3. Non-Extended Functions
+4. Exec Functions
+
+### ActionScript
+
+* Avoid putting code inside the `.fla` file because Git will not be able to merge changes.
+* Press the `Auto format` button before saving and committing code.
+
+## Testing
+
+Test the changes in dedicated server mode before committing because the engine behaves differently as a dedicated server. The `TestMultiplayer.bat` script starts a dedicated server and automatically connects a client to it.

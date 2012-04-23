@@ -11,18 +11,18 @@ class FSVehiclePad extends Actor //@todo this should extend an FS class
 var(Factions) int VehicleHealth;
 var(Factions) class<UDKVehicle> VehicleClass;
 
-function PostBeginPlay()
+event PostBeginPlay()
 {
-	Super.PostBeginPlay();
+	super.PostBeginPlay();
 
 	SetCollision(true, true);
 }
 
-function Bump(Actor Other, PrimitiveComponent OtherComp, Object.Vector HitNormal)
+event Bump(Actor Other, PrimitiveComponent OtherComp, Object.Vector HitNormal)
 {
 	local UDKVehicle SpawnedVehicle;
 
-	Super.Bump(Other, OtherComp, HitNormal);
+	super.Bump(Other, OtherComp, HitNormal);
 
 	if (FSPawn(Other) != none)
 	{

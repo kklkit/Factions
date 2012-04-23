@@ -8,7 +8,7 @@ class FSGFxOmniMenu extends GFxMoviePlayer;
 /**
  * @extends
  */
-function bool Start(optional bool StartPaused)
+event bool Start(optional bool StartPaused)
 {
 	super.Start(StartPaused);
 
@@ -20,23 +20,16 @@ function bool Start(optional bool StartPaused)
 /**
  * @extends
  */
-function OnClose()
+event OnClose()
 {
 	Super.OnClose();
 
 	GetGameViewportClient().bDisplayHardwareMouseCursor = false;
 }
 
-// Functions calling ActionScript below.
-
-function UpdateTeam(int TeamIndex)
-{
-	ActionScriptVoid("_root.UpdateTeam");
-}
-
-// End functions calling ActionScript.
-
-// Functions called from ActionScript below.
+/*********************************************************************************************
+ Functions called from ActionScript
+**********************************************************************************************/
 
 function CloseOmniMenu(string FrameLabelOnClose)
 {
@@ -48,7 +41,14 @@ function SelectTeam(int TeamIndex)
 	GetPC().ServerChangeTeam(TeamIndex);
 }
 
-// End functions called from ActionScript.
+/*********************************************************************************************
+ Functions calling ActionScript
+**********************************************************************************************/
+
+function UpdateTeam(int TeamIndex)
+{
+	ActionScriptVoid("_root.UpdateTeam");
+}
 
 defaultproperties
 {
