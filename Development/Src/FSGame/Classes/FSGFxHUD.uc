@@ -44,6 +44,7 @@ function TickHud()
 
 	FSP = FSPawn(GetPC().Pawn);
 
+	// Set the pawn if driving a vehicle or mounted weapon
 	if (FSP == None)
 	{
 		FSV = UDKVehicle(PC.Pawn);
