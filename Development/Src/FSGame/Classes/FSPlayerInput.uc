@@ -5,5 +5,5 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSPlayerInput extends PlayerInput within FSPlayerController
+class FSPlayerInput extends UDKPlayerInput within FSPlayerController
 	config(InputFS);

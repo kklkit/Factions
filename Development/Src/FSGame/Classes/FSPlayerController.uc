@@ -3,7 +3,7 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSPlayerController extends PlayerController;
+class FSPlayerController extends UDKPlayerController;
 
 const MapViewRotation=rot(-16384,-16384,0);
 

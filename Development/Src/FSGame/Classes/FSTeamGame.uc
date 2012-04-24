@@ -3,7 +3,7 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSTeamGame extends GameInfo;
+class FSTeamGame extends UDKGame;
 
 const NumTeams=2; //@todo test to make sure increasing the number of teams actually works
 

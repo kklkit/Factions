@@ -3,7 +3,7 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSHUD extends HUD;
+class FSHUD extends UDKHUD;
 
 const MinimapSize=256;
 const MinimapUnitBoxSize=10;
@@ -21,7 +21,17 @@ var Color LineColor;
 /**
  * @extends
  */
-event PostBeginPlay()
+event PostRender()
+{
+	Super.PostRender();
+
+	GFxHUD.TickHud();
+}
+
+/**
+ * @extends
+ */
+simulated function PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
@@ -34,16 +44,6 @@ event PostBeginPlay()
 
 	// Set the map size for use by the minimap
 	MapSize = FSMapInfo(WorldInfo.GetMapInfo()).MapRadius * 2;
-}
-
-/**
- * @extends
- */
-event PostRender()
-{
-	Super.PostRender();
-
-	GFxHUD.TickHud();
 }
 
 /**

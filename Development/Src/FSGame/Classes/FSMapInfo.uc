@@ -5,7 +5,7 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSMapInfo extends MapInfo;
+class FSMapInfo extends UDKMapInfo;
 
 var() int RecommendedPlayersMin, RecommendedPlayersMax;
 
