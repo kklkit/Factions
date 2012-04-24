@@ -148,7 +148,9 @@ exec function ComRotate()
 
 defaultproperties
 {
-	Components.Remove(Sprite);
+	InventoryManagerClass=class'FSGame.FSInventoryManager'
+
+	Components.Remove(Sprite)
 
 	begin object Class=SkeletalMeshComponent Name=FSSkeletalMeshComponent
 		SkeletalMesh=SkeletalMesh'FSAssets.Mesh.IronGuard'
