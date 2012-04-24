@@ -1,4 +1,4 @@
-class FSAttachment_HeavyPistol extends FSWeaponAttachment;
+class FSAttachment_Firearm extends FSWeaponAttachment;
 
 defaultproperties
 {

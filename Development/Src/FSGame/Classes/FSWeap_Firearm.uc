@@ -1,4 +1,4 @@
-class FSHeavyPistol extends FSWeapon;
+class FSWeap_Firearm extends FSWeapon;
 
 defaultproperties
 {
@@ -16,7 +16,7 @@ defaultproperties
 	End Object
 	Mesh=FirstPersonMesh
 
-	AttachmentClass=class'FSGame.FSAttachment_HeavyPistol'
+	AttachmentClass=class'FSGame.FSAttachment_Firearm'
 
 	Begin Object Class=SkeletalMeshComponent Name=PickupMesh
 		SkeletalMesh=SkeletalMesh'WP_ShockRifle.Mesh.SK_WP_ShockRifle_3P'
