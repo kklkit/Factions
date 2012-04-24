@@ -27,6 +27,29 @@ var repnotify class<FSWeaponAttachment> CurrentWeaponAttachmentClass;
 var FSWeaponAttachment CurrentWeaponAttachment;
 var bool bWeaponAttachmentVisible;
 
+replication
+{
+	if (bNetDirty)
+		CurrentWeaponAttachmentClass;
+}
+
+/**
+ * @extends
+ */
+simulated event ReplicatedEvent(name VarName)
+{
+	if (VarName == 'CurrentWeaponAttachmentClass')
+	{
+		WeaponAttachmentChanged();
+		return;
+	}
+	else
+	{
+		super.ReplicatedEvent(VarName);
+	}
+}
+
+
 /**
  * @extends
  */
@@ -130,6 +153,34 @@ simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out 
 		out_CamRot = GetViewRotation();
 		return true;
 	}
+}
+
+/**
+ * @extends
+ */
+simulated function NotifyTeamChanged()
+{
+	super.NotifyTeamChanged();
+
+	if (CurrentWeaponAttachmentClass != none)
+	{
+		if (CurrentWeaponAttachment != none)
+		{
+			//@todo implement
+		}
+		WeaponAttachmentChanged();
+	}
+}
+
+/**
+ * @extends
+ */
+simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
+{
+	super.PlayDying(DamageType, HitLoc);
+
+	CurrentWeaponAttachmentClass = none;
+	WeaponAttachmentChanged();
 }
 
 simulated function WeaponAttachmentChanged()
