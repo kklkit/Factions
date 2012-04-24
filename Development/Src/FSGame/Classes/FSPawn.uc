@@ -159,12 +159,13 @@ simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out 
 simulated function NotifyTeamChanged()
 {
 	super.NotifyTeamChanged();
-
-	if (CurrentWeaponAttachmentClass != none)
+	if (CurrentWeaponAttachmentClass != None)
 	{
-		if (CurrentWeaponAttachment != none)
+		if (WorldInfo.NetMode != NM_DedicatedServer && CurrentWeaponAttachment != None)
 		{
-			//@todo implement
+			CurrentWeaponAttachment.DetachFrom(Mesh);
+			CurrentWeaponAttachment.Destroy();
+			CurrentWeaponAttachment = None;
 		}
 		WeaponAttachmentChanged();
 	}
@@ -177,28 +178,32 @@ simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
 {
 	super.PlayDying(DamageType, HitLoc);
 
-	CurrentWeaponAttachmentClass = none;
+	CurrentWeaponAttachmentClass = None;
 	WeaponAttachmentChanged();
 }
 
+/**
+ * Called when the weapon attachment needs to be changed.
+ */
 simulated function WeaponAttachmentChanged()
 {
-	if ((CurrentWeaponAttachment == none || CurrentWeaponAttachment.Class != CurrentWeaponAttachmentClass) && Mesh.SkeletalMesh != none)
+	if ((CurrentWeaponAttachment == None || CurrentWeaponAttachment.Class != CurrentWeaponAttachmentClass) && Mesh.SkeletalMesh != None)
 	{
-		if (CurrentWeaponAttachment != none)
+		if (CurrentWeaponAttachment != None)
 		{
-			// detatch the mesh
+			CurrentWeaponAttachment.DetachFrom(Mesh);
+			CurrentWeaponAttachment.Destroy();
 		}
 
-		if (CurrentWeaponAttachmentClass != none)
+		if (CurrentWeaponAttachmentClass != None)
 		{
 			CurrentWeaponAttachment = Spawn(CurrentWeaponAttachmentClass, self);
 			CurrentWeaponAttachment.Instigator = self;
 		}
 		else
-			CurrentWeaponAttachment = none;
+			CurrentWeaponAttachment = None;
 
-		if (CurrentWeaponAttachment != none)
+		if (CurrentWeaponAttachment != None)
 		{
 			CurrentWeaponAttachment.AttachTo(self);
 			CurrentWeaponAttachment.ChangeVisibility(bWeaponAttachmentVisible);
