@@ -4,13 +4,15 @@
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSPawn extends UDKPawn
-	Implements(FSActorInterface);
+	Implements(FSActorInterface)
+	config(GameFS)
+	notplaceable;
 
-const MinimapCaptureRotation=Rot(-16384,-16384,0); // Camera needs to be rotated to make up point north.
 const MinimapCaptureFOV=90; // This must be 90 degrees otherwise the minimap overlays will be incorrect.
 
 var SceneCapture2DComponent MinimapCaptureComponent; //@todo this should really be its own actor
 var Vector MinimapCapturePosition;
+var Rotator MinimapCaptureRotation;
 
 var float CommanderCamZoom;
 var float CommanderCamZoomTick;
@@ -156,6 +158,8 @@ defaultproperties
 	end object
 	Mesh=FSSkeletalMeshComponent
 	Components.Add(FSSkeletalMeshComponent)
+
+	MinimapCaptureRotation=(Pitch=-16384,Yaw=-16384,Roll=0) // Camera needs to be rotated to make up point north.
 	
 	CommanderCamZoom=384.0
 	CommanderCamZoomTick=18.0
