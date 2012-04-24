@@ -1,10 +1,15 @@
+/**
+ * Firearm-type weapon.
+ * 
+ * Copyright 2012 Factions Team. All Rights Reserved.
+ */
 class FSWeap_Firearm extends FSWeapon;
 
 defaultproperties
 {
-	begin object class=AnimNodeSequence Name=MeshSequenceA
+	Begin Object Class=AnimNodeSequence Name=MeshSequenceA
 		bCauseActorAnimEnd=true
-	end object
+	End Object
 
 	Begin Object Class=UDKSkeletalMeshComponent Name=FirstPersonMesh
 		SkeletalMesh=SkeletalMesh'WP_ShockRifle.Mesh.SK_WP_ShockRifle_1P'

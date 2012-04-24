@@ -1,5 +1,7 @@
 /**
- * Client-side weapon actor that is attached to the Pawn.
+ * Client-side weapon attachment.
+ * 
+ * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSWeaponAttachment extends Actor
 	abstract
@@ -59,8 +61,14 @@ simulated function ChangeVisibility(bool bIsVisible)
 		Mesh.SetHidden(!bIsVisible);
 }
 
+/**
+ * Called when the fire mode is updated.
+ */
 simulated function FireModeUpdated(byte FiringMode, bool bViaReplication);
 
+/**
+ * Called when the weapon is being put down.
+ */
 simulated function SetPuttingDownWeapon(bool bNowPuttingDown);
 
 state CurrentlyAttached

@@ -95,9 +95,16 @@ simulated event ReplicatedEvent(name VarName)
 	super.ReplicatedEvent(VarName);
 
 	if (VarName == 'CurrentWeaponAttachmentClass')
-		WeaponAttachmentChanged();	
+		WeaponAttachmentChanged();
+	else if (VarName == 'bPuttingDownWeapon')
+		SetPuttingDownWeapon(bPuttingDownWeapon);
 }
 
+/**
+ * Override.
+ * 
+ * @extends
+ */
 simulated singular event Rotator GetBaseAimRotation()
 {
    local vector   POVLoc;
@@ -198,6 +205,18 @@ simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
 }
 
 /**
+ * @extends
+ */
+simulated function FiringModeUpdated(Weapon InWeapon, byte InFiringMode, bool bViaReplication)
+{
+	super.FiringModeUpdated(InWeapon, InFiringMode, bViaReplication);
+	if (CurrentWeaponAttachment != None)
+	{
+		CurrentWeaponAttachment.FireModeUpdated(InFiringMode, bViaReplication);
+	}
+}
+
+/**
  * Called when the weapon attachment needs to be changed.
  */
 simulated function WeaponAttachmentChanged()
@@ -227,17 +246,8 @@ simulated function WeaponAttachmentChanged()
 }
 
 /**
- * @extends
+ * Called when weapon is being put down.
  */
-simulated function FiringModeUpdated(Weapon InWeapon, byte InFiringMode, bool bViaReplication)
-{
-	super.FiringModeUpdated(InWeapon, InFiringMode, bViaReplication);
-	if (CurrentWeaponAttachment != None)
-	{
-		CurrentWeaponAttachment.FireModeUpdated(InFiringMode, bViaReplication);
-	}
-}
-
 simulated function SetPuttingDownWeapon(bool bNowPuttingDownWeapon)
 {
 	if (bPuttingDownWeapon != bNowPuttingDownWeapon || Role < ROLE_Authority)
@@ -274,22 +284,22 @@ defaultproperties
 {
 	Components.Remove(Sprite)
 
-	begin object class=DynamicLightEnvironmentComponent Name=MyLightEnvironment
+	Begin Object Class=DynamicLightEnvironmentComponent Name=MyLightEnvironment
 		bSynthesizeSHLight=TRUE
 		bIsCharacterLightEnvironment=TRUE
 		bUseBooleanEnvironmentShadowing=FALSE
 		InvisibleUpdateTime=1
 		MinTimeBetweenFullUpdates=.2
-	end object
+	End Object
 	Components.Add(MyLightEnvironment)
 	LightEnvironment=MyLightEnvironment
 
-	begin object Class=SkeletalMeshComponent Name=WSkeletalMeshComponent
+	Begin Object Class=SkeletalMeshComponent Name=WSkeletalMeshComponent
 		SkeletalMesh=SkeletalMesh'FSAssets.Mesh.IronGuard'
 		AnimTreeTemplate=AnimTree'CH_AnimHuman_Tree.AT_CH_Human'
 		PhysicsAsset=PhysicsAsset'CH_AnimCorrupt.Mesh.SK_CH_Corrupt_Male_Physics'
 		AnimSets(0)=AnimSet'CH_AnimHuman.Anims.K_AnimHuman_BaseMale'
-	end object
+	End Object
 	Mesh=WSkeletalMeshComponent
 	Components.Add(WSkeletalMeshComponent)
 
