@@ -19,7 +19,13 @@ var float CommanderCamZoomTick;
 var float CommanderComZoomMax;
 var float CommanderComZoomMin;
 var bool bInCommanderView;
-var bool bCommanderRotation; 
+var bool bCommanderRotation;
+
+var name WeaponSocket;
+var DynamicLightEnvironmentComponent LightEnvironment;
+var repnotify class<FSWeaponAttachment> CurrentWeaponAttachmentClass;
+var FSWeaponAttachment CurrentWeaponAttachment;
+var bool bWeaponAttachmentVisible;
 
 /**
  * @extends
@@ -126,6 +132,31 @@ simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out 
 	}
 }
 
+simulated function WeaponAttachmentChanged()
+{
+	if ((CurrentWeaponAttachment == none || CurrentWeaponAttachment.Class != CurrentWeaponAttachmentClass) && Mesh.SkeletalMesh != none)
+	{
+		if (CurrentWeaponAttachment != none)
+		{
+			// detatch the mesh
+		}
+
+		if (CurrentWeaponAttachmentClass != none)
+		{
+			CurrentWeaponAttachment = Spawn(CurrentWeaponAttachmentClass, self);
+			CurrentWeaponAttachment.Instigator = self;
+		}
+		else
+			CurrentWeaponAttachment = none;
+
+		if (CurrentWeaponAttachment != none)
+		{
+			CurrentWeaponAttachment.AttachTo(self);
+			CurrentWeaponAttachment.ChangeVisibility(bWeaponAttachmentVisible);
+		}
+	}
+}
+
 exec function ToggleCommanderView()
 {
 	bInCommanderView = !bInCommanderView;
@@ -148,18 +179,34 @@ exec function ComRotate()
 
 defaultproperties
 {
-	InventoryManagerClass=class'FSGame.FSInventoryManager'
-
 	Components.Remove(Sprite)
 
-	begin object Class=SkeletalMeshComponent Name=FSSkeletalMeshComponent
+	begin object class=DynamicLightEnvironmentComponent Name=MyLightEnvironment
+		bSynthesizeSHLight=TRUE
+		bIsCharacterLightEnvironment=TRUE
+		bUseBooleanEnvironmentShadowing=FALSE
+		InvisibleUpdateTime=1
+		MinTimeBetweenFullUpdates=.2
+	end object
+	Components.Add(MyLightEnvironment)
+	LightEnvironment=MyLightEnvironment
+
+	begin object Class=SkeletalMeshComponent Name=WSkeletalMeshComponent
 		SkeletalMesh=SkeletalMesh'FSAssets.Mesh.IronGuard'
 		AnimTreeTemplate=AnimTree'CH_AnimHuman_Tree.AT_CH_Human'
 		PhysicsAsset=PhysicsAsset'CH_AnimCorrupt.Mesh.SK_CH_Corrupt_Male_Physics'
 		AnimSets(0)=AnimSet'CH_AnimHuman.Anims.K_AnimHuman_BaseMale'
 	end object
-	Mesh=FSSkeletalMeshComponent
-	Components.Add(FSSkeletalMeshComponent)
+	Mesh=WSkeletalMeshComponent
+	Components.Add(WSkeletalMeshComponent)
+
+	Begin Object Name=CollisionCylinder
+		CollisionRadius=+0021.000000
+		CollisionHeight=+0044.000000
+	End Object
+	CylinderComponent=CollisionCylinder
+
+	BaseTranslationOffset=6.0
 
 	MinimapCaptureRotation=(Pitch=-16384,Yaw=-16384,Roll=0) // Camera needs to be rotated to make up point north.
 	
@@ -167,4 +214,10 @@ defaultproperties
 	CommanderCamZoomTick=18.0
 	bInCommanderView=false
 	bCommanderRotation=false
+
+	bWeaponAttachmentVisible=true
+
+	WeaponSocket=WeaponPoint
+
+	InventoryManagerClass=class'FSGame.FSInventoryManager'
 }
