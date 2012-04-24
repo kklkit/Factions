@@ -41,9 +41,9 @@ function SelectTeam(int TeamIndex)
 	GetPC().ServerChangeTeam(TeamIndex);
 }
 
-function SelectClass(string ClassName)
+function SelectClass(int ClassIndex)
 {
-	`log("Selected class" @ ClassName);
+	`log("Selected class" @ ClassIndex);
 }
 
 function SelectEquipment(string EquipmentName)

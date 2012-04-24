@@ -42,30 +42,30 @@
 
 			menuButtonBar.dataProvider = menuDataProvider;
 			menuButtonBar.selectedIndex = 0;
-			menuButtonBar.addEventListener(ButtonBarEvent.BUTTON_SELECT, onButtonBarSelect);
+			menuButtonBar.addEventListener(ButtonBarEvent.BUTTON_SELECT, selectPanel);
 
-			closeButton.addEventListener(ButtonEvent.CLICK, onCloseButtonClick);
+			closeButton.addEventListener(ButtonEvent.CLICK, closeMenu);
 		}
 
-		private function onButtonBarSelect(e:ButtonBarEvent):void
+		private function selectPanel(e:ButtonBarEvent):void
 		{
 			gotoAndPlay(panels[e.index]);
 		}
 		
-		private function onCloseButtonClick(e:ButtonEvent):void
+		private function closeMenu(e:ButtonEvent):void
 		{
 			ExternalInterface.call("CloseOmniMenu", this.currentLabel);
 		}
 
-		private function onTeamButtonBarSelect(e:ButtonBarEvent):void
+		private function selectTeam(e:ButtonBarEvent):void
 		{
 			ExternalInterface.call("SelectTeam", e.index);
 			gotoAndPlay("Infantry");
 		}
 		
-		private function selectClass(e:IndexEvent):void
+		private function selectClass(e:ButtonBarEvent):void
 		{
-			ExternalInterface.call("SelectClass", e.data);
+			ExternalInterface.call("SelectClass", e.index);
 		}
 		
 		private function selectEquipment(e:ListEvent):void
