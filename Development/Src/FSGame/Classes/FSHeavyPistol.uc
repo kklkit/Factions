@@ -16,6 +16,8 @@ defaultproperties
 	End Object
 	Mesh=FirstPersonMesh
 
+	AttachmentClass=class'FSGame.FSAttachment_HeavyPistol'
+
 	Begin Object Class=SkeletalMeshComponent Name=PickupMesh
 		SkeletalMesh=SkeletalMesh'WP_ShockRifle.Mesh.SK_WP_ShockRifle_3P'
 		bOnlyOwnerSee=false

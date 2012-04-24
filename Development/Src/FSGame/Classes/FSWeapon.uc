@@ -5,13 +5,6 @@ class FSWeapon extends UDKWeapon
 
 var class<FSWeaponAttachment> AttachmentClass;
 
-simulated event SetPosition(UDKPawn Holder)
-{
-	SetLocation(Holder.Location);
-	SetRotation(Holder.Rotation);
-	SetBase(Holder);
-}
-
 simulated function AttachWeaponTo(SkeletalMeshComponent MeshCpnt, optional name SocketName)
 {
 	local FSPawn FSP;

@@ -3,9 +3,9 @@ class FSWeaponAttachment extends Actor
 	dependson(FSPawn);
 
 var SkeletalMeshComponent Mesh;
-
 var SkeletalMeshComponent OwnerMesh;
-var Name AttachmentSocket;
+
+var name AttachmentSocket;
 
 simulated function AttachTo(FSPawn OwnerPawn)
 {
