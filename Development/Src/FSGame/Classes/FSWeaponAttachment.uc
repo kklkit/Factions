@@ -1,3 +1,6 @@
+/**
+ * Client-side weapon actor that is attached to the Pawn.
+ */
 class FSWeaponAttachment extends Actor
 	abstract
 	dependson(FSPawn);
@@ -7,6 +10,9 @@ var SkeletalMeshComponent OwnerMesh;
 
 var name AttachmentSocket;
 
+/**
+ * Attaches the weapon to the given Pawn.
+ */
 simulated function AttachTo(FSPawn OwnerPawn)
 {
 	if (OwnerPawn.Mesh != None && Mesh != None)
@@ -23,14 +29,30 @@ simulated function AttachTo(FSPawn OwnerPawn)
 	GotoState('CurrentlyAttached');
 }
 
-simulated function FirstPersonFireEffects(FSWeapon PawnWeapon, Vector HitLocation)
+/**
+ * Detaches the weapon from the skeletal mesh.
+ */
+simulated function DetachFrom(SkeletalMeshComponent MeshCpnt)
 {
-	if (PawnWeapon != none)
+	if (Mesh != None)
 	{
-		PawnWeapon.PlayFireEffects(FSPawn(Owner).FiringMode, HitLocation);
+		Mesh.SetShadowParent(None);
+		Mesh.SetLightEnvironment(None);
 	}
+	if (MeshCpnt != None)
+	{
+		if (Mesh != None)
+		{
+			MeshCpnt.DetachComponent(Mesh);
+		}
+	}
+
+	GotoState('');
 }
 
+/**
+ * Show or hide the weapon mesh.
+ */
 simulated function ChangeVisibility(bool bIsVisible)
 {
 	if (Mesh != none)
@@ -43,10 +65,10 @@ state CurrentlyAttached
 
 defaultproperties
 {
-	begin object class=AnimNodeSequence Name=MeshSequenceA
-	end object
+	Begin Object Class=AnimNodeSequence Name=MeshSequenceA
+	End Object
 
-	begin object class=SkeletalMeshComponent Name=SkeletalMeshComponent0
+	Begin Object Class=SkeletalMeshComponent Name=SkeletalMeshComponent0
 		bOwnerNoSee=false
 		bOnlyOwnerSee=false
 		CollideActors=false
@@ -62,7 +84,7 @@ defaultproperties
 		CastShadow=true
 		bCastDynamicShadow=true
 		bPerBoneMotionBlur=true
-	end object
+	End Object
 	Mesh=SkeletalMeshComponent0
 
 	TickGroup=TG_DuringAsyncWork

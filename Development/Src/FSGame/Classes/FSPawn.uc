@@ -10,10 +10,20 @@ class FSPawn extends UDKPawn
 
 const MinimapCaptureFOV=90; // This must be 90 degrees otherwise the minimap overlays will be incorrect.
 
-var SceneCapture2DComponent MinimapCaptureComponent; //@todo this should really be its own actor
+var DynamicLightEnvironmentComponent LightEnvironment;
+
+// Weapon
+var repnotify class<FSWeaponAttachment> CurrentWeaponAttachmentClass;
+var FSWeaponAttachment CurrentWeaponAttachment;
+var name WeaponSocket;
+var bool bWeaponAttachmentVisible;
+
+// Minimap
+var SceneCapture2DComponent MinimapCaptureComponent;
 var Vector MinimapCapturePosition;
 var Rotator MinimapCaptureRotation;
 
+// Commander
 var float CommanderCamZoom;
 var float CommanderCamZoomTick;
 var float CommanderComZoomMax;
@@ -21,34 +31,11 @@ var float CommanderComZoomMin;
 var bool bInCommanderView;
 var bool bCommanderRotation;
 
-var name WeaponSocket;
-var DynamicLightEnvironmentComponent LightEnvironment;
-var repnotify class<FSWeaponAttachment> CurrentWeaponAttachmentClass;
-var FSWeaponAttachment CurrentWeaponAttachment;
-var bool bWeaponAttachmentVisible;
-
 replication
 {
 	if (bNetDirty)
 		CurrentWeaponAttachmentClass;
 }
-
-/**
- * @extends
- */
-simulated event ReplicatedEvent(name VarName)
-{
-	if (VarName == 'CurrentWeaponAttachmentClass')
-	{
-		WeaponAttachmentChanged();
-		return;
-	}
-	else
-	{
-		super.ReplicatedEvent(VarName);
-	}
-}
-
 
 /**
  * @extends
@@ -83,6 +70,17 @@ simulated event Tick(float DeltaTime)
 
 	// Update the capture component's position
 	MinimapCaptureComponent.SetView(MinimapCapturePosition, MinimapCaptureRotation);
+}
+
+/**
+ * @extends
+ */
+simulated event ReplicatedEvent(name VarName)
+{
+	super.ReplicatedEvent(VarName);
+
+	if (VarName == 'CurrentWeaponAttachmentClass')
+		WeaponAttachmentChanged();	
 }
 
 simulated singular event Rotator GetBaseAimRotation()
@@ -120,7 +118,7 @@ simulated singular event Rotator GetBaseAimRotation()
 }
 
 /**
- * Override to calculate the camera.
+ * Override.
  * 
  * @extends
  */
