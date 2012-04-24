@@ -9,6 +9,8 @@
 	import scaleform.clik.controls.ScrollingList;
 	import scaleform.clik.events.ButtonBarEvent;
 	import scaleform.clik.events.ButtonEvent;
+	import scaleform.clik.events.IndexEvent;
+	import scaleform.clik.events.ListEvent;
 
 	public class FactionsOmniMenu extends MovieClip
 	{
@@ -49,16 +51,26 @@
 		{
 			gotoAndPlay(panels[e.index]);
 		}
+		
+		private function onCloseButtonClick(e:ButtonEvent):void
+		{
+			ExternalInterface.call("CloseOmniMenu", this.currentLabel);
+		}
 
 		private function onTeamButtonBarSelect(e:ButtonBarEvent):void
 		{
 			ExternalInterface.call("SelectTeam", e.index);
 			gotoAndPlay("Infantry");
 		}
-
-		private function onCloseButtonClick(e:ButtonEvent):void
+		
+		private function selectClass(e:IndexEvent):void
 		{
-			ExternalInterface.call("CloseOmniMenu", this.currentLabel);
+			ExternalInterface.call("SelectClass", e.data);
+		}
+		
+		private function selectEquipment(e:ListEvent):void
+		{
+			ExternalInterface.call("SelectEquipment", e.itemData);
 		}
 
 		public function UpdateTeam(teamIndex:int):void

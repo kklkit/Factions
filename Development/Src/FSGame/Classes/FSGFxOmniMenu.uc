@@ -41,6 +41,16 @@ function SelectTeam(int TeamIndex)
 	GetPC().ServerChangeTeam(TeamIndex);
 }
 
+function SelectClass(string ClassName)
+{
+	`log("Selected class" @ ClassName);
+}
+
+function SelectEquipment(string EquipmentName)
+{
+	`log("Selected equipment" @ EquipmentName);
+}
+
 /*********************************************************************************************
  Functions calling ActionScript
 **********************************************************************************************/
