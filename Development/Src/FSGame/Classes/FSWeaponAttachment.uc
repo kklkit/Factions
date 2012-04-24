@@ -59,6 +59,10 @@ simulated function ChangeVisibility(bool bIsVisible)
 		Mesh.SetHidden(!bIsVisible);
 }
 
+simulated function FireModeUpdated(byte FiringMode, bool bViaReplication);
+
+simulated function SetPuttingDownWeapon(bool bNowPuttingDown);
+
 state CurrentlyAttached
 {
 }

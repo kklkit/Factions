@@ -64,6 +64,21 @@ simulated event PostBeginPlay()
 /**
  * @extends
  */
+simulated event Destroyed()
+{
+	super.Destroyed();
+
+	if (CurrentWeaponAttachment != None)
+	{
+		CurrentWeaponAttachment.DetachFrom(Mesh);
+		CurrentWeaponAttachment.Destroy();
+	}
+}
+
+
+/**
+ * @extends
+ */
 simulated event Tick(float DeltaTime)
 {
 	super.Tick(DeltaTime);
@@ -207,6 +222,30 @@ simulated function WeaponAttachmentChanged()
 		{
 			CurrentWeaponAttachment.AttachTo(self);
 			CurrentWeaponAttachment.ChangeVisibility(bWeaponAttachmentVisible);
+		}
+	}
+}
+
+/**
+ * @extends
+ */
+simulated function FiringModeUpdated(Weapon InWeapon, byte InFiringMode, bool bViaReplication)
+{
+	super.FiringModeUpdated(InWeapon, InFiringMode, bViaReplication);
+	if (CurrentWeaponAttachment != None)
+	{
+		CurrentWeaponAttachment.FireModeUpdated(InFiringMode, bViaReplication);
+	}
+}
+
+simulated function SetPuttingDownWeapon(bool bNowPuttingDownWeapon)
+{
+	if (bPuttingDownWeapon != bNowPuttingDownWeapon || Role < ROLE_Authority)
+	{
+		bPuttingDownWeapon = bNowPuttingDownWeapon;
+		if (CurrentWeaponAttachment != None)
+		{
+			CurrentWeaponAttachment.SetPuttingDownWeapon(bPuttingDownWeapon);
 		}
 	}
 }
