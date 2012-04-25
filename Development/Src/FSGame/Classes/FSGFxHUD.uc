@@ -68,11 +68,16 @@ function TickHud()
 			return;
 	}
 
-	UpdateHealth(FSP.Health, FSP.HealthMax);
+	if (FSP != None)
+		UpdateHealth(FSP.Health, FSP.HealthMax);
+	else
+		UpdateHealth(0, 1);
 
 	FSW = FSWeapon(FSP.Weapon);
 	if (FSW != None)
 		UpdateAmmo(FSW.AmmoCount, FSW.AmmoCountMax);
+	else
+		UpdateAmmo(0, 1);
 }
 
 /*********************************************************************************************
