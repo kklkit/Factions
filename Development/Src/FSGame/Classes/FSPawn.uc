@@ -118,12 +118,31 @@ simulated event Tick(float DeltaTime)
  */
 simulated event ReplicatedEvent(name VarName)
 {
-	super.ReplicatedEvent(VarName);
-
-	if (VarName == 'CurrentWeaponAttachmentClass')
+	if (VarName == 'Controller' && Controller != None)
+	{
+		if (FSWeapon(Weapon) != None)
+		{
+			UTWeapon(Weapon).ClientEndFire(0);
+			UTWeapon(Weapon).ClientEndFire(1);
+			if (!Weapon.HasAnyAmmo())
+			{
+				Weapon.WeaponEmpty();
+			}
+		}
+	}
+	else if (VarName == 'CurrentWeaponAttachmentClass')
+	{
 		WeaponAttachmentChanged();
+		return;
+	}
 	else if (VarName == 'bPuttingDownWeapon')
+	{
 		SetPuttingDownWeapon(bPuttingDownWeapon);
+	}
+	else
+	{
+		super.ReplicatedEvent(VarName);
+	}
 }
 
 /**
@@ -381,9 +400,41 @@ defaultproperties
 		AnimTreeTemplate=AnimTree'CH_AnimHuman_Tree.AT_CH_Human'
 		PhysicsAsset=PhysicsAsset'CH_AnimCorrupt.Mesh.SK_CH_Corrupt_Male_Physics'
 		AnimSets(0)=AnimSet'CH_AnimHuman.Anims.K_AnimHuman_BaseMale'
+		bCacheAnimSequenceNodes=false
+		AlwaysLoadOnClient=true
+		AlwaysLoadOnServer=true
+		bOwnerNoSee=false
+		CastShadow=true
+		BlockRigidBody=true
+		bUpdateSkelWhenNotRendered=false
+		bIgnoreControllersWhenNotRendered=true
+		bUpdateKinematicBonesFromAnimation=true
+		bCastDynamicShadow=true
+		Translation=(Z=8.0)
+		RBChannel=RBCC_Untitled3
+		RBCollideWithChannels=(Untitled3=true)
+		LightEnvironment=MyLightEnvironment
+		bOverrideAttachmentOwnerVisibility=true
+		bAcceptsDynamicDecals=false
+		bHasPhysicsAssetInstance=true
+		TickGroup=TG_PreAsyncWork
+		MinDistFactorForKinematicUpdate=0.2
+		bChartDistanceFactor=true
+		RBDominanceGroup=20
+		Scale=1.075
+		bUseOnePassLightingOnTranslucency=true
+		bPerBoneMotionBlur=true
 	End Object
 	Mesh=WSkeletalMeshComponent
 	Components.Add(WSkeletalMeshComponent)
+
+	BaseTranslationOffset=6.0
+
+	Begin Object class=AnimNodeSequence Name=MeshSequenceA
+	End Object
+
+	Begin Object class=AnimNodeSequence Name=MeshSequenceB
+	End Object
 
 	Begin Object Name=CollisionCylinder
 		CollisionRadius=+0021.000000
@@ -391,7 +442,17 @@ defaultproperties
 	End Object
 	CylinderComponent=CollisionCylinder
 
-	BaseTranslationOffset=6.0
+	AlwaysRelevantDistanceSquared=+1960000.0
+	bCanCrouch=true
+	bWeaponAttachmentVisible=true
+	WeaponSocket=WeaponPoint
+	bCanPickupInventory=true
+	InventoryManagerClass=class'FSGame.FSInventoryManager'
+
+	LeftFootControlName=LeftFootControl
+	RightFootControlName=RightFootControl
+	bEnableFootPlacement=true
+	MaxFootPlacementDistSquared=56250000.0
 
 	MinimapCaptureRotation=(Pitch=-16384,Yaw=-16384,Roll=0) // Camera needs to be rotated to make up point north.
 	
@@ -399,12 +460,4 @@ defaultproperties
 	CommanderCamZoomTick=18.0
 	bInCommanderView=false
 	bCommanderRotation=false
-
-	bWeaponAttachmentVisible=true
-
-	WeaponSocket=WeaponPoint
-
-	bCanPickupInventory=true
-
-	InventoryManagerClass=class'FSGame.FSInventoryManager'
 }
