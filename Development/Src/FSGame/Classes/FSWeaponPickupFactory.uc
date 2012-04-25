@@ -89,13 +89,10 @@ defaultproperties
 		bCastDynamicShadow=false
 		bAcceptsLights=true
 		bForceDirectLightMap=true
-		LightEnvironment=PickupLightEnvironment
 
 		CollideActors=false
 		MaxDrawDistance=7000
 	End Object
 	BaseMesh=BaseMeshComp
 	Components.Add(BaseMeshComp)
-
-	bDoVisibilityFadeIn=true
 }
