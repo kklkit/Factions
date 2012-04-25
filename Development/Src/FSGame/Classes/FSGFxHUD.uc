@@ -118,6 +118,16 @@ function UpdateIsAlive(bool IsAlive)
 	ActionScriptVoid("_root.UpdateIsAlive");
 }
 
+function UpdateCommStatus(string CommName, int Health, int HealthMax)
+{
+	ActionScriptVoid("_root.UpdateCommStatus");
+}
+
+function UpdateCurrentResearch(string ResearchName, int SecsLeft)
+{
+	ActionScriptVoid("_root.UpdateCurrentResearch");
+}
+
 defaultproperties
 {
 	MovieInfo=SwfMovie'FSFlashAssets.factions_hud'

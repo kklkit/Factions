@@ -47,5 +47,41 @@
 			var resourceCount:TextField = topRightHUD.getChildByName('resourceCount') as TextField;
 			resourceCount.text = resources.toString();
 		}
+		
+		public function UpdateCommStatus(name:String, health:int, healthMax:int):void
+		{
+			var commName:TextField = topLeftHUD.getChildByName('commName') as TextField;
+			
+			if (name == "")
+			{
+				commName.text = "No commander!";
+				commName.textColor = 0xFF0000;
+				//todo: colour name according to health
+			}
+			else
+			{
+				commName.text = name;
+				commName.textColor = 0x000000;
+			}
+		}
+		
+		public function UpdateCurrentResearch(research:String, secsLeft:int):void
+		{
+			var currentResearch:TextField = topLeftHUD.getChildByName('currentResearch') as TextField;
+			
+			if (research == "")
+			{
+				currentResearch.text = "No research!";
+				currentResearch.textColor = 0xFF0000;
+			}
+			else
+			{
+				var mins:int = Math.floor(secsLeft / 60);
+				var secs:int = secsLeft % 60;
+			
+				currentResearch.text = research + " (" + mins + ":" + secs + ")";
+				currentResearch.textColor = 0x000000;
+			}
+		}
 	}
 }
