@@ -7,10 +7,6 @@ class FSWeap_Firearm extends FSWeapon;
 
 defaultproperties
 {
-	Begin Object Class=AnimNodeSequence Name=MeshSequenceA
-		bCauseActorAnimEnd=true
-	End Object
-
 	Begin Object Class=UDKSkeletalMeshComponent Name=FirstPersonMesh
 		SkeletalMesh=SkeletalMesh'WP_ShockRifle.Mesh.SK_WP_ShockRifle_1P'
 		AnimSets(0)=AnimSet'WP_ShockRifle.Anim.K_WP_ShockRifle_1P_Base'

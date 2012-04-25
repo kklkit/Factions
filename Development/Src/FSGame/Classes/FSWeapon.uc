@@ -81,4 +81,7 @@ simulated function TimeWeaponEquipping()
 
 defaultproperties
 {
+	Begin Object Class=AnimNodeSequence Name=MeshSequenceA
+		bCauseActorAnimEnd=true
+	End Object
 }
