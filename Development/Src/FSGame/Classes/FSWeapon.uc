@@ -111,6 +111,40 @@ simulated function TimeWeaponEquipping()
 	super.TimeWeaponEquipping();
 }
 
+/**
+ * @extends
+ */
+function bool DenyPickupQuery(class<Inventory> ItemClass, Actor Pickup)
+{
+	local DroppedPickup DP;
+
+	if (ItemClass == class)
+	{
+		DP = DroppedPickup(Pickup);
+		if (DP != None)
+		{
+			if (DP.Instigator == Instigator)
+				// Pickup was dropped by this player - don't pick it up again
+				return true;
+
+			// Otherwise take the ammo in the weapon
+			AddAmmo(FSWeapon(DP.Inventory).AmmoCount);
+			DP.PickedUpBy(Instigator);
+			AnnouncePickup(Instigator);
+		}
+		else if (AmmoCount != AmmoCountMax)
+		{
+			// Take the ammo in the pickup
+			AddAmmo(default.AmmoCount);
+			if (PickupFactory(Pickup) != None)
+				PickupFactory(Pickup).PickedUpBy(Instigator);
+			AnnouncePickup(Instigator);
+		}
+		return true; // Don't pick up the pickup, only the ammo was taken
+	}
+	return false; // The player doesn't have this pickup
+}
+
 defaultproperties
 {
 	Begin Object Class=AnimNodeSequence Name=MeshSequenceA
