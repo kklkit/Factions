@@ -60,6 +60,19 @@ simulated event PostBeginPlay()
 		MinimapCapturePosition.Z = MI.MapRadius;
 	}
 }
+/**
+ * @extends
+ */
+simulated event PostInitAnimTree(SkeletalMeshComponent SkelComp)
+{
+	Super.PostInitAnimTree(SkelComp);
+
+	// Only refresh anim nodes if our main mesh was updated
+	if (SkelComp == Mesh)
+	{
+		AimNode = AnimNodeAimOffset( mesh.FindAnimNode('AimNode') );
+	}
+}
 
 /**
  * @extends
