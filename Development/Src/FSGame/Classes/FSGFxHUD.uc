@@ -12,6 +12,8 @@ var GFxObject BottomRightHUD;
 
 var float LastHealth;
 var float LastHealthMax;
+var float LastAmmo;
+var float LastAmmoMax;
 
 /**
  * @extends
@@ -37,6 +39,7 @@ function TickHud()
 {
 	local PlayerController PC;
 	local FSPawn FSP;
+	local FSWeapon FSW;
 	local UDKVehicle FSV; //@todo change to FSVehicle
 	local UDKWeaponPawn FWP; //@todo change to FSWeaponPawn
 
@@ -66,6 +69,10 @@ function TickHud()
 	}
 
 	UpdateHealth(FSP.Health, FSP.HealthMax);
+
+	FSW = FSWeapon(FSP.Weapon);
+	if (FSW != None)
+		UpdateAmmo(FSW.AmmoCount, FSW.AmmoCountMax);
 }
 
 /*********************************************************************************************
@@ -104,7 +111,17 @@ function UpdateHealth(int Health, int HealthMax)
 	{
 		ActionScriptVoid("_root.UpdateHealth");
 		LastHealth = Health;
-		HealthMax = LastHealthMax;
+		LastHealthMax = HealthMax;
+	}
+}
+
+function UpdateAmmo(int Ammo, int AmmoMax)
+{
+	if (Ammo != LastAmmo || AmmoMax != LastAmmoMax)
+	{
+		ActionScriptVoid("_root.UpdateAmmo");
+		LastAmmo = Ammo;
+		LastAmmoMax = AmmoMax; 
 	}
 }
 
@@ -135,4 +152,6 @@ defaultproperties
 	bAutoPlay=true
 	LastHealth=-110
 	LastHealthMax=-110
+	LastAmmo=-110
+	LastAmmoMax=-110
 }

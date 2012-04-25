@@ -10,6 +10,51 @@ class FSWeapon extends UDKWeapon
 
 var class<FSWeaponAttachment> AttachmentClass;
 
+var repnotify int AmmoCountMax;
+
+/**
+ * @extends
+ */
+function ConsumeAmmo(byte FireModeNum)
+{
+	super.ConsumeAmmo(FireModeNum);
+
+	AddAmmo(-1);
+}
+
+/**
+ * @extends
+ */
+function int AddAmmo(int Amount)
+{
+	super.AddAmmo(Amount);
+
+	AmmoCount = Clamp(AmmoCount + Amount, 0, AmmoCountMax);
+
+	return AmmoCount;
+}
+
+/**
+ * @extends
+ */
+simulated function bool HasAmmo(byte FireModeNum, optional int Amount)
+{
+	super.HasAmmo(FireModeNum, Amount);
+
+	if (Amount == 0)
+		return (AmmoCount >= 1);
+	else
+		return (AmmoCount >= Amount);
+}
+
+/**
+ * @extends
+ */
+simulated function bool HasAnyAmmo()
+{
+	return AmmoCount > 0;
+}
+
 /**
  * @extends
  */
@@ -71,4 +116,7 @@ defaultproperties
 	Begin Object Class=AnimNodeSequence Name=MeshSequenceA
 		bCauseActorAnimEnd=true
 	End Object
+
+	AmmoCount=30
+	AmmoCountMax=30
 }

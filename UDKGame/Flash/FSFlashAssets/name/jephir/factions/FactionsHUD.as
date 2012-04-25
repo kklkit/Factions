@@ -16,6 +16,7 @@
 		public var bottomLeftHUD:MovieClip;
 		public var bottomRightHUD:MovieClip;
 		public var healthBarStartPositionX:Number = bottomLeftHUD.getChildByName('healthBar').x;
+		public var ammoBarStartPositionX:Number = bottomRightHUD.getChildByName('ammoBar').x;
 
 		public function FactionsHUD()
 		{
@@ -40,6 +41,20 @@
 			}
 
 			healthBar.x = -healthBar.width + healthBarStartPositionX + (health / healthMax * healthBar.width);
+		}
+		
+		public function UpdateAmmo(ammo:int, ammoMax:int):void
+		{
+			var ammoBar:DisplayObject = bottomRightHUD.getChildByName('ammoBar');
+			
+			// Divide by zero protection
+			if (ammoMax === 0)
+			{
+				ammo = 0;
+				ammoMax = 1;
+			}
+			
+			ammoBar.x = ammoBar.width + ammoBarStartPositionX - (ammo / ammoMax * ammoBar.width);
 		}
 
 		public function UpdateResources(resources:int):void
