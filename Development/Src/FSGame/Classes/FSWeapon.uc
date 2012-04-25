@@ -12,6 +12,57 @@ var class<FSWeaponAttachment> AttachmentClass;
 
 var repnotify int AmmoCountMax;
 
+var byte InventoryGroup;
+var float InventoryWeight;
+
+var bool bNeverForwardPendingFire;
+
+auto simulated state Inactive
+{
+	simulated function BeginState(name PreviousStateName)
+	{
+		local PlayerController PC;
+
+		if (Instigator != None)
+		{
+			PC = PlayerController(Instigator.Controller);
+			if (PC != None && LocalPlayer(PC.Player) != none)
+			{
+				PC.SetFOV(PC.DefaultFOV);
+			}
+		}
+
+		Super.BeginState(PreviousStateName);
+	}
+
+	simulated function bool bReadyToFire()
+	{
+		return false;
+	}
+}
+
+simulated state Active
+{
+	reliable server function ServerStartFire(byte FireModeNum)
+	{
+		if (Instigator != none && Instigator.Weapon != self)
+		{
+			UTInventoryManager(InvManager).ClientSyncWeapon(Instigator.Weapon);
+		}
+		Global.ServerStartFire(FireModeNum);
+	}
+}
+
+simulated state WeaponPuttingDown
+{
+	simulated function Activate();
+
+	simulated function bool bReadyToFire()
+	{
+		return false;
+	}
+}
+
 /**
  * @extends
  */
@@ -146,6 +197,43 @@ function bool DenyPickupQuery(class<Inventory> ItemClass, Actor Pickup)
 	}
 	return false; // The player doesn't have this pickup
 }
+
+/**
+ * Return true if allowed to switch to the new weapon.
+ */
+simulated function bool AllowSwitchTo(Weapon NewWeapon)
+{
+	return true;
+}
+
+/**
+ * Return true if able to switch to the given weapon.
+ */
+simulated function bool ShouldSwitchTo(FSWeapon InWeapon)
+{
+	if (IsFiring() || DenyClientWeaponSet())
+	{
+		FSInventoryManager(InvManager).RetrySwitchTo(InWeapon);
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+/**
+ * True if the weapon is ready to fire.
+ */
+simulated function bool bReadyToFire()
+{
+	return true;
+}
+
+/**
+ * Called whenever the player reselects the same weapon.
+ */
+reliable server function ServerReselectWeapon();
 
 defaultproperties
 {
