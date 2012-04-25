@@ -112,6 +112,8 @@ simulated function TimeWeaponEquipping()
 }
 
 /**
+ * Override to pick up ammo instead of the pickup if necessary.
+ * 
  * @extends
  */
 function bool DenyPickupQuery(class<Inventory> ItemClass, Actor Pickup)
