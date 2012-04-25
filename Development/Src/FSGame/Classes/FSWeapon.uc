@@ -120,8 +120,6 @@ function bool DenyPickupQuery(class<Inventory> ItemClass, Actor Pickup)
 {
 	local DroppedPickup DP;
 
-	//@todo in dedicated mode players can't pick up pickups on the ground
-
 	if (ItemClass == class)
 	{
 		DP = DroppedPickup(Pickup);
