@@ -120,6 +120,8 @@ function bool DenyPickupQuery(class<Inventory> ItemClass, Actor Pickup)
 {
 	local DroppedPickup DP;
 
+	//@todo in dedicated mode players can't pick up pickups on the ground
+
 	if (ItemClass == class)
 	{
 		DP = DroppedPickup(Pickup);
@@ -134,7 +136,7 @@ function bool DenyPickupQuery(class<Inventory> ItemClass, Actor Pickup)
 			DP.PickedUpBy(Instigator);
 			AnnouncePickup(Instigator);
 		}
-		else if (AmmoCount != AmmoCountMax)
+		else if (AmmoCount < AmmoCountMax)
 		{
 			// Take the ammo in the pickup
 			AddAmmo(default.AmmoCount);
