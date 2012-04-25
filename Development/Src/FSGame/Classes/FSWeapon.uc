@@ -21,10 +21,6 @@ simulated function AttachWeaponTo(SkeletalMeshComponent MeshCpnt, optional name 
 
 	FSP = FSPawn(Instigator);
 
-	//@todo enable if fake fps view is used
-	// AttachComponent(Mesh);
-	// SetHidden(false);
-
 	if (Role == ROLE_Authority && FSP != None)
 	{
 		FSP.CurrentWeaponAttachmentClass = AttachmentClass;
@@ -44,13 +40,6 @@ simulated function DetachWeapon()
 
 	super.DetachWeapon();
 
-	//@todo enable if fake fps view is used
-	//DetachComponent(Mesh);
-	//if (OverlayMesh != None)
-	//{
-	//	DetachComponent(OverlayMesh);
-	//}
-
 	FSP = FSPawn(Instigator);
 	if (FSP != None)
 	{
@@ -65,8 +54,6 @@ simulated function DetachWeapon()
 	}
 
 	SetBase(None);
-	//SetHidden(True);
-	//Mesh.SetLightEnvironment(None);
 }
 
 /**
