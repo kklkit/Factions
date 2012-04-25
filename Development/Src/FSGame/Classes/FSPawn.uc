@@ -118,6 +118,24 @@ simulated event ReplicatedEvent(name VarName)
  * 
  * @extends
  */
+simulated function Rotator GetAdjustedAimFor(Weapon W, vector StartFireLoc)
+{
+	local vector MuzVec;
+	local rotator MuzRot;
+	
+	if (CurrentWeaponAttachment == None)
+		return GetBaseAimRotation();
+
+	CurrentWeaponAttachment.Mesh.GetSocketWorldLocationAndRotation(CurrentWeaponAttachment.MuzzleFlashSocket, MuzVec, MuzRot);
+
+	return MuzRot;
+}
+
+/**
+ * Override.
+ * 
+ * @extends
+ */
 simulated singular event Rotator GetBaseAimRotation()
 {
    local vector   POVLoc;
