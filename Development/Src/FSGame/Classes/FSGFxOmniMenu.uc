@@ -57,12 +57,15 @@ function SelectEquipment(string EquipmentName)
 
 function UpdateTeam(int TeamIndex)
 {
-	ActionScriptVoid("_root.UpdateTeam");
+	if (bMovieIsOpen)
+	{
+		ActionScriptVoid("_root.UpdateTeam");
+	}
 }
 
 defaultproperties
 {
 	MovieInfo=SwfMovie'FSFlashAssets.factions_omnimenu'
-	bAutoPlay=true
+	bAutoPlay=false
 	bCaptureMouseInput=true
 }
