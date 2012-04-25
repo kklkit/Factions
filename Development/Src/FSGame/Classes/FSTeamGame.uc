@@ -32,35 +32,56 @@ event PreBeginPlay()
 }
 
 /**
+ * Sets the controller's team to the given team index.
+ */
+function SetTeam(Controller Other, FSTeamInfo NewTeam, bool bNewTeam)
+{
+	local PlayerController PC;
+	local Actor A;
+
+	if (Other.PlayerReplicationInfo == None)
+		return;
+
+	// Clear old spawn point
+	if (Other.PlayerReplicationInfo.Team != None || !ShouldSpawnAtStartSpot(Other))
+		Other.StartSpot = None;
+
+	// Remove controller from old team
+	if (Other.PlayerReplicationInfo.Team != None)
+	{
+		Other.PlayerReplicationInfo.Team.RemoveFromTeam(Other);
+		Other.PlayerReplicationInfo.Team = None;
+	}
+	
+	if (NewTeam == None || (NewTeam != None && NewTeam.AddToTeam(Other)))
+	{
+		if ((NewTeam != None) && ((WorldInfo.NetMode != NM_Standalone) || (PlayerController(Other) == None) || (PlayerController(Other).Player != None)))
+			BroadcastLocalizedMessage(GameMessageClass, 3, Other.PlayerReplicationInfo, None, NewTeam);
+	}
+
+	if ((PlayerController(Other) != None) && (LocalPlayer(PlayerController(Other).Player) != None))
+	{
+		foreach AllActors(class'Actor', A)
+		{
+			A.NotifyLocalPlayerTeamReceived();
+		}
+	}
+}
+
+/**
  * @extends
  */
 function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
 {
-	local bool bChangedTeam;
-	local PlayerController PC;
-
 	super.ChangeTeam(Other, N, bNewTeam);
 
-	// Ensure the given team index is valid
 	if (N >= 0 && N < NumTeams)
 	{
-		Teams[N].AddToTeam(Other);
-		bChangedTeam = true;
+		SetTeam(Other, Teams[N], bNewTeam);
+		return true;
 	}
 	else
-		bChangedTeam = false;
-
-	// Broadcast join message
-	PC = PlayerController(Other);
-	if (PC != none)
-	{
-		if (bChangedTeam)
-			BroadcastHandler.Broadcast(self, Other.GetHumanReadableName() @ "joined team" @ N);
-		else
-			PC.ClientMessage("Failed to change to team" @ N);
-	}
-
-	return bChangedTeam;
+		return false;
 }
 
 /**
