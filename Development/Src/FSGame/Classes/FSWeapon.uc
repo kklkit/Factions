@@ -117,6 +117,13 @@ defaultproperties
 		bCauseActorAnimEnd=true
 	End Object
 
+	Begin Object Class=SkeletalMeshComponent Name=PickupMesh
+		bOnlyOwnerSee=false
+	End Object
+
+	PickupFactoryMesh=PickupMesh
+	DroppedPickupMesh=PickupMesh
+
 	FiringStatesArray(0)=WeaponFiring
 	WeaponFireTypes(0)=EWFT_InstantHit
 	WeaponProjectiles(0)=none

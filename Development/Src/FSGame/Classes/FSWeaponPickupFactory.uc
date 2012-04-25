@@ -10,6 +10,19 @@ var() class<FSWeapon> WeaponPickupClass;
 /**
  * @extends
  */
+simulated event ReplicatedEvent(name VarName)
+{
+	if (VarName == 'InventoryType')
+	{
+		if (InventoryType != WeaponPickupClass)
+			WeaponPickupClass = class<FSWeapon>(InventoryType);
+	}
+	super.ReplicatedEvent(VarName);
+}
+
+/**
+ * @extends
+ */
 simulated function InitializePickup()
 {
 	InventoryType = WeaponPickupClass;
@@ -20,19 +33,6 @@ simulated function InitializePickup()
 	}
 
 	super.InitializePickup();
-}
-
-/**
- * @extends
- */
-simulated event ReplicatedEvent(name VarName)
-{
-	if (VarName == 'InventoryType')
-	{
-		if (InventoryType != WeaponPickupClass)
-			WeaponPickupClass = class<FSWeapon>(InventoryType);
-	}
-	super.ReplicatedEvent(VarName);
 }
 
 /**
