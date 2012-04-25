@@ -25,7 +25,7 @@
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			stage.addEventListener(Event.RESIZE, function () {
-			ExternalInterface.call("ResizeHUD");
+				ExternalInterface.call("ResizeHUD");
 			});
 		}
 
@@ -71,12 +71,12 @@
 			{
 				commName.text = "No commander!";
 				commName.textColor = 0xFF0000;
-				//todo: colour name according to health
 			}
 			else
 			{
 				commName.text = name;
 				commName.textColor = 0x000000;
+				//todo: colour name according to health
 			}
 		}
 		
@@ -94,9 +94,17 @@
 				var mins:int = Math.floor(secsLeft / 60);
 				var secs:int = secsLeft % 60;
 			
-				currentResearch.text = research + " (" + mins + ":" + secs + ")";
+				currentResearch.text = research + " (" + mins + ":" + zeroPad(secs, 2) + ")";
 				currentResearch.textColor = 0x000000;
 			}
+		}
+		
+		public function zeroPad(number:int, width:int):String
+		{
+			var ret:String = "" + number;
+			while (ret.length < width)
+				ret = "0" + ret;
+			return ret;
 		}
 	}
 }
