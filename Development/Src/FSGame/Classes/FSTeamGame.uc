@@ -32,6 +32,46 @@ event PreBeginPlay()
 }
 
 /**
+ * Override.
+ * 
+ * @extends
+ */
+function bool ShouldRespawn(PickupFactory Other)
+{
+	return true;
+}
+
+/**
+ * @extends
+ */
+function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
+{
+	super.ChangeTeam(Other, N, bNewTeam);
+
+	if (N >= 0 && N < NumTeams)
+	{
+		SetTeam(Other, Teams[N], bNewTeam);
+		return true;
+	}
+	else
+		return false;
+}
+
+/**
+ * Override to return the team index for the team with fewest players.
+ * 
+ * @extends
+ */
+function byte PickTeam(byte Current, Controller C)
+{
+	//@todo make this work for more than 2 teams
+	if (Teams[0].Size <= Teams[1].Size)
+		return 0;
+	else
+		return 1;
+}
+
+/**
  * Sets the controller's team to the given team index.
  */
 function SetTeam(Controller Other, FSTeamInfo NewTeam, bool bNewTeam)
@@ -65,36 +105,6 @@ function SetTeam(Controller Other, FSTeamInfo NewTeam, bool bNewTeam)
 			A.NotifyLocalPlayerTeamReceived();
 		}
 	}
-}
-
-/**
- * @extends
- */
-function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
-{
-	super.ChangeTeam(Other, N, bNewTeam);
-
-	if (N >= 0 && N < NumTeams)
-	{
-		SetTeam(Other, Teams[N], bNewTeam);
-		return true;
-	}
-	else
-		return false;
-}
-
-/**
- * Override to return the team index for the team with fewest players.
- * 
- * @extends
- */
-function byte PickTeam(byte Current, Controller C)
-{
-	//@todo make this work for more than 2 teams
-	if (Teams[0].Size <= Teams[1].Size)
-		return 0;
-	else
-		return 1;
 }
 
 /**

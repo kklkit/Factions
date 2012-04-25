@@ -142,4 +142,6 @@ defaultproperties
 
 	AmmoCount=30
 	AmmoCountMax=30
+
+	RespawnTime=1.0
 }

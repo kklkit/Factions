@@ -3,7 +3,8 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSWeaponPickupFactory extends UDKPickupFactory;
+class FSWeaponPickupFactory extends UDKPickupFactory
+	ClassGroup(Pickups,Weapon);
 
 var() class<FSWeapon> WeaponPickupClass;
 
@@ -63,12 +64,15 @@ defaultproperties
 	bMovable=false
 	bStatic=false
 
-	bDoVisibilityFadeIn=false // weapons are all skeletal meshes and don't do the ResIn effect. Also most weapons are always available
+	bDoVisibilityFadeIn=false
 	bRotatingPickup=true
 	bCollideActors=true
 	bBlockActors=true
 
 	YawRotationRate=32768
+
+	bIsSuperItem=false
+	bPickupHidden=false
 
 	Begin Object Name=CollisionCylinder
 		CollisionRadius=+00040.000000
