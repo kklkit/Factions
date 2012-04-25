@@ -70,7 +70,20 @@ simulated event PostInitAnimTree(SkeletalMeshComponent SkelComp)
 	// Only refresh anim nodes if our main mesh was updated
 	if (SkelComp == Mesh)
 	{
+		LeftLegControl = SkelControlFootPlacement(Mesh.FindSkelControl(LeftFootControlName));
+		RightLegControl = SkelControlFootPlacement(Mesh.FindSkelControl(RightFootControlName));
+
+		LeftHandIK = SkelControlLimb( mesh.FindSkelControl('LeftHandIK') );
+
+		RightHandIK = SkelControlLimb( mesh.FindSkelControl('RightHandIK') );
+
+		RootRotControl = SkelControlSingleBone( mesh.FindSkelControl('RootRot') );
 		AimNode = AnimNodeAimOffset( mesh.FindAnimNode('AimNode') );
+		GunRecoilNode = GameSkelCtrl_Recoil( mesh.FindSkelControl('GunRecoilNode') );
+		LeftRecoilNode = GameSkelCtrl_Recoil( mesh.FindSkelControl('LeftRecoilNode') );
+		RightRecoilNode = GameSkelCtrl_Recoil( mesh.FindSkelControl('RightRecoilNode') );
+
+		FlyingDirOffset = AnimNodeAimOffset( mesh.FindAnimNode('FlyingDirOffset') );
 	}
 }
 
