@@ -260,6 +260,10 @@ simulated function SetPuttingDownWeapon(bool bNowPuttingDownWeapon)
 	}
 }
 
+simulated function ChangeClass()
+{
+}
+
 exec function ToggleCommanderView()
 {
 	bInCommanderView = !bInCommanderView;
@@ -321,6 +325,8 @@ defaultproperties
 	bWeaponAttachmentVisible=true
 
 	WeaponSocket=WeaponPoint
+
+	bCanPickupInventory=true
 
 	InventoryManagerClass=class'FSGame.FSInventoryManager'
 }
