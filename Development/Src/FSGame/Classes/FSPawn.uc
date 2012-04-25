@@ -217,6 +217,40 @@ simulated function FiringModeUpdated(Weapon InWeapon, byte InFiringMode, bool bV
 }
 
 /**
+ * @extends
+ */
+simulated function WeaponFired(Weapon InWeapon, bool bViaReplication, optional vector HitLocation)
+{
+	super.WeaponFired(InWeapon, bViaReplication, HitLocation);
+
+	if (CurrentWeaponAttachment != None)
+	{
+		if (!IsFirstPerson())
+			CurrentWeaponAttachment.ThirdPersonFireEffects(HitLocation);
+		else
+		{
+			CurrentWeaponAttachment.FirstPersonFireEffects(Weapon, HitLocation);
+	        if (class'Engine'.static.IsSplitScreen() && CurrentWeaponAttachment.EffectIsRelevant(CurrentWeaponAttachment.Location, false, CurrentWeaponAttachment.MaxFireEffectDistance))
+		        CurrentWeaponAttachment.CauseMuzzleFlash();
+		}
+	}
+}
+
+/**
+ * @extends
+ */
+simulated function WeaponStoppedFiring(Weapon InWeapon, bool bViaReplication)
+{
+	super.WeaponFired(InWeapon, bViaReplication);
+
+	if (CurrentWeaponAttachment != None)
+	{
+		CurrentWeaponAttachment.StopThirdPersonFireEffects();
+		CurrentWeaponAttachment.StopFirstPersonFireEffects(Weapon);
+	}
+}
+
+/**
  * Called when the weapon attachment needs to be changed.
  */
 simulated function WeaponAttachmentChanged()
