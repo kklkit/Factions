@@ -7,6 +7,22 @@ class FSTeamInfo extends TeamInfo;
 
 var int Resources;
 
+var localized string TeamColorNames[4];
+
+/**
+ * @extends
+ */
+simulated function string GetHumanReadableName()
+{
+	if (TeamName == Default.TeamName)
+	{
+		if (TeamIndex < 4)
+			return TeamColorNames[TeamIndex];
+		return TeamName@TeamIndex;
+	}
+	return TeamName;
+}
+
 defaultproperties
 {
 	Resources=0

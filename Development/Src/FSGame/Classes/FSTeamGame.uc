@@ -36,7 +36,6 @@ event PreBeginPlay()
  */
 function SetTeam(Controller Other, FSTeamInfo NewTeam, bool bNewTeam)
 {
-	local PlayerController PC;
 	local Actor A;
 
 	if (Other.PlayerReplicationInfo == None)

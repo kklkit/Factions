@@ -39,7 +39,12 @@ UDKGame/Config/DefaultU*
 UDKGame/Config/DefaultW*
 UDKGame/Config/UDK*
 UDKGame/CookedMac/
-UDKGame/Localization/
+UDKGame/Localization/INT/Castle*
+UDKGame/Localization/INT/Editor*
+UDKGame/Localization/INT/GFx*
+UDKGame/Localization/INT/Scaleform*
+UDKGame/Localization/INT/UDK*
+UDKGame/Localization/INT/ut*
 UDKGame/Logs/
 UDKGame/Movies/
 UDKGame/Script/
