@@ -8,9 +8,25 @@ class FSWeaponAttachment extends Actor
 	dependson(FSPawn);
 
 var SkeletalMeshComponent Mesh;
-var SkeletalMeshComponent OwnerMesh;
 
+var name MuzzleFlashSocket;
+var ParticleSystemComponent	MuzzleFlashPSC;
+var ParticleSystem MuzzleFlashPSCTemplate, MuzzleFlashAltPSCTemplate;
+var color MuzzleFlashColor;
+var bool bMuzzleFlashPSCLoops;
+var class<UDKExplosionLight> MuzzleFlashLightClass;
+var	UDKExplosionLight MuzzleFlashLight;
+var float MuzzleFlashDuration;
+var SkeletalMeshComponent OwnerMesh;
 var name AttachmentSocket;
+
+var float MaxFireEffectDistance;
+
+var name FireAnim, AltFireAnim;
+
+state CurrentlyAttached
+{
+}
 
 /**
  * Attaches the weapon to the given Pawn.
@@ -28,6 +44,17 @@ simulated function AttachTo(FSPawn OwnerPawn)
 		OwnerPawn.Mesh.AttachComponentToSocket(Mesh, OwnerPawn.WeaponSocket);
 	}
 
+	if (MuzzleFlashSocket != '')
+	{
+		if (MuzzleFlashPSCTemplate != None || MuzzleFlashAltPSCTemplate != None)
+		{
+			MuzzleFlashPSC = new(self) class'UDKParticleSystemComponent';
+			MuzzleFlashPSC.bAutoActivate = false;
+			MuzzleFlashPSC.SetOwnerNoSee(false);
+			Mesh.AttachComponentToSocket(MuzzleFlashPSC, MuzzleFlashSocket);
+		}
+	}
+
 	GotoState('CurrentlyAttached');
 }
 
@@ -40,6 +67,10 @@ simulated function DetachFrom(SkeletalMeshComponent MeshCpnt)
 	{
 		Mesh.SetShadowParent(None);
 		Mesh.SetLightEnvironment(None);
+		if (MuzzleFlashPSC != None)
+			Mesh.DetachComponent(MuzzleFlashPSC);
+		if (MuzzleFlashLight != None)
+			Mesh.DetachComponent(MuzzleFlashLight);
 	}
 	if (MeshCpnt != None)
 	{
@@ -50,6 +81,118 @@ simulated function DetachFrom(SkeletalMeshComponent MeshCpnt)
 	}
 
 	GotoState('');
+}
+
+/**
+ * Allows a child to setup custom parameters on the muzzle flash
+ */
+simulated function SetMuzzleFlashParams(ParticleSystemComponent PSC)
+{
+	PSC.SetColorParameter('MuzzleFlashColor', MuzzleFlashColor);
+}
+
+/**
+ * Turns the MuzzleFlashlight off
+ */
+simulated function MuzzleFlashTimer()
+{
+	if ( MuzzleFlashLight != None )
+		MuzzleFlashLight.SetEnabled(false);
+
+	if (MuzzleFlashPSC != none && (!bMuzzleFlashPSCLoops) )
+		MuzzleFlashPSC.DeactivateSystem();
+}
+
+/**
+ * Causes the muzzle flash to turn on and setup a time to turn it back off again.
+ */
+simulated function CauseMuzzleFlash()
+{
+	local ParticleSystem MuzzleTemplate;
+
+	if ((!WorldInfo.bDropDetail && !class'Engine'.static.IsSplitScreen()) || WorldInfo.IsConsoleBuild(CONSOLE_Mobile))
+	{
+		if (MuzzleFlashLight == None)
+		{
+			if (MuzzleFlashLightClass != None)
+			{
+				MuzzleFlashLight = new(Outer) MuzzleFlashLightClass;
+
+				if (Mesh != None && Mesh.GetSocketByName(MuzzleFlashSocket) != None)
+					Mesh.AttachComponentToSocket(MuzzleFlashLight, MuzzleFlashSocket);
+				else if (OwnerMesh != None)
+					OwnerMesh.AttachComponentToSocket(MuzzleFlashLight, AttachmentSocket);
+			}
+		}
+		else
+			MuzzleFlashLight.ResetLight();
+	}
+
+	if (MuzzleFlashPSC != none)
+	{
+		if (!bMuzzleFlashPSCLoops || !MuzzleFlashPSC.bIsActive)
+		{
+			if (Instigator != None && Instigator.FiringMode == 1 && MuzzleFlashAltPSCTemplate != None)
+				MuzzleTemplate = MuzzleFlashAltPSCTemplate;
+			else
+				MuzzleTemplate = MuzzleFlashPSCTemplate;
+
+			if (MuzzleTemplate != MuzzleFlashPSC.Template)
+				MuzzleFlashPSC.SetTemplate(MuzzleTemplate);
+
+			SetMuzzleFlashParams(MuzzleFlashPSC);
+			MuzzleFlashPSC.ActivateSystem();
+		}
+	}
+
+	SetTimer(MuzzleFlashDuration, false, 'MuzzleFlashTimer');
+}
+
+/**
+ * Stops the muzzle flash.
+ */
+simulated function StopMuzzleFlash()
+{
+	ClearTimer('MuzzleFlashTimer');
+	MuzzleFlashTimer();
+
+	if (MuzzleFlashPSC != none)
+	{
+		MuzzleFlashPSC.DeactivateSystem();
+	}
+}
+
+simulated function FirstPersonFireEffects(Weapon PawnWeapon, vector HitLocation)
+{
+	if (PawnWeapon != None)
+		PawnWeapon.PlayFireEffects(Pawn(Owner).FiringMode, HitLocation);
+}
+
+simulated function StopFirstPersonFireEffects(Weapon PawnWeapon)
+{
+	if (PawnWeapon != None)
+		PawnWeapon.StopFireEffects(Pawn(Owner).FiringMode);
+}
+
+simulated function ThirdPersonFireEffects(vector HitLocation)
+{
+	local FSPawn P;
+	if (EffectIsRelevant(Location, false, MaxFireEffectDistance))
+		CauseMuzzleFlash();
+
+	P = FSPawn(Instigator);
+	if (P != None && P.GunRecoilNode != None)
+		P.GunRecoilNode.bPlayRecoil = true;
+
+	if (Instigator.FiringMode == 1 && AltFireAnim != 'None')
+		Mesh.PlayAnim(AltFireAnim, , , false);
+	else if (FireAnim != 'None')
+		Mesh.PlayAnim(FireAnim, , , false);
+}
+
+simulated event StopThirdPersonFireEffects()
+{
+	StopMuzzleFlash();
 }
 
 /**
@@ -71,9 +214,19 @@ simulated function FireModeUpdated(byte FiringMode, bool bViaReplication);
  */
 simulated function SetPuttingDownWeapon(bool bNowPuttingDown);
 
-state CurrentlyAttached
+simulated function Vector GetEffectLocation()
 {
+	local Vector SocketLocation;
+
+	if (MuzzleFlashSocket != 'None')
+	{
+		Mesh.GetSocketWorldLocationAndRotation(MuzzleFlashSocket, SocketLocation);
+		return SocketLocation;
+	}
+	else
+		return Mesh.Bounds.Origin + (vect(45,0,0) >> Instigator.Rotation);
 }
+
 
 defaultproperties
 {
@@ -103,4 +256,7 @@ defaultproperties
 	NetUpdateFrequency=10
 	RemoteRole=ROLE_None
 	bReplicateInstigator=true
+	MaxFireEffectDistance=5000.0
+	MuzzleFlashDuration=0.3
+	MuzzleFlashColor=(R=255,G=255,B=255,A=255)
 }
