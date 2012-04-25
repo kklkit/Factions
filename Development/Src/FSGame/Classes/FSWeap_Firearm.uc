@@ -24,6 +24,4 @@ defaultproperties
 		bOnlyOwnerSee=false
 	End Object
 	DroppedPickupMesh=PickupMesh
-
-	WeaponFireTypes(0)=EWFT_InstantHit
 }
