@@ -9,6 +9,12 @@ var int Resources;
 
 var localized string TeamColorNames[4];
 
+replication
+{
+	if (bNetDirty)
+		Resources;
+}
+
 /**
  * @extends
  */

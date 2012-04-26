@@ -39,7 +39,7 @@ reliable server function RequestVehicle()
 		break;
 
 	if (VP != None)
-		VP.BuildVehicle();
+		VP.BuildVehicle(FSPawn(Pawn));
 }
 
 /**

@@ -17,9 +17,10 @@ event PostBeginPlay()
 	SetCollision(true, true);
 }
 
-function BuildVehicle()
+function BuildVehicle(FSPawn Builder)
 {
-	Spawn(VehicleClass, , , Location + vect(500, 500, 200));
+	FSTeamInfo(Builder.PlayerReplicationInfo.Team).Resources -= 100;
+	Spawn(VehicleClass, Builder, , Location + vect(500, 500, 200));
 }
 
 defaultproperties
