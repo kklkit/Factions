@@ -8,7 +8,8 @@ class FSVehiclePad extends Actor //@todo this should extend an FS class
 	Placeable
 	AutoExpandCategories(Factions);
 
-var(Factions) class<UDKVehicle> VehicleClass;
+var() class<UDKVehicle> VehicleClass;
+var() int VehicleCost;
 
 event PostBeginPlay()
 {
@@ -19,8 +20,15 @@ event PostBeginPlay()
 
 function BuildVehicle(FSPawn Builder)
 {
-	FSTeamInfo(Builder.PlayerReplicationInfo.Team).Resources -= 100;
-	Spawn(VehicleClass, Builder, , Location + vect(500, 500, 200));
+	local FSTeamInfo Team;
+
+	Team = FSTeamInfo(Builder.PlayerReplicationInfo.Team);
+
+	if (Team != None && Team.Resources >= VehicleCost)
+	{
+		Team.Resources -= VehicleCost;
+		Spawn(VehicleClass, Builder, , Location + vect(500, 500, 200));
+	}
 }
 
 defaultproperties
@@ -34,6 +42,7 @@ defaultproperties
 	bCollideComplex=true
 
 	VehicleClass=class'UTVehicle_Scorpion_Content'
+	VehicleCost=100
 
 	RemoteRole=ROLE_SimulatedProxy
 }
