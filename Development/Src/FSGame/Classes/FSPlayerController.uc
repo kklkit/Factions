@@ -7,14 +7,7 @@ class FSPlayerController extends UDKPlayerController;
 
 const MapViewRotation=rot(-16384,-16384,0);
 
-var bool InCommanderView;
-
 var bool bViewingMap;
-
-state CommanderView extends PlayerWalking
-{
-
-}
 
 /**
  * Override to display the full-screen map if it is open.
@@ -35,16 +28,6 @@ simulated event GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rota
 	}
 }
 
-exec function ToggleCommanderView2()
-{
-	InCommanderView = !InCommanderView;
-	
-	if( InCommanderView )
-		GotoState('CommanderView');
-	else
-		GotoState('PlayerWalking');
-}
-
 /**
  * Toggles opening and closing the full-screen map.
  */
@@ -60,6 +43,5 @@ exec function ToggleViewMap()
 defaultproperties
 {
 	InputClass=class'FSGame.FSPlayerInput'
-	InCommanderView=false
 	bViewingMap=false
 }

@@ -23,14 +23,6 @@ var SceneCapture2DComponent MinimapCaptureComponent;
 var Vector MinimapCapturePosition;
 var Rotator MinimapCaptureRotation;
 
-// Commander
-var float CommanderCamZoom;
-var float CommanderCamZoomTick;
-var float CommanderComZoomMax;
-var float CommanderComZoomMin;
-var bool bInCommanderView;
-var bool bCommanderRotation;
-
 replication
 {
 	if (bNetDirty)
@@ -168,74 +160,12 @@ simulated function Rotator GetAdjustedAimFor(Weapon W, vector StartFireLoc)
  * 
  * @extends
  */
-simulated singular event Rotator GetBaseAimRotation()
-{
-   local vector   POVLoc;
-   local rotator   POVRot, tempRot;
-   
-   if ( bInCommanderView )
-   {
-	   tempRot = Rotation;
-	   tempRot.Pitch = 0;
-	   SetRotation(tempRot);
-	   POVRot = Rotation;
-	   POVRot.Pitch = 0;    
-	}
-	else
-   {
-	  if( Controller != None && !InFreeCam() )
-	  {
-		 Controller.GetPlayerViewPoint(POVLoc, POVRot);
-		 return POVRot;
-	  }
-	  else
-	  {
-		 POVRot = Rotation;
-		 
-		 if( POVRot.Pitch == 0 )
-		 {
-			POVRot.Pitch = RemoteViewPitch << 8;
-		 }
-	  }
-   }
-
-	return POVRot;
-}
-
-/**
- * Override.
- * 
- * @extends
- */
 simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out Rotator out_CamRot, out float out_FOV)
 {
-	if (bInCommanderView)
-	{
-		out_CamLoc = Location;
-		out_CamLoc.Z += CommanderCamZoom;
-
-	   if(bCommanderRotation)
-	   {
-		  out_CamRot.Pitch = -16384;
-		  out_CamRot.Yaw = Rotation.Yaw;
-		  out_CamRot.Roll = Rotation.Roll;
-	   }
-	   else
-	   {
-		  out_CamRot.Pitch = -16384;
-		  out_CamRot.Yaw = 0;
-		  out_CamRot.Roll = 0;
-	   }
-
-	   return true;
-	}
-	else
-	{
-		// Set the camera to the player's eyes
-		Mesh.GetSocketWorldLocationAndRotation('Eyes', out_CamLoc);
-		out_CamRot = GetViewRotation();
-		return true;
-	}
+	// Set the camera to the player's eyes
+	Mesh.GetSocketWorldLocationAndRotation('Eyes', out_CamLoc);
+	out_CamRot = GetViewRotation();
+	return true;
 }
 
 /**
@@ -361,26 +291,6 @@ simulated function ChangeClass()
 {
 }
 
-exec function ToggleCommanderView()
-{
-	bInCommanderView = !bInCommanderView;
-}
-
-exec function ComZoomIn()
-{
-	CommanderCamZoom += CommanderCamZoomTick;
-}
-
-exec function ComZoomOut()
-{
-	CommanderCamZoom -= CommanderCamZoomTick;
-}
-
-exec function ComRotate()
-{
-	bCommanderRotation = !bCommanderRotation;
-}
-
 defaultproperties
 {
 	Components.Remove(Sprite)
@@ -455,9 +365,4 @@ defaultproperties
 	MaxFootPlacementDistSquared=56250000.0
 
 	MinimapCaptureRotation=(Pitch=-16384,Yaw=-16384,Roll=0) // Camera needs to be rotated to make up point north.
-	
-	CommanderCamZoom=384.0
-	CommanderCamZoomTick=18.0
-	bInCommanderView=false
-	bCommanderRotation=false
 }
