@@ -8,7 +8,6 @@ class FSVehiclePad extends Actor //@todo this should extend an FS class
 	Placeable
 	AutoExpandCategories(Factions);
 
-var(Factions) int VehicleHealth;
 var(Factions) class<UDKVehicle> VehicleClass;
 
 event PostBeginPlay()
@@ -18,18 +17,9 @@ event PostBeginPlay()
 	SetCollision(true, true);
 }
 
-event Bump(Actor Other, PrimitiveComponent OtherComp, Object.Vector HitNormal)
+function BuildVehicle()
 {
-	local UDKVehicle SpawnedVehicle;
-
-	super.Bump(Other, OtherComp, HitNormal);
-
-	if (FSPawn(Other) != none)
-	{
-		SpawnedVehicle = Spawn(VehicleClass, , , Location + vect(500, 500, 200));
-		SpawnedVehicle.HealthMax = VehicleHealth;
-		SpawnedVehicle.Health = VehicleHealth;
-	}
+	Spawn(VehicleClass, , , Location + vect(500, 500, 200));
 }
 
 defaultproperties
@@ -42,7 +32,6 @@ defaultproperties
 	bCanStepUpOn=true
 	bCollideComplex=true
 
-	VehicleHealth=100
 	VehicleClass=class'UTVehicle_Scorpion_Content'
 
 	RemoteRole=ROLE_SimulatedProxy

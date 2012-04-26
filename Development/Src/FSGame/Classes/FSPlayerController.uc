@@ -29,6 +29,28 @@ simulated event GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rota
 }
 
 /**
+ * Builds the requested vehicle.
+ */
+reliable server function RequestVehicle()
+{
+	local FSVehiclePad VP;
+
+	foreach DynamicActors(class'FSVehiclePad', VP, class'FSActorInterface')
+		break;
+
+	if (VP != None)
+		VP.BuildVehicle();
+}
+
+/**
+ * Requests to build a vehicle.
+ */
+exec function BuildVehicle()
+{
+	RequestVehicle();
+}
+
+/**
  * Toggles opening and closing the full-screen map.
  */
 exec function ToggleViewMap()
