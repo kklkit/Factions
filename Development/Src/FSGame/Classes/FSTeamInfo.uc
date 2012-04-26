@@ -25,5 +25,5 @@ simulated function string GetHumanReadableName()
 
 defaultproperties
 {
-	Resources=0
+	Resources=400
 }

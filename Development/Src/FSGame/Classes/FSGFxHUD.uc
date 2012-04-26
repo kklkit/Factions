@@ -69,7 +69,13 @@ function TickHud()
 	}
 
 	if (FSP != None)
+	{
 		UpdateHealth(FSP.Health, FSP.HealthMax);
+		if (FSP.PlayerReplicationInfo != None)
+		{
+			UpdateResources(FSTeamInfo(FSP.PlayerReplicationInfo.Team).Resources);
+		}
+	}
 	else
 		UpdateHealth(0, 1);
 
