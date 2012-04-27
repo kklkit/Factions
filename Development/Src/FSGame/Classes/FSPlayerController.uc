@@ -29,9 +29,35 @@ simulated state Commanding
 	 */
 	function PlayerMove(float DeltaTime)
 	{
+		local Vector L;
+
 		if (Pawn == None)
 		{
 			GotoState('Dead');
+		}
+		else
+		{
+			L = Location;
+
+			if (PlayerInput.aForward > 0)
+			{
+				L.X += 10;
+			}
+			else if (PlayerInput.aForward < 0)
+			{
+				L.X -= 10;
+			}
+
+			if (PlayerInput.aStrafe > 0)
+			{
+				L.Y += 10;
+			}
+			else if (PlayerInput.aStrafe < 0)
+			{
+				L.Y -= 10;
+			}
+
+			SetLocation(L);
 		}
 	}
 
