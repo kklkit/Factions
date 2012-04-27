@@ -347,7 +347,7 @@ defaultproperties
 	End Object
 
 	Begin Object Name=CollisionCylinder
-		CollisionRadius=+0021.000000
+		CollisionRadius=+0040.000000
 		CollisionHeight=+0044.000000
 	End Object
 	CylinderComponent=CollisionCylinder
