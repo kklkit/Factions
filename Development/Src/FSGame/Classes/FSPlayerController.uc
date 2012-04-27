@@ -5,18 +5,34 @@
  */
 class FSPlayerController extends UDKPlayerController;
 
-const MapViewRotation=rot(-16384,-16384,0);
-
-var bool bViewingMap;
+var Vector CommanderViewLocation;
+var Rotator CommanderViewRotation;
 
 simulated state Commanding
 {
 	/**
+	 * @extends
+	 */
+	event BeginState(name PreviousStateName)
+	{
+		super.BeginState(PreviousStateName);
+
+		CommanderViewLocation.X = Pawn.Location.X - 2048;
+		CommanderViewLocation.Y = Pawn.Location.Y;
+		CommanderViewLocation.Z = Pawn.Location.Z + 2048;
+
+		CommanderViewRotation = Rotator(Pawn.Location - CommanderViewLocation);
+	}
+
+	/**
 	 * Commander view point.
+	 * 
+	 * @extends
 	 */
 	simulated event GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
 	{
-		out_Location = vect(0, 0, 0);
+		out_Location = CommanderViewLocation;
+		out_Rotation = CommanderViewRotation;
 	}
 
 	/**
@@ -61,5 +77,4 @@ exec function ToggleCommandView()
 defaultproperties
 {
 	InputClass=class'FSGame.FSPlayerInput'
-	bViewingMap=false
 }

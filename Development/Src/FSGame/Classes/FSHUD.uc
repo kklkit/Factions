@@ -70,7 +70,7 @@ function DrawHud()
 	super.DrawHud();
 
 	FSPlayer = FSPlayerController(PlayerOwner);
-	if (FSPlayer != none && !FSPlayer.bViewingMap)
+	if (FSPlayer != none)
 	{
 		// Draw the minimap
 		//@todo this should be done in scaleform once the render texture crash is fixed
