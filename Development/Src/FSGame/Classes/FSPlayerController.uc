@@ -5,9 +5,6 @@
  */
 class FSPlayerController extends UDKPlayerController;
 
-var Vector CommanderViewLocation;
-var Rotator CommanderViewRotation;
-
 simulated state Commanding
 {
 	/**
@@ -15,13 +12,27 @@ simulated state Commanding
 	 */
 	event BeginState(name PreviousStateName)
 	{
+		local Vector ViewLocation;
+
 		super.BeginState(PreviousStateName);
 
-		CommanderViewLocation.X = Pawn.Location.X - 2048;
-		CommanderViewLocation.Y = Pawn.Location.Y;
-		CommanderViewLocation.Z = Pawn.Location.Z + 2048;
+		ViewLocation.X = Pawn.Location.X - 2048;
+		ViewLocation.Y = Pawn.Location.Y;
+		ViewLocation.Z = Pawn.Location.Z + 2048;
 
-		CommanderViewRotation = Rotator(Pawn.Location - CommanderViewLocation);
+		SetLocation(ViewLocation);
+		SetRotation(Rotator(Pawn.Location - ViewLocation));
+	}
+
+	/**
+	 * @extends
+	 */
+	function PlayerMove(float DeltaTime)
+	{
+		if (Pawn == None)
+		{
+			GotoState('Dead');
+		}
 	}
 
 	/**
@@ -31,8 +42,8 @@ simulated state Commanding
 	 */
 	simulated event GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
 	{
-		out_Location = CommanderViewLocation;
-		out_Rotation = CommanderViewRotation;
+		out_Location = Location;
+		out_Rotation = Rotation;
 	}
 
 	/**
