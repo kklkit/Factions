@@ -68,6 +68,22 @@ simulated state Commanding
 	}
 
 	/**
+	 * @extends
+	 */
+	exec function StartFire(optional byte FireModeNum)
+	{
+		FSHUD(myHUD).BeginDragging();
+	}
+
+	/**
+	 * @extends
+	 */
+	exec function StopFire(optional byte FireModeNum)
+	{
+		FSHUD(myHUD).EndDragging();
+	}
+
+	/**
 	 * Commander view point.
 	 * 
 	 * @extends

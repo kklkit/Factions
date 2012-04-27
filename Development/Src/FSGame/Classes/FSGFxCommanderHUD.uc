@@ -31,5 +31,5 @@ defaultproperties
 {
 	MovieInfo=SwfMovie'FSFlashAssets.factions_commander_hud'
 	bAutoPlay=false
-	bCaptureMouseInput=true
+	bCaptureMouseInput=false
 }

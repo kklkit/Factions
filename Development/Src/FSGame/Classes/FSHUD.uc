@@ -19,6 +19,10 @@ var float MapSize;
 
 var Color LineColor;
 
+// Commander mouse dragging
+var bool bDragging;
+var Vector2d DragStart;
+
 /**
  * @extends
  */
@@ -96,7 +100,35 @@ function DrawHud()
 				Canvas.Draw2DLine(UnitPositionX, UnitPositionY, UnitGroundPositionX, UnitGroundPositionY, LineColor);
 			}
 		}
+
+		if (bDragging)
+		{
+			DrawSelectionBox(FSPlayer);
+		}
 	}
+}
+
+function DrawSelectionBox(PlayerController PC)
+{
+	local Vector2d MousePosition;
+
+	MousePosition = LocalPlayer(PlayerOwner.Player).ViewportClient.GetMousePosition();
+	
+	Canvas.SetDrawColor(0, 255, 0);
+
+	Canvas.SetPos(Min(DragStart.X, MousePosition.X), Min(DragStart.Y, MousePosition.Y));
+	Canvas.DrawBox(Max(DragStart.X, MousePosition.X) - Min(DragStart.X, MousePosition.X), Max(DragStart.Y, MousePosition.Y) - Min(DragStart.Y, MousePosition.Y));
+}
+
+function BeginDragging()
+{
+	bDragging = true;
+	DragStart = LocalPlayer(PlayerOwner.Player).ViewportClient.GetMousePosition();
+}
+
+function EndDragging()
+{
+	bDragging = false;
 }
 
 /**
