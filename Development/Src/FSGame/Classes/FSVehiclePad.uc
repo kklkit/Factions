@@ -3,10 +3,7 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSVehiclePad extends FSStructure
-	Implements(FSActorInterface)
-	Placeable
-	AutoExpandCategories(Factions);
+class FSVehiclePad extends FSStructure;
 
 var() class<UDKVehicle> VehicleClass;
 var() int VehicleCost;
@@ -26,10 +23,9 @@ function BuildVehicle(FSPawn Builder)
 
 defaultproperties
 {
-	Begin Object Class=StaticMeshComponent Name=StructureStaticMesh
+	Begin Object Name=StaticMeshComponent0
 		StaticMesh=StaticMesh'FSAssets.Structures.VehiclePad'
 	End Object
-	Components.Add(StructureStaticMesh)
 
 	VehicleClass=class'UTVehicle_Scorpion_Content'
 	VehicleCost=100
