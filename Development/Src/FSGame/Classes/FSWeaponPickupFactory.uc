@@ -63,6 +63,7 @@ defaultproperties
 
 	bMovable=false
 	bStatic=false
+	bNoDelete=false
 
 	bDoVisibilityFadeIn=false
 	bRotatingPickup=true
@@ -99,4 +100,6 @@ defaultproperties
 	End Object
 	BaseMesh=BaseMeshComp
 	Components.Add(BaseMeshComp)
+
+	WeaponPickupClass=class'FSWeap_Firearm'
 }
