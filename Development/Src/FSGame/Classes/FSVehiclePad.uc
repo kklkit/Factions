@@ -27,7 +27,7 @@ function BuildVehicle(FSPawn Builder)
 	if (Team != None && Team.Resources >= VehicleCost)
 	{
 		Team.Resources -= VehicleCost;
-		Spawn(VehicleClass, Builder, , Location + vect(500, 500, 200));
+		Spawn(VehicleClass, Builder, , Location + vect(600, 600, 100));
 	}
 }
 
