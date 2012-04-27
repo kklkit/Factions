@@ -31,7 +31,8 @@ UDKGame/Config/Mobile/
 UDKGame/Config/UnrealFrontend*/
 UDKGame/Config/DefaultC*
 UDKGame/Config/DefaultE*
-UDKGame/Config/DefaultG*
+UDKGame/Config/DefaultGame.ini
+UDKGame/Config/DefaultGameUDK.ini
 UDKGame/Config/DefaultInput.ini
 UDKGame/Config/DefaultInputDefaults.ini
 UDKGame/Config/DefaultL*
