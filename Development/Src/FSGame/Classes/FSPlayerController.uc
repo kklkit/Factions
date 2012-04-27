@@ -9,6 +9,14 @@ const MapViewRotation=rot(-16384,-16384,0);
 
 var bool bViewingMap;
 
+simulated state Commanding
+{
+	exec function ToggleCommandView()
+	{
+		GotoState('PlayerWalking');
+	}
+}
+
 /**
  * Override to display the full-screen map if it is open.
  * 
@@ -60,6 +68,11 @@ exec function ToggleViewMap()
 		SetFOV(90.0);
 	else
 		SetFOV(DefaultFOV);
+}
+
+exec function ToggleCommandView()
+{
+	GotoState('Commanding');
 }
 
 defaultproperties
