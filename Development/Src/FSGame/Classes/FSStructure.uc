@@ -8,6 +8,18 @@ class FSStructure extends Actor
 	placeable
 	abstract;
 
+var() byte TeamNumber;
+
+/**
+ * Override.
+ * 
+ * @extends
+ */
+simulated event byte ScriptGetTeamNum()
+{
+	return TeamNumber;
+}
+
 defaultproperties
 {
 	Begin Object Class=DynamicLightEnvironmentComponent Name=LightEnvironment0
@@ -33,4 +45,6 @@ defaultproperties
 	bAlwaysRelevant=true
 	bReplicateMovement=false
 	bOnlyDirtyReplication=true
+
+	TeamNumber=0
 }

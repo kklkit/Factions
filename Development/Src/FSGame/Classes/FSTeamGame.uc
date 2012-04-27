@@ -72,6 +72,28 @@ function byte PickTeam(byte Current, Controller C)
 }
 
 /**
+ * @extends
+ */
+function float RatePlayerStart(PlayerStart P, byte Team, Controller Player)
+{
+	if (FSTeamPlayerStart(P) == None)
+	{
+		`warn(P$" is not a team playerstart!");
+		return -9;
+	}
+
+	if (Team != FSTeamPlayerStart(P).TeamNumber)
+		return -9;
+
+	if (Player != None && Player.Pawn != None)
+	{
+		return VSize(Player.Pawn.Location - P.Location);
+	}
+
+	return Super.RatePlayerStart(P, Team, Player);
+}
+
+/**
  * Sets the controller's team to the given team index.
  */
 function SetTeam(Controller Other, FSTeamInfo NewTeam, bool bNewTeam)
