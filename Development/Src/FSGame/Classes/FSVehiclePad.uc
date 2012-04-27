@@ -3,20 +3,13 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSVehiclePad extends Actor //@todo this should extend an FS class
+class FSVehiclePad extends FSStructure
 	Implements(FSActorInterface)
 	Placeable
 	AutoExpandCategories(Factions);
 
 var() class<UDKVehicle> VehicleClass;
 var() int VehicleCost;
-
-event PostBeginPlay()
-{
-	super.PostBeginPlay();
-
-	SetCollision(true, true);
-}
 
 function BuildVehicle(FSPawn Builder)
 {
@@ -37,12 +30,7 @@ defaultproperties
 		StaticMesh=StaticMesh'FSAssets.Structures.VehiclePad'
 	End Object
 	Components.Add(StructureStaticMesh)
-	
-	bCanStepUpOn=true
-	bCollideComplex=true
 
 	VehicleClass=class'UTVehicle_Scorpion_Content'
 	VehicleCost=100
-
-	RemoteRole=ROLE_SimulatedProxy
 }
