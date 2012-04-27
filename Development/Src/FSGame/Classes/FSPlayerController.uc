@@ -11,28 +11,20 @@ var bool bViewingMap;
 
 simulated state Commanding
 {
+	/**
+	 * Commander view point.
+	 */
+	simulated event GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
+	{
+		out_Location = vect(0, 0, 0);
+	}
+
+	/**
+	 * Exits the command view.
+	 */
 	exec function ToggleCommandView()
 	{
 		GotoState('PlayerWalking');
-	}
-}
-
-/**
- * Override to display the full-screen map if it is open.
- * 
- * @extends
- */
-simulated event GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
-{
-	local Vector V;
-
-	if (bViewingMap)
-	{
-		V.Z = FSMapInfo(WorldInfo.GetMapInfo()).MapRadius;
-		out_Location = V;
-		out_Rotation = MapViewRotation;
-	} else {
-		super.GetPlayerViewPoint(out_Location, out_Rotation);
 	}
 }
 
@@ -59,17 +51,8 @@ exec function BuildVehicle()
 }
 
 /**
- * Toggles opening and closing the full-screen map.
+ * Enters the command view.
  */
-exec function ToggleViewMap()
-{
-	bViewingMap = !bViewingMap;
-	if (bViewingMap)
-		SetFOV(90.0);
-	else
-		SetFOV(DefaultFOV);
-}
-
 exec function ToggleCommandView()
 {
 	GotoState('Commanding');

@@ -14,8 +14,6 @@ This is the development repository for Factions.
 
 **Important:** Always pull using **rebase**. Do not use merge because this will cause a non-linear history.
 
-You need to delete all _UDKGame/Config/UDK\*.ini_ files if the default scripts are changed in a commit. This will force UDK to reload the new default scripts.
-
 ## Coding Standards
 
 ### UnrealScript
