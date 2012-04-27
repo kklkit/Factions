@@ -7,14 +7,9 @@ class FSPlayerController extends UDKPlayerController;
 
 simulated state Commanding
 {
-	/**
-	 * @extends
-	 */
-	event BeginState(name PreviousStateName)
+	simulated event BeginState(name PreviousStateName)
 	{
 		local Vector ViewLocation;
-
-		super.BeginState(PreviousStateName);
 
 		ViewLocation.X = Pawn.Location.X - 2048;
 		ViewLocation.Y = Pawn.Location.Y;
@@ -22,6 +17,17 @@ simulated state Commanding
 
 		SetLocation(ViewLocation);
 		SetRotation(Rotator(Pawn.Location - ViewLocation));
+
+		FSHUD(myHUD).GFxCommanderHUD.Start();
+
+		super.BeginState(PreviousStateName);
+	}
+
+	simulated event EndState(name NextStateName)
+	{
+		FSHUD(myHUD).GFxCommanderHUD.Close(false);
+
+		super.EndState(NextStateName);
 	}
 
 	/**

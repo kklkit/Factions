@@ -10,6 +10,7 @@ const MinimapUnitBoxSize=10;
 
 var FSGFxHUD GFxHUD;
 var FSGFxOmniMenu GFxOmniMenu;
+var FSGFxCommanderHUD GFxCommanderHUD;
 
 var Material MinimapMaterial;
 var Vector2d MinimapPadding;
@@ -41,6 +42,9 @@ simulated function PostBeginPlay()
 
 	GFxOmniMenu = new class'FSGFxOmniMenu';
 	GFxOmniMenu.Init();
+
+	GFxCommanderHUD = new class'FSGFxCommanderHUD';
+	GFxCommanderHUD.Init();
 
 	// Set the map size for use by the minimap
 	MapSize = FSMapInfo(WorldInfo.GetMapInfo()).MapRadius * 2;
