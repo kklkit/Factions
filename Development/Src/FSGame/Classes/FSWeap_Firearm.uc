@@ -10,6 +10,6 @@ defaultproperties
 	AttachmentClass=class'FSGame.FSAttachment_Firearm'
 
 	Begin Object Name=PickupMesh
-		SkeletalMesh=SkeletalMesh'WP_ShockRifle.Mesh.SK_WP_ShockRifle_3P'
+		SkeletalMesh=SkeletalMesh'FSAssets.Equipment.SK_HeavyRifle'
 	End Object
 }

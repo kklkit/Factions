@@ -94,7 +94,7 @@ simulated function SetMuzzleFlashParams(ParticleSystemComponent PSC)
 defaultproperties
 {
 	Begin Object Name=SkeletalMeshComponent0
-		SkeletalMesh=SkeletalMesh'WP_ShockRifle.Mesh.SK_WP_ShockRifle_3P'
+		SkeletalMesh=SkeletalMesh'FSAssets.Equipment.SK_HeavyRifle'
 	End Object
 
 	BeamTemplate=particlesystem'WP_ShockRifle.Particles.P_WP_ShockRifle_Beam'
