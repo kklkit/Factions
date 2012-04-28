@@ -5,6 +5,9 @@
  */
 class FSPlayerController extends UDKPlayerController;
 
+var bool bPlacingStructure;
+var byte PlacingStructureType;
+
 simulated state Commanding
 {
 	simulated event BeginState(name PreviousStateName)
@@ -28,6 +31,17 @@ simulated state Commanding
 		FSHUD(myHUD).GFxCommanderHUD.Close(false);
 
 		super.EndState(NextStateName);
+	}
+
+	/**
+	 * Commander view point.
+	 * 
+	 * @extends
+	 */
+	simulated event GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
+	{
+		out_Location = Location;
+		out_Rotation = Rotation;
 	}
 
 	/**
@@ -81,17 +95,7 @@ simulated state Commanding
 	exec function StopFire(optional byte FireModeNum)
 	{
 		FSHUD(myHUD).EndDragging();
-	}
-
-	/**
-	 * Commander view point.
-	 * 
-	 * @extends
-	 */
-	simulated event GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
-	{
-		out_Location = Location;
-		out_Rotation = Rotation;
+		PlaceStructure();
 	}
 
 	/**
@@ -125,6 +129,12 @@ exec function BuildVehicle()
 	RequestVehicle();
 }
 
+exec function PlaceStructure()
+{
+	bPlacingStructure = true;
+}
+
+
 /**
  * Enters the command view.
  */
@@ -136,4 +146,6 @@ exec function ToggleCommandView()
 defaultproperties
 {
 	InputClass=class'FSGame.FSPlayerInput'
+	bPlacingStructure=false
+	PlacingStructureType=0
 }

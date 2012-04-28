@@ -105,6 +105,11 @@ function DrawHud()
 		{
 			DrawSelectionBox(FSPlayer);
 		}
+
+		if (FSPlayer.bPlacingStructure)
+		{
+			PlaceStructure(FSPlayer);
+		}
 	}
 }
 
@@ -118,6 +123,19 @@ function DrawSelectionBox(PlayerController PC)
 
 	Canvas.SetPos(Min(DragStart.X, MousePosition.X), Min(DragStart.Y, MousePosition.Y));
 	Canvas.DrawBox(Max(DragStart.X, MousePosition.X) - Min(DragStart.X, MousePosition.X), Max(DragStart.Y, MousePosition.Y) - Min(DragStart.Y, MousePosition.Y));
+}
+
+function PlaceStructure(FSPlayerController FSPlayer)
+{
+	local Vector HitLocation, HitNormal, WorldOrigin, WorldDirection;
+
+	Canvas.DeProject(LocalPlayer(PlayerOwner.Player).ViewportClient.GetMousePosition(), WorldOrigin, WorldDirection);
+
+	Trace(HitLocation, HitNormal, WorldOrigin + WorldDirection * 65536.0, WorldOrigin, true, , , );
+
+	FSTeamGame(WorldInfo.Game).PlaceStructure(HitLocation);
+
+	FSPlayer.bPlacingStructure = false;
 }
 
 function BeginDragging()

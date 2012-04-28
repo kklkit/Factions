@@ -142,6 +142,11 @@ function CreateTeam(int TeamIndex)
 	Teams[TeamIndex] = Team;
 }
 
+reliable server function PlaceStructure(Vector StructureLocation)
+{
+	Spawn(class'FSVehiclePad', , , StructureLocation, , , );
+}
+
 defaultproperties
 {
 	PlayerControllerClass=class'FSGame.FSPlayerController'
