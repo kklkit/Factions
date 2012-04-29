@@ -1,10 +1,4 @@
-/**
- * Base weapon class.
- * 
- * Copyright 2012 Factions Team. All Rights Reserved.
- */
 class FSWeapon extends UDKWeapon
-	dependson(FSPlayerController)
 	config(WeaponFS)
 	abstract;
 
@@ -268,8 +262,6 @@ defaultproperties
 	AmmoCountMax=30
 
 	RespawnTime=1.0
-
-	Spread=(0.05)
 
 	bDelayedSpawn=false
 }

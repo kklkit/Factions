@@ -17,11 +17,6 @@ simulated function ReplicatedEvent(name VarName)
 simulated function InitializePickup()
 {
 	InventoryType = WeaponPickupClass;
-	if (InventoryType == None)
-	{
-		GotoState('Disabled');
-		return;
-	}
 
 	Super.InitializePickup();
 }

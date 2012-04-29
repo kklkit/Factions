@@ -29,6 +29,8 @@ simulated function FirstPersonFireEffects(Weapon PawnWeapon, Vector HitLocation)
 {
 	if (PawnWeapon != None)
 		PawnWeapon.PlayFireEffects(Pawn(Owner).FiringMode, HitLocation);
+
+	PlayRecoil();
 }
 
 simulated function StopFirstPersonFireEffects(Weapon PawnWeapon)
@@ -39,6 +41,13 @@ simulated function StopFirstPersonFireEffects(Weapon PawnWeapon)
 
 simulated function ThirdPersonFireEffects(Vector HitLocation)
 {
+	PlayRecoil();
+}
+
+simulated function StopThirdPersonFireEffects();
+
+simulated function PlayRecoil()
+{
 	local FSPawn InstigatorPawn;
 
 	InstigatorPawn = FSPawn(Instigator);
@@ -47,17 +56,11 @@ simulated function ThirdPersonFireEffects(Vector HitLocation)
 		InstigatorPawn.GunRecoilNode.bPlayRecoil = true;
 }
 
-simulated function StopThirdPersonFireEffects();
-
 simulated function ChangeVisibility(bool bIsVisible)
 {
 	if (Mesh != None)
 		Mesh.SetHidden(!bIsVisible);
 }
-
-simulated function FireModeUpdated(byte FiringMode, bool bViaReplication);
-
-simulated function SetPuttingDownWeapon(bool bNowPuttingDown);
 
 simulated function Vector GetEffectLocation()
 {
