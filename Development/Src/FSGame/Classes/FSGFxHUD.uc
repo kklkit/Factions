@@ -14,13 +14,14 @@ var float LastHealth;
 var float LastHealthMax;
 var float LastAmmo;
 var float LastAmmoMax;
+var float LastResources;
 
 /**
  * @extends
  */
 function Init(optional LocalPlayer LocPlay)
 {
-	Super.Init(LocPlay);
+	super.Init(LocPlay);
 
 	// Get object references for the HUD anchors
 	TopLeftHUD = GetVariableObject("_root.topLeftHUD");
@@ -37,25 +38,55 @@ function Init(optional LocalPlayer LocPlay)
  */
 function TickHud()
 {
-	local PlayerController PC;
 	local FSPawn FSP;
 	local FSWeapon FSW;
+
+	FSP = GetPlayerPawn();
+
+	if (FSP != none)
+	{
+		UpdateHealth(FSP.Health, FSP.HealthMax);
+
+		if (FSP.PlayerReplicationInfo != none)
+		{
+			UpdateResources(FSTeamInfo(FSP.PlayerReplicationInfo.Team).Resources);
+		}
+
+		FSW = FSWeapon(FSP.Weapon);
+		if (FSW != none)
+			UpdateAmmo(FSW.AmmoCount, FSW.AmmoCountMax);
+		else
+			UpdateAmmo(0, 1);
+	}
+	else
+	{
+		UpdateHealth(0, 1);
+		UpdateAmmo(0, 1);
+	}
+}
+
+/**
+ * Returns the player's pawn or none if it cannot be found.
+ */
+function FSPawn GetPlayerPawn()
+{
+	local PlayerController PC;
+	local FSPawn FSP;
 	local UDKVehicle FSV; //@todo change to FSVehicle
 	local UDKWeaponPawn FWP; //@todo change to FSWeaponPawn
 
 	PC = GetPC();
-
 	FSP = FSPawn(GetPC().Pawn);
 
 	// Set the pawn if driving a vehicle or mounted weapon
-	if (FSP == None)
+	if (FSP == none)
 	{
 		FSV = UDKVehicle(PC.Pawn);
 
-		if (FSV == None)
+		if (FSV == none)
 		{
 			FWP = UDKWeaponPawn(PC.Pawn);
-			if ( FWP != None )
+			if (FWP != none)
 			{
 				FSV = FWP.MyVehicle;
 				FSP = FSPawn(FWP.Driver);
@@ -64,26 +95,11 @@ function TickHud()
 		else
 			FSP = FSPawn(FSV.Driver);
 
-		if (FSV == None)
-			return;
+		if (FSV == none)
+			return none;
 	}
 
-	if (FSP != None)
-	{
-		UpdateHealth(FSP.Health, FSP.HealthMax);
-		if (FSP.PlayerReplicationInfo != None)
-		{
-			UpdateResources(FSTeamInfo(FSP.PlayerReplicationInfo.Team).Resources);
-		}
-	}
-	else
-		UpdateHealth(0, 1);
-
-	FSW = FSWeapon(FSP.Weapon);
-	if (FSW != None)
-		UpdateAmmo(FSW.AmmoCount, FSW.AmmoCountMax);
-	else
-		UpdateAmmo(0, 1);
+	return FSP;
 }
 
 /*********************************************************************************************
@@ -138,7 +154,11 @@ function UpdateAmmo(int Ammo, int AmmoMax)
 
 function UpdateResources(int Resources)
 {
-	ActionScriptVoid("_root.UpdateResources");
+	if (Resources != LastResources)
+	{
+		ActionScriptVoid("_root.UpdateResources");
+		LastResources = Resources;
+	}
 }
 
 function UpdateIsAlive(bool IsAlive)
@@ -165,4 +185,5 @@ defaultproperties
 	LastHealthMax=-110
 	LastAmmo=-110
 	LastAmmoMax=-110
+	LastResources=-110
 }
