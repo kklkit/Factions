@@ -74,9 +74,9 @@ simulated function Vector GetEffectLocation()
 
 defaultproperties
 {
-	Begin Object Class=SkeletalMeshComponent Name=SkeletalMeshComponent0
+	Begin Object Class=SkeletalMeshComponent Name=AttachmentMeshComponent
 	End Object
-	Mesh=SkeletalMeshComponent0
+	Mesh=AttachmentMeshComponent
 
 	bReplicateInstigator=true
 

@@ -61,7 +61,7 @@ simulated function SpawnBeam(Vector Start, Vector End, bool bFirstPerson)
 
 defaultproperties
 {
-	Begin Object Name=SkeletalMeshComponent0
+	Begin Object Name=AttachmentMeshComponent
 		SkeletalMesh=SkeletalMesh'FSAssets.Equipment.SK_HeavyRifle'
 	End Object
 
