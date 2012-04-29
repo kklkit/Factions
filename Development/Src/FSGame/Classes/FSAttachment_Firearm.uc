@@ -1,15 +1,14 @@
 /**
- * Attachment for firearm weapons.
+ * Physical model and effects for infantry weapons.
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSAttachment_Firearm extends FSWeaponAttachment;
 
 var ParticleSystem BeamTemplate;
-
 var int CurrentPath;
 
-simulated function SpawnBeam(vector Start, vector End, bool bFirstPerson)
+simulated function SpawnBeam(Vector Start, Vector End, bool bFirstPerson)
 {
 	local ParticleSystemComponent E;
 	local Actor HitActor;
@@ -17,12 +16,12 @@ simulated function SpawnBeam(vector Start, vector End, bool bFirstPerson)
 
 	if (End == Vect(0,0,0))
 	{
-		if (!bFirstPerson || (Instigator.Controller == None))
+		if (!bFirstPerson || (Instigator.Controller == none))
 	    	return;
 
-		End = Start + Vector(Instigator.Controller.Rotation) * class'UTWeap_ShockRifle'.default.WeaponRange;
+		End = Start + Vector(Instigator.Controller.Rotation) * class'FSWeap_Firearm'.default.WeaponRange;
 		HitActor = Instigator.Trace(HitLocation, HitNormal, End, Start, true, vect(0,0,0), , TRACEFLAG_Bullet);
-		if (HitActor != None)
+		if (HitActor != none)
 			End = HitLocation;
 	}
 
@@ -34,29 +33,24 @@ simulated function SpawnBeam(vector Start, vector End, bool bFirstPerson)
 		E.SetDepthPriorityGroup(SDPG_World);
 }
 
-simulated function FirstPersonFireEffects(Weapon PawnWeapon, vector HitLocation)
+simulated function FirstPersonFireEffects(Weapon PawnWeapon, Vector HitLocation)
 {
 	local Vector EffectLocation;
 
-	Super.FirstPersonFireEffects(PawnWeapon, HitLocation);
+	super.FirstPersonFireEffects(PawnWeapon, HitLocation);
 
-	if (Instigator.FiringMode == 0 || Instigator.FiringMode == 3)
-	{
-		EffectLocation = GetEffectLocation();
-		SpawnBeam(EffectLocation, HitLocation, true);
-	}
+	EffectLocation = GetEffectLocation();
+	SpawnBeam(EffectLocation, HitLocation, true);
 }
 
-simulated function ThirdPersonFireEffects(vector HitLocation)
+simulated function ThirdPersonFireEffects(Vector HitLocation)
 {
-	Super.ThirdPersonFireEffects(HitLocation);
+	super.ThirdPersonFireEffects(HitLocation);
 
-	if ((Instigator.FiringMode == 0 || Instigator.FiringMode == 3))
-	{
-		SpawnBeam(GetEffectLocation(), HitLocation, false);
-	}
+	SpawnBeam(GetEffectLocation(), HitLocation, false);
 }
 
+//@todo Implement muzzle flash
 simulated function SetMuzzleFlashParams(ParticleSystemComponent PSC)
 {
 	local float PathValues[3];
