@@ -4,165 +4,33 @@
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSWeaponAttachment extends Actor
-	abstract
-	dependson(FSPawn);
+	abstract;
 
 var SkeletalMeshComponent Mesh;
-
 var name MuzzleFlashSocket;
-var ParticleSystemComponent	MuzzleFlashPSC;
-var ParticleSystem MuzzleFlashPSCTemplate, MuzzleFlashAltPSCTemplate;
-var color MuzzleFlashColor;
-var bool bMuzzleFlashPSCLoops;
-var class<UDKExplosionLight> MuzzleFlashLightClass;
-var	UDKExplosionLight MuzzleFlashLight;
-var float MuzzleFlashDuration;
-var SkeletalMeshComponent OwnerMesh;
-var name AttachmentSocket;
 
-var float MaxFireEffectDistance;
-
-var name FireAnim, AltFireAnim;
-
-state CurrentlyAttached
+simulated function AttachTo(FSPawn TargetPawn)
 {
+	if (TargetPawn.Mesh != None && Mesh != None)
+	{
+		Mesh.SetShadowParent(TargetPawn.Mesh);
+		Mesh.SetLightEnvironment(TargetPawn.LightEnvironment);
+
+		TargetPawn.Mesh.AttachComponentToSocket(Mesh, TargetPawn.WeaponSocket);
+	}
 }
 
-/**
- * Attaches the weapon to the given Pawn.
- */
-simulated function AttachTo(FSPawn OwnerPawn)
+simulated function DetachFrom(SkeletalMeshComponent TargetMeshComponent)
 {
-	if (OwnerPawn.Mesh != None && Mesh != None)
-	{
-		OwnerMesh = OwnerPawn.Mesh;
-		AttachmentSocket = OwnerPawn.WeaponSocket;
-
-		Mesh.SetShadowParent(OwnerPawn.Mesh);
-		Mesh.SetLightEnvironment(OwnerPawn.LightEnvironment);
-
-		OwnerPawn.Mesh.AttachComponentToSocket(Mesh, OwnerPawn.WeaponSocket);
-	}
-
-	if (MuzzleFlashSocket != '')
-	{
-		if (MuzzleFlashPSCTemplate != None || MuzzleFlashAltPSCTemplate != None)
-		{
-			MuzzleFlashPSC = new(self) class'UDKParticleSystemComponent';
-			MuzzleFlashPSC.bAutoActivate = false;
-			MuzzleFlashPSC.SetOwnerNoSee(false);
-			Mesh.AttachComponentToSocket(MuzzleFlashPSC, MuzzleFlashSocket);
-		}
-	}
-
-	GotoState('CurrentlyAttached');
-}
-
-/**
- * Detaches the weapon from the skeletal mesh.
- */
-simulated function DetachFrom(SkeletalMeshComponent MeshCpnt)
-{
-	if (Mesh != None)
+	if (TargetMeshComponent != None && Mesh != None)
 	{
 		Mesh.SetShadowParent(None);
 		Mesh.SetLightEnvironment(None);
-		if (MuzzleFlashPSC != None)
-			Mesh.DetachComponent(MuzzleFlashPSC);
-		if (MuzzleFlashLight != None)
-			Mesh.DetachComponent(MuzzleFlashLight);
-	}
-	if (MeshCpnt != None)
-	{
-		if (Mesh != None)
-		{
-			MeshCpnt.DetachComponent(Mesh);
-		}
-	}
-
-	GotoState('');
-}
-
-/**
- * Allows a child to setup custom parameters on the muzzle flash
- */
-simulated function SetMuzzleFlashParams(ParticleSystemComponent PSC)
-{
-	PSC.SetColorParameter('MuzzleFlashColor', MuzzleFlashColor);
-}
-
-/**
- * Turns the MuzzleFlashlight off
- */
-simulated function MuzzleFlashTimer()
-{
-	if ( MuzzleFlashLight != None )
-		MuzzleFlashLight.SetEnabled(false);
-
-	if (MuzzleFlashPSC != None && (!bMuzzleFlashPSCLoops) )
-		MuzzleFlashPSC.DeactivateSystem();
-}
-
-/**
- * Causes the muzzle flash to turn on and setup a time to turn it back off again.
- */
-simulated function CauseMuzzleFlash()
-{
-	local ParticleSystem MuzzleTemplate;
-
-	if ((!WorldInfo.bDropDetail && !class'Engine'.static.IsSplitScreen()) || WorldInfo.IsConsoleBuild(CONSOLE_Mobile))
-	{
-		if (MuzzleFlashLight == None)
-		{
-			if (MuzzleFlashLightClass != None)
-			{
-				MuzzleFlashLight = new(Outer) MuzzleFlashLightClass;
-
-				if (Mesh != None && Mesh.GetSocketByName(MuzzleFlashSocket) != None)
-					Mesh.AttachComponentToSocket(MuzzleFlashLight, MuzzleFlashSocket);
-				else if (OwnerMesh != None)
-					OwnerMesh.AttachComponentToSocket(MuzzleFlashLight, AttachmentSocket);
-			}
-		}
-		else
-			MuzzleFlashLight.ResetLight();
-	}
-
-	if (MuzzleFlashPSC != None)
-	{
-		if (!bMuzzleFlashPSCLoops || !MuzzleFlashPSC.bIsActive)
-		{
-			if (Instigator != None && Instigator.FiringMode == 1 && MuzzleFlashAltPSCTemplate != None)
-				MuzzleTemplate = MuzzleFlashAltPSCTemplate;
-			else
-				MuzzleTemplate = MuzzleFlashPSCTemplate;
-
-			if (MuzzleTemplate != MuzzleFlashPSC.Template)
-				MuzzleFlashPSC.SetTemplate(MuzzleTemplate);
-
-			SetMuzzleFlashParams(MuzzleFlashPSC);
-			MuzzleFlashPSC.ActivateSystem();
-		}
-	}
-
-	SetTimer(MuzzleFlashDuration, false, 'MuzzleFlashTimer');
-}
-
-/**
- * Stops the muzzle flash.
- */
-simulated function StopMuzzleFlash()
-{
-	ClearTimer('MuzzleFlashTimer');
-	MuzzleFlashTimer();
-
-	if (MuzzleFlashPSC != None)
-	{
-		MuzzleFlashPSC.DeactivateSystem();
+		TargetMeshComponent.DetachComponent(Mesh);
 	}
 }
 
-simulated function FirstPersonFireEffects(Weapon PawnWeapon, vector HitLocation)
+simulated function FirstPersonFireEffects(Weapon PawnWeapon, Vector HitLocation)
 {
 	if (PawnWeapon != None)
 		PawnWeapon.PlayFireEffects(Pawn(Owner).FiringMode, HitLocation);
@@ -174,44 +42,26 @@ simulated function StopFirstPersonFireEffects(Weapon PawnWeapon)
 		PawnWeapon.StopFireEffects(Pawn(Owner).FiringMode);
 }
 
-simulated function ThirdPersonFireEffects(vector HitLocation)
+simulated function ThirdPersonFireEffects(Vector HitLocation)
 {
-	local FSPawn P;
-	if (EffectIsRelevant(Location, false, MaxFireEffectDistance))
-		CauseMuzzleFlash();
+	local FSPawn InstigatorPawn;
 
-	P = FSPawn(Instigator);
-	if (P != None && P.GunRecoilNode != None)
-		P.GunRecoilNode.bPlayRecoil = true;
+	InstigatorPawn = FSPawn(Instigator);
 
-	if (Instigator.FiringMode == 1 && AltFireAnim != 'None')
-		Mesh.PlayAnim(AltFireAnim, , , false);
-	else if (FireAnim != 'None')
-		Mesh.PlayAnim(FireAnim, , , false);
+	if (InstigatorPawn != None && InstigatorPawn.GunRecoilNode != None)
+		InstigatorPawn.GunRecoilNode.bPlayRecoil = true;
 }
 
-simulated function StopThirdPersonFireEffects()
-{
-	StopMuzzleFlash();
-}
+simulated function StopThirdPersonFireEffects();
 
-/**
- * Show or hide the weapon mesh.
- */
 simulated function ChangeVisibility(bool bIsVisible)
 {
 	if (Mesh != None)
 		Mesh.SetHidden(!bIsVisible);
 }
 
-/**
- * Called when the fire mode is updated.
- */
 simulated function FireModeUpdated(byte FiringMode, bool bViaReplication);
 
-/**
- * Called when the weapon is being put down.
- */
 simulated function SetPuttingDownWeapon(bool bNowPuttingDown);
 
 simulated function Vector GetEffectLocation()
@@ -227,12 +77,8 @@ simulated function Vector GetEffectLocation()
 		return Mesh.Bounds.Origin + (vect(45,0,0) >> Instigator.Rotation);
 }
 
-
 defaultproperties
 {
-	Begin Object Class=AnimNodeSequence Name=MeshSequenceA
-	End Object
-
 	Begin Object Class=SkeletalMeshComponent Name=SkeletalMeshComponent0
 		bOwnerNoSee=false
 		bOnlyOwnerSee=false
@@ -245,18 +91,15 @@ defaultproperties
 		bIgnoreControllersWhenNotRendered=true
 		bOverrideAttachmentOwnerVisibility=true
 		bAcceptsDynamicDecals=false
-		Animations=MeshSequenceA
 		CastShadow=true
 		bCastDynamicShadow=true
 		bPerBoneMotionBlur=true
 	End Object
 	Mesh=SkeletalMeshComponent0
 
-	TickGroup=TG_DuringAsyncWork
-	NetUpdateFrequency=10
-	RemoteRole=ROLE_None
 	bReplicateInstigator=true
-	MaxFireEffectDistance=5000.0
-	MuzzleFlashDuration=0.3
-	MuzzleFlashColor=(R=255,G=255,B=255,A=255)
+
+	NetUpdateFrequency=10
+	TickGroup=TG_DuringAsyncWork
+	RemoteRole=ROLE_None
 }

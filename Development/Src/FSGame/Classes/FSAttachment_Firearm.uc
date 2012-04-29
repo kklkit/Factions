@@ -59,41 +59,6 @@ simulated function SpawnBeam(Vector Start, Vector End, bool bFirstPerson)
 		E.SetDepthPriorityGroup(SDPG_World);
 }
 
-//@todo Implement muzzle flash
-simulated function SetMuzzleFlashParams(ParticleSystemComponent PSC)
-{
-	local float PathValues[3];
-	local int NewPath;
-	Super.SetMuzzleFlashparams(PSC);
-	if (Instigator.FiringMode == 0)
-	{
-		NewPath = Rand(3);
-		if (NewPath == CurrentPath)
-		{
-			NewPath++;
-		}
-		CurrentPath = NewPath % 3;
-
-		PathValues[CurrentPath % 3] = 1.0;
-		PSC.SetFloatParameter('Path1',PathValues[0]);
-		PSC.SetFloatParameter('Path2',PathValues[1]);
-		PSC.SetFloatParameter('Path3',PathValues[2]);
-//			CurrentPath++;
-	}
-	else if (Instigator.FiringMode == 3)
-	{
-		PSC.SetFloatParameter('Path1',1.0);
-		PSC.SetFloatParameter('Path2',1.0);
-		PSC.SetFloatParameter('Path3',1.0);
-	}
-	else
-	{
-		PSC.SetFloatParameter('Path1',0.0);
-		PSC.SetFloatParameter('Path2',0.0);
-		PSC.SetFloatParameter('Path3',0.0);
-	}
-}
-
 defaultproperties
 {
 	Begin Object Name=SkeletalMeshComponent0
@@ -102,10 +67,5 @@ defaultproperties
 
 	BeamTemplate=ParticleSystem'FSAssets.Particles.P_BulletTrail'
 	
-	MuzzleFlashSocket=MuzzleFlashSocket
-	MuzzleFlashPSCTemplate=WP_ShockRifle.Particles.P_ShockRifle_3P_MF
-	MuzzleFlashAltPSCTemplate=WP_ShockRifle.Particles.P_ShockRifle_3P_MF
-	MuzzleFlashColor=(R=255,G=120,B=255,A=255)
-	MuzzleFlashDuration=0.33
-	MuzzleFlashLightClass=class'UTGame.UTShockMuzzleFlashLight'
+	MuzzleFlashSocket="MuzzleFlashSocket"
 }
