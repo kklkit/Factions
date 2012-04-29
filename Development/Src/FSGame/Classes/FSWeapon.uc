@@ -10,11 +10,15 @@ var repnotify int AmmoCountMax;
 
 function ConsumeAmmo(byte FireModeNum)
 {
+	Super.ConsumeAmmo(FireModeNum);
+
 	AddAmmo(-1);
 }
 
 function int AddAmmo(int Amount)
 {
+	Super.AddAmmo(Amount);
+
 	AmmoCount = Clamp(AmmoCount + Amount, 0, AmmoCountMax);
 
 	return AmmoCount;
@@ -37,6 +41,8 @@ simulated function AttachWeaponTo(SkeletalMeshComponent MeshCpnt, optional name 
 {
 	local FSPawn InstigatorPawn;
 
+	Super.AttachWeaponTo(MeshCpnt, SocketName);
+
 	InstigatorPawn = FSPawn(Instigator);
 
 	if (Role == ROLE_Authority && InstigatorPawn != None)
@@ -52,6 +58,8 @@ simulated function AttachWeaponTo(SkeletalMeshComponent MeshCpnt, optional name 
 simulated function DetachWeapon()
 {
 	local FSPawn InstigatorPawn;
+
+	Super.DetachWeapon();
 
 	InstigatorPawn = FSPawn(Instigator);
 	if (InstigatorPawn != None && Role == ROLE_Authority && InstigatorPawn.CurrentWeaponAttachmentClass == AttachmentClass)
