@@ -132,7 +132,7 @@ simulated function Rotator GetAdjustedAimFor(Weapon W, Vector StartFireLoc)
 		return GetBaseAimRotation();
 
 	// Set the aim to the weapon's rotation.
-	CurrentWeaponAttachment.Mesh.GetSocketWorldLocationAndRotation(CurrentWeaponAttachment.MuzzleFlashSocket, MuzVec, MuzRot);
+	CurrentWeaponAttachment.Mesh.GetSocketWorldLocationAndRotation(CurrentWeaponAttachment.MuzzleSocket, MuzVec, MuzRot);
 
 	return MuzRot;
 }

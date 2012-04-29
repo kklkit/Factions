@@ -1,13 +1,8 @@
-/**
- * Client-side weapon attachment.
- * 
- * Copyright 2012 Factions Team. All Rights Reserved.
- */
 class FSWeaponAttachment extends Actor
 	abstract;
 
 var SkeletalMeshComponent Mesh;
-var name MuzzleFlashSocket;
+var name MuzzleSocket;
 
 simulated function AttachTo(FSPawn TargetPawn)
 {
@@ -68,9 +63,9 @@ simulated function Vector GetEffectLocation()
 {
 	local Vector SocketLocation;
 
-	if (MuzzleFlashSocket != 'None')
+	if (MuzzleSocket != 'None')
 	{
-		Mesh.GetSocketWorldLocationAndRotation(MuzzleFlashSocket, SocketLocation);
+		Mesh.GetSocketWorldLocationAndRotation(MuzzleSocket, SocketLocation);
 		return SocketLocation;
 	}
 	else
@@ -99,6 +94,7 @@ defaultproperties
 
 	bReplicateInstigator=true
 
+	MuzzleSocket=Muzzle
 	NetUpdateFrequency=10
 	TickGroup=TG_DuringAsyncWork
 	RemoteRole=ROLE_None

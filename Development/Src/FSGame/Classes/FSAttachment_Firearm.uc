@@ -66,6 +66,4 @@ defaultproperties
 	End Object
 
 	BeamTemplate=ParticleSystem'FSAssets.Particles.P_BulletTrail'
-	
-	MuzzleFlashSocket="MuzzleFlashSocket"
 }

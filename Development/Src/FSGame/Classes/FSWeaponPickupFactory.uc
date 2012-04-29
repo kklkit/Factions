@@ -1,8 +1,3 @@
-/**
- * Dispenses weapons to players.
- * 
- * Copyright 2012 Factions Team. All Rights Reserved.
- */
 class FSWeaponPickupFactory extends UDKPickupFactory
 	ClassGroup(Pickups,Weapon);
 
