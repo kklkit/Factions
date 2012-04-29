@@ -13,22 +13,21 @@ var FSGFxOmniMenu GFxOmniMenu;
 var FSGFxCommanderHUD GFxCommanderHUD;
 
 var Material MinimapMaterial;
-var Vector2d MinimapPadding;
+var Vector2D MinimapPadding;
 
 var float MapSize;
-
 var Color LineColor;
 
 // Commander mouse dragging
 var bool bDragging;
-var Vector2d DragStart;
+var Vector2D DragStart;
 
 /**
  * @extends
  */
 event PostRender()
 {
-	Super.PostRender();
+	super.PostRender();
 
 	GFxHUD.TickHud();
 }
@@ -38,7 +37,7 @@ event PostRender()
  */
 simulated function PostBeginPlay()
 {
-	Super.PostBeginPlay();
+	super.PostBeginPlay();
 
 	// Initialize the GFx movie clips
 	GFxHUD = new class'FSGFxHUD';
@@ -61,7 +60,7 @@ simulated function PostBeginPlay()
  */
 simulated function NotifyLocalPlayerTeamReceived()
 {
-	Super.NotifyLocalPlayerTeamReceived();
+	super.NotifyLocalPlayerTeamReceived();
 
 	GFxOmniMenu.UpdateTeam(PlayerOwner.PlayerReplicationInfo.Team.TeamIndex);
 }
@@ -73,7 +72,7 @@ function DrawHud()
 {
 	local FSPlayerController FSPlayer;
 	local Actor LevelActor;
-	local float UnitPositionX, UnitPositionY, UnitGroundPositionX, UnitGroundPositionY; //@todo use vector2d instead
+	local Vector2D UnitPosition, UnitGroundPosition;
 	
 	super.DrawHud();
 
@@ -87,17 +86,18 @@ function DrawHud()
 
 		// Draw actor overlays on the minimap
 		Canvas.SetDrawColor(0, 255, 0);
-		ForEach DynamicActors(class'Actor', LevelActor)
+		foreach DynamicActors(class'Actor', LevelActor)
 		{
-			if (FSActorInterface(LevelActor) != None || Projectile(LevelActor) != None || UDKVehicle(LevelActor) != None)
+			if (FSActorInterface(LevelActor) != none || Projectile(LevelActor) != none || UDKVehicle(LevelActor) != none)
 			{
-				UnitPositionX = LevelActor.Location.X / (MapSize - LevelActor.Location.Z * 2) * MinimapSize + Canvas.ClipX - MinimapPadding.X - (MinimapSize / 2);
-				UnitPositionY = LevelActor.Location.Y / (MapSize - LevelActor.Location.Z * 2) * MinimapSize + MinimapPadding.Y + (MinimapSize / 2);
-				UnitGroundPositionX = LevelActor.Location.X / MapSize * MinimapSize + Canvas.ClipX - MinimapPadding.X - (MinimapSize / 2);
-				UnitGroundPositionY = LevelActor.Location.Y / MapSize * MinimapSize + MinimapPadding.Y + (MinimapSize / 2);
-				Canvas.SetPos(UnitPositionX - (MinimapUnitBoxSize / 2), UnitPositionY - (MinimapUnitBoxSize / 2));
+				UnitPosition.X = LevelActor.Location.X / (MapSize - LevelActor.Location.Z * 2) * MinimapSize + Canvas.ClipX - MinimapPadding.X - (MinimapSize / 2);
+				UnitPosition.Y = LevelActor.Location.Y / (MapSize - LevelActor.Location.Z * 2) * MinimapSize + MinimapPadding.Y + (MinimapSize / 2);
+				//@todo Ground position should be calculated from the actual ground
+				UnitGroundPosition.X = LevelActor.Location.X / MapSize * MinimapSize + Canvas.ClipX - MinimapPadding.X - (MinimapSize / 2);
+				UnitGroundPosition.Y = LevelActor.Location.Y / MapSize * MinimapSize + MinimapPadding.Y + (MinimapSize / 2);
+				Canvas.SetPos(UnitPosition.X - (MinimapUnitBoxSize / 2), UnitPosition.Y - (MinimapUnitBoxSize / 2));
 				Canvas.DrawBox(MinimapUnitBoxSize, MinimapUnitBoxSize);
-				Canvas.Draw2DLine(UnitPositionX, UnitPositionY, UnitGroundPositionX, UnitGroundPositionY, LineColor);
+				Canvas.Draw2DLine(UnitPosition.X, UnitPosition.Y, UnitGroundPosition.X, UnitGroundPosition.Y, LineColor);
 			}
 		}
 
@@ -113,40 +113,56 @@ function DrawHud()
 	}
 }
 
+/**
+ * Draw the unit selection box.
+ */
 function DrawSelectionBox(PlayerController PC)
 {
-	local Vector2d MousePosition;
+	local Vector2D MousePosition;
 
-	MousePosition = LocalPlayer(PlayerOwner.Player).ViewportClient.GetMousePosition();
+	MousePosition = GetMousePosition();
 	
 	Canvas.SetDrawColor(0, 255, 0);
-
 	Canvas.SetPos(Min(DragStart.X, MousePosition.X), Min(DragStart.Y, MousePosition.Y));
 	Canvas.DrawBox(Max(DragStart.X, MousePosition.X) - Min(DragStart.X, MousePosition.X), Max(DragStart.Y, MousePosition.Y) - Min(DragStart.Y, MousePosition.Y));
 }
 
+/**
+ * Requests that the server place a structure at the current mouse coordinates.
+ */
 function PlaceStructure(FSPlayerController FSPlayer)
 {
 	local Vector HitLocation, HitNormal, WorldOrigin, WorldDirection;
 
-	Canvas.DeProject(LocalPlayer(PlayerOwner.Player).ViewportClient.GetMousePosition(), WorldOrigin, WorldDirection);
-
+	Canvas.DeProject(GetMousePosition(), WorldOrigin, WorldDirection);
 	Trace(HitLocation, HitNormal, WorldOrigin + WorldDirection * 65536.0, WorldOrigin, true, , , );
-
 	FSTeamGame(WorldInfo.Game).PlaceStructure(HitLocation);
-
 	FSPlayer.bPlacingStructure = false;
 }
 
+/**
+ * Called to signal that the player started dragging the mouse.
+ */
 function BeginDragging()
 {
 	bDragging = true;
-	DragStart = LocalPlayer(PlayerOwner.Player).ViewportClient.GetMousePosition();
+	DragStart = GetMousePosition();
 }
 
+/**
+ * Called to signal that mouse dragging has ended.
+ */
 function EndDragging()
 {
 	bDragging = false;
+}
+
+/**
+ * Returns the hardware mouse coordinates.
+ */
+function Vector2D GetMousePosition()
+{
+	return LocalPlayer(PlayerOwner.Player).ViewportClient.GetMousePosition();
 }
 
 /**

@@ -22,9 +22,17 @@ event bool Start(optional bool StartPaused)
  */
 event OnClose()
 {
-	Super.OnClose();
+	super.OnClose();
 
 	GetGameViewportClient().bDisplayHardwareMouseCursor = false;
+}
+
+/**
+ * Updates the HUD elements.
+ */
+function TickHud()
+{
+
 }
 
 /*********************************************************************************************
@@ -57,7 +65,7 @@ function SelectEquipment(string EquipmentName)
 
 function UpdateTeam(int TeamIndex)
 {
-	if (bMovieIsOpen)
+	if (bMovieIsOpen) // Game will crash if ActionScript is called before the movie is loaded
 	{
 		ActionScriptVoid("_root.UpdateTeam");
 	}
