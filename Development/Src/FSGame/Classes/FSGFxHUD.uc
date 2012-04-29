@@ -1,6 +1,4 @@
 /**
- * Displays health, ammo, squad members, and other persistent HUD information.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSGFxHUD extends GFxMoviePlayer;
@@ -16,26 +14,18 @@ var float LastAmmo;
 var float LastAmmoMax;
 var float LastResources;
 
-/**
- * @extends
- */
 function Init(optional LocalPlayer LocPlay)
 {
 	Super.Init(LocPlay);
 
-	// Get object references for the HUD anchors
 	TopLeftHUD = GetVariableObject("_root.topLeftHUD");
 	TopRightHUD = GetVariableObject("_root.topRightHUD");
 	BottomLeftHUD = GetVariableObject("_root.bottomLeftHUD");
 	BottomRightHUD = GetVariableObject("_root.bottomRightHUD");
 
-	// Resize the HUD to the current resolution
 	ResizeHUD();
 }
 
-/**
- * Updates the HUD elements.
- */
 function TickHud()
 {
 	local FSPawn FSP;
@@ -65,9 +55,6 @@ function TickHud()
 	}
 }
 
-/**
- * Returns the player's pawn or None if it cannot be found.
- */
 function FSPawn GetPlayerPawn()
 {
 	local PlayerController PC;
@@ -106,9 +93,6 @@ function FSPawn GetPlayerPawn()
  Functions called from ActionScript
 **********************************************************************************************/
 
-/**
- * Places the top-level movie clips at their respective corners of the screen.
- */
 function ResizeHUD()
 {
 	local float Left, Top, Right, Bottom;

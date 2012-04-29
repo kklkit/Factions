@@ -1,6 +1,4 @@
 /**
- * Weapon attachment for firearms.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSAttachment_Firearm extends FSWeaponAttachment;
@@ -8,9 +6,6 @@ class FSAttachment_Firearm extends FSWeaponAttachment;
 var ParticleSystem BeamTemplate;
 var int CurrentPath;
 
-/**
- * @extends
- */
 simulated function FirstPersonFireEffects(Weapon PawnWeapon, Vector HitLocation)
 {
 	local Vector EffectLocation;
@@ -21,9 +16,6 @@ simulated function FirstPersonFireEffects(Weapon PawnWeapon, Vector HitLocation)
 	SpawnBeam(EffectLocation, HitLocation, true);
 }
 
-/**
- * @extends
- */
 simulated function ThirdPersonFireEffects(Vector HitLocation)
 {
 	Super.ThirdPersonFireEffects(HitLocation);
@@ -31,9 +23,6 @@ simulated function ThirdPersonFireEffects(Vector HitLocation)
 	SpawnBeam(GetEffectLocation(), HitLocation, false);
 }
 
-/**
- * Spawns the bullet trail.
- */
 simulated function SpawnBeam(Vector Start, Vector End, bool bFirstPerson)
 {
 	local ParticleSystemComponent E;

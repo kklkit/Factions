@@ -1,13 +1,8 @@
 /**
- * Displays the commander HUD.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSGFxCommanderHUD extends GFxMoviePlayer;
 
-/**
- * @extends
- */
 function bool Start(optional bool StartPaused)
 {
 	Super.Start(StartPaused);
@@ -17,9 +12,6 @@ function bool Start(optional bool StartPaused)
 	return true;
 }
 
-/**
- * @extends
- */
 function OnClose()
 {
 	Super.OnClose();
@@ -31,5 +23,4 @@ defaultproperties
 {
 	MovieInfo=SwfMovie'FSFlashAssets.factions_commander_hud'
 	bAutoPlay=false
-	bCaptureMouseInput=false
 }
