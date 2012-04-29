@@ -36,8 +36,6 @@ simulated function ReplicatedEvent(name VarName)
 {
 	if (VarName == 'CurrentWeaponAttachmentClass')
 		WeaponAttachmentChanged();
-	else if (VarName == 'bPuttingDownWeapon')
-		SetPuttingDownWeapon(bPuttingDownWeapon);
 
 	Super.ReplicatedEvent(VarName);
 }
@@ -183,17 +181,6 @@ simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
 /**
  * @extends
  */
-simulated function FiringModeUpdated(Weapon InWeapon, byte InFiringMode, bool bViaReplication)
-{
-	Super.FiringModeUpdated(InWeapon, InFiringMode, bViaReplication);
-
-	if (CurrentWeaponAttachment != None)
-		CurrentWeaponAttachment.FireModeUpdated(InFiringMode, bViaReplication);
-}
-
-/**
- * @extends
- */
 simulated function WeaponFired(Weapon InWeapon, bool bViaReplication, optional vector HitLocation)
 {
 	Super.WeaponFired(InWeapon, bViaReplication, HitLocation);
@@ -249,19 +236,6 @@ simulated function WeaponAttachmentChanged()
 			CurrentWeaponAttachment.AttachTo(self);
 			CurrentWeaponAttachment.ChangeVisibility(bWeaponAttachmentVisible);
 		}
-	}
-}
-
-/**
- * Called when weapon is being put down.
- */
-simulated function SetPuttingDownWeapon(bool bNowPuttingDownWeapon)
-{
-	if (bPuttingDownWeapon != bNowPuttingDownWeapon || Role < ROLE_Authority)
-	{
-		bPuttingDownWeapon = bNowPuttingDownWeapon;
-		if (CurrentWeaponAttachment != None)
-			CurrentWeaponAttachment.SetPuttingDownWeapon(bPuttingDownWeapon);
 	}
 }
 
