@@ -1,10 +1,9 @@
 /**
- * Factions player controller.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSPlayerController extends UDKPlayerController;
 
+var byte CommanderMoveSpeed;
 var bool bPlacingStructure;
 var byte PlacingStructureType;
 
@@ -22,94 +21,60 @@ simulated state Commanding
 		SetRotation(Rotator(Pawn.Location - ViewLocation));
 
 		FSHUD(myHUD).GFxCommanderHUD.Start();
-
-		Super.BeginState(PreviousStateName);
 	}
 
 	simulated function EndState(name NextStateName)
 	{
 		FSHUD(myHUD).GFxCommanderHUD.Close(false);
-
-		Super.EndState(NextStateName);
 	}
 
-	/**
-	 * Commander view point.
-	 * 
-	 * @extends
-	 */
 	simulated function GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
 	{
 		out_Location = Location;
 		out_Rotation = Rotation;
 	}
 
-	/**
-	 * @extends
-	 */
 	function PlayerMove(float DeltaTime)
 	{
 		local Vector L;
 
 		if (Pawn == None)
-		{
 			GotoState('Dead');
-		}
 		else
 		{
 			L = Location;
 
 			if (PlayerInput.aForward > 0)
-			{
-				L.X += 10;
-			}
+				L.X += CommanderMoveSpeed;
 			else if (PlayerInput.aForward < 0)
-			{
-				L.X -= 10;
-			}
+				L.X -= CommanderMoveSpeed;
 
 			if (PlayerInput.aStrafe > 0)
-			{
-				L.Y += 10;
-			}
+				L.Y += CommanderMoveSpeed;
 			else if (PlayerInput.aStrafe < 0)
-			{
-				L.Y -= 10;
-			}
+				L.Y -= CommanderMoveSpeed;
 
 			SetLocation(L);
 		}
 	}
 
-	/**
-	 * @extends
-	 */
 	exec function StartFire(optional byte FireModeNum)
 	{
 		FSHUD(myHUD).BeginDragging();
-	}
-
-	/**
-	 * @extends
-	 */
-	exec function StopFire(optional byte FireModeNum)
-	{
-		FSHUD(myHUD).EndDragging();
 		PlaceStructure();
 	}
 
-	/**
-	 * Exits the command view.
-	 */
+	exec function StopFire(optional byte FireModeNum)
+	{
+		FSHUD(myHUD).EndDragging();
+	}
+
 	exec function ToggleCommandView()
 	{
 		GotoState('PlayerWalking');
 	}
 }
 
-/**
- * Builds the requested vehicle.
- */
 reliable server function RequestVehicle()
 {
 	local FSStruct_VehicleFactory VF;
@@ -121,9 +86,6 @@ reliable server function RequestVehicle()
 		VF.BuildVehicle(FSPawn(Pawn));
 }
 
-/**
- * Requests to build a vehicle.
- */
 exec function BuildVehicle()
 {
 	RequestVehicle();
@@ -134,10 +96,6 @@ exec function PlaceStructure()
 	bPlacingStructure = true;
 }
 
-
-/**
- * Enters the command view.
- */
 exec function ToggleCommandView()
 {
 	GotoState('Commanding');
@@ -148,4 +106,5 @@ defaultproperties
 	InputClass=class'FSGame.FSPlayerInput'
 	bPlacingStructure=false
 	PlacingStructureType=0
+	CommanderMoveSpeed=10
 }

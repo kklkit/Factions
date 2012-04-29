@@ -1,13 +1,8 @@
 /**
- * Provides an infantry spawn point.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSStruct_Barracks extends FSStructure;
 
-/**
- * @extends
- */
 function PostBeginPlay()
 {
 	local Vector SpawnLocation;

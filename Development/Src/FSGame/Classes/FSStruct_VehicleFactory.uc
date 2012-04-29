@@ -1,6 +1,4 @@
 /**
- * Creates vehicles.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSStruct_VehicleFactory extends FSStructure;
@@ -12,7 +10,7 @@ function BuildVehicle(FSPawn Builder)
 {
 	local FSTeamInfo Team;
 
-	if (Builder.Base == self)
+	if (Builder.Base == self) //@todo move check to caller
 	{
 		Team = FSTeamInfo(Builder.PlayerReplicationInfo.Team);
 
