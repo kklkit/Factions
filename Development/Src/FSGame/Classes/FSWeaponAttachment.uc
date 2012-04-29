@@ -75,20 +75,6 @@ simulated function Vector GetEffectLocation()
 defaultproperties
 {
 	Begin Object Class=SkeletalMeshComponent Name=SkeletalMeshComponent0
-		bOwnerNoSee=false
-		bOnlyOwnerSee=false
-		CollideActors=false
-		AlwaysLoadOnClient=true
-		AlwaysLoadOnServer=true
-		MaxDrawDistance=4000
-		bForceRefPose=1
-		bUpdateSkelWhenNotRendered=false
-		bIgnoreControllersWhenNotRendered=true
-		bOverrideAttachmentOwnerVisibility=true
-		bAcceptsDynamicDecals=false
-		CastShadow=true
-		bCastDynamicShadow=true
-		bPerBoneMotionBlur=true
 	End Object
 	Mesh=SkeletalMeshComponent0
 
