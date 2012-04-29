@@ -112,13 +112,13 @@ simulated state Commanding
  */
 reliable server function RequestVehicle()
 {
-	local FSVehiclePad VP;
+	local FSStruct_VehicleFactory VF;
 
-	foreach DynamicActors(class'FSVehiclePad', VP, class'FSActorInterface')
+	foreach DynamicActors(class'FSStruct_VehicleFactory', VF, class'FSActorInterface')
 		break;
 
-	if (VP != None)
-		VP.BuildVehicle(FSPawn(Pawn));
+	if (VF != None)
+		VF.BuildVehicle(FSPawn(Pawn));
 }
 
 /**

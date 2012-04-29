@@ -270,4 +270,6 @@ defaultproperties
 	RespawnTime=1.0
 
 	Spread=(0.05)
+
+	bDelayedSpawn=false
 }

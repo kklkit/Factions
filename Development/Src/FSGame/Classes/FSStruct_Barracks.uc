@@ -3,7 +3,7 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSBarracks extends FSStructure;
+class FSStruct_Barracks extends FSStructure;
 
 /**
  * @extends

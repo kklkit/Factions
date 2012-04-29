@@ -144,7 +144,7 @@ function CreateTeam(int TeamIndex)
 
 reliable server function PlaceStructure(Vector StructureLocation)
 {
-	Spawn(class'FSVehiclePad', , , StructureLocation, , , );
+	Spawn(class'FSStruct_VehicleFactory', , , StructureLocation, , , );
 }
 
 defaultproperties

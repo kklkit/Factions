@@ -3,7 +3,7 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSVehiclePad extends FSStructure;
+class FSStruct_VehicleFactory extends FSStructure;
 
 var() class<UDKVehicle> VehicleClass;
 var() int VehicleCost;

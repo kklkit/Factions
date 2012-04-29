@@ -8,22 +8,17 @@ class FSWeaponPickupFactory extends UDKPickupFactory
 
 var() class<FSWeapon> WeaponPickupClass;
 
-/**
- * @extends
- */
 simulated function ReplicatedEvent(name VarName)
 {
 	if (VarName == 'InventoryType')
 	{
-		if (InventoryType != WeaponPickupClass)
+		if (WeaponPickupClass != InventoryType)
 			WeaponPickupClass = class<FSWeapon>(InventoryType);
 	}
+
 	Super.ReplicatedEvent(VarName);
 }
 
-/**
- * @extends
- */
 simulated function InitializePickup()
 {
 	InventoryType = WeaponPickupClass;
@@ -36,9 +31,6 @@ simulated function InitializePickup()
 	Super.InitializePickup();
 }
 
-/**
- * @extends
- */
 function bool CheckForErrors()
 {
 	if (Super.CheckForErrors())
@@ -55,37 +47,7 @@ function bool CheckForErrors()
 
 defaultproperties
 {
-	Components.Remove(Sprite)
-	Components.Remove(Sprite2)
-	Components.Remove(Arrow)
-	GoodSprite=None
-	BadSprite=None
-
-	bMovable=false
-	bStatic=false
-	bNoDelete=false
-
-	bDoVisibilityFadeIn=false
-	bRotatingPickup=true
-	bCollideActors=true
-	bBlockActors=true
-
-	YawRotationRate=32768
-
-	bIsSuperItem=false
-	bPickupHidden=false
-
-	Begin Object Name=CollisionCylinder
-		CollisionRadius=+00040.000000
-		CollisionHeight=+00044.000000
-		CollideActors=true
-		BlockZeroExtent=false
-	End Object
-
-	BasePulseRate=0.5
-	PulseThreshold=5.0
-
-	Begin Object Class=StaticMeshComponent Name=BaseMeshComp
+	Begin Object Class=StaticMeshComponent Name=BaseMeshComponent
 		StaticMesh=StaticMesh'Pickups.WeaponBase.S_Pickups_WeaponBase'
 		Translation=(X=0.0,Y=0.0,Z=-44.0)
 		Scale3D=(X=1.0,Y=1.0,Z=1.0)
@@ -98,8 +60,10 @@ defaultproperties
 		CollideActors=false
 		MaxDrawDistance=7000
 	End Object
-	BaseMesh=BaseMeshComp
-	Components.Add(BaseMeshComp)
+	BaseMesh=BaseMeshComponent
+	Components.Add(BaseMeshComponent)
+
+	bNoDelete=false
 
 	WeaponPickupClass=class'FSWeap_Firearm'
 }
