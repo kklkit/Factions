@@ -1,5 +1,5 @@
 /**
- * Spawns players and weapons.
+ * Provides an infantry spawn point.
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
@@ -11,7 +11,7 @@ class FSBarracks extends FSStructure;
 event PostBeginPlay()
 {
 	local Vector SpawnLocation;
-	local FSTeamPlayerStart TPS;
+	local FSTeamPlayerStart BarracksPlayerStart;
 
 	super.PostBeginPlay();
 
@@ -25,18 +25,18 @@ event PostBeginPlay()
 	SpawnLocation.Y = Location.Y + 200;
 	SpawnLocation.Z = Location.Z + 125;
 
-	TPS = Spawn(class'FSTeamPlayerStart', self, , SpawnLocation, , , );
+	BarracksPlayerStart = Spawn(class'FSTeamPlayerStart', self, , SpawnLocation, , , );
 
-	if (TPS != None)
+	if (BarracksPlayerStart != none)
 	{
-		TPS.TeamNumber = self.GetTeamNum();
-		TPS.TeamIndex = self.GetTeamNum();
+		BarracksPlayerStart.TeamNumber = self.GetTeamNum();
+		BarracksPlayerStart.TeamIndex = self.GetTeamNum();
 	}
 }
 
 defaultproperties
 {
-	Begin Object Name=StaticMeshComponent0
+	begin object name=StaticMeshComponent0
 		StaticMesh=StaticMesh'FSAssets.Structures.Barracks'
-	End Object
+	end object
 }

@@ -8,6 +8,32 @@ class FSAttachment_Firearm extends FSWeaponAttachment;
 var ParticleSystem BeamTemplate;
 var int CurrentPath;
 
+/**
+ * @extends
+ */
+simulated function FirstPersonFireEffects(Weapon PawnWeapon, Vector HitLocation)
+{
+	local Vector EffectLocation;
+
+	super.FirstPersonFireEffects(PawnWeapon, HitLocation);
+
+	EffectLocation = GetEffectLocation();
+	SpawnBeam(EffectLocation, HitLocation, true);
+}
+
+/**
+ * @extends
+ */
+simulated function ThirdPersonFireEffects(Vector HitLocation)
+{
+	super.ThirdPersonFireEffects(HitLocation);
+
+	SpawnBeam(GetEffectLocation(), HitLocation, false);
+}
+
+/**
+ * Spawns the bullet trail.
+ */
 simulated function SpawnBeam(Vector Start, Vector End, bool bFirstPerson)
 {
 	local ParticleSystemComponent E;
@@ -31,23 +57,6 @@ simulated function SpawnBeam(Vector Start, Vector End, bool bFirstPerson)
 		E.SetDepthPriorityGroup(SDPG_Foreground);
 	else
 		E.SetDepthPriorityGroup(SDPG_World);
-}
-
-simulated function FirstPersonFireEffects(Weapon PawnWeapon, Vector HitLocation)
-{
-	local Vector EffectLocation;
-
-	super.FirstPersonFireEffects(PawnWeapon, HitLocation);
-
-	EffectLocation = GetEffectLocation();
-	SpawnBeam(EffectLocation, HitLocation, true);
-}
-
-simulated function ThirdPersonFireEffects(Vector HitLocation)
-{
-	super.ThirdPersonFireEffects(HitLocation);
-
-	SpawnBeam(GetEffectLocation(), HitLocation, false);
 }
 
 //@todo Implement muzzle flash
@@ -87,9 +96,9 @@ simulated function SetMuzzleFlashParams(ParticleSystemComponent PSC)
 
 defaultproperties
 {
-	Begin Object Name=SkeletalMeshComponent0
+	begin object name=SkeletalMeshComponent0
 		SkeletalMesh=SkeletalMesh'FSAssets.Equipment.SK_HeavyRifle'
-	End Object
+	end object
 
 	BeamTemplate=ParticleSystem'FSAssets.Particles.P_BulletTrail'
 	
@@ -97,6 +106,6 @@ defaultproperties
 	MuzzleFlashPSCTemplate=WP_ShockRifle.Particles.P_ShockRifle_3P_MF
 	MuzzleFlashAltPSCTemplate=WP_ShockRifle.Particles.P_ShockRifle_3P_MF
 	MuzzleFlashColor=(R=255,G=120,B=255,A=255)
-	MuzzleFlashDuration=0.33;
+	MuzzleFlashDuration=0.33
 	MuzzleFlashLightClass=class'UTGame.UTShockMuzzleFlashLight'
 }
