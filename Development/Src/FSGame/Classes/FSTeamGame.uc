@@ -13,14 +13,14 @@ var FSTeamInfo Teams[NumTeams];
 /**
  * @extends
  */
-event PreBeginPlay()
+function PreBeginPlay()
 {
 	local int i;
 
-	super.PreBeginPlay();
+	Super.PreBeginPlay();
 
 	// Set the map info if the mapper didn't do it
-	if (WorldInfo.GetMapInfo() == none)
+	if (WorldInfo.GetMapInfo() == None)
 	{
 		`log("MAPINFO NOT SET!!!");
 		WorldInfo.SetMapInfo(new class'FSGame.FSMapInfo');
@@ -46,7 +46,7 @@ function bool ShouldRespawn(PickupFactory Other)
  */
 function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
 {
-	super.ChangeTeam(Other, N, bNewTeam);
+	Super.ChangeTeam(Other, N, bNewTeam);
 
 	if (N >= 0 && N < NumTeams)
 	{

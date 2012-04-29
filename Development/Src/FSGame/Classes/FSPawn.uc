@@ -8,7 +8,7 @@ class FSPawn extends UDKPawn
 	config(GameFS)
 	notplaceable;
 
-const MinimapCaptureFOV=90; // This must be 90 degrees otherwise the minimap overlays will be incorrect.
+const MinimapCaptureFOV=90; // This must be 90 degrees otherwise the minimap overlays will be incorrect.\
 
 var DynamicLightEnvironmentComponent LightEnvironment;
 
@@ -32,17 +32,32 @@ replication
 /**
  * @extends
  */
-simulated event PostBeginPlay()
+simulated function ReplicatedEvent(name VarName)
+{
+	if (VarName == 'CurrentWeaponAttachmentClass')
+		WeaponAttachmentChanged();
+	else if (VarName == 'bPuttingDownWeapon')
+		SetPuttingDownWeapon(bPuttingDownWeapon);
+
+	Super.ReplicatedEvent(VarName);
+}
+
+/**
+ * @extends
+ */
+simulated function PostBeginPlay()
 {
 	local FSMapInfo MI;
 
-	super.PostBeginPlay();
+	Super.PostBeginPlay();
 
 	MI = FSMapInfo(WorldInfo.GetMapInfo());
-	if (MI != none)
+
+	// Initialize the minimap capture component
+	if (WorldInfo.NetMode != NM_DedicatedServer && MI != None)
 	{
-		// Initialize the minimap capture component
-		MinimapCaptureComponent = new class'SceneCapture2DComponent';
+		//@todo Create in defaultproperties and use AlwaysLoadOnServer=false and CollideActors=False
+		MinimapCaptureComponent = new(self) class'SceneCapture2DComponent';
 		MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'FSAssets.HUD.minimap_render_texture', MinimapCaptureFOV, , 0);
 		MinimapCaptureComponent.bUpdateMatrices = false;
 		AttachComponent(MinimapCaptureComponent);
@@ -52,39 +67,48 @@ simulated event PostBeginPlay()
 		MinimapCapturePosition.Z = MI.MapRadius;
 	}
 }
+
 /**
  * @extends
  */
-simulated event PostInitAnimTree(SkeletalMeshComponent SkelComp)
+simulated function PostInitAnimTree(SkeletalMeshComponent SkelComp)
 {
 	Super.PostInitAnimTree(SkelComp);
 
-	// Only refresh anim nodes if our main mesh was updated
+	// These variables need to be set for animations to work properly.
 	if (SkelComp == Mesh)
 	{
 		LeftLegControl = SkelControlFootPlacement(Mesh.FindSkelControl(LeftFootControlName));
 		RightLegControl = SkelControlFootPlacement(Mesh.FindSkelControl(RightFootControlName));
-
-		LeftHandIK = SkelControlLimb( mesh.FindSkelControl('LeftHandIK') );
-
-		RightHandIK = SkelControlLimb( mesh.FindSkelControl('RightHandIK') );
-
-		RootRotControl = SkelControlSingleBone( mesh.FindSkelControl('RootRot') );
-		AimNode = AnimNodeAimOffset( mesh.FindAnimNode('AimNode') );
-		GunRecoilNode = GameSkelCtrl_Recoil( mesh.FindSkelControl('GunRecoilNode') );
-		LeftRecoilNode = GameSkelCtrl_Recoil( mesh.FindSkelControl('LeftRecoilNode') );
-		RightRecoilNode = GameSkelCtrl_Recoil( mesh.FindSkelControl('RightRecoilNode') );
-
-		FlyingDirOffset = AnimNodeAimOffset( mesh.FindAnimNode('FlyingDirOffset') );
+		LeftHandIK = SkelControlLimb(Mesh.FindSkelControl('LeftHandIK'));
+		RightHandIK = SkelControlLimb(Mesh.FindSkelControl('RightHandIK'));
+		RootRotControl = SkelControlSingleBone(Mesh.FindSkelControl('RootRot'));
+		AimNode = AnimNodeAimOffset(Mesh.FindAnimNode('AimNode'));
+		GunRecoilNode = GameSkelCtrl_Recoil(Mesh.FindSkelControl('GunRecoilNode'));
+		LeftRecoilNode = GameSkelCtrl_Recoil(Mesh.FindSkelControl('LeftRecoilNode'));
+		RightRecoilNode = GameSkelCtrl_Recoil(Mesh.FindSkelControl('RightRecoilNode'));
+		FlyingDirOffset = AnimNodeAimOffset(Mesh.FindAnimNode('FlyingDirOffset'));
 	}
+}
+
+/**
+* @extends
+*/
+simulated function Tick(float DeltaTime)
+{
+	Super.Tick(DeltaTime);
+
+	// Update the capture component's position
+	if (WorldInfo.NetMode != NM_DedicatedServer)
+		MinimapCaptureComponent.SetView(MinimapCapturePosition, MinimapCaptureRotation);
 }
 
 /**
  * @extends
  */
-simulated event Destroyed()
+simulated function Destroyed()
 {
-	super.Destroyed();
+	Super.Destroyed();
 
 	if (CurrentWeaponAttachment != None)
 	{
@@ -93,63 +117,21 @@ simulated event Destroyed()
 	}
 }
 
-
-/**
- * @extends
- */
-simulated event Tick(float DeltaTime)
-{
-	super.Tick(DeltaTime);
-
-	// Update the capture component's position
-	MinimapCaptureComponent.SetView(MinimapCapturePosition, MinimapCaptureRotation);
-}
-
-/**
- * @extends
- */
-simulated event ReplicatedEvent(name VarName)
-{
-	if (VarName == 'Controller' && Controller != None)
-	{
-		if (FSWeapon(Weapon) != None)
-		{
-			UTWeapon(Weapon).ClientEndFire(0);
-			UTWeapon(Weapon).ClientEndFire(1);
-			if (!Weapon.HasAnyAmmo())
-			{
-				Weapon.WeaponEmpty();
-			}
-		}
-	}
-	else if (VarName == 'CurrentWeaponAttachmentClass')
-	{
-		WeaponAttachmentChanged();
-		return;
-	}
-	else if (VarName == 'bPuttingDownWeapon')
-	{
-		SetPuttingDownWeapon(bPuttingDownWeapon);
-	}
-	else
-	{
-		super.ReplicatedEvent(VarName);
-	}
-}
-
 /**
  * Override.
  * 
  * @extends
  */
-simulated function Rotator GetAdjustedAimFor(Weapon W, vector StartFireLoc)
+simulated function Rotator GetAdjustedAimFor(Weapon W, Vector StartFireLoc)
 {
-	local vector MuzVec;
-	local rotator MuzRot;
+	local Vector MuzVec;
+	local Rotator MuzRot;
 	
+	// Fallback if there is no weapon.
 	if (CurrentWeaponAttachment == None)
 		return GetBaseAimRotation();
 
+	// Set the aim to the weapon's rotation.
 	CurrentWeaponAttachment.Mesh.GetSocketWorldLocationAndRotation(CurrentWeaponAttachment.MuzzleFlashSocket, MuzVec, MuzRot);
 
 	return MuzRot;
@@ -162,7 +144,7 @@ simulated function Rotator GetAdjustedAimFor(Weapon W, vector StartFireLoc)
  */
 simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out Rotator out_CamRot, out float out_FOV)
 {
-	// Set the camera to the player's eyes
+	// Set the camera to the player's eyes.
 	Mesh.GetSocketWorldLocationAndRotation('Eyes', out_CamLoc);
 	out_CamRot = GetViewRotation();
 	return true;
@@ -173,7 +155,8 @@ simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out 
  */
 simulated function NotifyTeamChanged()
 {
-	super.NotifyTeamChanged();
+	Super.NotifyTeamChanged();
+
 	if (CurrentWeaponAttachmentClass != None)
 	{
 		if (WorldInfo.NetMode != NM_DedicatedServer && CurrentWeaponAttachment != None)
@@ -191,7 +174,7 @@ simulated function NotifyTeamChanged()
  */
 simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
 {
-	super.PlayDying(DamageType, HitLoc);
+	Super.PlayDying(DamageType, HitLoc);
 
 	CurrentWeaponAttachmentClass = None;
 	WeaponAttachmentChanged();
@@ -202,11 +185,10 @@ simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
  */
 simulated function FiringModeUpdated(Weapon InWeapon, byte InFiringMode, bool bViaReplication)
 {
-	super.FiringModeUpdated(InWeapon, InFiringMode, bViaReplication);
+	Super.FiringModeUpdated(InWeapon, InFiringMode, bViaReplication);
+
 	if (CurrentWeaponAttachment != None)
-	{
 		CurrentWeaponAttachment.FireModeUpdated(InFiringMode, bViaReplication);
-	}
 }
 
 /**
@@ -214,18 +196,16 @@ simulated function FiringModeUpdated(Weapon InWeapon, byte InFiringMode, bool bV
  */
 simulated function WeaponFired(Weapon InWeapon, bool bViaReplication, optional vector HitLocation)
 {
-	super.WeaponFired(InWeapon, bViaReplication, HitLocation);
+	Super.WeaponFired(InWeapon, bViaReplication, HitLocation);
 
 	if (CurrentWeaponAttachment != None)
 	{
-		if (!IsFirstPerson())
-			CurrentWeaponAttachment.ThirdPersonFireEffects(HitLocation);
-		else
+		if (IsFirstPerson())
 		{
 			CurrentWeaponAttachment.FirstPersonFireEffects(Weapon, HitLocation);
-	        if (class'Engine'.static.IsSplitScreen() && CurrentWeaponAttachment.EffectIsRelevant(CurrentWeaponAttachment.Location, false, CurrentWeaponAttachment.MaxFireEffectDistance))
-		        CurrentWeaponAttachment.CauseMuzzleFlash();
 		}
+		else
+			CurrentWeaponAttachment.ThirdPersonFireEffects(HitLocation);
 	}
 }
 
@@ -234,12 +214,12 @@ simulated function WeaponFired(Weapon InWeapon, bool bViaReplication, optional v
  */
 simulated function WeaponStoppedFiring(Weapon InWeapon, bool bViaReplication)
 {
-	super.WeaponFired(InWeapon, bViaReplication);
+	Super.WeaponStoppedFiring(InWeapon, bViaReplication);
 
 	if (CurrentWeaponAttachment != None)
 	{
-		CurrentWeaponAttachment.StopThirdPersonFireEffects();
 		CurrentWeaponAttachment.StopFirstPersonFireEffects(Weapon);
+		CurrentWeaponAttachment.StopThirdPersonFireEffects();
 	}
 }
 
@@ -281,31 +261,25 @@ simulated function SetPuttingDownWeapon(bool bNowPuttingDownWeapon)
 	{
 		bPuttingDownWeapon = bNowPuttingDownWeapon;
 		if (CurrentWeaponAttachment != None)
-		{
 			CurrentWeaponAttachment.SetPuttingDownWeapon(bPuttingDownWeapon);
-		}
 	}
-}
-
-simulated function ChangeClass()
-{
 }
 
 defaultproperties
 {
 	Components.Remove(Sprite)
 
-	Begin Object Class=DynamicLightEnvironmentComponent Name=MyLightEnvironment
-		bSynthesizeSHLight=TRUE
-		bIsCharacterLightEnvironment=TRUE
-		bUseBooleanEnvironmentShadowing=FALSE
+	Begin Object Class=DynamicLightEnvironmentComponent Name=LightEnvironment0
+		bSynthesizeSHLight=true
+		bIsCharacterLightEnvironment=true
+		bUseBooleanEnvironmentShadowing=false
 		InvisibleUpdateTime=1
 		MinTimeBetweenFullUpdates=.2
 	End Object
-	Components.Add(MyLightEnvironment)
-	LightEnvironment=MyLightEnvironment
+	Components.Add(LightEnvironment0)
+	LightEnvironment=LightEnvironment0
 
-	Begin Object Class=SkeletalMeshComponent Name=WSkeletalMeshComponent
+	Begin Object Class=SkeletalMeshComponent Name=SkeletalMeshComponent0
 		SkeletalMesh=SkeletalMesh'FSAssets.Mesh.IronGuard'
 		AnimTreeTemplate=AnimTree'CH_AnimHuman_Tree.AT_CH_Human'
 		PhysicsAsset=PhysicsAsset'CH_AnimCorrupt.Mesh.SK_CH_Corrupt_Male_Physics'
@@ -323,7 +297,7 @@ defaultproperties
 		Translation=(Z=8.0)
 		RBChannel=RBCC_Untitled3
 		RBCollideWithChannels=(Untitled3=true)
-		LightEnvironment=MyLightEnvironment
+		LightEnvironment=LightEnvironment0
 		bOverrideAttachmentOwnerVisibility=true
 		bAcceptsDynamicDecals=false
 		bHasPhysicsAssetInstance=true
@@ -335,15 +309,15 @@ defaultproperties
 		bUseOnePassLightingOnTranslucency=true
 		bPerBoneMotionBlur=true
 	End Object
-	Mesh=WSkeletalMeshComponent
-	Components.Add(WSkeletalMeshComponent)
+	Mesh=SkeletalMeshComponent0
+	Components.Add(SkeletalMeshComponent0)
 
 	BaseTranslationOffset=6.0
 
-	Begin Object class=AnimNodeSequence Name=MeshSequenceA
+	Begin Object Class=AnimNodeSequence Name=MeshSequenceA
 	End Object
 
-	Begin Object class=AnimNodeSequence Name=MeshSequenceB
+	Begin Object Class=AnimNodeSequence Name=MeshSequenceB
 	End Object
 
 	Begin Object Name=CollisionCylinder

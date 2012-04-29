@@ -1,5 +1,5 @@
 /**
- * Physical model and effects for infantry weapons.
+ * Weapon attachment for firearms.
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
@@ -15,7 +15,7 @@ simulated function FirstPersonFireEffects(Weapon PawnWeapon, Vector HitLocation)
 {
 	local Vector EffectLocation;
 
-	super.FirstPersonFireEffects(PawnWeapon, HitLocation);
+	Super.FirstPersonFireEffects(PawnWeapon, HitLocation);
 
 	EffectLocation = GetEffectLocation();
 	SpawnBeam(EffectLocation, HitLocation, true);
@@ -26,7 +26,7 @@ simulated function FirstPersonFireEffects(Weapon PawnWeapon, Vector HitLocation)
  */
 simulated function ThirdPersonFireEffects(Vector HitLocation)
 {
-	super.ThirdPersonFireEffects(HitLocation);
+	Super.ThirdPersonFireEffects(HitLocation);
 
 	SpawnBeam(GetEffectLocation(), HitLocation, false);
 }
@@ -42,12 +42,12 @@ simulated function SpawnBeam(Vector Start, Vector End, bool bFirstPerson)
 
 	if (End == Vect(0,0,0))
 	{
-		if (!bFirstPerson || (Instigator.Controller == none))
+		if (!bFirstPerson || (Instigator.Controller == None))
 	    	return;
 
 		End = Start + Vector(Instigator.Controller.Rotation) * class'FSWeap_Firearm'.default.WeaponRange;
 		HitActor = Instigator.Trace(HitLocation, HitNormal, End, Start, true, vect(0,0,0), , TRACEFLAG_Bullet);
-		if (HitActor != none)
+		if (HitActor != None)
 			End = HitLocation;
 	}
 
@@ -96,9 +96,9 @@ simulated function SetMuzzleFlashParams(ParticleSystemComponent PSC)
 
 defaultproperties
 {
-	begin object name=SkeletalMeshComponent0
+	Begin Object Name=SkeletalMeshComponent0
 		SkeletalMesh=SkeletalMesh'FSAssets.Equipment.SK_HeavyRifle'
-	end object
+	End Object
 
 	BeamTemplate=ParticleSystem'FSAssets.Particles.P_BulletTrail'
 	

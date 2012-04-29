@@ -8,9 +8,9 @@ class FSGFxOmniMenu extends GFxMoviePlayer;
 /**
  * @extends
  */
-event bool Start(optional bool StartPaused)
+function bool Start(optional bool StartPaused)
 {
-	super.Start(StartPaused);
+	Super.Start(StartPaused);
 
 	GetGameViewportClient().bDisplayHardwareMouseCursor = true;
 
@@ -20,9 +20,9 @@ event bool Start(optional bool StartPaused)
 /**
  * @extends
  */
-event OnClose()
+function OnClose()
 {
-	super.OnClose();
+	Super.OnClose();
 
 	GetGameViewportClient().bDisplayHardwareMouseCursor = false;
 }

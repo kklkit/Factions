@@ -21,7 +21,7 @@ var float LastResources;
  */
 function Init(optional LocalPlayer LocPlay)
 {
-	super.Init(LocPlay);
+	Super.Init(LocPlay);
 
 	// Get object references for the HUD anchors
 	TopLeftHUD = GetVariableObject("_root.topLeftHUD");
@@ -43,17 +43,17 @@ function TickHud()
 
 	FSP = GetPlayerPawn();
 
-	if (FSP != none)
+	if (FSP != None)
 	{
 		UpdateHealth(FSP.Health, FSP.HealthMax);
 
-		if (FSP.PlayerReplicationInfo != none)
+		if (FSP.PlayerReplicationInfo != None)
 		{
 			UpdateResources(FSTeamInfo(FSP.PlayerReplicationInfo.Team).Resources);
 		}
 
 		FSW = FSWeapon(FSP.Weapon);
-		if (FSW != none)
+		if (FSW != None)
 			UpdateAmmo(FSW.AmmoCount, FSW.AmmoCountMax);
 		else
 			UpdateAmmo(0, 1);
@@ -66,7 +66,7 @@ function TickHud()
 }
 
 /**
- * Returns the player's pawn or none if it cannot be found.
+ * Returns the player's pawn or None if it cannot be found.
  */
 function FSPawn GetPlayerPawn()
 {
@@ -79,14 +79,14 @@ function FSPawn GetPlayerPawn()
 	FSP = FSPawn(GetPC().Pawn);
 
 	// Set the pawn if driving a vehicle or mounted weapon
-	if (FSP == none)
+	if (FSP == None)
 	{
 		FSV = UDKVehicle(PC.Pawn);
 
-		if (FSV == none)
+		if (FSV == None)
 		{
 			FWP = UDKWeaponPawn(PC.Pawn);
-			if (FWP != none)
+			if (FWP != None)
 			{
 				FSV = FWP.MyVehicle;
 				FSP = FSPawn(FWP.Driver);
@@ -95,8 +95,8 @@ function FSPawn GetPlayerPawn()
 		else
 			FSP = FSPawn(FSV.Driver);
 
-		if (FSV == none)
-			return none;
+		if (FSV == None)
+			return None;
 	}
 
 	return FSP;

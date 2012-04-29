@@ -15,7 +15,7 @@ var() byte TeamNumber;
  * 
  * @extends
  */
-simulated event byte ScriptGetTeamNum()
+simulated function byte ScriptGetTeamNum()
 {
 	return TeamNumber;
 }

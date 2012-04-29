@@ -9,7 +9,7 @@ class FSMapInfo extends UDKMapInfo;
 
 var() int RecommendedPlayersMin, RecommendedPlayersMax;
 
-var(Minimap) Vector2d MapCenter; //@todo make sure minimap doesn't use these values because each player can move their own minimap
+var(Minimap) Vector2D MapCenter;
 var(Minimap) float MapRadius;
 
 defaultproperties

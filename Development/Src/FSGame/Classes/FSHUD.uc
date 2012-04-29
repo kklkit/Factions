@@ -25,9 +25,9 @@ var Vector2D DragStart;
 /**
  * @extends
  */
-event PostRender()
+function PostRender()
 {
-	super.PostRender();
+	Super.PostRender();
 
 	GFxHUD.TickHud();
 }
@@ -37,7 +37,7 @@ event PostRender()
  */
 simulated function PostBeginPlay()
 {
-	super.PostBeginPlay();
+	Super.PostBeginPlay();
 
 	// Initialize the GFx movie clips
 	GFxHUD = new class'FSGFxHUD';
@@ -60,7 +60,7 @@ simulated function PostBeginPlay()
  */
 simulated function NotifyLocalPlayerTeamReceived()
 {
-	super.NotifyLocalPlayerTeamReceived();
+	Super.NotifyLocalPlayerTeamReceived();
 
 	GFxOmniMenu.UpdateTeam(PlayerOwner.PlayerReplicationInfo.Team.TeamIndex);
 }
@@ -74,10 +74,10 @@ function DrawHud()
 	local Actor LevelActor;
 	local Vector2D UnitPosition, UnitGroundPosition;
 	
-	super.DrawHud();
+	Super.DrawHud();
 
 	FSPlayer = FSPlayerController(PlayerOwner);
-	if (FSPlayer != none)
+	if (FSPlayer != None)
 	{
 		// Draw the minimap
 		//@todo this should be done in scaleform once the render texture crash is fixed
@@ -88,7 +88,7 @@ function DrawHud()
 		Canvas.SetDrawColor(0, 255, 0);
 		foreach DynamicActors(class'Actor', LevelActor)
 		{
-			if (FSActorInterface(LevelActor) != none || Projectile(LevelActor) != none || UDKVehicle(LevelActor) != none)
+			if (FSActorInterface(LevelActor) != None || Projectile(LevelActor) != None || UDKVehicle(LevelActor) != None)
 			{
 				UnitPosition.X = LevelActor.Location.X / (MapSize - LevelActor.Location.Z * 2) * MinimapSize + Canvas.ClipX - MinimapPadding.X - (MinimapSize / 2);
 				UnitPosition.Y = LevelActor.Location.Y / (MapSize - LevelActor.Location.Z * 2) * MinimapSize + MinimapPadding.Y + (MinimapSize / 2);

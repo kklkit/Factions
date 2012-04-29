@@ -8,12 +8,12 @@ class FSBarracks extends FSStructure;
 /**
  * @extends
  */
-event PostBeginPlay()
+function PostBeginPlay()
 {
 	local Vector SpawnLocation;
 	local FSTeamPlayerStart BarracksPlayerStart;
 
-	super.PostBeginPlay();
+	Super.PostBeginPlay();
 
 	SpawnLocation.X = Location.X + 200;
 	SpawnLocation.Y = Location.Y + 1000;
@@ -27,7 +27,7 @@ event PostBeginPlay()
 
 	BarracksPlayerStart = Spawn(class'FSTeamPlayerStart', self, , SpawnLocation, , , );
 
-	if (BarracksPlayerStart != none)
+	if (BarracksPlayerStart != None)
 	{
 		BarracksPlayerStart.TeamNumber = self.GetTeamNum();
 		BarracksPlayerStart.TeamIndex = self.GetTeamNum();
@@ -36,7 +36,7 @@ event PostBeginPlay()
 
 defaultproperties
 {
-	begin object name=StaticMeshComponent0
+	Begin Object Name=StaticMeshComponent0
 		StaticMesh=StaticMesh'FSAssets.Structures.Barracks'
-	end object
+	End Object
 }

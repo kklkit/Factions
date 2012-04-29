@@ -99,7 +99,7 @@ simulated function MuzzleFlashTimer()
 	if ( MuzzleFlashLight != None )
 		MuzzleFlashLight.SetEnabled(false);
 
-	if (MuzzleFlashPSC != none && (!bMuzzleFlashPSCLoops) )
+	if (MuzzleFlashPSC != None && (!bMuzzleFlashPSCLoops) )
 		MuzzleFlashPSC.DeactivateSystem();
 }
 
@@ -128,7 +128,7 @@ simulated function CauseMuzzleFlash()
 			MuzzleFlashLight.ResetLight();
 	}
 
-	if (MuzzleFlashPSC != none)
+	if (MuzzleFlashPSC != None)
 	{
 		if (!bMuzzleFlashPSCLoops || !MuzzleFlashPSC.bIsActive)
 		{
@@ -156,7 +156,7 @@ simulated function StopMuzzleFlash()
 	ClearTimer('MuzzleFlashTimer');
 	MuzzleFlashTimer();
 
-	if (MuzzleFlashPSC != none)
+	if (MuzzleFlashPSC != None)
 	{
 		MuzzleFlashPSC.DeactivateSystem();
 	}
@@ -190,7 +190,7 @@ simulated function ThirdPersonFireEffects(vector HitLocation)
 		Mesh.PlayAnim(FireAnim, , , false);
 }
 
-simulated event StopThirdPersonFireEffects()
+simulated function StopThirdPersonFireEffects()
 {
 	StopMuzzleFlash();
 }
@@ -200,7 +200,7 @@ simulated event StopThirdPersonFireEffects()
  */
 simulated function ChangeVisibility(bool bIsVisible)
 {
-	if (Mesh != none)
+	if (Mesh != None)
 		Mesh.SetHidden(!bIsVisible);
 }
 

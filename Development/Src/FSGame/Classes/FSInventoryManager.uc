@@ -105,7 +105,7 @@ simulated function SwitchWeapon(byte NewGroup)
 		CurrentWeapon = FSWeapon(Instigator.Weapon);
 	}
 
-	if (CurrentWeapon == none || CurrentWeapon.InventoryGroup != NewGroup)
+	if (CurrentWeapon == None || CurrentWeapon.InventoryGroup != NewGroup)
 	{
 		NewIndex = 0;
 	}
@@ -358,7 +358,7 @@ simulated function Inventory CreateInventory(class<Inventory> NewInventoryItemCl
 	{
 		return Super.CreateInventory(NewInventoryItemClass, bDoNotActivate);
 	}
-	return none;
+	return None;
 }
 
 /**
@@ -407,7 +407,7 @@ simulated function bool AddInventory(Inventory NewItem, optional bool bDoNotActi
 
 	if (Role == ROLE_Authority)
 	{
-		bResult = super.AddInventory(NewItem, bDoNotActivate);
+		bResult = Super.AddInventory(NewItem, bDoNotActivate);
 
 		if (bResult && FSWeapon(NewItem) != None)
 		{
@@ -457,14 +457,14 @@ simulated function RemoveFromInventory(Inventory ItemToRemove)
 }
 
 /**
- * Returns an inventory item of the given class, or none if not found.
+ * Returns an inventory item of the given class, or None if not found.
  */
 function Inventory GetInventoryOfClass(class<Inventory> InvClass)
 {
 	local Inventory Inv;
 
 	Inv = InventoryChain;
-	while (Inv != none)
+	while (Inv != None)
 	{
 		if (Inv.Class == InvClass)
 			return Inv;
@@ -472,7 +472,7 @@ function Inventory GetInventoryOfClass(class<Inventory> InvClass)
 		Inv = Inv.Inventory;
 	}
 
-	return none;
+	return None;
 }
 
 /**
@@ -490,7 +490,7 @@ simulated function ChangedWeapon()
 
 	// Clear out Pending fires if the weapon doesn't allow them
 
-	if (Wep != none && Wep.bNeverForwardPendingFire)
+	if (Wep != None && Wep.bNeverForwardPendingFire)
 	{
 		ClearAllPendingFire(Wep);
 	}

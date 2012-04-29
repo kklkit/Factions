@@ -10,7 +10,7 @@ var byte PlacingStructureType;
 
 simulated state Commanding
 {
-	simulated event BeginState(name PreviousStateName)
+	simulated function BeginState(name PreviousStateName)
 	{
 		local Vector ViewLocation;
 
@@ -23,14 +23,14 @@ simulated state Commanding
 
 		FSHUD(myHUD).GFxCommanderHUD.Start();
 
-		super.BeginState(PreviousStateName);
+		Super.BeginState(PreviousStateName);
 	}
 
-	simulated event EndState(name NextStateName)
+	simulated function EndState(name NextStateName)
 	{
 		FSHUD(myHUD).GFxCommanderHUD.Close(false);
 
-		super.EndState(NextStateName);
+		Super.EndState(NextStateName);
 	}
 
 	/**
@@ -38,7 +38,7 @@ simulated state Commanding
 	 * 
 	 * @extends
 	 */
-	simulated event GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
+	simulated function GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
 	{
 		out_Location = Location;
 		out_Rotation = Rotation;

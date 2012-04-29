@@ -26,7 +26,7 @@ auto simulated state Inactive
 		if (Instigator != None)
 		{
 			PC = PlayerController(Instigator.Controller);
-			if (PC != None && LocalPlayer(PC.Player) != none)
+			if (PC != None && LocalPlayer(PC.Player) != None)
 			{
 				PC.SetFOV(PC.DefaultFOV);
 			}
@@ -45,7 +45,7 @@ simulated state Active
 {
 	reliable server function ServerStartFire(byte FireModeNum)
 	{
-		if (Instigator != none && Instigator.Weapon != self)
+		if (Instigator != None && Instigator.Weapon != self)
 		{
 			UTInventoryManager(InvManager).ClientSyncWeapon(Instigator.Weapon);
 		}
@@ -68,7 +68,7 @@ simulated state WeaponPuttingDown
  */
 function ConsumeAmmo(byte FireModeNum)
 {
-	super.ConsumeAmmo(FireModeNum);
+	Super.ConsumeAmmo(FireModeNum);
 
 	AddAmmo(-1);
 }
@@ -78,7 +78,7 @@ function ConsumeAmmo(byte FireModeNum)
  */
 function int AddAmmo(int Amount)
 {
-	super.AddAmmo(Amount);
+	Super.AddAmmo(Amount);
 
 	AmmoCount = Clamp(AmmoCount + Amount, 0, AmmoCountMax);
 
@@ -90,7 +90,7 @@ function int AddAmmo(int Amount)
  */
 simulated function bool HasAmmo(byte FireModeNum, optional int Amount)
 {
-	super.HasAmmo(FireModeNum, Amount);
+	Super.HasAmmo(FireModeNum, Amount);
 
 	if (Amount == 0)
 		return (AmmoCount >= 1);
@@ -113,7 +113,7 @@ simulated function AttachWeaponTo(SkeletalMeshComponent MeshCpnt, optional name 
 {
 	local FSPawn FSP;
 
-	super.AttachWeaponTo(MeshCpnt, SocketName);
+	Super.AttachWeaponTo(MeshCpnt, SocketName);
 
 	FSP = FSPawn(Instigator);
 
@@ -134,7 +134,7 @@ simulated function DetachWeapon()
 {
 	local FSPawn FSP;
 
-	super.DetachWeapon();
+	Super.DetachWeapon();
 
 	FSP = FSPawn(Instigator);
 	if (FSP != None)
@@ -159,7 +159,7 @@ simulated function TimeWeaponEquipping()
 {
 	AttachWeaponTo(Instigator.Mesh);
 
-	super.TimeWeaponEquipping();
+	Super.TimeWeaponEquipping();
 }
 
 /**
@@ -250,7 +250,7 @@ defaultproperties
 
 	FiringStatesArray(0)=WeaponFiring
 	WeaponFireTypes(0)=EWFT_InstantHit
-	WeaponProjectiles(0)=none
+	WeaponProjectiles(0)=None
 	FireInterval(0)=+0.1
 	Spread(0)=0.0
 	InstantHitDamage(0)=100.0
