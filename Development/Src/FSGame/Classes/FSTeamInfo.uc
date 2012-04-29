@@ -1,12 +1,6 @@
-/**
- * Shared game state for individual teams.
- * 
- * Copyright 2012 Factions Team. All Rights Reserved.
- */
 class FSTeamInfo extends TeamInfo;
 
 var int Resources;
-
 var localized string TeamColorNames[4];
 
 replication
@@ -15,9 +9,6 @@ replication
 		Resources;
 }
 
-/**
- * @extends
- */
 simulated function string GetHumanReadableName()
 {
 	if (TeamName == Default.TeamName)

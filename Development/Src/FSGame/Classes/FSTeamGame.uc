@@ -1,53 +1,33 @@
-/**
- * Base class for Factions game modes.
- * 
- * Copyright 2012 Factions Team. All Rights Reserved.
- */
 class FSTeamGame extends UDKGame
 	config(GameFS);
 
-const NumTeams=2; //@todo test to make sure increasing the number of teams actually works
+const NumTeams=2;
 
 var FSTeamInfo Teams[NumTeams];
 
-/**
- * @extends
- */
 function PreBeginPlay()
 {
-	local int i;
+	local byte i;
 
 	Super.PreBeginPlay();
 
-	// Set the map info if the mapper didn't do it
 	if (WorldInfo.GetMapInfo() == None)
 	{
 		`log("MAPINFO NOT SET!!!");
-		WorldInfo.SetMapInfo(new class'FSGame.FSMapInfo');
+		WorldInfo.SetMapInfo(new class'FSMapInfo');
 	}
 
-	// Create the teams
 	for (i = 0; i < NumTeams; i++)
 		CreateTeam(i);
 }
 
-/**
- * Override.
- * 
- * @extends
- */
 function bool ShouldRespawn(PickupFactory Other)
 {
 	return true;
 }
 
-/**
- * @extends
- */
 function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
 {
-	Super.ChangeTeam(Other, N, bNewTeam);
-
 	if (N >= 0 && N < NumTeams)
 	{
 		SetTeam(Other, Teams[N], bNewTeam);
@@ -57,23 +37,14 @@ function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
 		return false;
 }
 
-/**
- * Override to return the team index for the team with fewest players.
- * 
- * @extends
- */
 function byte PickTeam(byte Current, Controller C)
 {
-	//@todo make this work for more than 2 teams
 	if (Teams[0].Size <= Teams[1].Size)
 		return 0;
 	else
 		return 1;
 }
 
-/**
- * @extends
- */
 function float RatePlayerStart(PlayerStart P, byte Team, Controller Player)
 {
 	if (FSTeamPlayerStart(P) == None)
@@ -86,16 +57,11 @@ function float RatePlayerStart(PlayerStart P, byte Team, Controller Player)
 		return -9;
 
 	if (Player != None && Player.Pawn != None)
-	{
-		return VSize(Player.Pawn.Location - P.Location);
-	}
+		return (FSMapInfo(WorldInfo.GetMapInfo()).MapRadius * 2) - VSize(Player.Pawn.Location - P.Location);
 
 	return Super.RatePlayerStart(P, Team, Player);
 }
 
-/**
- * Sets the controller's team to the given team index.
- */
 function SetTeam(Controller Other, FSTeamInfo NewTeam, bool bNewTeam)
 {
 	local Actor A;
@@ -103,11 +69,9 @@ function SetTeam(Controller Other, FSTeamInfo NewTeam, bool bNewTeam)
 	if (Other.PlayerReplicationInfo == None)
 		return;
 
-	// Clear old spawn point
 	if (Other.PlayerReplicationInfo.Team != None || !ShouldSpawnAtStartSpot(Other))
 		Other.StartSpot = None;
 
-	// Remove controller from old team
 	if (Other.PlayerReplicationInfo.Team != None)
 	{
 		Other.PlayerReplicationInfo.Team.RemoveFromTeam(Other);
@@ -123,19 +87,14 @@ function SetTeam(Controller Other, FSTeamInfo NewTeam, bool bNewTeam)
 	if ((PlayerController(Other) != None) && (LocalPlayer(PlayerController(Other).Player) != None))
 	{
 		foreach AllActors(class'Actor', A)
-		{
 			A.NotifyLocalPlayerTeamReceived();
-		}
 	}
 }
 
-/**
- * Creates a new team given the team index.
- */
 function CreateTeam(int TeamIndex)
 {
 	local FSTeamInfo Team;
-	Team = spawn(class'FSGame.FSTeamInfo');
+	Team = Spawn(class'FSTeamInfo');
 
 	Team.TeamIndex = TeamIndex;
 	GameReplicationInfo.SetTeam(TeamIndex, Team);
@@ -149,11 +108,11 @@ reliable server function PlaceStructure(Vector StructureLocation)
 
 defaultproperties
 {
-	PlayerControllerClass=class'FSGame.FSPlayerController'
-	DefaultPawnClass=class'FSGame.FSPawn'
-	HUDType=class'FSGame.FSHUD'
-	GameReplicationInfoClass=class'FSGame.FSGameReplicationInfo'
-	PlayerReplicationInfoClass=class'FSGame.FSPlayerReplicationInfo'
+	PlayerControllerClass=class'FSPlayerController'
+	DefaultPawnClass=class'FSPawn'
+	HUDType=class'FSHUD'
+	GameReplicationInfoClass=class'FSGameReplicationInfo'
+	PlayerReplicationInfoClass=class'FSPlayerReplicationInfo'
 
 	bTeamGame=true
 	bDelayedStart=false
