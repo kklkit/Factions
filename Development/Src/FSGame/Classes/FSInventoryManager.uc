@@ -1,6 +1,4 @@
 /**
- * Inventory manager for pawns.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSInventoryManager extends InventoryManager
