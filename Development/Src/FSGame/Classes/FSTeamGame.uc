@@ -1,3 +1,6 @@
+/**
+ * Copyright 2012 Factions Team. All Rights Reserved.
+ */
 class FSTeamGame extends UDKGame
 	config(GameFS);
 
@@ -101,6 +104,7 @@ function CreateTeam(int TeamIndex)
 	Teams[TeamIndex] = Team;
 }
 
+//@todo move this somewhere else - dedicated bug
 reliable server function PlaceStructure(Vector StructureLocation)
 {
 	Spawn(class'FSStruct_VehicleFactory', , , StructureLocation, , , );

@@ -36,7 +36,7 @@ function PostBeginPlay()
 
 defaultproperties
 {
-	Begin Object Name=StaticMeshComponent0
+	Begin Object Name=StructureMeshComponent
 		StaticMesh=StaticMesh'FSAssets.Structures.Barracks'
 	End Object
 }

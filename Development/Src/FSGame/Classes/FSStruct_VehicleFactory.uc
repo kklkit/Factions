@@ -26,7 +26,7 @@ function BuildVehicle(FSPawn Builder)
 
 defaultproperties
 {
-	Begin Object Name=StaticMeshComponent0
+	Begin Object Name=StructureMeshComponent
 		StaticMesh=StaticMesh'FSAssets.Structures.VehiclePad'
 	End Object
 

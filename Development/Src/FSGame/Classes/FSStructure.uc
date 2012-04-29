@@ -1,6 +1,4 @@
 /**
- * Base structure class.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSStructure extends Actor
@@ -10,11 +8,6 @@ class FSStructure extends Actor
 
 var() byte TeamNumber;
 
-/**
- * Override.
- * 
- * @extends
- */
 simulated function byte ScriptGetTeamNum()
 {
 	return TeamNumber;
@@ -22,26 +15,26 @@ simulated function byte ScriptGetTeamNum()
 
 defaultproperties
 {
-	Begin Object Class=DynamicLightEnvironmentComponent Name=LightEnvironment0
+	Begin Object Class=DynamicLightEnvironmentComponent Name=StructureLightEnvironmentComponent
 		bSynthesizeSHLight=true
 		bUseBooleanEnvironmentShadowing=false
 		ModShadowFadeoutTime=0.75f
 		bIsCharacterLightEnvironment=true
 		bAllowDynamicShadowsOnTranslucency=true
 	End Object
-	Components.Add(LightEnvironment0)
+	Components.Add(StructureLightEnvironmentComponent)
 
-	Begin Object Class=StaticMeshComponent Name=StaticMeshComponent0
-		LightEnvironment=LightEnvironment0
+	Begin Object Class=StaticMeshComponent Name=StructureMeshComponent
+		LightEnvironment=StructureLightEnvironmentComponent
 	End Object
-	Components.Add(StaticMeshComponent0)
+	Components.Add(StructureMeshComponent)
 
 	CollisionType=COLLIDE_BlockAll
 	BlockRigidBody=true
 	bCollideActors=true
 	bBlockActors=true
 	RemoteRole=ROLE_SimulatedProxy
-	NetPriority=2.f
+	NetPriority=2.0
 	bAlwaysRelevant=true
 	bReplicateMovement=false
 	bOnlyDirtyReplication=true
