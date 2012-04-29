@@ -27,7 +27,7 @@ simulated function SpawnBeam(vector Start, vector End, bool bFirstPerson)
 	}
 
 	E = WorldInfo.MyEmitterPool.SpawnEmitter(BeamTemplate, Start);
-	E.SetVectorParameter('ShockBeamEnd', End);
+	E.SetVectorParameter('Target', End);
 	if (bFirstPerson && !class'Engine'.static.IsSplitScreen())
 		E.SetDepthPriorityGroup(SDPG_Foreground);
 	else
@@ -97,7 +97,7 @@ defaultproperties
 		SkeletalMesh=SkeletalMesh'FSAssets.Equipment.SK_HeavyRifle'
 	End Object
 
-	BeamTemplate=particlesystem'WP_ShockRifle.Particles.P_WP_ShockRifle_Beam'
+	BeamTemplate=ParticleSystem'FSAssets.Particles.P_BulletTrail'
 	
 	MuzzleFlashSocket=MuzzleFlashSocket
 	MuzzleFlashPSCTemplate=WP_ShockRifle.Particles.P_ShockRifle_3P_MF

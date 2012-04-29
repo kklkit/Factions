@@ -268,4 +268,6 @@ defaultproperties
 	AmmoCountMax=30
 
 	RespawnTime=1.0
+
+	Spread=(0.05)
 }
