@@ -189,6 +189,11 @@ simulated function WeaponAttachmentChanged()
 	}
 }
 
+exec function EquipLoadout()
+{
+	FSInventoryManager(InvManager).EquipLoadout();
+}
+
 defaultproperties
 {
 	Components.Remove(Sprite)

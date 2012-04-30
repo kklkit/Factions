@@ -46,6 +46,7 @@ function SelectClass(int ClassIndex)
 function SelectEquipment(string EquipmentName)
 {
 	`log("Selected equipment" @ EquipmentName);
+	FSInventoryManager(FSPawn(GetPC().Pawn).InvManager).SelectEquipment(0, EquipmentName);
 }
 
 /*********************************************************************************************
