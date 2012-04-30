@@ -50,5 +50,5 @@ defaultproperties
 
 	bNoDelete=false
 
-	WeaponPickupClass=class'FSWeap_Firearm'
+	WeaponPickupClass=class'FSWeap_BattleRifle'
 }
