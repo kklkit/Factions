@@ -51,7 +51,7 @@ simulated function SpawnBeam(Vector Start, Vector End, bool bFirstPerson)
 defaultproperties
 {
 	Begin Object Name=AttachmentMeshComponent
-		SkeletalMesh=SkeletalMesh'FSAssets.Equipment.SK_WP_BattleRifle'
+		SkeletalMesh=SkeletalMesh'FSAssets.Equipment.SK_WP_AssaultRifle'
 	End Object
 
 	BeamTemplate=ParticleSystem'FSAssets.Particles.P_BulletTrail'

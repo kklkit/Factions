@@ -6,7 +6,7 @@ class FSWeap_Firearm extends FSWeapon;
 defaultproperties
 {
 	Begin Object Name=PickupMeshComponent
-		SkeletalMesh=SkeletalMesh'FSAssets.Equipment.SK_WP_BattleRifle'
+		SkeletalMesh=SkeletalMesh'FSAssets.Equipment.SK_WP_AssaultRifle'
 	End Object
 
 	AttachmentClass=class'FSGame.FSAttachment_Firearm'
