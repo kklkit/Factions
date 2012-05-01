@@ -11,12 +11,6 @@ function PostBeginPlay()
 	Super.PostBeginPlay();
 
 	SpawnLocation.X = Location.X + 200;
-	SpawnLocation.Y = Location.Y + 1000;
-	SpawnLocation.Z = Location.Z + 75;
-
-	Spawn(class'FSWeaponPickupFactory', self, , SpawnLocation, , , );
-
-	SpawnLocation.X = Location.X + 200;
 	SpawnLocation.Y = Location.Y + 200;
 	SpawnLocation.Z = Location.Z + 125;
 
