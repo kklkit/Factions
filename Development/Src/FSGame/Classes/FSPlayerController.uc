@@ -5,7 +5,7 @@ class FSPlayerController extends UDKPlayerController;
 
 var byte CommanderMoveSpeed;
 var bool bPlacingStructure;
-var byte PlacingStructureType;
+var byte PlacingStructureIndex;
 
 simulated state Commanding
 {
@@ -73,6 +73,17 @@ simulated state Commanding
 	{
 		GotoState('PlayerWalking');
 	}
+
+	exec function SelectStructure(byte StructureIndex)
+	{
+		PlacingStructureIndex = StructureIndex;
+	}
+
+	exec function PlaceStructure()
+	{
+		if (PlacingStructureIndex != 0)
+			bPlacingStructure = true;
+	}
 }
 
 reliable server function RequestVehicle()
@@ -90,11 +101,6 @@ exec function BuildVehicle()
 	RequestVehicle();
 }
 
-exec function PlaceStructure()
-{
-	bPlacingStructure = true;
-}
-
 exec function ToggleCommandView()
 {
 	GotoState('Commanding');
@@ -104,6 +110,6 @@ defaultproperties
 {
 	InputClass=class'FSGame.FSPlayerInput'
 	bPlacingStructure=false
-	PlacingStructureType=0
+	PlacingStructureIndex=0
 	CommanderMoveSpeed=10
 }

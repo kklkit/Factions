@@ -105,9 +105,21 @@ function CreateTeam(int TeamIndex)
 }
 
 //@todo move this somewhere else - dedicated bug
-reliable server function PlaceStructure(Vector StructureLocation)
+reliable server function PlaceStructure(byte StructureIndex, Vector StructureLocation)
 {
-	Spawn(class'FSStruct_VehicleFactory', , , StructureLocation, , , );
+	local class<FSStructure> StructureClass;
+
+	switch (StructureIndex)
+	{
+	case 1:
+		StructureClass = class'FSStruct_Barracks';
+		break;
+	case 2:
+		StructureClass = class'FSStruct_VehicleFactory';
+		break;
+	}
+
+	Spawn(StructureClass, , , StructureLocation, , , );
 }
 
 defaultproperties
