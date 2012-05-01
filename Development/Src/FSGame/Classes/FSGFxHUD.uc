@@ -38,9 +38,7 @@ function TickHud()
 		UpdateHealth(FSP.Health, FSP.HealthMax);
 
 		if (FSP.PlayerReplicationInfo != None)
-		{
 			UpdateResources(FSTeamInfo(FSP.PlayerReplicationInfo.Team).Resources);
-		}
 
 		FSW = FSWeapon(FSP.Weapon);
 		if (FSW != None)
@@ -53,38 +51,6 @@ function TickHud()
 		UpdateHealth(0, 1);
 		UpdateAmmo(0, 1);
 	}
-}
-
-function FSPawn GetPlayerPawn()
-{
-	local FSPawn FSP;
-	local UDKVehicle FSV; //@todo change to FSVehicle
-	local UDKWeaponPawn FWP; //@todo change to FSWeaponPawn
-
-	FSP = FSPawn(PC.Pawn);
-
-	// Set the pawn if driving a vehicle or mounted weapon
-	if (FSP == None)
-	{
-		FSV = UDKVehicle(PC.Pawn);
-
-		if (FSV == None)
-		{
-			FWP = UDKWeaponPawn(PC.Pawn);
-			if (FWP != None)
-			{
-				FSV = FWP.MyVehicle;
-				FSP = FSPawn(FWP.Driver);
-			}
-		}
-		else
-			FSP = FSPawn(FSV.Driver);
-
-		if (FSV == None)
-			return None;
-	}
-
-	return FSP;
 }
 
 /*********************************************************************************************

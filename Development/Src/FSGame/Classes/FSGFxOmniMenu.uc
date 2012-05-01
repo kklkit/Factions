@@ -3,14 +3,9 @@
  */
 class FSGFxOmniMenu extends FSGFxMoviePlayer;
 
-var int NewTeamIndex;
-
 function bool Start(optional bool StartPaused)
 {
 	Super.Start(StartPaused);
-
-	if (NewTeamIndex != -110)
-		UpdateTeam(NewTeamIndex);
 
 	return true;
 }
@@ -19,7 +14,8 @@ function OnClose()
 {
 	Super.OnClose();
 
-	FSPawn(GetPC().Pawn).ResetEquipment();
+	if (PC.Pawn != None)
+		FSPawn(PC.Pawn).ResetEquipment();
 }
 
 /*********************************************************************************************
@@ -33,17 +29,18 @@ function CloseOmniMenu(string FrameLabelOnClose)
 
 function SelectTeam(byte TeamIndex)
 {
-	GetPC().ServerChangeTeam(TeamIndex);
+	PC.ServerChangeTeam(TeamIndex);
 }
 
 function SelectClass(byte ClassIndex)
 {
-	FSPawn(GetPC().Pawn).ChangeClass(ClassIndex);
+	FSPawn(PC.Pawn).ChangeClass(ClassIndex);
 }
 
 function SelectEquipment(byte Slot, string EquipmentName)
 {
-	FSInventoryManager(FSPawn(GetPC().Pawn).InvManager).SelectEquipment(Slot, EquipmentName);
+	if (PC.Pawn != None)
+		FSInventoryManager(FSPawn(PC.Pawn).InvManager).SelectEquipment(Slot, EquipmentName);
 }
 
 /*********************************************************************************************
@@ -52,13 +49,7 @@ function SelectEquipment(byte Slot, string EquipmentName)
 
 function UpdateTeam(int TeamIndex)
 {
-	if (bMovieIsOpen) // Game will crash if ActionScript is called before the movie is loaded
-	{
-		NewTeamIndex = -110;
-		ActionScriptVoid("_root.UpdateTeam");
-	}
-	else
-		NewTeamIndex = TeamIndex;
+	ActionScriptVoid("_root.UpdateTeam");
 }
 
 function UpdateClassSelection(byte ClassIndex)
@@ -77,5 +68,4 @@ defaultproperties
 	bAutoPlay=true
 	bCaptureMouseInput=true
 	bDisplayMouseCursor=true
-	NewTeamIndex=-110
 }
