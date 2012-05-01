@@ -1,16 +1,12 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSGFxCommanderHUD extends GFxMoviePlayer;
+class FSGFxCommanderHUD extends FSGFxMoviePlayer;
 
 var GFxObject StatusText;
 
 function TickHUD()
 {
-	local FSPlayerController PC;
-
-	PC = FSPlayerController(GetPC());
-
 	// Update status text
 	if (StatusText != None)
 	{
@@ -23,24 +19,10 @@ function TickHUD()
 		StatusText = GetVariableObject("_root.statusText");
 }
 
-function bool Start(optional bool StartPaused)
-{
-	Super.Start(StartPaused);
-
-	GetGameViewportClient().bDisplayHardwareMouseCursor = true;
-
-	return true;
-}
-
-function OnClose()
-{
-	Super.OnClose();
-
-	GetGameViewportClient().bDisplayHardwareMouseCursor = false;
-}
-
 defaultproperties
 {
 	MovieInfo=SwfMovie'FSFlashAssets.factions_commander_hud'
 	bAutoPlay=false
+	bDisplayWithHudOff=false
+	bDisplayMouseCursor=true
 }

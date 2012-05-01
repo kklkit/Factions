@@ -1,7 +1,7 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSGFxHUD extends GFxMoviePlayer;
+class FSGFxHUD extends FSGFxMoviePlayer;
 
 var GFxObject TopLeftHUD;
 var GFxObject TopRightHUD;
@@ -57,13 +57,11 @@ function TickHud()
 
 function FSPawn GetPlayerPawn()
 {
-	local PlayerController PC;
 	local FSPawn FSP;
 	local UDKVehicle FSV; //@todo change to FSVehicle
 	local UDKWeaponPawn FWP; //@todo change to FSWeaponPawn
 
-	PC = GetPC();
-	FSP = FSPawn(GetPC().Pawn);
+	FSP = FSPawn(PC.Pawn);
 
 	// Set the pawn if driving a vehicle or mounted weapon
 	if (FSP == None)

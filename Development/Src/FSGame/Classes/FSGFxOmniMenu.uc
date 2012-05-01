@@ -1,15 +1,13 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSGFxOmniMenu extends GFxMoviePlayer;
+class FSGFxOmniMenu extends FSGFxMoviePlayer;
 
 var int NewTeamIndex;
 
 function bool Start(optional bool StartPaused)
 {
 	Super.Start(StartPaused);
-
-	GetGameViewportClient().bDisplayHardwareMouseCursor = true;
 
 	if (NewTeamIndex != -110)
 		UpdateTeam(NewTeamIndex);
@@ -20,8 +18,6 @@ function bool Start(optional bool StartPaused)
 function OnClose()
 {
 	Super.OnClose();
-
-	GetGameViewportClient().bDisplayHardwareMouseCursor = false;
 
 	FSPawn(GetPC().Pawn).ResetEquipment();
 }
@@ -80,5 +76,6 @@ defaultproperties
 	MovieInfo=SwfMovie'FSFlashAssets.factions_omnimenu'
 	bAutoPlay=true
 	bCaptureMouseInput=true
+	bDisplayMouseCursor=true
 	NewTeamIndex=-110
 }
