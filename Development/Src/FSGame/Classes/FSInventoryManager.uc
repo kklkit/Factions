@@ -41,11 +41,14 @@ reliable server function ResetEquipment()
 {
 	local byte i;
 
-	DiscardInventory();
+	if (FSStruct_Barracks(FSPawn(Instigator).Base) != None)
+	{
+		DiscardInventory();
 
-	for (i = 0; i < NumSlots; i++)
-		if (RequestedEquipment[i] != None)
-			CreateInventory(RequestedEquipment[i]);
+		for (i = 0; i < NumSlots; i++)
+			if (RequestedEquipment[i] != None)
+				CreateInventory(RequestedEquipment[i]);
+	}
 }
 
 defaultproperties

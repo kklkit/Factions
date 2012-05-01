@@ -22,6 +22,8 @@ function OnClose()
 	Super.OnClose();
 
 	GetGameViewportClient().bDisplayHardwareMouseCursor = false;
+
+	FSPawn(GetPC().Pawn).ResetEquipment();
 }
 
 /*********************************************************************************************
@@ -76,7 +78,7 @@ function UpdateEquipmentSelection(byte Slot, string EquipmentName)
 defaultproperties
 {
 	MovieInfo=SwfMovie'FSFlashAssets.factions_omnimenu'
-	bAutoPlay=false
+	bAutoPlay=true
 	bCaptureMouseInput=true
 	NewTeamIndex=-110
 }
