@@ -25,6 +25,7 @@ function PostRender()
 	Super.PostRender();
 
 	GFxHUD.TickHud();
+	GFxCommanderHUD.TickHUD();
 }
 
 simulated function PostBeginPlay()

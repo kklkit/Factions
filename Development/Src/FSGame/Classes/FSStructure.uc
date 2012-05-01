@@ -13,6 +13,17 @@ simulated function byte ScriptGetTeamNum()
 	return TeamNumber;
 }
 
+static function class<FSStructure> GetStructureClass(byte StructureIndex)
+{
+	switch (StructureIndex)
+	{
+	case 1:
+		return class'FSStruct_Barracks';
+	case 2:
+		return class'FSStruct_VehicleFactory';
+	}
+}
+
 defaultproperties
 {
 	Begin Object Class=DynamicLightEnvironmentComponent Name=StructureLightEnvironmentComponent
