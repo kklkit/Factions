@@ -17,22 +17,28 @@
 		public var menuButtonBar:ButtonBar;
 		public var closeButton:Button;
 
-		private var panels:Array = ["Team","Infantry","Vehicle","Tactical","Research"];
-		private var menuDataProvider:DataProvider = new DataProvider(panels);
-		private var teamDataProvider:DataProvider = new DataProvider(["Red","Blue","Spectator"]);
-		private var infantryClassDataProvider:DataProvider = new DataProvider(["Soldier","Support"]);
-		private var infantryTinyEquipmentDataProvider:DataProvider = new DataProvider(["None"]);
-		private var infantrySmallEquipmentDataProvider:DataProvider = new DataProvider(["None","Heavy Pistol"]);
-		private var infantryMediumEquipmentDataProvider:DataProvider = new DataProvider(["None"]);
-		private var infantryLargeEquipmentDataProvider:DataProvider = new DataProvider(["None","Battle Rifle","Assault Rifle"]);
-		private var vehicleChassisDataProvider:DataProvider = new DataProvider(["Jeep","APC","Light Tank","Medium Tank","Heavy Tank","Artillery Tank","Gunship","Bomber","Dropship","Blimp"]);
-		private var vehicleArmorDataProvider:DataProvider = new DataProvider(["Reflective","Absorbent","Composite","Reactive","Regenerative"]);
+		public var panels:Array = ["Team","Infantry","Vehicle","Tactical","Research"];
+		public var menuDataProvider:DataProvider = new DataProvider(panels);
+		
+		public var teamDataProvider:DataProvider = new DataProvider(["Red","Blue","Spectator"]);
+		public var teamIndex:int = 2;
 
-		private var teamIndex:int = 2;
-		private var infantryClassIndex:int = 0;
-		private var infantryEquipmentIndicies:Array = [0,0,0,0];
-		private var vehicleChassisIndex:int = 0;
-		private var vehicleArmorIndex:int = 0;
+		public var infantryClassDataProvider:DataProvider = new DataProvider(["Soldier","Support"]);
+		public var infantryClassIndex:int = 0;
+		
+		public var infantryEquipmentDataProviders = [
+		 new DataProvider(["None", "Battle Rifle", "Assault Rifle"]),
+		 new DataProvider(["None"]),
+		 new DataProvider(["None", "Heavy Pistol"]),
+		 new DataProvider(["None"])
+		 ];
+		public var infantryEquipmentIndicies:Array = [0,0,0,0];
+
+		public var vehicleChassisDataProvider:DataProvider = new DataProvider(["Jeep","APC","Light Tank","Medium Tank","Heavy Tank","Artillery Tank","Gunship","Bomber","Dropship","Blimp"]);
+		public var vehicleChassisIndex:int = 0;
+		
+		public var vehicleArmorDataProvider:DataProvider = new DataProvider(["Reflective","Absorbent","Composite","Reactive","Regenerative"]);
+		public var vehicleArmorIndex:int = 0;
 
 		public function FactionsOmniMenu()
 		{
@@ -68,16 +74,11 @@
 			ExternalInterface.call("SelectClass", e.index);
 		}
 
-		private function selectEquipment(e:ListEvent):void
-		{
-			ExternalInterface.call("SelectEquipment", e.itemData);
-		}
-
 		public function UpdateTeam(teamIndex:int):void
 		{
 			this.teamIndex = teamIndex;
 		}
-		
+
 		public function UpdateSelectedEquipment(slot:int, index:int):void
 		{
 			infantryEquipmentIndicies[slot] = index;

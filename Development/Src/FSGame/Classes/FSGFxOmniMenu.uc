@@ -4,12 +4,15 @@
 class FSGFxOmniMenu extends GFxMoviePlayer;
 
 var int NewTeamIndex;
+var FSInventoryManager InvManager;
 
 function bool Start(optional bool StartPaused)
 {
 	Super.Start(StartPaused);
 
 	GetGameViewportClient().bDisplayHardwareMouseCursor = true;
+
+	InvManager = FSInventoryManager(FSPawn(GetPC().Pawn).InvManager);
 
 	if (NewTeamIndex != -110)
 		UpdateTeam(NewTeamIndex);
@@ -43,10 +46,9 @@ function SelectClass(int ClassIndex)
 	`log("Selected class" @ ClassIndex);
 }
 
-function SelectEquipment(string EquipmentName)
+function SelectEquipment(int Slot, string EquipmentName)
 {
-	`log("Selected equipment" @ EquipmentName);
-	FSInventoryManager(FSPawn(GetPC().Pawn).InvManager).SelectEquipment(0, EquipmentName);
+	InvManager.SelectEquipment(Slot, EquipmentName);
 }
 
 /*********************************************************************************************
