@@ -46,7 +46,6 @@ simulated function PostBeginPlay()
 		MI = FSMapInfo(WorldInfo.GetMapInfo());
 		if (MI != None)
 		{
-			//@todo Create in defaultproperties and use AlwaysLoadOnServer=false and CollideActors=False
 			MinimapCaptureComponent = new(self) class'SceneCapture2DComponent';
 			MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'FSAssets.HUD.minimap_render_texture', MinimapCaptureFOV, , 0);
 			MinimapCaptureComponent.bUpdateMatrices = false;

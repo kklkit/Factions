@@ -10,15 +10,12 @@ function BuildVehicle(FSPawn Builder)
 {
 	local FSTeamInfo Team;
 
-	if (Builder.Base == self) //@todo move check to caller
-	{
-		Team = FSTeamInfo(Builder.PlayerReplicationInfo.Team);
+	Team = FSTeamInfo(Builder.PlayerReplicationInfo.Team);
 
-		if (Team != None && Team.Resources >= VehicleCost)
-		{
-			Team.Resources -= VehicleCost;
-			Spawn(VehicleClass, Builder, , Location + vect(600, 600, 100));
-		}
+	if (Team != None && Team.Resources >= VehicleCost)
+	{
+		Team.Resources -= VehicleCost;
+		Spawn(VehicleClass, Builder, , Location + vect(600, 600, 100));
 	}
 }
 

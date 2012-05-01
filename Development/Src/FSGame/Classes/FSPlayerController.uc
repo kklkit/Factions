@@ -79,8 +79,7 @@ reliable server function RequestVehicle()
 {
 	local FSStruct_VehicleFactory VF;
 
-	foreach DynamicActors(class'FSStruct_VehicleFactory', VF, class'FSActorInterface')
-		break;
+	VF = FSStruct_VehicleFactory(Pawn.Base);
 
 	if (VF != None)
 		VF.BuildVehicle(FSPawn(Pawn));
