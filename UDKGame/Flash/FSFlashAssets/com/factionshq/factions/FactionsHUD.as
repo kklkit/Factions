@@ -1,4 +1,4 @@
-﻿package name.jephir.factions
+﻿package com.factionshq.factions
 {
 	import flash.display.MovieClip;
 	import flash.display.StageScaleMode;

@@ -11,6 +11,7 @@ function TickHUD()
 
 	PC = FSPlayerController(GetPC());
 
+	// Update status text
 	if (StatusText != None)
 	{
 		if (PC.PlacingStructureIndex != 0)
