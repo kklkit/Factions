@@ -8,6 +8,8 @@ class FSPawn extends UDKPawn
 
 const MinimapCaptureFOV=90;
 
+var name ClassName;
+
 var DynamicLightEnvironmentComponent LightEnvironment;
 
 var repnotify class<FSWeaponAttachment> CurrentWeaponAttachmentClass;
@@ -22,7 +24,7 @@ var Rotator MinimapCaptureRotation;
 replication
 {
 	if (bNetDirty)
-		CurrentWeaponAttachmentClass;
+		CurrentWeaponAttachmentClass, ClassName;
 }
 
 simulated function ReplicatedEvent(name VarName)
@@ -187,6 +189,27 @@ simulated function WeaponAttachmentChanged()
 			CurrentWeaponAttachment.ChangeVisibility(bWeaponAttachmentVisible);
 		}
 	}
+}
+
+reliable server function ChangeClass(byte ClassIndex)
+{
+	local name NewClass;
+
+	switch (ClassIndex)
+	{
+	case 0:
+		NewClass = 'Soldier';
+		break;
+	case 1:
+		NewClass = 'Support';
+		break;
+	default:
+		`log("Unknown class selected!");
+		return;
+	}
+
+	ClassName = NewClass;
+	FSHUD(FSPlayerController(Controller).myHUD).GFxOmniMenu.UpdateClassSelection(ClassIndex);
 }
 
 exec function ResetEquipment()

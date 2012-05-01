@@ -79,9 +79,14 @@
 			this.teamIndex = teamIndex;
 		}
 
-		public function UpdateSelectedEquipment(slot:int, index:int):void
+		public function UpdateEquipmentSelection(slot:int, equipmentName:String):void
 		{
-			infantryEquipmentIndicies[slot] = index;
+			infantryEquipmentIndicies[slot] = infantryEquipmentDataProviders[slot].indexOf(equipmentName);
+		}
+		
+		public function UpdateClassSelection(classIndex:int):void
+		{
+			infantryClassIndex = classIndex;
 		}
 	}
 }

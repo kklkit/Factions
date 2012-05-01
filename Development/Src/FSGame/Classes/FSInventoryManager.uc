@@ -28,8 +28,13 @@ reliable server function SelectEquipment(byte Slot, string EquipmentName)
 		case "Battle Rifle":
 			RequestedEquipment[Slot] = class'FSWeap_BattleRifle';
 			break;
+		default:
+			`log("Unknown equipment selected!");
+			return;
 		}
 	}
+
+	FSHUD(FSPlayerController(FSPawn(Instigator).Controller).myHUD).GFxOmniMenu.UpdateEquipmentSelection(Slot, EquipmentName);
 }
 
 reliable server function ResetEquipment()
