@@ -4,42 +4,43 @@
 class FSInventoryManager extends InventoryManager
 	config(GameFS);
 
-const EquipmentSlots=4;
+const NumSlots=4;
 
-var class<Inventory> EquipmentClass[EquipmentSlots];
+var class<Inventory> RequestedEquipment[NumSlots];
 
 replication
 {
 	if (bNetDirty)
-		EquipmentClass;
+		RequestedEquipment;
 }
 
 reliable server function SelectEquipment(byte Slot, string EquipmentName)
 {
-	switch (EquipmentName) {
-	case "Heavy Pistol":
-		EquipmentClass[Slot] = class'FSWeap_HeavyPistol';
-		break;
-	case "Assault Rifle":
-		EquipmentClass[Slot] = class'FSWeap_AssaultRifle';
-		break;
-	case "Battle Rifle":
-		EquipmentClass[Slot] = class'FSWeap_BattleRifle';
-		break;
+	if (Slot >= 0 && Slot < NumSlots)
+	{
+		switch (EquipmentName) {
+		case "Heavy Pistol":
+			RequestedEquipment[Slot] = class'FSWeap_HeavyPistol';
+			break;
+		case "Assault Rifle":
+			RequestedEquipment[Slot] = class'FSWeap_AssaultRifle';
+			break;
+		case "Battle Rifle":
+			RequestedEquipment[Slot] = class'FSWeap_BattleRifle';
+			break;
+		}
 	}
 }
 
-reliable server function EquipLoadout()
+reliable server function ResetEquipment()
 {
 	local byte i;
 
 	DiscardInventory();
 
-	for (i = 0; i < EquipmentSlots; i++)
-	{
-		if (EquipmentClass[i] != None)
-			CreateInventory(EquipmentClass[i]);
-	}
+	for (i = 0; i < NumSlots; i++)
+		if (RequestedEquipment[i] != None)
+			CreateInventory(RequestedEquipment[i]);
 }
 
 defaultproperties

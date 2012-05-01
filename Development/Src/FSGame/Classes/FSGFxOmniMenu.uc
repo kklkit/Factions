@@ -46,7 +46,7 @@ function SelectClass(int ClassIndex)
 	`log("Selected class" @ ClassIndex);
 }
 
-function SelectEquipment(int Slot, string EquipmentName)
+function SelectEquipment(byte Slot, string EquipmentName)
 {
 	InvManager.SelectEquipment(Slot, EquipmentName);
 }

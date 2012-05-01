@@ -189,9 +189,9 @@ simulated function WeaponAttachmentChanged()
 	}
 }
 
-exec function EquipLoadout()
+exec function ResetEquipment()
 {
-	FSInventoryManager(InvManager).EquipLoadout();
+	FSInventoryManager(InvManager).ResetEquipment();
 }
 
 defaultproperties
