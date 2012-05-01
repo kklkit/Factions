@@ -21,6 +21,7 @@ Development/Src/WinDrv/
 *.suo
 *.ucproj
 *.ucproj.user
+*.udkproj
 Engine/
 UDKGame/Autosaves/
 UDKGame/Build/
