@@ -7,4 +7,5 @@ defaultproperties
 {
 	bStatic=false
 	bNoDelete=false
+	bPrimaryStart=false
 }

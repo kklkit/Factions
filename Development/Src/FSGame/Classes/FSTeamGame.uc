@@ -57,17 +57,14 @@ function byte PickTeam(byte Current, Controller C)
 
 function float RatePlayerStart(PlayerStart P, byte Team, Controller Player)
 {
-	if (FSTeamPlayerStart(P) == None)
-	{
-		`warn(P$" is not a team playerstart!");
-		return -9;
-	}
+	if (Player == None && P.bPrimaryStart)
+		return 10;
 
-	if (Team != FSTeamPlayerStart(P).TeamNumber)
+	if (Player == None || FSTeamPlayerStart(P) == None || Team != FSTeamPlayerStart(P).TeamNumber)
 		return -9;
 
 	if (Player != None && Player.Pawn != None)
-		return (FSMapInfo(WorldInfo.GetMapInfo()).MapRadius * 2) - VSize(Player.Pawn.Location - P.Location);
+		return (FSMapInfo(WorldInfo.GetMapInfo()).MapRadius * 2) - VSize(Player.Pawn.Location - P.Location); //@todo this doesn't work
 
 	return Super.RatePlayerStart(P, Team, Player);
 }
