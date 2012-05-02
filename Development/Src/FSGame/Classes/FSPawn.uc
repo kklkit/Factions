@@ -17,7 +17,7 @@ var FSWeaponAttachment CurrentWeaponAttachment;
 var name WeaponSocket;
 var bool bWeaponAttachmentVisible;
 
-var SceneCapture2DComponent MinimapCaptureComponent;
+var SceneCapture2DComponent MinimapCaptureComponent; //@todo move minimap capture to controller so specs can view minimap
 var Vector MinimapCapturePosition;
 var Rotator MinimapCaptureRotation;
 
