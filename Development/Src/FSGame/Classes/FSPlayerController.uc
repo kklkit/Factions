@@ -160,4 +160,5 @@ defaultproperties
 	bPlacingStructure=false
 	PlacingStructureIndex=0
 	CommanderMoveSpeed=10
+	SpectatorCameraSpeed=5000.0
 }
