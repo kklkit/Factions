@@ -3,9 +3,16 @@
  */
 class FSPlayerController extends UDKPlayerController;
 
+// Commander
 var byte CommanderMoveSpeed;
 var bool bPlacingStructure;
 var byte PlacingStructureIndex;
+
+// Minimap
+var SceneCapture2DComponent MinimapCaptureComponent;
+var Vector MinimapCapturePosition;
+var Rotator MinimapCaptureRotation;
+const MinimapCaptureFOV=90;
 
 simulated state Commanding
 {
@@ -86,6 +93,33 @@ simulated state Commanding
 	}
 }
 
+simulated function PostBeginPlay()
+{
+	local FSMapInfo MI;
+
+	Super.PostBeginPlay();
+
+	MI = FSMapInfo(WorldInfo.GetMapInfo());
+	if (MI != None && WorldInfo.NetMode != NM_DedicatedServer)
+	{
+		MinimapCaptureComponent = new(self) class'SceneCapture2DComponent';
+		MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'FSAssets.HUD.minimap_render_texture', MinimapCaptureFOV, , 0);
+		MinimapCaptureComponent.bUpdateMatrices = false;
+		AttachComponent(MinimapCaptureComponent);
+
+		MinimapCapturePosition.X = MI.MapCenter.X;
+		MinimapCapturePosition.Y = MI.MapCenter.Y;
+		MinimapCapturePosition.Z = MI.MapRadius;
+	}
+}
+
+function PlayerTick(float DeltaTime)
+{
+	Super.PlayerTick(DeltaTime);
+
+	MinimapCaptureComponent.SetView(MinimapCapturePosition, MinimapCaptureRotation);
+}
+
 reliable server function RequestVehicle()
 {
 	local FSStruct_VehicleFactory VF;
@@ -161,4 +195,6 @@ defaultproperties
 	PlacingStructureIndex=0
 	CommanderMoveSpeed=10
 	SpectatorCameraSpeed=5000.0
+
+	MinimapCaptureRotation=(Pitch=-16384,Yaw=-16384,Roll=0)
 }

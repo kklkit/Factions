@@ -6,8 +6,6 @@ class FSPawn extends UDKPawn
 	config(GameFS)
 	notplaceable;
 
-const MinimapCaptureFOV=90;
-
 var name ClassName;
 
 var DynamicLightEnvironmentComponent LightEnvironment;
@@ -16,10 +14,6 @@ var repnotify class<FSWeaponAttachment> CurrentWeaponAttachmentClass;
 var FSWeaponAttachment CurrentWeaponAttachment;
 var name WeaponSocket;
 var bool bWeaponAttachmentVisible;
-
-var SceneCapture2DComponent MinimapCaptureComponent; //@todo move minimap capture to controller so specs can view minimap
-var Vector MinimapCapturePosition;
-var Rotator MinimapCaptureRotation;
 
 replication
 {
@@ -33,29 +27,6 @@ simulated function ReplicatedEvent(name VarName)
 		WeaponAttachmentChanged();
 
 	Super.ReplicatedEvent(VarName);
-}
-
-simulated function PostBeginPlay()
-{
-	local FSMapInfo MI;
-
-	Super.PostBeginPlay();
-
-	if (WorldInfo.NetMode != NM_DedicatedServer)
-	{
-		MI = FSMapInfo(WorldInfo.GetMapInfo());
-		if (MI != None)
-		{
-			MinimapCaptureComponent = new(self) class'SceneCapture2DComponent';
-			MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'FSAssets.HUD.minimap_render_texture', MinimapCaptureFOV, , 0);
-			MinimapCaptureComponent.bUpdateMatrices = false;
-			AttachComponent(MinimapCaptureComponent);
-
-			MinimapCapturePosition.X = MI.MapCenter.X;
-			MinimapCapturePosition.Y = MI.MapCenter.Y;
-			MinimapCapturePosition.Z = MI.MapRadius;
-		}
-	}
 }
 
 simulated function PostInitAnimTree(SkeletalMeshComponent SkelComp)
@@ -75,14 +46,6 @@ simulated function PostInitAnimTree(SkeletalMeshComponent SkelComp)
 		RightRecoilNode = GameSkelCtrl_Recoil(Mesh.FindSkelControl('RightRecoilNode'));
 		FlyingDirOffset = AnimNodeAimOffset(Mesh.FindAnimNode('FlyingDirOffset'));
 	}
-}
-
-simulated function Tick(float DeltaTime)
-{
-	Super.Tick(DeltaTime);
-
-	if (MinimapCaptureComponent != None)
-		MinimapCaptureComponent.SetView(MinimapCapturePosition, MinimapCaptureRotation);
 }
 
 simulated function Destroyed()
@@ -245,6 +208,4 @@ defaultproperties
 	LeftFootControlName=LeftFootControl
 	RightFootControlName=RightFootControl
 	bEnableFootPlacement=true
-
-	MinimapCaptureRotation=(Pitch=-16384,Yaw=-16384,Roll=0)
 }
