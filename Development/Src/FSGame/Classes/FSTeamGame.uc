@@ -24,6 +24,13 @@ function PreBeginPlay()
 		CreateTeam(i);
 }
 
+function PlayerController Login(string Portal, string Options, const UniqueNetId UniqueId, out string ErrorMessage)
+{
+	Options $= "?SpectatorOnly=1"; //@todo only set spectator if new player
+
+	return Super.Login(Portal, Options, UniqueId, ErrorMessage);
+}
+
 function bool ShouldRespawn(PickupFactory Other)
 {
 	return true;
