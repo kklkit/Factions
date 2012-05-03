@@ -99,10 +99,16 @@ function GetData(string DataName)
 
 	switch (DataName)
 	{
+	case "RedTeamPlayers":
+		foreach GetPC().WorldInfo.AllControllers(class'FSPlayerController', FSPC)
+			if (FSPC.PlayerReplicationInfo.Team.TeamIndex == 0)
+				Data.AddItem(FSPC.PlayerReplicationInfo.PlayerName);
+		break;
 	case "BlueTeamPlayers":
 		foreach GetPC().WorldInfo.AllControllers(class'FSPlayerController', FSPC)
 			if (FSPC.PlayerReplicationInfo.Team.TeamIndex == 1)
 				Data.AddItem(FSPC.PlayerReplicationInfo.PlayerName);
+		break;
 	}
 
 	Data.AddItem("DataEnd");

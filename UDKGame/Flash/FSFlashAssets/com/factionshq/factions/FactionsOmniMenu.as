@@ -28,7 +28,7 @@
 		public var teamIndex:int = -110; // -110 is used to signal that the player is not on a team (spectator)
 		
 		public var blueTeamDataProvider:ExternalDataProvider = new ExternalDataProvider("BlueTeamPlayers", dataBuffer);
-		public var redTeamDataProvider:DataProvider = new DataProvider();
+		public var redTeamDataProvider:ExternalDataProvider = new ExternalDataProvider("RedTeamPlayers", dataBuffer);
 
 		public var infantryClassDataProvider:DataProvider = new DataProvider(["Soldier","Support"]);
 		public var infantryClassIndex:int = 0;
