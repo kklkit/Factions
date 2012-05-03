@@ -1,9 +1,11 @@
 ﻿/**
- * A data provider that polls UDK for data.
+ * A data provider that polls an external application for data.
+ *
+ * Users of this data provider should always use the callbacks since the function return values are cached and may be out-of-date. Callback values will always be up-to-date as returned by the external application.
  */
 /**************************************************************************
 
-Filename    :   UDKDataProvider.as
+Filename    :   ExternalDataProvider.as
 
 Copyright   :   Copyright 2012 Factions Team. All Rights reserved.
 
@@ -11,23 +13,21 @@ Copyright   :   Copyright 2012 Factions Team. All Rights reserved.
 
 package com.factionshq.data {
 	
+	import flash.events.Event;
 	import flash.events.EventDispatcher;
-    import flash.events.IEventDispatcher;
-    import flash.events.Event;
+	import flash.events.IEventDispatcher;
 	import flash.external.ExternalInterface;
-		
     import scaleform.clik.interfaces.IDataProvider;
-	import com.factionshq.interfaces.IDataBuffer;
 
     [Event(name="change", type="flash.events.Event")]
 	
-	dynamic public class UDKDataProvider implements IDataProvider, IEventDispatcher {
+	public class ExternalDataProvider implements IDataProvider, IEventDispatcher {
 		
-		protected var dataName:String;
-		protected var dataBuffer:IDataBuffer;
+		protected var dataName:String; // Used to identify what data is being requested when polling the application
+		protected var dataBuffer:DataBuffer; // Contains the requested data
 		protected var dispatcher:EventDispatcher;
 		
-		public function UDKDataProvider(dataName:String, dataBuffer:IDataBuffer) {
+		public function ExternalDataProvider(dataName:String, dataBuffer:DataBuffer) {
 			this.dataName = dataName;
 			this.dataBuffer = dataBuffer;
 			dispatcher = new EventDispatcher(this);
@@ -35,7 +35,7 @@ package com.factionshq.data {
 		
 		public function get length():uint {
 			fetchData();
-			return dataBuffer.length;
+			return dataBuffer.data.length;
 		}
 		
 		public function indexOf(item:Object, callBack:Function=null):int {
@@ -43,7 +43,7 @@ package com.factionshq.data {
 				return data.indexOf(item);
 			});
             
-            return 0;
+            return dataBuffer.data.indexOf(item);
 		}
 		
 		public function requestItemAt(index:uint, callBack:Function=null):Object {
@@ -51,7 +51,7 @@ package com.factionshq.data {
 				return data[index];
 			});
 			
-            return null;
+            return dataBuffer.data[index];
     	}
 		
 		public function requestItemRange(startPosition:int, endPosition:int, callBack:Function=null):Array {
@@ -59,10 +59,11 @@ package com.factionshq.data {
 				return data.slice(startPosition, endPosition + 1);
 			});
 			
-            return null;
+            return dataBuffer.data.slice(startPosition, endPosition + 1);
         }
 		
 		public function cleanUp():void {
+			dataBuffer.data.splice(0, dataBuffer.data.length);
         }
 		
 		public function invalidate(length:uint=0):void {
@@ -70,12 +71,12 @@ package com.factionshq.data {
         }
 		
 		public function toString():String {
-            return "[UDKDataProvider]";
+        	return "[ExternalDataProvider " + dataBuffer.data.join(",") + "]";
         }
 		
 		protected function fetchData(callBack:Function=null, dataOperation:Function=null) {
 			dataBuffer.onDataReceived(function (data:Array):void {
-				if (callBack != null) { callBack(dataOperation(data)); }
+				if (callBack != null && dataOperation != null) { callBack(dataOperation(data)); }
 			});
 			
 			ExternalInterface.call("GetData", dataName);
