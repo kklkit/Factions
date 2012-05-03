@@ -20,8 +20,11 @@
 		public var panels:Array = ["Team","Infantry","Vehicle","Tactical","Research"];
 		public var menuDataProvider:DataProvider = new DataProvider(panels);
 		
-		public var teamDataProvider:DataProvider = new DataProvider(["Red","Blue","Spectator"]);
-		public var teamIndex:int = 2;
+		public var teamDataProvider:DataProvider = new DataProvider(["Red","Blue"]);
+		public var teamIndex:int = -110; // -110 is used to signal that the player is not on a team (spectator)
+		
+		public var blueTeamDataProvider:DataProvider = new DataProvider();
+		public var redTeamDataProvider:DataProvider = new DataProvider();
 
 		public var infantryClassDataProvider:DataProvider = new DataProvider(["Soldier","Support"]);
 		public var infantryClassIndex:int = 0;
