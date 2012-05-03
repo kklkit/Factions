@@ -8,10 +8,6 @@ var FSPlayerController PC;
 
 var private bool bDisplayedMouseCursor;
 
-delegate int IndexOf(string DataName, string Item);
-delegate string RequestItemAt(string DataName, int Index);
-delegate array<string> RequestItemRange(string DataName, int StartPosition, int EndPosition);
-delegate CleanUp();
 
 function Init(optional LocalPlayer LocPlay)
 {
@@ -76,6 +72,51 @@ function FSPawn GetPlayerPawn()
 	}
 
 	return FSP;
+}
+
+/*********************************************************************************************
+ Functions calling ActionScript
+**********************************************************************************************/
+
+function DataUpdated()
+{
+	ActionScriptVoid("_root.dataBuffer.dataUpdated");
+}
+
+/*********************************************************************************************
+ Functions called from ActionScript
+**********************************************************************************************/
+
+function GetData(string DataName)
+{
+	local GFxObject DataBuffer;
+	local GFxObject DataArray;
+	local array<string> Data;
+	local FSPlayerController FSPC;
+
+	local string DataItem;
+	local int DataItemIndex;
+
+	switch (DataName)
+	{
+	case "BlueTeamPlayers":
+		foreach GetPC().WorldInfo.AllControllers(class'FSPlayerController', FSPC)
+			if (FSPC.PlayerReplicationInfo.Team.TeamIndex == 1)
+				Data.AddItem(FSPC.PlayerReplicationInfo.PlayerName);
+	}
+
+	Data.AddItem("DataEnd");
+
+	DataBuffer = GetVariableObject("_root.dataBuffer");
+
+	DataArray = CreateArray();
+	
+	foreach Data(DataItem, DataItemIndex)
+		DataArray.SetElementString(DataItemIndex, DataItem);
+
+	DataBuffer.SetObject("data", DataArray);
+
+	DataUpdated();
 }
 
 defaultproperties

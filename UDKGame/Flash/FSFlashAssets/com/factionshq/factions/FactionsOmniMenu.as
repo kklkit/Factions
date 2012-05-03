@@ -11,11 +11,16 @@
 	import scaleform.clik.events.ButtonEvent;
 	import scaleform.clik.events.IndexEvent;
 	import scaleform.clik.events.ListEvent;
+	import com.factionshq.data.UDKDataProvider;
+	import com.factionshq.interfaces.IDataBuffer;
+	import com.factionshq.data.DataBuffer;
 
 	public class FactionsOmniMenu extends MovieClip
 	{
 		public var menuButtonBar:ButtonBar;
 		public var closeButton:Button;
+		
+		public var dataBuffer:IDataBuffer = new DataBuffer();
 
 		public var panels:Array = ["Team","Infantry","Vehicle","Tactical","Research"];
 		public var menuDataProvider:DataProvider = new DataProvider(panels);
@@ -23,7 +28,7 @@
 		public var teamDataProvider:DataProvider = new DataProvider(["Red","Blue"]);
 		public var teamIndex:int = -110; // -110 is used to signal that the player is not on a team (spectator)
 		
-		public var blueTeamDataProvider:DataProvider = new DataProvider();
+		public var blueTeamDataProvider:UDKDataProvider = new UDKDataProvider("BlueTeamPlayers", dataBuffer);
 		public var redTeamDataProvider:DataProvider = new DataProvider();
 
 		public var infantryClassDataProvider:DataProvider = new DataProvider(["Soldier","Support"]);
