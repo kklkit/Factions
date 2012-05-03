@@ -8,6 +8,11 @@ var FSPlayerController PC;
 
 var private bool bDisplayedMouseCursor;
 
+delegate int IndexOf(string DataName, string Item);
+delegate string RequestItemAt(string DataName, int Index);
+delegate array<string> RequestItemRange(string DataName, int StartPosition, int EndPosition);
+delegate CleanUp();
+
 function Init(optional LocalPlayer LocPlay)
 {
 	Super.Init(LocPlay);
