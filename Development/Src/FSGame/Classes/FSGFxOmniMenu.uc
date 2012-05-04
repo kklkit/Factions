@@ -85,6 +85,11 @@ function array<string> PlayerNames(string TeamName)
  Functions calling ActionScript
 **********************************************************************************************/
 
+function Invalidate(string Item)
+{
+	ActionScriptVoid("_root.invalidate");
+}
+
 function UpdateTeamSelection(string TeamName)
 {
 	ActionScriptVoid("_root.updateTeamSelection");

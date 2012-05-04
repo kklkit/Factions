@@ -124,6 +124,12 @@ public class FactionsOmniMenu extends MovieClip {
 		joinSpectatorButton.selected = selectedTeam == "spectator";
 	}
 	
+	public function invalidate(item:String) {
+		redTeamDataProvider.invalidate();
+		spectatorDataProvider.invalidate();
+		blueTeamDataProvider.invalidate();
+	}
+	
 	public function updateTeamSelection(teamName:String) {
 		selectedTeam = teamName;
 		updateTeamButtons();
