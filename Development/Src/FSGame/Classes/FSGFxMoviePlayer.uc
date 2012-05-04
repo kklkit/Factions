@@ -78,24 +78,17 @@ function FSPawn GetPlayerPawn()
  Functions called from ActionScript
 **********************************************************************************************/
 
-function array<string> GetData(string DataName)
+function array<string> GetTeamPlayers(string Team)
 {
 	local array<string> Data;
 	local FSPlayerController FSPC;
+	local byte TeamIndex;
 
-	switch (DataName)
-	{
-	case "RedTeamPlayers":
-		foreach GetPC().WorldInfo.AllControllers(class'FSPlayerController', FSPC)
-			if (FSPC.PlayerReplicationInfo.Team.TeamIndex == 0)
-				Data.AddItem(FSPC.PlayerReplicationInfo.PlayerName);
-		break;
-	case "BlueTeamPlayers":
-		foreach GetPC().WorldInfo.AllControllers(class'FSPlayerController', FSPC)
-			if (FSPC.PlayerReplicationInfo.Team.TeamIndex == 1)
-				Data.AddItem(FSPC.PlayerReplicationInfo.PlayerName);
-		break;
-	}
+	TeamIndex = Team ~= "Red" ? 0 : 1;
+
+	foreach GetPC().WorldInfo.AllControllers(class'FSPlayerController', FSPC)
+		if (FSPC.PlayerReplicationInfo.Team.TeamIndex == TeamIndex)
+			Data.AddItem(FSPC.PlayerReplicationInfo.PlayerName);
 
 	return Data;
 }
