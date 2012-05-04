@@ -18,6 +18,20 @@ function OnClose()
 		FSPawn(PC.Pawn).ResetEquipment();
 }
 
+function UpdateTeam(int TeamIndex)
+{
+	local string TeamName;
+
+	if (TeamIndex == -1)
+		TeamName = "spectator";
+	else if (TeamIndex == 0)
+		TeamName = "red";
+	else if (TeamIndex == 1)
+		TeamName = "blue";
+
+	UpdateTeamSelection(TeamName);
+}
+
 /*********************************************************************************************
  Functions called from ActionScript
 **********************************************************************************************/
@@ -27,8 +41,17 @@ function CloseMenu(string FrameLabelOnClose)
 	Close(false);
 }
 
-function SelectTeam(byte TeamIndex)
+function SelectTeam(string TeamName)
 {
+	local byte TeamIndex;
+
+	if (TeamName ~= "red")
+		TeamIndex = 0;
+	else if (TeamName ~= "blue")
+		TeamIndex = 1;
+	else if (TeamName ~= "spectator")
+		TeamIndex = 0;
+
 	PC.ServerChangeTeam(TeamIndex);
 }
 
@@ -49,7 +72,7 @@ function array<string> PlayerNames(string TeamName)
 	local FSPlayerController FSPC;
 	local byte TeamIndex;
 
-	TeamIndex = TeamName ~= "Red" ? 0 : 1;
+	TeamIndex = TeamName ~= "red" ? 0 : 1;
 
 	foreach GetPC().WorldInfo.AllControllers(class'FSPlayerController', FSPC)
 		if (FSPC.PlayerReplicationInfo.Team.TeamIndex == TeamIndex)
@@ -62,19 +85,19 @@ function array<string> PlayerNames(string TeamName)
  Functions calling ActionScript
 **********************************************************************************************/
 
-function UpdateTeam(int TeamIndex)
+function UpdateTeamSelection(string TeamName)
 {
-	ActionScriptVoid("_root.UpdateTeam");
+	ActionScriptVoid("_root.updateTeamSelection");
 }
 
 function UpdateClassSelection(byte ClassIndex)
 {
-	ActionScriptVoid("_root.UpdateClassSelection");
+	ActionScriptVoid("_root.updateClassSelection");
 }
 
 function UpdateEquipmentSelection(byte Slot, string EquipmentName)
 {
-	ActionScriptVoid("_root.UpdateEquipmentSelection");
+	ActionScriptVoid("_root.updateEquipmentSelection");
 }
 
 defaultproperties

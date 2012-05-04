@@ -25,10 +25,11 @@ public class FactionsOmniMenu extends MovieClip {
 	public var spectatorList:ScrollingList;
 	public var blueTeamList:ScrollingList;
 	
-	
 	public var redTeamDataProvider:ExternalDataProvider = new ExternalDataProvider("PlayerNames", "red");
 	public var spectatorDataProvider:ExternalDataProvider = new ExternalDataProvider("PlayerNames", "spectator");
 	public var blueTeamDataProvider:ExternalDataProvider = new ExternalDataProvider("PlayerNames", "blue");
+	
+	public var selectedTeam:String = "spectator";
 	
 	// Infantry
 	public var infantryClassButtonBar:ButtonBar;
@@ -72,10 +73,15 @@ public class FactionsOmniMenu extends MovieClip {
 		blueTeamList.dataProvider = blueTeamDataProvider;
 		
 		joinRedTeamButton.label = "Red Team";
-		joinSpectatorButton.label = "Spectator";
-		joinBlueTeamButton.label = "Blue Team";
+		joinRedTeamButton.addEventListener(ButtonEvent.CLICK, createTeamEventListener("red"));
 		
-		joinSpectatorButton.enabled = false;
+		joinSpectatorButton.label = "Spectator";
+		joinSpectatorButton.addEventListener(ButtonEvent.CLICK, createTeamEventListener("spectator"));
+		
+		joinBlueTeamButton.label = "Blue Team";
+		joinBlueTeamButton.addEventListener(ButtonEvent.CLICK, createTeamEventListener("blue"));
+		
+		updateTeamButtons();
 	}
 	
 	public function frameScript1():void {
@@ -86,7 +92,7 @@ public class FactionsOmniMenu extends MovieClip {
 		
 		for (var i:int = 0; i < infantryEquipmentLists.length; ++i) {
 			infantryEquipmentLists[i].dataProvider = infantryEquipmentDataProviders[i];
-			infantryEquipmentLists[i].addEventListener(ListEvent.ITEM_CLICK, createEventListener(i));
+			infantryEquipmentLists[i].addEventListener(ListEvent.ITEM_CLICK, createEquipmentEventListener(i));
 		}
 		
 		infantryClassButtonBar.dataProvider = infantryClassDataProvider;
@@ -108,22 +114,35 @@ public class FactionsOmniMenu extends MovieClip {
 		menuButtonBar.selectedIndex = 4;
 	}
 	
-	public function createEventListener(i:int) {
+	public function selectPanel(e:ButtonBarEvent):void {
+		gotoAndStop(panels[e.index]);
+	}
+	
+	public function updateTeamButtons() {
+		joinRedTeamButton.selected = selectedTeam == "red";
+		joinBlueTeamButton.selected = selectedTeam == "blue";
+		joinSpectatorButton.selected = selectedTeam == "spectator";
+	}
+	
+	public function updateTeamSelection(teamName:String) {
+		selectedTeam = teamName;
+		updateTeamButtons();
+	}
+	
+	public function createTeamEventListener(teamName:String):Function {
+		return function(e:ButtonEvent):void {
+			ExternalInterface.call("SelectTeam", teamName);
+		}
+	}
+	
+	public function createEquipmentEventListener(i:int) {
 		return function(e:ListEvent):void {
 			ExternalInterface.call("SelectEquipment", i, e.itemData);
 		};
 	}
 	
-	public function selectPanel(e:ButtonBarEvent):void {
-		gotoAndStop(panels[e.index]);
-	}
-	
 	public function closeMenu(e:ButtonEvent):void {
 		ExternalInterface.call("CloseMenu", this.currentLabel);
-	}
-	
-	public function selectTeam(e:ButtonBarEvent):void {
-		ExternalInterface.call("SelectTeam", e.index);
 	}
 	
 	public function selectClass(e:ButtonBarEvent):void {
