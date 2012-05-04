@@ -1,96 +1,133 @@
-﻿package com.factionshq.factions
-{
-	import flash.display.MovieClip;
-	import flash.external.ExternalInterface;
-	import scaleform.gfx.Extensions;
-	import scaleform.clik.data.DataProvider;
-	import scaleform.clik.controls.ButtonBar;
-	import scaleform.clik.controls.Button;
-	import scaleform.clik.controls.ScrollingList;
-	import scaleform.clik.events.ButtonBarEvent;
-	import scaleform.clik.events.ButtonEvent;
-	import scaleform.clik.events.IndexEvent;
-	import scaleform.clik.events.ListEvent;
-	import com.factionshq.data.ExternalDataProvider;
+﻿package com.factionshq.factions {
 
-	public class FactionsOmniMenu extends MovieClip
-	{
-		public var menuButtonBar:ButtonBar;
-		public var closeButton:Button;
+import com.factionshq.data.*;
+import flash.display.*;
+import flash.external.*;
+import scaleform.clik.controls.*;
+import scaleform.clik.data.*;
+import scaleform.clik.events.*;
+import scaleform.gfx.*;
 
-		public var panels:Array = ["Team","Infantry","Vehicle","Tactical","Research"];
-		public var menuDataProvider:DataProvider = new DataProvider(panels);
+public class FactionsOmniMenu extends MovieClip {
+	
+	// Frame
+	public var menuButtonBar:ButtonBar;
+	public var closeButton:Button;
+	
+	public var panels:Array = ["Team", "Infantry", "Vehicle", "Tactical", "Research"];
+	public var menuDataProvider:DataProvider = new DataProvider(panels);
+	
+	// Team
+	public var joinRedTeamButton:Button;
+	public var joinSpectatorButton:Button;
+	public var joinBlueTeamButton:Button;
+	public var redTeamList:ScrollingList;
+	public var spectatorList:ScrollingList;
+	public var blueTeamList:ScrollingList;
+	
+	
+	public var redTeamDataProvider:ExternalDataProvider = new ExternalDataProvider("PlayerNames", "red");
+	public var spectatorDataProvider:ExternalDataProvider = new ExternalDataProvider("PlayerNames", "spectator");
+	public var blueTeamDataProvider:ExternalDataProvider = new ExternalDataProvider("PlayerNames", "blue");
+	
+	// Infantry
+	public var infantryClassButtonBar:ButtonBar;
+	public var infantryEquipmentList0:ScrollingList;
+	public var infantryEquipmentList1:ScrollingList;
+	public var infantryEquipmentList2:ScrollingList;
+	public var infantryEquipmentList3:ScrollingList;
+	
+	public var infantryClassDataProvider:ExternalDataProvider = new ExternalDataProvider("ClassNames");
+	public var infantryEquipmentDataProviders = [new ExternalDataProvider("EquipmentNames", 0), new ExternalDataProvider("EquipmentNames", 1), new ExternalDataProvider("EquipmentNames", 2), new ExternalDataProvider("EquipmentNames", 3)];
+	
+	// Vehicle
+	public var vehicleChassisList:ScrollingList;
+	public var vehicleArmorList:ScrollingList;
+	
+	public var vehicleChassisDataProvider:ExternalDataProvider = new ExternalDataProvider("ChassisNames");
+	public var vehicleArmorDataProvider:ExternalDataProvider = new ExternalDataProvider("ArmorNames");
+	
+	public function FactionsOmniMenu() {
+		super();
 		
-		public var teamDataProvider:DataProvider = new DataProvider(["Red","Blue"]);
-		public var teamIndex:int = -110; // -110 is used to signal that the player is not on a team (spectator)
+		Extensions.enabled = true;
+		menuButtonBar.dataProvider = menuDataProvider;
+		menuButtonBar.addEventListener(ButtonBarEvent.BUTTON_SELECT, selectPanel);
+		closeButton.addEventListener(ButtonEvent.CLICK, closeMenu);
 		
-		public var blueTeamDataProvider:ExternalDataProvider = new ExternalDataProvider("GetTeamPlayers", "Blue");
-		public var redTeamDataProvider:ExternalDataProvider = new ExternalDataProvider("GetTeamPlayers", "Red");
-
-		public var infantryClassDataProvider:DataProvider = new DataProvider(["Soldier","Support"]);
-		public var infantryClassIndex:int = 0;
+		addFrameScript(0, frameScript0);
+		addFrameScript(1, frameScript1);
+		addFrameScript(2, frameScript2);
+		addFrameScript(3, frameScript3);
+		addFrameScript(4, frameScript4);
 		
-		public var infantryEquipmentDataProviders = [
-		 new DataProvider(["None", "Battle Rifle", "Assault Rifle"]),
-		 new DataProvider(["None"]),
-		 new DataProvider(["None", "Heavy Pistol"]),
-		 new DataProvider(["None"])
-		 ];
-		public var infantryEquipmentIndicies:Array = [0,0,0,0];
-
-		public var vehicleChassisDataProvider:DataProvider = new DataProvider(["Jeep","APC","Light Tank","Medium Tank","Heavy Tank","Artillery Tank","Gunship","Bomber","Dropship","Blimp"]);
-		public var vehicleChassisIndex:int = 0;
-		
-		public var vehicleArmorDataProvider:DataProvider = new DataProvider(["Reflective","Absorbent","Composite","Reactive","Regenerative"]);
-		public var vehicleArmorIndex:int = 0;
-
-		public function FactionsOmniMenu()
-		{
-			super();
-
-			Extensions.enabled = true;
-
-			menuButtonBar.dataProvider = menuDataProvider;
-			menuButtonBar.selectedIndex = 0;
-			menuButtonBar.addEventListener(ButtonBarEvent.BUTTON_SELECT, selectPanel);
-
-			closeButton.addEventListener(ButtonEvent.CLICK, closeMenu);
-		}
-
-		private function selectPanel(e:ButtonBarEvent):void
-		{
-			gotoAndPlay(panels[e.index]);
-		}
-
-		private function closeMenu(e:ButtonEvent):void
-		{
-			ExternalInterface.call("CloseOmniMenu", this.currentLabel);
-		}
-
-		private function selectTeam(e:ButtonBarEvent):void
-		{
-			ExternalInterface.call("SelectTeam", e.index);
-			gotoAndPlay("Infantry");
-		}
-
-		private function selectClass(e:ButtonBarEvent):void
-		{
-			ExternalInterface.call("SelectClass", e.index);
-		}
-
-		public function UpdateTeam(teamIndex:int):void
-		{
-			this.teamIndex = teamIndex;
-		}
-
-		public function UpdateEquipmentSelection(slot:int, equipmentName:String):void
-		{
-			infantryEquipmentIndicies[slot] = infantryEquipmentDataProviders[slot].indexOf(equipmentName);
-		}
-		
-		public function UpdateClassSelection(classIndex:int):void
-		{
-			infantryClassIndex = classIndex;
-		}
+		stop();
 	}
+	
+	public function frameScript0():void {
+		menuButtonBar.selectedIndex = 0;
+		
+		redTeamList.dataProvider = redTeamDataProvider;
+		spectatorList.dataProvider = spectatorDataProvider;
+		blueTeamList.dataProvider = blueTeamDataProvider;
+		
+		joinRedTeamButton.label = "Red Team";
+		joinSpectatorButton.label = "Spectator";
+		joinBlueTeamButton.label = "Blue Team";
+		
+		joinSpectatorButton.enabled = false;
+	}
+	
+	public function frameScript1():void {
+		var infantryEquipmentLists:Array = [infantryEquipmentList0, infantryEquipmentList1, infantryEquipmentList2, infantryEquipmentList3];
+		var eventListeners:Array;
+		
+		menuButtonBar.selectedIndex = 1;
+		
+		for (var i:int = 0; i < infantryEquipmentLists.length; ++i) {
+			infantryEquipmentLists[i].dataProvider = infantryEquipmentDataProviders[i];
+			infantryEquipmentLists[i].addEventListener(ListEvent.ITEM_CLICK, createEventListener(i));
+		}
+		
+		infantryClassButtonBar.dataProvider = infantryClassDataProvider;
+		infantryClassButtonBar.addEventListener(ButtonBarEvent.BUTTON_SELECT, selectClass);
+	}
+	
+	public function frameScript2():void {
+		menuButtonBar.selectedIndex = 2;
+		
+		vehicleChassisList.dataProvider = vehicleChassisDataProvider;
+		vehicleArmorList.dataProvider = vehicleArmorDataProvider;
+	}
+	
+	public function frameScript3():void {
+		menuButtonBar.selectedIndex = 3;
+	}
+	
+	public function frameScript4():void {
+		menuButtonBar.selectedIndex = 4;
+	}
+	
+	public function createEventListener(i:int) {
+		return function(e:ListEvent):void {
+			ExternalInterface.call("SelectEquipment", i, e.itemData);
+		};
+	}
+	
+	public function selectPanel(e:ButtonBarEvent):void {
+		gotoAndStop(panels[e.index]);
+	}
+	
+	public function closeMenu(e:ButtonEvent):void {
+		ExternalInterface.call("CloseMenu", this.currentLabel);
+	}
+	
+	public function selectTeam(e:ButtonBarEvent):void {
+		ExternalInterface.call("SelectTeam", e.index);
+	}
+	
+	public function selectClass(e:ButtonBarEvent):void {
+		ExternalInterface.call("SelectClass", e.index);
+	}
+}
 }

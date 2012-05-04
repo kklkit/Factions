@@ -74,25 +74,6 @@ function FSPawn GetPlayerPawn()
 	return FSP;
 }
 
-/*********************************************************************************************
- Functions called from ActionScript
-**********************************************************************************************/
-
-function array<string> GetTeamPlayers(string Team)
-{
-	local array<string> Data;
-	local FSPlayerController FSPC;
-	local byte TeamIndex;
-
-	TeamIndex = Team ~= "Red" ? 0 : 1;
-
-	foreach GetPC().WorldInfo.AllControllers(class'FSPlayerController', FSPC)
-		if (FSPC.PlayerReplicationInfo.Team.TeamIndex == TeamIndex)
-			Data.AddItem(FSPC.PlayerReplicationInfo.PlayerName);
-
-	return Data;
-}
-
 defaultproperties
 {
 	bDisplayMouseCursor=false

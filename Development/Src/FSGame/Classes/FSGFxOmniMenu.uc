@@ -22,7 +22,7 @@ function OnClose()
  Functions called from ActionScript
 **********************************************************************************************/
 
-function CloseOmniMenu(string FrameLabelOnClose)
+function CloseMenu(string FrameLabelOnClose)
 {
 	Close(false);
 }
@@ -41,6 +41,21 @@ function SelectEquipment(byte Slot, string EquipmentName)
 {
 	if (PC.Pawn != None)
 		FSInventoryManager(FSPawn(PC.Pawn).InvManager).SelectEquipment(Slot, EquipmentName);
+}
+
+function array<string> PlayerNames(string TeamName)
+{
+	local array<string> Data;
+	local FSPlayerController FSPC;
+	local byte TeamIndex;
+
+	TeamIndex = TeamName ~= "Red" ? 0 : 1;
+
+	foreach GetPC().WorldInfo.AllControllers(class'FSPlayerController', FSPC)
+		if (FSPC.PlayerReplicationInfo.Team.TeamIndex == TeamIndex)
+			Data.AddItem(FSPC.PlayerReplicationInfo.PlayerName);
+
+	return Data;
 }
 
 /*********************************************************************************************
