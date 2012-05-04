@@ -32,11 +32,27 @@ public class FactionsOmniMenu extends MovieClip {
 	public var selectedTeam:String = "spectator";
 	
 	// Infantry
-	public var infantryClassButtonBar:ButtonBar;
+	public var infantryPresetNameBox:TextInput;
+	public var infantryPresetsList:ScrollingList;
+	public var infantryArmorLabel:Label;
+	public var infantryLightArmorButton:Button;
+	public var infantryHeavyArmorButton:Button;
+	public var infantryEquipmentLabel0:Label;
+	public var infantryEquipmentLabel1:Label;
+	public var infantryEquipmentLabel2:Label;
+	public var infantryEquipmentLabel3:Label;
 	public var infantryEquipmentList0:ScrollingList;
 	public var infantryEquipmentList1:ScrollingList;
 	public var infantryEquipmentList2:ScrollingList;
 	public var infantryEquipmentList3:ScrollingList;
+	public var infantrySkillLabel0:Label;
+	public var infantrySkillLabel1:Label;
+	public var infantrySkillLabel2:Label;
+	public var infantrySkillLabel3:Label;
+	public var infantrySkillList0:ScrollingList;
+	public var infantrySkillList1:ScrollingList;
+	public var infantrySkillList2:ScrollingList;
+	public var infantrySkillList3:ScrollingList;
 	
 	public var infantryClassDataProvider:ExternalDataProvider = new ExternalDataProvider("ClassNames");
 	public var infantryEquipmentDataProviders = [new ExternalDataProvider("EquipmentNames", 0), new ExternalDataProvider("EquipmentNames", 1), new ExternalDataProvider("EquipmentNames", 2), new ExternalDataProvider("EquipmentNames", 3)];
@@ -90,13 +106,12 @@ public class FactionsOmniMenu extends MovieClip {
 		
 		menuButtonBar.selectedIndex = 1;
 		
+		infantryArmorLabel.text = "Armor:";
+		
 		for (var i:int = 0; i < infantryEquipmentLists.length; ++i) {
 			infantryEquipmentLists[i].dataProvider = infantryEquipmentDataProviders[i];
 			infantryEquipmentLists[i].addEventListener(ListEvent.ITEM_CLICK, createEquipmentEventListener(i));
 		}
-		
-		infantryClassButtonBar.dataProvider = infantryClassDataProvider;
-		infantryClassButtonBar.addEventListener(ButtonBarEvent.BUTTON_SELECT, selectClass);
 	}
 	
 	public function frameScript2():void {
