@@ -56,7 +56,7 @@ package com.factionshq.data {
         }
 		
 		public function get data():Array {
-			return ExternalInterface.call.apply(null, externalCall);
+			return ExternalInterface.call.apply(null, externalCall) || [];
 		}
 	}
 }
