@@ -75,27 +75,13 @@ function FSPawn GetPlayerPawn()
 }
 
 /*********************************************************************************************
- Functions calling ActionScript
-**********************************************************************************************/
-
-function DataUpdated()
-{
-	ActionScriptVoid("_root.dataBuffer.dataUpdated");
-}
-
-/*********************************************************************************************
  Functions called from ActionScript
 **********************************************************************************************/
 
-function GetData(string DataName)
+function array<string> GetData(string DataName)
 {
-	local GFxObject DataBuffer;
-	local GFxObject DataArray;
 	local array<string> Data;
 	local FSPlayerController FSPC;
-
-	local string DataItem;
-	local int DataItemIndex;
 
 	switch (DataName)
 	{
@@ -111,18 +97,7 @@ function GetData(string DataName)
 		break;
 	}
 
-	Data.AddItem("DataEnd");
-
-	DataBuffer = GetVariableObject("_root.dataBuffer");
-
-	DataArray = CreateArray();
-	
-	foreach Data(DataItem, DataItemIndex)
-		DataArray.SetElementString(DataItemIndex, DataItem);
-
-	DataBuffer.SetObject("data", DataArray);
-
-	DataUpdated();
+	return Data;
 }
 
 defaultproperties

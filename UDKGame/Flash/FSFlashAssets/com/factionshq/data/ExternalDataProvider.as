@@ -1,7 +1,5 @@
 ﻿/**
  * A data provider that polls an external application for data.
- *
- * Users of this data provider should always use the callbacks since the function return values are cached and may be out-of-date. Callback values will always be up-to-date as returned by the external application.
  */
 /**************************************************************************
 
@@ -24,46 +22,41 @@ package com.factionshq.data {
 	public class ExternalDataProvider implements IDataProvider, IEventDispatcher {
 		
 		protected var dataName:String; // Used to identify what data is being requested when polling the application
-		protected var dataBuffer:DataBuffer; // Contains the requested data
 		protected var dispatcher:EventDispatcher;
 		
-		public function ExternalDataProvider(dataName:String, dataBuffer:DataBuffer) {
+		public function ExternalDataProvider(dataName:String) {
 			this.dataName = dataName;
-			this.dataBuffer = dataBuffer;
 			dispatcher = new EventDispatcher(this);
 		}
 		
 		public function get length():uint {
-			fetchData();
-			return dataBuffer.data.length;
+			var data:Array = ExternalInterface.call("GetData", dataName);
+			
+			return data.length;
 		}
 		
 		public function indexOf(item:Object, callBack:Function=null):int {
-			fetchData(callBack, function (data:Array):int {
-				return data.indexOf(item);
-			});
-            
-            return dataBuffer.data.indexOf(item);
+			var data:Array = ExternalInterface.call("GetData", dataName);
+			var index:int = data.indexOf(item);
+			if (callBack != null) { callBack(index); }
+            return index;
 		}
 		
 		public function requestItemAt(index:uint, callBack:Function=null):Object {
-			fetchData(callBack, function (data:Array):Object {
-				return data[index];
-			});
-			
-            return dataBuffer.data[index];
+			var data:Array = ExternalInterface.call("GetData", dataName);
+			var item:Object = data[index];
+			if (callBack != null) { callBack(item); }
+            return item;
     	}
 		
 		public function requestItemRange(startPosition:int, endPosition:int, callBack:Function=null):Array {
-			fetchData(callBack, function (data:Array):Array {
-				return data.slice(startPosition, endPosition + 1);
-			});
-			
-            return dataBuffer.data.slice(startPosition, endPosition + 1);
+			var data:Array = ExternalInterface.call("GetData", dataName);
+			var items:Array = data.slice(startPosition, endPosition + 1);
+			if (callBack != null) { callBack(items); }
+            return items;
         }
 		
 		public function cleanUp():void {
-			dataBuffer.data.splice(0, dataBuffer.data.length);
         }
 		
 		public function invalidate(length:uint=0):void {
@@ -71,16 +64,8 @@ package com.factionshq.data {
         }
 		
 		public function toString():String {
-        	return "[ExternalDataProvider " + dataBuffer.data.join(",") + "]";
+        	return "[ExternalDataProvider]";
         }
-		
-		protected function fetchData(callBack:Function=null, dataOperation:Function=null) {
-			dataBuffer.onDataReceived(function (data:Array):void {
-				if (callBack != null && dataOperation != null) { callBack(dataOperation(data)); }
-			});
-			
-			ExternalInterface.call("GetData", dataName);
-		}
 		 
         public function addEventListener(type:String, listener:Function, useCapture:Boolean=false, priority:int=0, useWeakReference:Boolean=false):void {
             dispatcher.addEventListener(type, listener, useCapture, priority, useWeakReference);
