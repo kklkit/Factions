@@ -55,7 +55,7 @@ package com.factionshq.data {
             super.dispatchEvent(new Event(Event.CHANGE));
         }
 		
-		private function get data():Array {
+		public function get data():Array {
 			return ExternalInterface.call.apply(null, externalCall);
 		}
 	}
