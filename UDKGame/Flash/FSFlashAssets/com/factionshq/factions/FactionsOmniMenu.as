@@ -29,7 +29,7 @@ public class FactionsOmniMenu extends MovieClip {
 	public var spectatorDataProvider:ExternalDataProvider = new ExternalDataProvider("PlayerNames", "spectator");
 	public var blueTeamDataProvider:ExternalDataProvider = new ExternalDataProvider("PlayerNames", "blue");
 	
-	public var selectedTeam:String = "spectator";
+	public var selectedTeam:String;
 	
 	// Infantry
 	public var infantryPresetNameBox:TextInput;
@@ -68,6 +68,7 @@ public class FactionsOmniMenu extends MovieClip {
 		super();
 		
 		Extensions.enabled = true;
+		
 		menuButtonBar.dataProvider = menuDataProvider;
 		menuButtonBar.addEventListener(ButtonBarEvent.BUTTON_SELECT, selectPanel);
 		closeButton.addEventListener(ButtonEvent.CLICK, closeMenu);
@@ -97,16 +98,16 @@ public class FactionsOmniMenu extends MovieClip {
 		joinBlueTeamButton.label = "Blue Team";
 		joinBlueTeamButton.addEventListener(ButtonEvent.CLICK, createTeamEventListener("blue"));
 		
-		updateTeamButtons();
+		refreshTeamButtons();
 	}
 	
-	public function frameScript1():void {
-		var infantryEquipmentLists:Array = [infantryEquipmentList0, infantryEquipmentList1, infantryEquipmentList2, infantryEquipmentList3];
-		var eventListeners:Array;
-		
+	public function frameScript1():void {	
 		menuButtonBar.selectedIndex = 1;
 		
 		infantryArmorLabel.text = "Armor:";
+		infantryLightArmorButton.label = "Light Armor";
+		infantryHeavyArmorButton.label = "Heavy Armor";
+		infantrySkillLabel0.text = "asd";
 		
 		for (var i:int = 0; i < infantryEquipmentLists.length; ++i) {
 			infantryEquipmentLists[i].dataProvider = infantryEquipmentDataProviders[i];
@@ -129,11 +130,27 @@ public class FactionsOmniMenu extends MovieClip {
 		menuButtonBar.selectedIndex = 4;
 	}
 	
+	public function get infantryEquipmentLabels():Array {
+		return [infantryEquipmentLabel0, infantryEquipmentLabel1, infantryEquipmentLabel2, infantryEquipmentLabel3];
+	}
+	
+	public function get infantryEquipmentLists():Array {
+		return [infantryEquipmentList0, infantryEquipmentList1, infantryEquipmentList2, infantryEquipmentList3];
+	}
+	
+	public function get infantrySkillLabels():Array {
+		return [infantrySkillLabel0, infantrySkillLabel1, infantrySkillLabel2, infantrySkillLabel3];
+	}
+	
+	public function get infantrySkillLists():Array {
+		return [infantrySkillList0, infantrySkillList1, infantrySkillList2, infantrySkillList3];
+	}
+	
 	public function selectPanel(e:ButtonBarEvent):void {
 		gotoAndStop(panels[e.index]);
 	}
 	
-	public function updateTeamButtons() {
+	public function refreshTeamButtons() {
 		joinRedTeamButton.selected = selectedTeam == "red";
 		joinBlueTeamButton.selected = selectedTeam == "blue";
 		joinSpectatorButton.selected = selectedTeam == "spectator";
@@ -147,7 +164,18 @@ public class FactionsOmniMenu extends MovieClip {
 	
 	public function updateTeamSelection(teamName:String) {
 		selectedTeam = teamName;
-		updateTeamButtons();
+		refreshTeamButtons();
+	}
+	
+	public function updateEquipmentList(listNumber:int, listLabel:String) {
+		if (listLabel) {
+			infantryEquipmentLists[listNumber].visible = true;
+			infantryEquipmentLabels[listNumber].visible = true;
+			infantryEquipmentLabels[listNumber].text = listLabel;
+		} else {
+			infantryEquipmentLists[listNumber].visible = false;
+			infantryEquipmentLabels[listNumber].visible = false;
+		}
 	}
 	
 	public function createTeamEventListener(teamName:String):Function {
