@@ -145,9 +145,9 @@ public class FactionsOmniMenu extends MovieClip {
 	
 	public function refreshTeamButtons():void {
 		var teamName = data.team.requestItemAt(0);
-		joinRedTeamButton.selected = teamName == "red";
-		joinBlueTeamButton.selected = teamName == "blue";
-		joinSpectatorButton.selected = teamName == "spectator";
+		joinRedTeamButton.selected = teamName == "Red";
+		joinBlueTeamButton.selected = teamName == "Blue";
+		joinSpectatorButton.selected = teamName == "Spectator";
 	}
 	
 	public function refreshEquipmentLabels(event:Event):void {

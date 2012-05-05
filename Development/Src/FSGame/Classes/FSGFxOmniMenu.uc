@@ -66,6 +66,15 @@ function SelectEquipment(byte Slot, string EquipmentName)
 		FSInventoryManager(FSPawn(PC.Pawn).InvManager).SelectEquipment(Slot, EquipmentName);
 }
 
+function array<string> PlayerTeam()
+{
+	local array<string> Data;
+
+	Data.AddItem(FSTeamInfo(GetPC().PlayerReplicationInfo.Team).GetHumanReadableName());
+
+	return Data;
+}
+
 function array<string> PlayerNames(string TeamName)
 {
 	local array<string> Data;
@@ -77,6 +86,85 @@ function array<string> PlayerNames(string TeamName)
 	foreach GetPC().WorldInfo.AllControllers(class'FSPlayerController', FSPC)
 		if (FSPC.PlayerReplicationInfo.Team.TeamIndex == TeamIndex)
 			Data.AddItem(FSPC.PlayerReplicationInfo.PlayerName);
+
+	return Data;
+}
+
+function array<string> InfantryEquipmentLabels()
+{
+	local array<string> Data;
+
+	Data.AddItem("Large Equipment");
+	Data.AddItem("Medium Equipment");
+	Data.AddItem("Small Equipment");
+	Data.AddItem("Tiny Equipment");
+
+	return Data;
+}
+
+function array<string> InfantryEquipmentNames(int Slot)
+{
+	local array<string> Data;
+
+	switch (Slot)
+	{
+	case 0:
+		Data.AddItem("Heavy Rifle");
+		Data.AddItem("Battle Rifle");
+		break;
+	case 1:
+		Data.AddItem("None");
+		break;
+	case 2:
+		Data.AddItem("Heavy Pistol");
+		break;
+	case 3:
+		Data.AddItem("None");
+		break;
+	}
+
+	return Data;
+}
+
+function array<string> InfantrySkillLabels()
+{
+	local array<string> Data;
+
+	Data.AddItem("Armor Skills");
+	Data.AddItem("Weapon Skills");
+	Data.AddItem("HUD Skills");
+	Data.AddItem("Leadership Skills");
+
+	return Data;
+}
+
+function array<string> InfantrySkillNames(int Slot)
+{
+	local array<string> Data;
+
+	switch (Slot)
+	{
+	case 0:
+		Data.AddItem("Lightweight Materials");
+		Data.AddItem("Auto Repair");
+		Data.AddItem("Buffer Repair");
+		break;
+	case 1:
+		Data.AddItem("Weapon Zoom");
+		Data.AddItem("Efficient Reload");
+		Data.AddItem("Quick Reload");
+		break;
+	case 2:
+		Data.AddItem("Armor Detection");
+		Data.AddItem("Sniper Detection");
+		Data.AddItem("Artillery Feedback");
+		break;
+	case 3:
+		Data.AddItem("Charge");
+		Data.AddItem("Stealth");
+		Data.AddItem("Fight");
+		break;
+	}
 
 	return Data;
 }
