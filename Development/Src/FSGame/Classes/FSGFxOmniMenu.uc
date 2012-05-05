@@ -55,12 +55,7 @@ function SelectTeam(string TeamName)
 	PC.ServerChangeTeam(TeamIndex);
 }
 
-function SelectClass(byte ClassIndex)
-{
-	FSPawn(PC.Pawn).ChangeClass(ClassIndex);
-}
-
-function SelectEquipment(byte Slot, string EquipmentName)
+function SelectInfantryEquipment(byte Slot, string EquipmentName)
 {
 	if (PC.Pawn != None)
 		FSInventoryManager(FSPawn(PC.Pawn).InvManager).SelectEquipment(Slot, EquipmentName);
@@ -173,15 +168,15 @@ function array<string> VehicleChassisNames()
 {
 	local array<string> Data;
 
-	Data.AddItem("\"Harasser\" Jeep");
-	Data.AddItem("\"Raider\" Buggy");
-	Data.AddItem("\"Transporter\" APC");
-	Data.AddItem("\"Skirmisher\" Tank");
-	Data.AddItem("\"Archer\" Tank");
-	Data.AddItem("\"Devastator\" Tank");
-	Data.AddItem("\"Falcon\" Gunship");
-	Data.AddItem("\"Vulture\" Gunship");
-	Data.AddItem("\"Eagle\" Dropship");
+	Data.AddItem("Jeep");
+	Data.AddItem("Attack Buggy");
+	Data.AddItem("APC");
+	Data.AddItem("Light Tank");
+	Data.AddItem("Missile Tank");
+	Data.AddItem("Heavy Tank");
+	Data.AddItem("Attack Gunship");
+	Data.AddItem("Heavy Gunship");
+	Data.AddItem("Dropship");
 
 	return Data;
 }
@@ -214,11 +209,6 @@ function Invalidate(string Item)
 function UpdateTeamSelection(string TeamName)
 {
 	ActionScriptVoid("_root.updateTeamSelection");
-}
-
-function UpdateClassSelection(byte ClassIndex)
-{
-	ActionScriptVoid("_root.updateClassSelection");
 }
 
 function UpdateEquipmentSelection(byte Slot, string EquipmentName)

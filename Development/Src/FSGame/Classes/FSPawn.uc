@@ -6,8 +6,6 @@ class FSPawn extends UDKPawn
 	config(GameFS)
 	notplaceable;
 
-var name ClassName;
-
 var DynamicLightEnvironmentComponent LightEnvironment;
 
 var repnotify class<FSWeaponAttachment> CurrentWeaponAttachmentClass;
@@ -18,7 +16,7 @@ var bool bWeaponAttachmentVisible;
 replication
 {
 	if (bNetDirty)
-		CurrentWeaponAttachmentClass, ClassName;
+		CurrentWeaponAttachmentClass;
 }
 
 simulated function ReplicatedEvent(name VarName)
@@ -151,27 +149,6 @@ simulated function WeaponAttachmentChanged()
 			CurrentWeaponAttachment.ChangeVisibility(bWeaponAttachmentVisible);
 		}
 	}
-}
-
-reliable server function ChangeClass(byte ClassIndex)
-{
-	local name NewClass;
-
-	switch (ClassIndex)
-	{
-	case 0:
-		NewClass = 'Soldier';
-		break;
-	case 1:
-		NewClass = 'Support';
-		break;
-	default:
-		`log("Unknown class selected!");
-		return;
-	}
-
-	ClassName = NewClass;
-	FSHUD(FSPlayerController(Controller).myHUD).GFxOmniMenu.UpdateClassSelection(ClassIndex);
 }
 
 exec function ResetEquipment()
