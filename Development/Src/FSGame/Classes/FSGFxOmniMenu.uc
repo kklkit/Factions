@@ -169,6 +169,39 @@ function array<string> InfantrySkillNames(int Slot)
 	return Data;
 }
 
+function array<string> VehicleChassisNames()
+{
+	local array<string> Data;
+
+	Data.AddItem("\"Harasser\" Jeep");
+	Data.AddItem("\"Raider\" Buggy");
+	Data.AddItem("\"Transporter\" APC");
+	Data.AddItem("\"Skirmisher\" Tank");
+	Data.AddItem("\"Archer\" Tank");
+	Data.AddItem("\"Devastator\" Tank");
+	Data.AddItem("\"Falcon\" Gunship");
+	Data.AddItem("\"Vulture\" Gunship");
+	Data.AddItem("\"Eagle\" Dropship");
+
+	return Data;
+}
+
+function array<string> VehicleArmorNames()
+{
+	local array<string> Data;
+
+	Data.AddItem("Plain");
+	Data.AddItem("Regenerative");
+	Data.AddItem("Absorbent");
+	Data.AddItem("Reactive");
+	Data.AddItem("Composite");
+	Data.AddItem("Reflective");
+	Data.AddItem("Compound");
+	Data.AddItem("Ablative");
+
+	return Data;
+}
+
 /*********************************************************************************************
  Functions calling ActionScript
 **********************************************************************************************/
