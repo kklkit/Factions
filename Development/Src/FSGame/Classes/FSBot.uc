@@ -1,0 +1,2 @@
+class FSBot extends UDKBot;
+
