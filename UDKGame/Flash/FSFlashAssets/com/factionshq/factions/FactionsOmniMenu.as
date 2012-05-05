@@ -181,8 +181,10 @@ public class FactionsOmniMenu extends MovieClip {
 			data.teamRed.invalidate();
 			data.teamBlue.invalidate();
 			data.teamSpectator.invalidate();
+			refreshTeamButtons();
 		} else if (item == "equipment labels") {
 			data.infantryEquipmentLabels.invalidate();
+			refreshEquipmentLabels();
 		}
 	}
 	

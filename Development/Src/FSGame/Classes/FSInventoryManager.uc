@@ -33,8 +33,6 @@ reliable server function SelectEquipment(byte Slot, string EquipmentName)
 			return;
 		}
 	}
-
-	FSHUD(FSPlayerController(FSPawn(Instigator).Controller).myHUD).GFxOmniMenu.UpdateEquipmentSelection(Slot, EquipmentName);
 }
 
 reliable server function ResetEquipment()

@@ -48,7 +48,7 @@ simulated function NotifyLocalPlayerTeamReceived()
 {
 	Super.NotifyLocalPlayerTeamReceived();
 
-	GFxOmniMenu.UpdateTeam(PlayerOwner.PlayerReplicationInfo.Team.TeamIndex);
+	GFxOmniMenu.Invalidate("team");
 }
 
 function DrawHud()

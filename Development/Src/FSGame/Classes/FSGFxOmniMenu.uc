@@ -18,20 +18,6 @@ function OnClose()
 		FSPawn(PC.Pawn).ResetEquipment();
 }
 
-function UpdateTeam(int TeamIndex)
-{
-	local string TeamName;
-
-	if (TeamIndex == TEAM_SPECTATOR)
-		TeamName = "spectator";
-	else if (TeamIndex == TEAM_RED)
-		TeamName = "red";
-	else if (TeamIndex == TEAM_BLUE)
-		TeamName = "blue";
-
-	UpdateTeamSelection(TeamName);
-}
-
 /*********************************************************************************************
  Functions called from ActionScript
 **********************************************************************************************/
@@ -209,16 +195,6 @@ function array<string> VehicleArmorNames()
 function Invalidate(string Item)
 {
 	ActionScriptVoid("_root.invalidate");
-}
-
-function UpdateTeamSelection(string TeamName)
-{
-	ActionScriptVoid("_root.updateTeamSelection");
-}
-
-function UpdateEquipmentSelection(byte Slot, string EquipmentName)
-{
-	ActionScriptVoid("_root.updateEquipmentSelection");
 }
 
 defaultproperties
