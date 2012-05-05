@@ -130,10 +130,10 @@ function array<string> InfantrySkillLabels()
 {
 	local array<string> Data;
 
-	Data.AddItem("Armor Skills");
-	Data.AddItem("Weapon Skills");
-	Data.AddItem("HUD Skills");
-	Data.AddItem("Leadership Skills");
+	Data.AddItem("Armor Skill");
+	Data.AddItem("Weapon Skill");
+	Data.AddItem("HUD Skill");
+	Data.AddItem("Leadership Skill");
 
 	return Data;
 }

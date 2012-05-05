@@ -66,6 +66,7 @@ public class FactionsOmniMenu extends MovieClip {
 		closeButton.addEventListener(ButtonEvent.CLICK, closeMenu);
 		
 		data.infantryEquipmentLabels.addEventListener(Event.CHANGE, refreshEquipmentLabels);
+		data.infantrySkillLabels.addEventListener(Event.CHANGE, refreshSkillLabels);
 		
 		addFrameScript(0, frameScript0);
 		addFrameScript(1, frameScript1);
@@ -107,7 +108,12 @@ public class FactionsOmniMenu extends MovieClip {
 			infantryEquipmentLists[i].addEventListener(ListEvent.ITEM_CLICK, createInfantryEquipmentSelector(i));
 		}
 		
+		for (var j:int = 0; j < infantrySkillLists.length; ++j) {
+			infantrySkillLists[j].dataProvider = data.infantrySkillNames[j];
+		}
+		
 		refreshEquipmentLabels();
+		refreshSkillLabels();
 	}
 	
 	public function frameScript2():void {
@@ -156,6 +162,14 @@ public class FactionsOmniMenu extends MovieClip {
 		for (var i:int = 0; i < infantryEquipmentLabels.length; ++i) {
 			data.infantryEquipmentLabels.requestItemAt(i, function(item:Object):void {
 					infantryEquipmentLabels[i].text = String(item);
+				});
+		}
+	}
+	
+	public function refreshSkillLabels():void {
+		for (var i:int = 0; i < infantrySkillLabels.length; ++i) {
+			data.infantrySkillLabels.requestItemAt(i, function(item:Object):void {
+					infantrySkillLabels[i].text = String(item);
 				});
 		}
 	}
