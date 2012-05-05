@@ -8,7 +8,6 @@ var FSPlayerController PC;
 
 var private bool bDisplayedMouseCursor;
 
-
 function Init(optional LocalPlayer LocPlay)
 {
 	Super.Init(LocPlay);

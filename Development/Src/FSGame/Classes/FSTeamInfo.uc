@@ -4,7 +4,7 @@
 class FSTeamInfo extends TeamInfo;
 
 var int Resources;
-var localized string TeamColorNames[4];
+var localized string TeamNames[ETeams];
 
 replication
 {
@@ -16,9 +16,9 @@ simulated function string GetHumanReadableName()
 {
 	if (TeamName == Default.TeamName)
 	{
-		if (TeamIndex < 4)
-			return TeamColorNames[TeamIndex];
-		return TeamName@TeamIndex;
+		if (TeamIndex < ArrayCount(TeamNames))
+			return TeamNames[TeamIndex];
+		return TeamName @ TeamIndex;
 	}
 	return TeamName;
 }

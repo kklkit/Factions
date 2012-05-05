@@ -4,9 +4,12 @@
 class FSTeamGame extends UDKGame
 	config(GameFS);
 
-const NumTeams=2;
-
-var FSTeamInfo Teams[NumTeams];
+enum ETeams
+{
+	TEAM_SPECTATOR,
+	TEAM_RED,
+	TEAM_BLUE
+};
 
 function PreBeginPlay()
 {
@@ -16,31 +19,20 @@ function PreBeginPlay()
 
 	if (WorldInfo.GetMapInfo() == None)
 	{
-		`log("MAPINFO NOT SET!!!");
+		`log("Factions: MapInfo not set!");
 		WorldInfo.SetMapInfo(new class'FSMapInfo');
 	}
 
-	for (i = 0; i < NumTeams; i++)
+	for (i = 0; i < ETeams.EnumCount; ++i)
 		CreateTeam(i);
-}
-
-function PlayerController Login(string Portal, string Options, const UniqueNetId UniqueId, out string ErrorMessage)
-{
-	Options $= "?SpectatorOnly=1"; //@todo only set spectator if new player
-
-	return Super.Login(Portal, Options, UniqueId, ErrorMessage);
-}
-
-function bool ShouldRespawn(PickupFactory Other)
-{
-	return true;
 }
 
 function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
 {
-	if (N >= 0 && N < NumTeams)
+	// Ensure team number is valid
+	if (N >= 0 && N < ETeams.EnumCount)
 	{
-		SetTeam(Other, Teams[N], bNewTeam);
+		SetTeam(Other, GameReplicationInfo.Teams[N], bNewTeam);
 		return true;
 	}
 	else
@@ -49,69 +41,51 @@ function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
 
 function byte PickTeam(byte Current, Controller C)
 {
-	if (Teams[0].Size <= Teams[1].Size)
-		return 0;
-	else
-		return 1;
+	// Return the team with fewer players
+	return GameReplicationInfo.Teams[TEAM_RED].Size <= GameReplicationInfo.Teams[TEAM_BLUE].Size ? TEAM_RED : TEAM_BLUE;
 }
 
 function float RatePlayerStart(PlayerStart P, byte Team, Controller Player)
 {
-	if (Player == None && P.bPrimaryStart)
-		return 10;
+	// Use only team spawn points
+	if (UDKTeamPlayerStart(P) != None && Team == UDKTeamPlayerStart(P).TeamNumber)
+		return (FSMapInfo(WorldInfo.GetMapInfo()).MapRadius * 2) - VSize(Player.Pawn.Location - P.Location);
 
-	if (Player == None || FSTeamPlayerStart(P) == None || Team != FSTeamPlayerStart(P).TeamNumber)
-		return -9;
-
-	if (Player != None && Player.Pawn != None)
-		return (FSMapInfo(WorldInfo.GetMapInfo()).MapRadius * 2) - VSize(Player.Pawn.Location - P.Location); //@todo this doesn't work
-
-	return Super.RatePlayerStart(P, Team, Player);
+	return -1.f;
 }
 
-function SetTeam(Controller Other, FSTeamInfo NewTeam, bool bNewTeam)
+function SetTeam(Controller Other, TeamInfo NewTeam, bool bNewTeam)
 {
 	local Actor A;
 
 	if (Other.PlayerReplicationInfo == None)
 		return;
 
-	if (Other.PlayerReplicationInfo.Team != None || !ShouldSpawnAtStartSpot(Other))
-		Other.StartSpot = None;
-
 	if (Other.PlayerReplicationInfo.Team != None)
 	{
+		if (!ShouldSpawnAtStartSpot(Other))
+			Other.StartSpot = None;
+
 		Other.PlayerReplicationInfo.Team.RemoveFromTeam(Other);
 		Other.PlayerReplicationInfo.Team = None;
 	}
 	
-	if (NewTeam == None || (NewTeam != None && NewTeam.AddToTeam(Other)))
-	{
-		if ((NewTeam != None) && ((WorldInfo.NetMode != NM_Standalone) || (PlayerController(Other) == None) || (PlayerController(Other).Player != None)))
-			BroadcastLocalizedMessage(GameMessageClass, 3, Other.PlayerReplicationInfo, None, NewTeam);
-	}
+	if (NewTeam != None && NewTeam.AddToTeam(Other))
+		BroadcastLocalizedMessage(GameMessageClass, 3, Other.PlayerReplicationInfo, None, NewTeam);
 
 	if ((PlayerController(Other) != None) && (LocalPlayer(PlayerController(Other).Player) != None))
-	{
 		foreach AllActors(class'Actor', A)
 			A.NotifyLocalPlayerTeamReceived();
-	}
 }
 
 function CreateTeam(int TeamIndex)
 {
 	local FSTeamInfo Team;
+
 	Team = Spawn(class'FSTeamInfo');
-
 	Team.TeamIndex = TeamIndex;
-	GameReplicationInfo.SetTeam(TeamIndex, Team);
-	Teams[TeamIndex] = Team;
-}
 
-//@todo move this somewhere else - dedicated bug
-reliable server function PlaceStructure(byte StructureIndex, Vector StructureLocation)
-{
-	Spawn(class'FSStructure'.static.GetStructureClass(StructureIndex), , , StructureLocation, , , );
+	GameReplicationInfo.SetTeam(TeamIndex, Team);
 }
 
 defaultproperties

@@ -114,9 +114,7 @@ function PlaceStructure(FSPlayerController FSPlayer)
 
 	Canvas.DeProject(GetMousePosition(), WorldOrigin, WorldDirection);
 	Trace(HitLocation, HitNormal, WorldOrigin + WorldDirection * 65536.0, WorldOrigin, true, , , );
-	FSTeamGame(WorldInfo.Game).PlaceStructure(FSPlayer.PlacingStructureIndex, HitLocation);
-	FSPlayer.bPlacingStructure = false;
-	FSPlayer.PlacingStructureIndex = 0;
+	FSPlayer.PlaceStructure(HitLocation);
 }
 
 function BeginDragging()

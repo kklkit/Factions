@@ -22,11 +22,11 @@ function UpdateTeam(int TeamIndex)
 {
 	local string TeamName;
 
-	if (TeamIndex == -1)
+	if (TeamIndex == TEAM_SPECTATOR)
 		TeamName = "spectator";
-	else if (TeamIndex == 0)
+	else if (TeamIndex == TEAM_RED)
 		TeamName = "red";
-	else if (TeamIndex == 1)
+	else if (TeamIndex == TEAM_BLUE)
 		TeamName = "blue";
 
 	UpdateTeamSelection(TeamName);
@@ -46,11 +46,11 @@ function SelectTeam(string TeamName)
 	local byte TeamIndex;
 
 	if (TeamName ~= "red")
-		TeamIndex = 0;
+		TeamIndex = TEAM_RED;
 	else if (TeamName ~= "blue")
-		TeamIndex = 1;
+		TeamIndex = TEAM_BLUE;
 	else if (TeamName ~= "spectator")
-		TeamIndex = 0;
+		TeamIndex = TEAM_SPECTATOR;
 
 	PC.ServerChangeTeam(TeamIndex);
 }
@@ -76,7 +76,12 @@ function array<string> PlayerNames(string TeamName)
 	local FSPlayerController FSPC;
 	local byte TeamIndex;
 
-	TeamIndex = TeamName ~= "red" ? 0 : 1;
+	if (TeamName ~= "red")
+		TeamIndex = TEAM_RED;
+	else if (TeamName ~= "blue")
+		TeamIndex = TEAM_BLUE;
+	else if (TeamName ~= "spectator")
+		TeamIndex = TEAM_SPECTATOR;
 
 	foreach GetPC().WorldInfo.AllControllers(class'FSPlayerController', FSPC)
 		if (FSPC.PlayerReplicationInfo.Team.TeamIndex == TeamIndex)
