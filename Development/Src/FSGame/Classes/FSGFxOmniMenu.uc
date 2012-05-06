@@ -36,7 +36,7 @@ function SelectTeam(string TeamName)
 	else if (TeamName ~= "blue")
 		TeamIndex = TEAM_BLUE;
 	else if (TeamName ~= "spectator")
-		TeamIndex = 255;
+		TeamIndex = class'FSTeamGame'.const.PSEUDO_TEAM_SPECTATOR;
 
 	PC.ServerChangeTeam(TeamIndex);
 }

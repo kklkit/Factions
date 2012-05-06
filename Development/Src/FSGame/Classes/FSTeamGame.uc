@@ -4,6 +4,8 @@
 class FSTeamGame extends UDKGame
 	config(GameFS);
 
+const PSEUDO_TEAM_SPECTATOR=255;
+
 enum ETeams
 {
 	TEAM_RED,
@@ -78,7 +80,7 @@ function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
 		return true;
 	}
 
-	if (N == 255)
+	if (N == PSEUDO_TEAM_SPECTATOR)
 	{
 		SetTeam(Other, None, bNewTeam);
 		return true;
