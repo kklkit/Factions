@@ -17,7 +17,9 @@ function Init(optional LocalPlayer LocPlay)
 
 function bool Start(optional bool StartPaused)
 {
-	Super.Start(StartPaused);
+	local bool Result;
+
+	Result = Super.Start(StartPaused);
 
 	if (bDisplayMouseCursor)
 	{
@@ -30,7 +32,7 @@ function bool Start(optional bool StartPaused)
 		}
 	}
 
-	return true;
+	return Result;
 }
 
 function OnClose()

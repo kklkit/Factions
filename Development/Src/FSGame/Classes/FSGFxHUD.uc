@@ -16,9 +16,9 @@ var float LastResources;
 
 function bool Start(optional bool StartPaused)
 {
-	local bool Started;
+	local bool Result;
 
-	Started = Super.Start(StartPaused);
+	Result = Super.Start(StartPaused);
 
 	TopLeftHUD = GetVariableObject("_root.topLeftHUD");
 	TopRightHUD = GetVariableObject("_root.topRightHUD");
@@ -27,7 +27,7 @@ function bool Start(optional bool StartPaused)
 
 	ResizeHUD();
 
-	return Started;
+	return Result;
 }
 
 function TickHud()
