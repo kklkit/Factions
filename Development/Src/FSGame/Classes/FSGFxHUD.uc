@@ -37,7 +37,7 @@ function TickHud()
 	{
 		UpdateHealth(FSP.Health, FSP.HealthMax);
 
-		if (FSP.PlayerReplicationInfo != None)
+		if (FSP.PlayerReplicationInfo != None && FSP.PlayerReplicationInfo.Team != None)
 			UpdateResources(FSTeamInfo(FSP.PlayerReplicationInfo.Team).Resources);
 
 		FSW = FSWeapon(FSP.Weapon);

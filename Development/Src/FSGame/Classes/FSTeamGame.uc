@@ -6,7 +6,6 @@ class FSTeamGame extends UDKGame
 
 enum ETeams
 {
-	TEAM_SPECTATOR,
 	TEAM_RED,
 	TEAM_BLUE
 };
@@ -23,44 +22,82 @@ function PreBeginPlay()
 		WorldInfo.SetMapInfo(new class'FSMapInfo');
 	}
 
-	for (i = 0; i < ETeams.EnumCount; ++i)
+	for (i = 0; i < ETeams.EnumCount; i++)
 		CreateTeam(i);
+}
+
+function PlayerController Login(string Portal, string Options, const UniqueNetID UniqueID, out string ErrorMessage)
+{
+	local PlayerController PC;
+
+	PC = Super.Login(Portal, Options, UniqueID, ErrorMessage);
+
+	if (PC.PlayerReplicationInfo.Team == None)
+	{
+		PC.GotoState('Spectating');
+		PC.PlayerReplicationInfo.bIsSpectator = true;
+	}
+
+	return PC;
+}
+
+function PostLogin(PlayerController NewPlayer)
+{
+	Super.PostLogin(NewPlayer);
+
+	if (NewPlayer.PlayerReplicationInfo.bIsSpectator)
+	{
+		NumSpectators++;
+		NumPlayers--;
+		NewPlayer.ClientGotoState('Spectating');
+	}
+}
+
+function Logout(Controller Exiting)
+{
+	local PlayerController PC;
+
+	PC = PlayerController(Exiting);
+	if (PC != None)
+	{
+		if (PC.PlayerReplicationInfo.bIsSpectator)
+		{
+			NumSpectators--;
+			NumPlayers++;
+		}
+	}
+
+	Super.Logout(Exiting);
 }
 
 function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
 {
-	// Ensure team number is valid
 	if (N >= 0 && N < ETeams.EnumCount)
 	{
 		SetTeam(Other, GameReplicationInfo.Teams[N], bNewTeam);
 		return true;
 	}
-	else
-		return false;
-}
 
-function byte PickTeam(byte Current, Controller C)
-{
-	// Return the team with fewer players
-	return GameReplicationInfo.Teams[TEAM_RED].Size <= GameReplicationInfo.Teams[TEAM_BLUE].Size ? TEAM_RED : TEAM_BLUE;
-}
+	if (N == 255)
+	{
+		SetTeam(Other, None, bNewTeam);
+		return true;
+	}
 
-function float RatePlayerStart(PlayerStart P, byte Team, Controller Player)
-{
-	// Use only team spawn points
-	if (UDKTeamPlayerStart(P) != None && Team == UDKTeamPlayerStart(P).TeamNumber)
-		return (FSMapInfo(WorldInfo.GetMapInfo()).MapRadius * 2) - VSize(Player.Pawn.Location - P.Location);
-
-	return -1.f;
+	return false;
 }
 
 function SetTeam(Controller Other, TeamInfo NewTeam, bool bNewTeam)
 {
+	local GameInfo Game;
 	local Actor A;
 
 	if (Other.PlayerReplicationInfo == None)
 		return;
 
+	Game = WorldInfo.Game;
+
+	// Remove player from their old team
 	if (Other.PlayerReplicationInfo.Team != None)
 	{
 		if (!ShouldSpawnAtStartSpot(Other))
@@ -69,15 +106,77 @@ function SetTeam(Controller Other, TeamInfo NewTeam, bool bNewTeam)
 		Other.PlayerReplicationInfo.Team.RemoveFromTeam(Other);
 		Other.PlayerReplicationInfo.Team = None;
 	}
-	
-	if (NewTeam != None && NewTeam.AddToTeam(Other))
-	{
-		BroadcastLocalizedMessage(GameMessageClass, 3, Other.PlayerReplicationInfo, None, NewTeam);
 
-		if ((PlayerController(Other) != None) && (LocalPlayer(PlayerController(Other).Player) != None))
-			foreach AllActors(class'Actor', A)
-				A.NotifyLocalPlayerTeamReceived();
+	if (NewTeam == None) // Becoming spectator
+	{
+		if (!Other.PlayerReplicationInfo.bIsSpectator)
+		{
+			Other.PlayerReplicationInfo.bIsSpectator = true;
+			Game.NumSpectators++;
+			Game.NumPlayers--;
+			Other.GotoState('Spectating');
+			if (PlayerController(Other) != None)
+				PlayerController(Other).ClientGotoState('Spectating');
+		}
+		
+		BroadcastLocalizedMessage(GameMessageClass, 14, Other.PlayerReplicationInfo);
 	}
+	else if (NewTeam.AddToTeam(Other)) // Joining a team
+	{
+		if (Other.PlayerReplicationInfo.bIsSpectator)
+		{
+			Other.PlayerReplicationInfo.bIsSpectator = false;
+			Game.NumSpectators--;
+			Game.NumPlayers++;
+
+			if (!Game.bDelayedStart)
+			{
+				Game.bRestartLevel = false;
+				if (Game.bWaitingToStartMatch)
+					Game.StartMatch();
+				else
+					Game.RestartPlayer(Other);
+				Game.bRestartLevel = Game.Default.bRestartLevel;
+			}
+			else
+			{
+				Other.GotoState('PlayerWaiting');
+				if (PlayerController(Other) != None)
+					PlayerController(Other).ClientGotoState('PlayerWaiting');
+			}
+		}
+
+		BroadcastLocalizedMessage(GameMessageClass, 3, Other.PlayerReplicationInfo, , NewTeam);
+	}
+
+	if ((PlayerController(Other) != None) && (LocalPlayer(PlayerController(Other).Player) != None))
+		foreach AllActors(class'Actor', A)
+			A.NotifyLocalPlayerTeamReceived();
+}
+
+function byte PickTeam(byte Current, Controller C)
+{
+	if (C == None)
+		return Current;
+
+	// Return the team with fewer players
+	return GameReplicationInfo.Teams[TEAM_RED].Size <= GameReplicationInfo.Teams[TEAM_BLUE].Size ? TEAM_RED : TEAM_BLUE;
+}
+
+function float RatePlayerStart(PlayerStart P, byte Team, Controller Player)
+{
+	if (Player == None || (Player.PlayerReplicationInfo.Team == None && P.bPrimaryStart))
+		return 1.f;
+
+	if (UDKTeamPlayerStart(P) != None && Team == UDKTeamPlayerStart(P).TeamNumber)
+	{
+		if (Player.Pawn != None)
+			return (FSMapInfo(WorldInfo.GetMapInfo()).MapRadius * 2) - VSize(Player.Pawn.Location - P.Location);
+		else
+			return 1.f;
+	}
+
+	return -1.f;
 }
 
 function CreateTeam(int TeamIndex)

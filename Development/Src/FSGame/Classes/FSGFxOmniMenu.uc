@@ -29,14 +29,14 @@ function CloseMenu(string FrameLabelOnClose)
 
 function SelectTeam(string TeamName)
 {
-	local byte TeamIndex;
+	local int TeamIndex;
 
 	if (TeamName ~= "red")
 		TeamIndex = TEAM_RED;
 	else if (TeamName ~= "blue")
 		TeamIndex = TEAM_BLUE;
 	else if (TeamName ~= "spectator")
-		TeamIndex = TEAM_SPECTATOR;
+		TeamIndex = 255;
 
 	PC.ServerChangeTeam(TeamIndex);
 }
@@ -51,7 +51,10 @@ function array<string> PlayerTeam()
 {
 	local array<string> Data;
 
-	Data.AddItem(FSTeamInfo(GetPC().PlayerReplicationInfo.Team).GetHumanReadableName());
+	if (GetPC().PlayerReplicationInfo.Team != None)
+		Data.AddItem(FSTeamInfo(GetPC().PlayerReplicationInfo.Team).GetHumanReadableName());
+	else
+		Data.AddItem("Spectator");
 
 	return Data;
 }
@@ -66,12 +69,12 @@ function array<string> PlayerNames(string TeamName)
 		TeamIndex = TEAM_RED;
 	else if (TeamName ~= "blue")
 		TeamIndex = TEAM_BLUE;
-	else if (TeamName ~= "spectator")
-		TeamIndex = TEAM_SPECTATOR;
 
 	foreach GetPC().WorldInfo.AllControllers(class'FSPlayerController', FSPC)
-		if (FSPC.PlayerReplicationInfo.Team.TeamIndex == TeamIndex)
+	{
+		if ((TeamName ~= "spectator" && FSPC.PlayerReplicationInfo.Team == None) || (FSPC.PlayerReplicationInfo.Team != None && FSPC.PlayerReplicationInfo.Team.TeamIndex == TeamIndex))
 			Data.AddItem(FSPC.PlayerReplicationInfo.PlayerName);
+	}
 
 	return Data;
 }
