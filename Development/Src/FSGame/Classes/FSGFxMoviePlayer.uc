@@ -25,7 +25,7 @@ function bool Start(optional bool StartPaused)
 			bDisplayedMouseCursor = false;
 		else
 		{
-			GetGameViewportClient().bDisplayHardwareMouseCursor = true;
+			GetGameViewportClient().SetHardwareMouseCursorVisibility(true);
 			bDisplayedMouseCursor = true;
 		}
 	}
@@ -38,7 +38,7 @@ function OnClose()
 	Super.OnClose();
 
 	if (bDisplayedMouseCursor)
-		GetGameViewportClient().bDisplayHardwareMouseCursor = false;
+		GetGameViewportClient().SetHardwareMouseCursorVisibility(false);
 }
 
 function FSPawn GetPlayerPawn()
