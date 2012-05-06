@@ -14,9 +14,11 @@ var float LastAmmo;
 var float LastAmmoMax;
 var float LastResources;
 
-function Init(optional LocalPlayer LocPlay)
+function bool Start(optional bool StartPaused)
 {
-	Super.Init(LocPlay);
+	local bool Started;
+
+	Started = Super.Start(StartPaused);
 
 	TopLeftHUD = GetVariableObject("_root.topLeftHUD");
 	TopRightHUD = GetVariableObject("_root.topRightHUD");
@@ -24,12 +26,17 @@ function Init(optional LocalPlayer LocPlay)
 	BottomRightHUD = GetVariableObject("_root.bottomRightHUD");
 
 	ResizeHUD();
+
+	return Started;
 }
 
 function TickHud()
 {
 	local FSPawn FSP;
 	local FSWeapon FSW;
+
+	if (!bMovieIsOpen)
+		return;
 
 	FSP = GetPlayerPawn();
 
@@ -128,7 +135,7 @@ defaultproperties
 {
 	MovieInfo=SwfMovie'FSFlashAssets.factions_hud'
 	bDisplayWithHudOff=false
-	bAutoPlay=true
+	bAutoPlay=false
 	LastHealth=-110
 	LastHealthMax=-110
 	LastAmmo=-110

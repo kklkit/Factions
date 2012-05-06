@@ -7,6 +7,9 @@ var GFxObject StatusText;
 
 function TickHUD()
 {
+	if (!bMovieIsOpen)
+		return;
+
 	// Update status text
 	if (StatusText != None)
 	{

@@ -49,6 +49,11 @@ simulated function NotifyLocalPlayerTeamReceived()
 	Super.NotifyLocalPlayerTeamReceived();
 
 	GFxOmniMenu.Invalidate("team");
+
+	if (PlayerOwner.PlayerReplicationInfo.Team != None && !GFxHUD.bMovieIsOpen)
+		GFxHUD.Start();
+	else if (GFxHUD.bMovieIsOpen)
+		GFxHUD.Close(false);
 }
 
 function DrawHud()
