@@ -71,11 +71,13 @@ function SetTeam(Controller Other, TeamInfo NewTeam, bool bNewTeam)
 	}
 	
 	if (NewTeam != None && NewTeam.AddToTeam(Other))
+	{
 		BroadcastLocalizedMessage(GameMessageClass, 3, Other.PlayerReplicationInfo, None, NewTeam);
 
-	if ((PlayerController(Other) != None) && (LocalPlayer(PlayerController(Other).Player) != None))
-		foreach AllActors(class'Actor', A)
-			A.NotifyLocalPlayerTeamReceived();
+		if ((PlayerController(Other) != None) && (LocalPlayer(PlayerController(Other).Player) != None))
+			foreach AllActors(class'Actor', A)
+				A.NotifyLocalPlayerTeamReceived();
+	}
 }
 
 function CreateTeam(int TeamIndex)
