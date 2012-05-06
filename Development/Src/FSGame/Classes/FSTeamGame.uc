@@ -179,6 +179,12 @@ function float RatePlayerStart(PlayerStart P, byte Team, Controller Player)
 	return -1.f;
 }
 
+function RestartPlayer(Controller NewPlayer)
+{
+	if (!NewPlayer.PlayerReplicationInfo.bIsSpectator)
+		Super.RestartPlayer(NewPlayer);
+}
+
 function CreateTeam(int TeamIndex)
 {
 	local FSTeamInfo Team;
