@@ -72,7 +72,12 @@ function array<string> PlayerNames(string TeamName)
 
 	foreach GetPC().WorldInfo.AllControllers(class'FSPlayerController', FSPC)
 	{
-		if ((TeamName ~= "spectator" && FSPC.PlayerReplicationInfo.Team == None) || (FSPC.PlayerReplicationInfo.Team != None && FSPC.PlayerReplicationInfo.Team.TeamIndex == TeamIndex))
+		if (TeamName ~= "spectator")
+		{
+			if (FSPC.PlayerReplicationInfo.Team == None) 
+				Data.AddItem(FSPC.PlayerReplicationInfo.PlayerName);
+		}
+		else if (FSPC.PlayerReplicationInfo.Team != None && FSPC.PlayerReplicationInfo.Team.TeamIndex == TeamIndex)
 			Data.AddItem(FSPC.PlayerReplicationInfo.PlayerName);
 	}
 
