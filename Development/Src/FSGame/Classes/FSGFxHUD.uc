@@ -25,8 +25,6 @@ function bool Start(optional bool StartPaused)
 	BottomLeftHUD = GetVariableObject("_root.bottomLeftHUD");
 	BottomRightHUD = GetVariableObject("_root.bottomRightHUD");
 
-	ResizeHUD();
-
 	return Result;
 }
 

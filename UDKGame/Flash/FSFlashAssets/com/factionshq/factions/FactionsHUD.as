@@ -24,6 +24,8 @@ public class FactionsHUD extends MovieClip {
 		stage.addEventListener(Event.RESIZE, function() {
 				ExternalInterface.call("ResizeHUD");
 			});
+		
+		ExternalInterface.call("ResizeHUD");
 	}
 	
 	public function updateHealth(health:int, healthMax:int):void {

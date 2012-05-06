@@ -52,7 +52,7 @@ simulated function NotifyLocalPlayerTeamReceived()
 
 	if (PlayerOwner.PlayerReplicationInfo.Team != None && !GFxHUD.bMovieIsOpen)
 		GFxHUD.Start();
-	else if (GFxHUD.bMovieIsOpen)
+	else if (PlayerOwner.PlayerReplicationInfo.Team == None && GFxHUD.bMovieIsOpen)
 		GFxHUD.Close(false);
 }
 
