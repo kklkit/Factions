@@ -84,6 +84,24 @@ function array<string> PlayerNames(string TeamName)
 	return Data;
 }
 
+function array<string> InfantryPresetNames()
+{
+	local array<string> Data;
+
+	Data.AddItem("Engineer");
+	Data.AddItem("Grenadier");
+	Data.AddItem("Rifleman");
+	Data.AddItem("Scout");
+	Data.AddItem("Preset 5");
+	Data.AddItem("Preset 6");
+	Data.AddItem("Preset 7");
+	Data.AddItem("Preset 8");
+	Data.AddItem("Preset 9");
+	Data.AddItem("Preset 10");
+
+	return Data;
+}
+
 function array<string> InfantryEquipmentLabels()
 {
 	local array<string> Data;

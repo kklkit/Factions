@@ -99,6 +99,9 @@ public class FactionsOmniMenu extends MovieClip {
 	public function frameScript1():void {
 		menuButtonBar.selectedIndex = 1;
 		
+		infantryPresetsList.dataProvider = data.infantryPresetNames;
+		infantryPresetsList.addEventListener(ListEvent.ITEM_CLICK, selectInfantryPreset);
+		
 		infantryArmorLabel.text = "Armor:";
 		infantryLightArmorButton.label = "Light Armor";
 		infantryHeavyArmorButton.label = "Heavy Armor";
@@ -210,6 +213,13 @@ public class FactionsOmniMenu extends MovieClip {
 	
 	public function selectArmor(e:ButtonBarEvent):void {
 		ExternalInterface.call("SelectInfantryArmor", e.index);
+	}
+	
+	private function selectInfantryPreset(e:ListEvent) {
+		data.infantryPresetNames.requestItemAt(e.index, function (item:Object):void {
+			ExternalInterface.call("SelectInfantryPreset", String(item));
+			infantryPresetNameBox.text = String(item);
+		});
 	}
 }
 }
