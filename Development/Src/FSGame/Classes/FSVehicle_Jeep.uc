@@ -1,7 +1,7 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSVehicle_Jeep extends SVehicle;
+class FSVehicle_Jeep extends FSVehicle;
 
 defaultproperties
 {
