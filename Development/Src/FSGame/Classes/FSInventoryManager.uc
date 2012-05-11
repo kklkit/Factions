@@ -38,20 +38,28 @@ reliable server function SelectEquipment(byte Slot, string EquipmentName)
 reliable server function ResetEquipment()
 {
 	local byte i;
+	local byte j;
 	local Inventory Inv;
+	local FSMagazine Mag;
 
 	if (FSStruct_Barracks(FSPawn(Instigator).Base) != None)
 	{
 		DiscardInventory();
 
 		for (i = 0; i < NumSlots; i++)
-			if (RequestedEquipment[i] != None)
-				Inv = CreateInventory(RequestedEquipment[i]);
-
-		if (FSWeapon(Inv) != None)
 		{
-			for (i = 0; i < FSWeapon(Inv).GetDefaultMagazines(); i++)
-				CreateInventory(class'FSMagazine');
+			if (RequestedEquipment[i] != None)
+			{
+				Inv = CreateInventory(RequestedEquipment[i]);
+				if (FSWeapon(Inv) != None)
+				{
+					for (j = 0; j < FSWeapon(Inv).GetDefaultMagazines(); j++)
+					{
+						Mag = FSMagazine(CreateInventory(class'FSMagazine'));
+						Mag.AmmoType = RequestedEquipment[i];
+					}
+				}
+			}
 		}
 	}
 }

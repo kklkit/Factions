@@ -85,20 +85,22 @@ reliable server function ServerReload()
 {
 	local FSMagazine M;
 
+	foreach InvManager.InventoryActors(class'FSMagazine', M)
+		if (M.AmmoType == Self.Class)
+			break;
+
+	if (M == None)
+		return;
+
 	if (Magazine != None)
 	{
-		InvManager.RemoveFromInventory(Magazine);
 		Magazine.Destroy();
+		AmmoCount = 0;
 	}
 
-	foreach InvManager.InventoryActors(class'FSMagazine', M)
-		break;
-
-	if (M != None)
-	{
-		Magazine = M;
-		AmmoCount = Magazine.AmmoCount;
-	}
+	InvManager.RemoveFromInventory(M);
+	Magazine = M;
+	AmmoCount = Magazine.AmmoCount;
 }
 
 function int GetDefaultMagazines()

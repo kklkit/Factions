@@ -3,6 +3,7 @@
  */
 class FSMagazine extends Inventory;
 
+var() class<Inventory> AmmoType;
 var() int AmmoCount;
 var() int AmmoCountMax;
 
