@@ -3,6 +3,8 @@
  */
 class FSVehicle_Jeep extends FSVehicle;
 
+const TireRadius=40.f;
+
 defaultproperties
 {
 	Begin Object Name=SVehicleMesh
@@ -14,7 +16,7 @@ defaultproperties
 	Begin Object Class=SVehicleWheel Name=FLWheel
 		BoneName="F_L_Tire"
 		SkelControlName="F_L_Tire_Cont"
-		WheelRadius=27
+		WheelRadius=TireRadius
 		bPoweredWheel=true
 	End Object
 	Wheels(0)=FLWheel
@@ -22,7 +24,7 @@ defaultproperties
 	Begin Object Class=SVehicleWheel Name=FRWheel
 		BoneName="F_R_Tire"
 		SkelControlName="F_R_Tire_Cont"
-		WheelRadius=27
+		WheelRadius=TireRadius
 		bPoweredWheel=true
 	End Object
 	Wheels(1)=FRWheel
@@ -30,7 +32,7 @@ defaultproperties
 	Begin Object Class=SVehicleWheel Name=BLWheel
 		BoneName="B_L_Tire"
 		SkelControlName="B_L_Tire_Cont"
-		WheelRadius=27
+		WheelRadius=TireRadius
 		bPoweredWheel=true
 	End Object
 	Wheels(2)=BLWheel
@@ -38,8 +40,10 @@ defaultproperties
 	Begin Object Class=SVehicleWheel Name=BRWheel
 		BoneName="B_R_Tire"
 		SkelControlName="B_R_Tire_Cont"
-		WheelRadius=27
+		WheelRadius=TireRadius
 		bPoweredWheel=true
 	End Object
 	Wheels(3)=BRWheel
+
+	DrawScale=1.5
 }
