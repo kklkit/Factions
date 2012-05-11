@@ -2,6 +2,7 @@
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSVehicle extends UDKVehicle
+	implements(FSActorInterface)
 	placeable
 	abstract;
 

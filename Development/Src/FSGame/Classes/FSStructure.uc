@@ -7,10 +7,20 @@ class FSStructure extends Actor
 	abstract;
 
 var() byte TeamNumber;
+var() int Health;
+var() int HealthMax;
 
 simulated function byte ScriptGetTeamNum()
 {
 	return TeamNumber;
+}
+
+event TakeDamage(int DamageAmount, Controller EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional TraceHitInfo HitInfo, optional Actor DamageCauser)
+{
+	Super.TakeDamage(DamageAmount, EventInstigator, HitLocation, Momentum, DamageType, HitInfo, DamageCauser);
+	Health -= DamageAmount;
+	if (Health <= 0)
+		Destroy();
 }
 
 static function class<FSStructure> GetStructureClass(byte StructureIndex)
@@ -51,4 +61,6 @@ defaultproperties
 	bOnlyDirtyReplication=true
 
 	TeamNumber=0
+	Health=1000
+	HealthMax=1000
 }
