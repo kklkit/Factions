@@ -143,7 +143,7 @@ exec function ToggleOmniMenu()
 	if (GFxOmniMenu.bMovieIsOpen)
 		GFxOmniMenu.Close(false);
 	else
-		GFxOmniMenu.Start(false);
+		GFxOmniMenu.Start();
 }
 
 defaultproperties

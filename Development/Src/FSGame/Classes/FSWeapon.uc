@@ -5,22 +5,23 @@ class FSWeapon extends UDKWeapon
 	config(WeaponFS)
 	abstract;
 
+var FSMagazine Magazine;
 var class<FSWeaponAttachment> AttachmentClass;
-var repnotify int AmmoCountMax;
+
+replication
+{
+	if (bNetDirty)
+		Magazine;
+}
 
 function ConsumeAmmo(byte FireModeNum)
 {
-	Super.ConsumeAmmo(FireModeNum);
-
 	AddAmmo(-1);
 }
 
 function int AddAmmo(int Amount)
 {
-	Super.AddAmmo(Amount);
-
-	AmmoCount = Clamp(AmmoCount + Amount, 0, AmmoCountMax);
-
+	AmmoCount = Magazine.AddAmmo(Amount);
 	return AmmoCount;
 }
 
@@ -29,7 +30,7 @@ simulated function bool HasAmmo(byte FireModeNum, optional int Amount)
 	if (Amount != 0)
 		return (AmmoCount >= Amount);
 	else
-		return (AmmoCount > 0);	
+		return (AmmoCount > 0);
 }
 
 simulated function bool HasAnyAmmo()
@@ -49,9 +50,7 @@ simulated function AttachWeaponTo(SkeletalMeshComponent MeshCpnt, optional name 
 	{
 		InstigatorPawn.CurrentWeaponAttachmentClass = AttachmentClass;
 		if (WorldInfo.NetMode == NM_ListenServer || WorldInfo.NetMode == NM_Standalone || (WorldInfo.NetMode == NM_Client && InstigatorPawn.IsLocallyControlled()))
-		{
 			InstigatorPawn.WeaponAttachmentChanged();
-		}
 	}
 }
 
@@ -66,9 +65,7 @@ simulated function DetachWeapon()
 	{
 		InstigatorPawn.CurrentWeaponAttachmentClass = None;
 		if (Instigator.IsLocallyControlled())
-		{
 			InstigatorPawn.WeaponAttachmentChanged();
-		}
 	}
 }
 
@@ -77,6 +74,36 @@ simulated function TimeWeaponEquipping()
 	AttachWeaponTo(Instigator.Mesh);
 
 	Super.TimeWeaponEquipping();
+}
+
+exec function ReloadWeapon()
+{
+	ServerReload();
+}
+
+reliable server function ServerReload()
+{
+	local FSMagazine M;
+
+	if (Magazine != None)
+	{
+		InvManager.RemoveFromInventory(Magazine);
+		Magazine.Destroy();
+	}
+
+	foreach InvManager.InventoryActors(class'FSMagazine', M)
+		break;
+
+	if (M != None)
+	{
+		Magazine = M;
+		AmmoCount = Magazine.AmmoCount;
+	}
+}
+
+function int GetDefaultMagazines()
+{
+	return 4;
 }
 
 defaultproperties

@@ -19,7 +19,4 @@ defaultproperties
 	PutDownTime=+0.33
 	WeaponRange=22000
 	AimTraceRange=22000
-
-	AmmoCount=30
-	AmmoCountMax=30
 }

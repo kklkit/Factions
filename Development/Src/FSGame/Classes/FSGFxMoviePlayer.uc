@@ -4,18 +4,10 @@
 class FSGFxMoviePlayer extends GFxMoviePlayer;
 
 var bool bDisplayMouseCursor;
-var FSPlayerController PC;
 
 var private bool bDisplayedMouseCursor;
 
-function Init(optional LocalPlayer LocPlay)
-{
-	Super.Init(LocPlay);
-
-	PC = FSPlayerController(GetPC());
-}
-
-function bool Start(optional bool StartPaused)
+function bool Start(optional bool StartPaused = false)
 {
 	local bool Result;
 
@@ -37,8 +29,6 @@ function bool Start(optional bool StartPaused)
 
 function OnClose()
 {
-	Super.OnClose();
-
 	if (bDisplayedMouseCursor)
 		GetGameViewportClient().SetHardwareMouseCursorVisibility(false);
 }
@@ -49,16 +39,16 @@ function FSPawn GetPlayerPawn()
 	local UDKVehicle FSV; //@todo change to FSVehicle
 	local UDKWeaponPawn FWP; //@todo change to FSWeaponPawn
 
-	FSP = FSPawn(PC.Pawn);
+	FSP = FSPawn(GetPC().Pawn);
 
 	// Set the pawn if driving a vehicle or mounted weapon
 	if (FSP == None)
 	{
-		FSV = UDKVehicle(PC.Pawn);
+		FSV = UDKVehicle(GetPC().Pawn);
 
 		if (FSV == None)
 		{
-			FWP = UDKWeaponPawn(PC.Pawn);
+			FWP = UDKWeaponPawn(GetPC().Pawn);
 			if (FWP != None)
 			{
 				FSV = FWP.MyVehicle;

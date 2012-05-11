@@ -13,8 +13,8 @@ function TickHUD()
 	// Update status text
 	if (StatusText != None)
 	{
-		if (PC.PlacingStructureIndex != 0)
-			StatusText.SetText("Placing:" @ class'FSStructure'.static.GetStructureClass(PC.PlacingStructureIndex));
+		if (FSPlayerController(GetPC()).PlacingStructureIndex != 0)
+			StatusText.SetText("Placing:" @ class'FSStructure'.static.GetStructureClass(FSPlayerController(GetPC()).PlacingStructureIndex));
 		else
 			StatusText.SetText("No structure selected");
 	}
@@ -25,7 +25,6 @@ function TickHUD()
 defaultproperties
 {
 	MovieInfo=SwfMovie'FSFlashAssets.factions_commander_hud'
-	bAutoPlay=false
 	bDisplayWithHudOff=false
 	bDisplayMouseCursor=true
 }

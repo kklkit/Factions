@@ -3,35 +3,12 @@
  */
 class FSGFxHUD extends FSGFxMoviePlayer;
 
-var GFxObject TopLeftHUD;
-var GFxObject TopRightHUD;
-var GFxObject BottomLeftHUD;
-var GFxObject BottomRightHUD;
-
-var float LastHealth;
-var float LastHealthMax;
-var float LastAmmo;
-var float LastAmmoMax;
-var float LastResources;
-
-function bool Start(optional bool StartPaused)
-{
-	local bool Result;
-
-	Result = Super.Start(StartPaused);
-
-	TopLeftHUD = GetVariableObject("_root.topLeftHUD");
-	TopRightHUD = GetVariableObject("_root.topRightHUD");
-	BottomLeftHUD = GetVariableObject("_root.bottomLeftHUD");
-	BottomRightHUD = GetVariableObject("_root.bottomRightHUD");
-
-	return Result;
-}
-
 function TickHud()
 {
 	local FSPawn FSP;
 	local FSWeapon FSW;
+	local FSMagazine Magazine;
+	local int MagazineCount;
 
 	if (!bMovieIsOpen)
 		return;
@@ -46,10 +23,15 @@ function TickHud()
 			UpdateResources(FSTeamInfo(FSP.PlayerReplicationInfo.Team).Resources);
 
 		FSW = FSWeapon(FSP.Weapon);
-		if (FSW != None)
-			UpdateAmmo(FSW.AmmoCount, FSW.AmmoCountMax);
+		if (FSW != None && FSW.Magazine != None)
+			UpdateAmmo(FSW.AmmoCount, FSW.Magazine.AmmoCountMax);
 		else
 			UpdateAmmo(0, 1);
+
+		foreach GetPC().Pawn.InvManager.InventoryActors(class'FSMagazine', Magazine)
+			MagazineCount++;
+
+		UpdateMagazineCount(MagazineCount);
 	}
 	else
 	{
@@ -64,79 +46,59 @@ function TickHud()
 
 function ResizeHUD()
 {
-	local float Left, Top, Right, Bottom;
-	local ASDisplayInfo DI;
+	local float x0, y0, x1, y1;
 
-	GetVisibleFrameRect(Left, Top, Right, Bottom);
+	GetVisibleFrameRect(x0, y0, x1, y1);
 
-	DI.hasY = true;
-	DI.Y = Bottom;
-	BottomLeftHUD.SetDisplayInfo(DI);
-	BottomRightHUD.SetDisplayInfo(DI);
-	DI.hasY = false;
-
-	DI.hasX = true;
-	DI.X = Right;
-	TopRightHUD.SetDisplayInfo(DI);
-	BottomRightHUD.SetDisplayInfo(DI);
+	UpdateResolution(x0, y0, x1, y1);
 }
 
 /*********************************************************************************************
  Functions calling ActionScript
 **********************************************************************************************/
 
+function UpdateResolution(float x0, float y0, float x1, float y1)
+{
+	ActionScriptVoid("_root.updateResolution");
+}
+
 function UpdateHealth(int Health, int HealthMax)
 {
-	if (Health != LastHealth || HealthMax != LastHealthMax)
-	{
-		ActionScriptVoid("_root.UpdateHealth");
-		LastHealth = Health;
-		LastHealthMax = HealthMax;
-	}
+	ActionScriptVoid("_root.updateHealth");
 }
 
 function UpdateAmmo(int Ammo, int AmmoMax)
 {
-	if (Ammo != LastAmmo || AmmoMax != LastAmmoMax)
-	{
-		ActionScriptVoid("_root.UpdateAmmo");
-		LastAmmo = Ammo;
-		LastAmmoMax = AmmoMax; 
-	}
+	ActionScriptVoid("_root.updateAmmo");
+}
+
+function UpdateMagazineCount(int MagazineCount)
+{
+	ActionScriptVoid("_root.updateMagazineCount");
 }
 
 function UpdateResources(int Resources)
 {
-	if (Resources != LastResources)
-	{
-		ActionScriptVoid("_root.UpdateResources");
-		LastResources = Resources;
-	}
+	ActionScriptVoid("_root.updateResources");
 }
 
 function UpdateIsAlive(bool IsAlive)
 {
-	ActionScriptVoid("_root.UpdateIsAlive");
+	ActionScriptVoid("_root.updateIsAlive");
 }
 
 function UpdateCommStatus(string CommName, int Health, int HealthMax)
 {
-	ActionScriptVoid("_root.UpdateCommStatus");
+	ActionScriptVoid("_root.updateCommStatus");
 }
 
 function UpdateCurrentResearch(string ResearchName, int SecsLeft)
 {
-	ActionScriptVoid("_root.UpdateCurrentResearch");
+	ActionScriptVoid("_root.updateCurrentResearch");
 }
 
 defaultproperties
 {
 	MovieInfo=SwfMovie'FSFlashAssets.factions_hud'
 	bDisplayWithHudOff=false
-	bAutoPlay=false
-	LastHealth=-110
-	LastHealthMax=-110
-	LastAmmo=-110
-	LastAmmoMax=-110
-	LastResources=-110
 }

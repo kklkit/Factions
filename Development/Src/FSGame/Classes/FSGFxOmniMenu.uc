@@ -14,8 +14,8 @@ function OnClose()
 {
 	Super.OnClose();
 
-	if (PC.Pawn != None)
-		FSPawn(PC.Pawn).ResetEquipment();
+	if (GetPC().Pawn != None)
+		FSPawn(GetPC().Pawn).ResetEquipment();
 }
 
 /*********************************************************************************************
@@ -38,13 +38,13 @@ function SelectTeam(string TeamName)
 	else if (TeamName ~= "spectator")
 		TeamIndex = class'FSTeamGame'.const.PSEUDO_TEAM_SPECTATOR;
 
-	PC.ServerChangeTeam(TeamIndex);
+	GetPC().ServerChangeTeam(TeamIndex);
 }
 
 function SelectInfantryEquipment(byte Slot, string EquipmentName)
 {
-	if (PC.Pawn != None)
-		FSInventoryManager(FSPawn(PC.Pawn).InvManager).SelectEquipment(Slot, EquipmentName);
+	if (GetPC().Pawn != None)
+		FSInventoryManager(FSPawn(GetPC().Pawn).InvManager).SelectEquipment(Slot, EquipmentName);
 }
 
 function array<string> PlayerTeam()
@@ -226,7 +226,6 @@ function Invalidate(string Item)
 defaultproperties
 {
 	MovieInfo=SwfMovie'FSFlashAssets.factions_omnimenu'
-	bAutoPlay=true
 	bCaptureMouseInput=true
 	bDisplayMouseCursor=true
 }

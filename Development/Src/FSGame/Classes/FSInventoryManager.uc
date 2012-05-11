@@ -38,6 +38,7 @@ reliable server function SelectEquipment(byte Slot, string EquipmentName)
 reliable server function ResetEquipment()
 {
 	local byte i;
+	local Inventory Inv;
 
 	if (FSStruct_Barracks(FSPawn(Instigator).Base) != None)
 	{
@@ -45,7 +46,13 @@ reliable server function ResetEquipment()
 
 		for (i = 0; i < NumSlots; i++)
 			if (RequestedEquipment[i] != None)
-				CreateInventory(RequestedEquipment[i]);
+				Inv = CreateInventory(RequestedEquipment[i]);
+
+		if (FSWeapon(Inv) != None)
+		{
+			for (i = 0; i < FSWeapon(Inv).GetDefaultMagazines(); i++)
+				CreateInventory(class'FSMagazine');
+		}
 	}
 }
 
@@ -53,5 +60,4 @@ defaultproperties
 {
 	PendingFire(0)=0
 	PendingFire(1)=0
-	bMustHoldWeapon=true
 }

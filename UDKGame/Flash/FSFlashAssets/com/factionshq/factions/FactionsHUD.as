@@ -28,6 +28,13 @@ public class FactionsHUD extends MovieClip {
 		ExternalInterface.call("ResizeHUD");
 	}
 	
+	public function updateResolution(x0:Number, y0:Number, x1:Number, y1:Number) {
+		bottomLeftHUD.y = y1;
+		bottomRightHUD.y = y1;
+		topRightHUD.x = x1;
+		bottomRightHUD.x = x1;
+	}
+	
 	public function updateHealth(health:int, healthMax:int):void {
 		var healthBar:DisplayObject = bottomLeftHUD.getChildByName('healthBar');
 		
@@ -50,6 +57,11 @@ public class FactionsHUD extends MovieClip {
 		}
 		
 		ammoBar.x = ammoBar.width + ammoBarStartPositionX - (ammo / ammoMax * ammoBar.width);
+	}
+	
+	public function updateMagazineCount(mags:int):void {
+		var magCount:TextField = bottomRightHUD.getChildByName('magCount') as TextField;
+		magCount.text = mags.toString();
 	}
 	
 	public function updateResources(resources:int):void {
