@@ -130,11 +130,11 @@ reliable server function RequestVehicle()
 		VF.BuildVehicle(FSPawn(Pawn));
 }
 
-reliable server function PlaceStructure(Vector StructureLocation)
+reliable server function ServerSpawnStructure(Vector StructureLocation)
 {
 	local FSStructure S;
 
-	S = Spawn(class'FSStructure'.static.GetStructureClass(PlacingStructureIndex), , , StructureLocation, , , );
+	S = Spawn(class'FSStructure'.static.GetStructureClass(PlacingStructureIndex), , , StructureLocation, rot(0, 0, 0), , );
 	S.TeamNumber = PlayerReplicationInfo.Team.TeamIndex;
 	bPlacingStructure = false;
 	PlacingStructureIndex = 0;

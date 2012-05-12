@@ -74,7 +74,7 @@ function DrawHud()
 			DrawSelectionBox();
 
 		if (FSPlayer.bPlacingStructure)
-			PlaceStructure(FSPlayer);
+			SpawnStructure(FSPlayer);
 	}
 }
 
@@ -116,13 +116,13 @@ function DrawSelectionBox()
 	Canvas.DrawBox(Max(DragStart.X, MousePosition.X) - Min(DragStart.X, MousePosition.X), Max(DragStart.Y, MousePosition.Y) - Min(DragStart.Y, MousePosition.Y));
 }
 
-function PlaceStructure(FSPlayerController FSPlayer)
+function SpawnStructure(FSPlayerController FSPlayer)
 {
 	local Vector HitLocation, HitNormal, WorldOrigin, WorldDirection;
 
 	Canvas.DeProject(GetMousePosition(), WorldOrigin, WorldDirection);
 	Trace(HitLocation, HitNormal, WorldOrigin + WorldDirection * 65536.0, WorldOrigin, true, , , );
-	FSPlayer.PlaceStructure(HitLocation);
+	FSPlayer.ServerSpawnStructure(HitLocation);
 }
 
 function BeginDragging()
