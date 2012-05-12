@@ -17,4 +17,7 @@ defaultproperties
 	Begin Object Name=SVehicleMesh
 		LightEnvironment=MyLightEnvironment
 	End Object
+
+	DestroyOnPenetrationThreshold=50.0
+	DestroyOnPenetrationDuration=1.0
 }
