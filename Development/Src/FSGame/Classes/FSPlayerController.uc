@@ -147,7 +147,8 @@ exec function BuildVehicle()
 
 exec function ToggleCommandView()
 {
-	GotoState('Commanding');
+	if (PlayerReplicationInfo.Team != None)
+		GotoState('Commanding');
 }
 
 defaultproperties
