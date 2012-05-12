@@ -50,6 +50,9 @@ simulated function NotifyLocalPlayerTeamReceived()
 
 	GFxOmniMenu.Invalidate("team");
 
+	GFxOmniMenu.Close(false);
+	GFxCommanderHUD.Close(false);
+
 	if (PlayerOwner.PlayerReplicationInfo.Team != None && !GFxHUD.bMovieIsOpen)
 		GFxHUD.Start();
 	else if (PlayerOwner.PlayerReplicationInfo.Team == None && GFxHUD.bMovieIsOpen)
