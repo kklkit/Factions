@@ -3,7 +3,7 @@
  */
 class FSVehicle_Jeep extends FSVehicle;
 
-const TireRadius=40.f;
+const TireRadius=46.f;
 
 defaultproperties
 {
