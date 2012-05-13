@@ -2,15 +2,19 @@
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSVehicle extends UDKVehicle
-	implements(FSActorInterface)
-	placeable
-	abstract;
+	abstract
+	notplaceable;
+
+simulated function PostBeginPlay()
+{
+	Super.PostBeginPlay();
+
+	Mesh.WakeRigidBody();
+}
 
 defaultproperties
 {
 	Begin Object Class=DynamicLightEnvironmentComponent Name=MyLightEnvironment
-		bSynthesizeSHLight=true
-		bUseBooleanEnvironmentShadowing=FALSE
 	End Object
 	Components.Add(MyLightEnvironment)
 

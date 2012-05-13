@@ -3,19 +3,21 @@
  */
 class FSStruct_VehicleFactory extends FSStructure;
 
-var() class<UDKVehicle> VehicleClass;
+var() class<FSVehicle> VehicleClass;
 var() int VehicleCost;
 
 function BuildVehicle(FSPawn Builder)
 {
 	local FSTeamInfo Team;
+	local FSVehicle V;
 
 	Team = FSTeamInfo(Builder.PlayerReplicationInfo.Team);
 
 	if (Team != None && Team.Resources >= VehicleCost)
 	{
 		Team.Resources -= VehicleCost;
-		Spawn(VehicleClass, Builder, , Location + vect(600, 600, 100));
+		V = Spawn(VehicleClass, , , Location + vect(600, 600, 100));
+		V.Team = Builder.PlayerReplicationInfo.Team.TeamIndex;
 	}
 }
 
@@ -25,6 +27,6 @@ defaultproperties
 		StaticMesh=StaticMesh'FSAssets.Structures.VehiclePad'
 	End Object
 
-	VehicleClass=class'UTVehicle_Scorpion_Content'
+	VehicleClass=class'FSVehicle_Jeep'
 	VehicleCost=100
 }
