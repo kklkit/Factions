@@ -23,7 +23,7 @@ defaultproperties
 		MaxYawRate=1.8
 		PitchTorqueFactor=450.0
 		PitchTorqueMax=60.0
-		PitchDamping=0.3
+		PitchDamping=5.0
 		RollTorqueTurnFactor=700.0
 		RollTorqueStrafeFactor=100.0
 		RollTorqueMax=300.0
@@ -59,6 +59,4 @@ defaultproperties
 	StayUprightPitchResistAngle=5.0
 	StayUprightStiffness=1200
 	StayUprightDamping=20
-
-	DrawScale=1.5
 }
