@@ -84,14 +84,14 @@ simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
 	CollisionComponent = Mesh;
 	
 	Mesh.PhysicsWeight = 1.0;
-	Mesh.bUpdateJointsFromAnimation = true;
+	Mesh.bUpdateJointsFromAnimation = True;
 	Mesh.SetRBChannel(RBCC_Pawn);
-	Mesh.SetRBCollidesWithChannel(RBCC_Default, true);
-	Mesh.SetRBCollidesWithChannel(RBCC_Pawn, true);
-	Mesh.SetRBCollidesWithChannel(RBCC_Vehicle, true);
-	Mesh.SetRBCollidesWithChannel(RBCC_Untitled3, false);
-	Mesh.SetRBCollidesWithChannel(RBCC_BlockingVolume, true);
-	Mesh.PhysicsAssetInstance.SetAllBodiesFixed(false);
+	Mesh.SetRBCollidesWithChannel(RBCC_Default, True);
+	Mesh.SetRBCollidesWithChannel(RBCC_Pawn, True);
+	Mesh.SetRBCollidesWithChannel(RBCC_Vehicle, True);
+	Mesh.SetRBCollidesWithChannel(RBCC_Untitled3, False);
+	Mesh.SetRBCollidesWithChannel(RBCC_BlockingVolume, True);
+	Mesh.PhysicsAssetInstance.SetAllBodiesFixed(False);
 
 	Super.PlayDying(DamageType, HitLoc);
 }
@@ -137,7 +137,7 @@ simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out 
 {
 	Mesh.GetSocketWorldLocationAndRotation('Eyes', out_CamLoc);
 	out_CamRot = GetViewRotation();
-	return true;
+	return True;
 }
 
 simulated function WeaponAttachmentChanged()
@@ -186,22 +186,22 @@ defaultproperties
 		PhysicsAsset=PhysicsAsset'CH_AnimCorrupt.Mesh.SK_CH_Corrupt_Male_Physics'
 		AnimSets(0)=AnimSet'CH_AnimHuman.Anims.K_AnimHuman_BaseMale'
 		LightEnvironment=PawnLightEnvironmentComponent
-		BlockRigidBody=true
-		bHasPhysicsAssetInstance=true
+		BlockRigidBody=True
+		bHasPhysicsAssetInstance=True
 		RBChannel=RBCC_Untitled3
-		RBCollideWithChannels=(Untitled3=true)
+		RBCollideWithChannels=(Untitled3=True)
 	End Object
 	Mesh=PawnMeshComponent
 	Components.Add(PawnMeshComponent)
 
 	InventoryManagerClass=class'FSInventoryManager'
 
-	bCanCrouch=true
-	bCanPickupInventory=true
-	bWeaponAttachmentVisible=true
+	bCanCrouch=True
+	bCanPickupInventory=True
+	bWeaponAttachmentVisible=True
 
 	WeaponSocket=WeaponPoint
 	LeftFootControlName=LeftFootControl
 	RightFootControlName=RightFootControl
-	bEnableFootPlacement=true
+	bEnableFootPlacement=True
 }

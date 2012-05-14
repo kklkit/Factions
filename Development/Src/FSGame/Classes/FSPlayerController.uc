@@ -32,7 +32,7 @@ simulated state Commanding
 
 	simulated function EndState(name NextStateName)
 	{
-		FSHUD(myHUD).GFxCommanderHUD.Close(false);
+		FSHUD(myHUD).GFxCommanderHUD.Close(False);
 	}
 
 	simulated function GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
@@ -89,7 +89,7 @@ simulated state Commanding
 	exec function PlaceStructure()
 	{
 		if (PlacingStructureIndex != 0)
-			bPlacingStructure = true;
+			bPlacingStructure = True;
 	}
 }
 
@@ -104,7 +104,7 @@ simulated function PostBeginPlay()
 	{
 		MinimapCaptureComponent = new(self) class'SceneCapture2DComponent';
 		MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'FSAssets.HUD.minimap_render_texture', MinimapCaptureFOV, , 0);
-		MinimapCaptureComponent.bUpdateMatrices = false;
+		MinimapCaptureComponent.bUpdateMatrices = False;
 		AttachComponent(MinimapCaptureComponent);
 
 		MinimapCapturePosition.X = MI.MapCenter.X;
@@ -157,7 +157,7 @@ exec function ToggleCommandView()
 defaultproperties
 {
 	InputClass=class'FSGame.FSPlayerInput'
-	bPlacingStructure=false
+	bPlacingStructure=False
 	PlacingStructureIndex=0
 	CommanderMoveSpeed=30
 	SpectatorCameraSpeed=5000.0

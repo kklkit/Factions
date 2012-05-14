@@ -27,15 +27,15 @@ simulated function InitializePickup()
 function bool CheckForErrors()
 {
 	if (Super.CheckForErrors())
-		return true;
+		return True;
 
 	if (WeaponPickupClass == None)
 	{
 		`log(self @ " no weapon pickup class");
-		return true;
+		return True;
 	}
 
-	return false;
+	return False;
 }
 
 defaultproperties
@@ -48,7 +48,7 @@ defaultproperties
 	BaseMesh=BaseMeshComponent
 	Components.Add(BaseMeshComponent)
 
-	bNoDelete=false
+	bNoDelete=False
 
 	WeaponPickupClass=class'FSWeap_BattleRifle'
 }

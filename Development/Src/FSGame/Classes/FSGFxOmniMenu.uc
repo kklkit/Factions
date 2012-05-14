@@ -7,7 +7,7 @@ function bool Start(optional bool StartPaused)
 {
 	Super.Start(StartPaused);
 
-	return true;
+	return True;
 }
 
 function OnClose()
@@ -24,7 +24,7 @@ function OnClose()
 
 function CloseMenu(string FrameLabelOnClose)
 {
-	Close(false);
+	Close(False);
 }
 
 function SelectTeam(string TeamName)
@@ -226,6 +226,6 @@ function Invalidate(string Item)
 defaultproperties
 {
 	MovieInfo=SwfMovie'FSFlashAssets.factions_omnimenu'
-	bCaptureMouseInput=true
-	bDisplayMouseCursor=true
+	bCaptureMouseInput=True
+	bDisplayMouseCursor=True
 }

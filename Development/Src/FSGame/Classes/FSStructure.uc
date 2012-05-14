@@ -39,11 +39,11 @@ static function class<FSStructure> GetStructureClass(byte StructureIndex)
 defaultproperties
 {
 	Begin Object Class=DynamicLightEnvironmentComponent Name=StructureLightEnvironmentComponent
-		bSynthesizeSHLight=true
-		bUseBooleanEnvironmentShadowing=false
+		bSynthesizeSHLight=True
+		bUseBooleanEnvironmentShadowing=False
 		ModShadowFadeoutTime=0.75f
-		bIsCharacterLightEnvironment=true
-		bAllowDynamicShadowsOnTranslucency=true
+		bIsCharacterLightEnvironment=True
+		bAllowDynamicShadowsOnTranslucency=True
 	End Object
 	Components.Add(StructureLightEnvironmentComponent)
 
@@ -53,14 +53,14 @@ defaultproperties
 	Components.Add(StructureMeshComponent)
 
 	CollisionType=COLLIDE_BlockAll
-	BlockRigidBody=true
-	bCollideActors=true
-	bBlockActors=true
+	BlockRigidBody=True
+	bCollideActors=True
+	bBlockActors=True
 	RemoteRole=ROLE_SimulatedProxy
 	NetPriority=2.0
-	bAlwaysRelevant=true
-	bReplicateMovement=false
-	bOnlyDirtyReplication=true
+	bAlwaysRelevant=True
+	bReplicateMovement=False
+	bOnlyDirtyReplication=True
 
 	TeamNumber=0
 	Health=1000

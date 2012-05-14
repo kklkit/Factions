@@ -5,7 +5,7 @@ class FSTeamPlayerStart extends UDKTeamPlayerStart;
 
 defaultproperties
 {
-	bStatic=false
-	bNoDelete=false
-	bPrimaryStart=false
+	bStatic=False
+	bNoDelete=False
+	bPrimaryStart=False
 }

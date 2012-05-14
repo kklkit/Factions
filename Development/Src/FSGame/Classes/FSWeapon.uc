@@ -111,5 +111,5 @@ defaultproperties
 	DroppedPickupMesh=PickupMeshComponent
 
 	RespawnTime=1.0
-	bDelayedSpawn=false
+	bDelayedSpawn=False
 }

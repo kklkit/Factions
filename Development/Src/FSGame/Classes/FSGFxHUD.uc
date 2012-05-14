@@ -102,5 +102,5 @@ function UpdateCurrentResearch(string ResearchName, int SecsLeft)
 defaultproperties
 {
 	MovieInfo=SwfMovie'FSFlashAssets.factions_hud'
-	bDisplayWithHudOff=false
+	bDisplayWithHudOff=False
 }

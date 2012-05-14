@@ -56,7 +56,7 @@ simulated function PlayRecoil()
 	InstigatorPawn = FSPawn(Instigator);
 
 	if (InstigatorPawn != None && InstigatorPawn.GunRecoilNode != None)
-		InstigatorPawn.GunRecoilNode.bPlayRecoil = true;
+		InstigatorPawn.GunRecoilNode.bPlayRecoil = True;
 }
 
 simulated function ChangeVisibility(bool bIsVisible)
@@ -84,7 +84,7 @@ defaultproperties
 	End Object
 	Mesh=AttachmentMeshComponent
 
-	bReplicateInstigator=true
+	bReplicateInstigator=True
 
 	MuzzleSocket=Muzzle
 	NetUpdateFrequency=10

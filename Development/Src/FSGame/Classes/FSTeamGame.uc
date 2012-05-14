@@ -37,7 +37,7 @@ function PlayerController Login(string Portal, string Options, const UniqueNetID
 	if (PC.PlayerReplicationInfo.Team == None)
 	{
 		PC.GotoState('Spectating');
-		PC.PlayerReplicationInfo.bIsSpectator = true;
+		PC.PlayerReplicationInfo.bIsSpectator = True;
 	}
 
 	return PC;
@@ -77,16 +77,16 @@ function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
 	if (N >= 0 && N < ETeams.EnumCount)
 	{
 		SetTeam(Other, GameReplicationInfo.Teams[N], bNewTeam);
-		return true;
+		return True;
 	}
 
 	if (N == PSEUDO_TEAM_SPECTATOR)
 	{
 		SetTeam(Other, None, bNewTeam);
-		return true;
+		return True;
 	}
 
-	return false;
+	return False;
 }
 
 function SetTeam(Controller Other, TeamInfo NewTeam, bool bNewTeam)
@@ -113,7 +113,7 @@ function SetTeam(Controller Other, TeamInfo NewTeam, bool bNewTeam)
 	{
 		if (!Other.PlayerReplicationInfo.bIsSpectator)
 		{
-			Other.PlayerReplicationInfo.bIsSpectator = true;
+			Other.PlayerReplicationInfo.bIsSpectator = True;
 			Game.NumSpectators++;
 			Game.NumPlayers--;
 			Other.GotoState('Spectating');
@@ -127,13 +127,13 @@ function SetTeam(Controller Other, TeamInfo NewTeam, bool bNewTeam)
 	{
 		if (Other.PlayerReplicationInfo.bIsSpectator)
 		{
-			Other.PlayerReplicationInfo.bIsSpectator = false;
+			Other.PlayerReplicationInfo.bIsSpectator = False;
 			Game.NumSpectators--;
 			Game.NumPlayers++;
 
 			if (!Game.bDelayedStart)
 			{
-				Game.bRestartLevel = false;
+				Game.bRestartLevel = False;
 				if (Game.bWaitingToStartMatch)
 					Game.StartMatch();
 				else
@@ -205,7 +205,7 @@ defaultproperties
 	GameReplicationInfoClass=class'FSGameReplicationInfo'
 	PlayerReplicationInfoClass=class'FSPlayerReplicationInfo'
 
-	bTeamGame=true
-	bDelayedStart=false
-	bRestartLevel=false
+	bTeamGame=True
+	bDelayedStart=False
+	bRestartLevel=False
 }

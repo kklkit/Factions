@@ -31,30 +31,30 @@ defaultproperties
 		MaxRandForce=30.0
 		RandForceInterval=0.5
 		StopThreshold=100
-		bShouldCutThrustMaxOnImpact=true
+		bShouldCutThrustMaxOnImpact=True
 	End Object
 	SimObj=SimObject
 
 	Seats(0)={(CameraTag=Main)}
 
-	bHomingTarget=true
-	bNoZDampingInAir=false
+	bHomingTarget=True
+	bNoZDampingInAir=False
 
-	bCanStrafe=true
-	bCanFly=true
-	bTurnInPlace=true
-	bFollowLookDir=true
+	bCanStrafe=True
+	bCanFly=True
+	bTurnInPlace=True
+	bFollowLookDir=True
 
-	bEjectPassengersWhenFlipped=false
+	bEjectPassengersWhenFlipped=False
 	UpsideDownDamagePerSec=0.0
 
-	bJostleWhileDriving=true
-	bFloatWhenDriven=true
+	bJostleWhileDriving=True
+	bFloatWhenDriven=True
 
 	AirSpeed=2000.0
 	GroundSpeed=1600.0
 
-	bStayUpright=true
+	bStayUpright=True
 	StayUprightRollResistAngle=5.0
 	StayUprightPitchResistAngle=5.0
 	StayUprightStiffness=1200

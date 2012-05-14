@@ -50,13 +50,13 @@ simulated function NotifyLocalPlayerTeamReceived()
 
 	GFxOmniMenu.Invalidate("team");
 
-	GFxOmniMenu.Close(false);
-	GFxCommanderHUD.Close(false);
+	GFxOmniMenu.Close(False);
+	GFxCommanderHUD.Close(False);
 
 	if (PlayerOwner.PlayerReplicationInfo.Team != None && !GFxHUD.bMovieIsOpen)
 		GFxHUD.Start();
 	else if (PlayerOwner.PlayerReplicationInfo.Team == None && GFxHUD.bMovieIsOpen)
-		GFxHUD.Close(false);
+		GFxHUD.Close(False);
 }
 
 function DrawHud()
@@ -121,21 +121,21 @@ function SpawnStructure(FSPlayerController FSPlayer)
 	local Vector HitLocation, HitNormal, WorldOrigin, WorldDirection;
 
 	Canvas.DeProject(GetMousePosition(), WorldOrigin, WorldDirection);
-	Trace(HitLocation, HitNormal, WorldOrigin + WorldDirection * 65536.0, WorldOrigin, true, , , );
+	Trace(HitLocation, HitNormal, WorldOrigin + WorldDirection * 65536.0, WorldOrigin, True, , , );
 	FSPlayer.ServerSpawnStructure(HitLocation, FSPlayer.PlacingStructureIndex);
-	FSPlayer.bPlacingStructure = false;
+	FSPlayer.bPlacingStructure = False;
 	FSPlayer.PlacingStructureIndex = 0;
 }
 
 function BeginDragging()
 {
-	bDragging = true;
+	bDragging = True;
 	DragStart = GetMousePosition();
 }
 
 function EndDragging()
 {
-	bDragging = false;
+	bDragging = False;
 }
 
 function Vector2D GetMousePosition()
@@ -146,7 +146,7 @@ function Vector2D GetMousePosition()
 exec function ToggleOmniMenu()
 {
 	if (GFxOmniMenu.bMovieIsOpen)
-		GFxOmniMenu.Close(false);
+		GFxOmniMenu.Close(False);
 	else
 		GFxOmniMenu.Start();
 }

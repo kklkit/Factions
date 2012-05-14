@@ -15,7 +15,7 @@ defaultproperties
 	End Object
 
 	Begin Object Class=UDKVehicleSimCar Name=SimObject
-		bClampedFrictionModel=true
+		bClampedFrictionModel=True
 		WheelSuspensionStiffness=15
 		WheelSuspensionDamping=2.0
 		WheelSuspensionBias=0.0
@@ -32,7 +32,7 @@ defaultproperties
 		SkelControlName="L_Tire_1_Cont"
 		WheelRadius=TireRadius
 		SteerFactor=1.0
-		bPoweredWheel=true
+		bPoweredWheel=True
 	End Object
 	Wheels(0)=LWheel1
 
@@ -40,7 +40,7 @@ defaultproperties
 		BoneName="L_Tire_2"
 		SkelControlName="L_Tire_2_Cont"
 		WheelRadius=TireRadius
-		bPoweredWheel=true
+		bPoweredWheel=True
 	End Object
 	Wheels(1)=LWheel2
 
@@ -48,7 +48,7 @@ defaultproperties
 		BoneName="L_Tire_3"
 		SkelControlName="L_Tire_3_Cont"
 		WheelRadius=TireRadius
-		bPoweredWheel=true
+		bPoweredWheel=True
 	End Object
 	Wheels(2)=LWheel3
 
@@ -56,7 +56,7 @@ defaultproperties
 		BoneName="L_Tire_4"
 		SkelControlName="L_Tire_4_Cont"
 		WheelRadius=TireRadius
-		bPoweredWheel=true
+		bPoweredWheel=True
 	End Object
 	Wheels(3)=LWheel4
 
@@ -65,7 +65,7 @@ defaultproperties
 		SkelControlName="R_Tire_1_Cont"
 		WheelRadius=TireRadius
 		SteerFactor=1.0
-		bPoweredWheel=true
+		bPoweredWheel=True
 	End Object
 	Wheels(4)=RWheel1
 
@@ -73,7 +73,7 @@ defaultproperties
 		BoneName="R_Tire_2"
 		SkelControlName="R_Tire_2_Cont"
 		WheelRadius=TireRadius
-		bPoweredWheel=true
+		bPoweredWheel=True
 	End Object
 	Wheels(5)=RWheel2
 
@@ -81,7 +81,7 @@ defaultproperties
 		BoneName="R_Tire_3"
 		SkelControlName="R_Tire_3_Cont"
 		WheelRadius=TireRadius
-		bPoweredWheel=true
+		bPoweredWheel=True
 	End Object
 	Wheels(6)=RWheel3
 
@@ -89,7 +89,7 @@ defaultproperties
 		BoneName="R_Tire_4"
 		SkelControlName="R_Tire_4_Cont"
 		WheelRadius=TireRadius
-		bPoweredWheel=true
+		bPoweredWheel=True
 	End Object
 	Wheels(7)=RWheel4
 

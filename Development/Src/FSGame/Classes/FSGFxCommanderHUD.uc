@@ -25,6 +25,6 @@ function TickHUD()
 defaultproperties
 {
 	MovieInfo=SwfMovie'FSFlashAssets.factions_commander_hud'
-	bDisplayWithHudOff=false
-	bDisplayMouseCursor=true
+	bDisplayWithHudOff=False
+	bDisplayMouseCursor=True
 }

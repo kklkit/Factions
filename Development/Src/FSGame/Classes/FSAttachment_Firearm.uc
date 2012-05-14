@@ -13,14 +13,14 @@ simulated function FirstPersonFireEffects(Weapon PawnWeapon, Vector HitLocation)
 	Super.FirstPersonFireEffects(PawnWeapon, HitLocation);
 
 	EffectLocation = GetEffectLocation();
-	SpawnBeam(EffectLocation, HitLocation, true);
+	SpawnBeam(EffectLocation, HitLocation, True);
 }
 
 simulated function ThirdPersonFireEffects(Vector HitLocation)
 {
 	Super.ThirdPersonFireEffects(HitLocation);
 
-	SpawnBeam(GetEffectLocation(), HitLocation, false);
+	SpawnBeam(GetEffectLocation(), HitLocation, False);
 }
 
 simulated function SpawnBeam(Vector Start, Vector End, bool bFirstPerson)
@@ -35,7 +35,7 @@ simulated function SpawnBeam(Vector Start, Vector End, bool bFirstPerson)
 	    	return;
 
 		End = Start + Vector(Instigator.Controller.Rotation) * class'FSWeap_Firearm'.default.WeaponRange;
-		HitActor = Instigator.Trace(HitLocation, HitNormal, End, Start, true, vect(0,0,0), , TRACEFLAG_Bullet);
+		HitActor = Instigator.Trace(HitLocation, HitNormal, End, Start, True, vect(0,0,0), , TRACEFLAG_Bullet);
 		if (HitActor != None)
 			End = HitLocation;
 	}
