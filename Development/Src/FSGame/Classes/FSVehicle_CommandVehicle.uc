@@ -4,7 +4,7 @@
 class FSVehicle_CommandVehicle extends FSVehicle
 	placeable;
 
-const TireRadius=100.f;
+const TireRadius=80.f;
 
 defaultproperties
 {
@@ -95,7 +95,7 @@ defaultproperties
 
 	Seats(0)={(CameraTag=Main_Root)}
 
-	DrawScale=3.f
+	DrawScale=2.6
 
 	AirSpeed=1150
 }
