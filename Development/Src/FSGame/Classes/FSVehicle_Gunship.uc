@@ -1,4 +1,5 @@
-class FSVehicle_Gunship extends FSVehicle;
+class FSVehicle_Gunship extends FSVehicle
+	placeable;
 
 defaultproperties
 {
