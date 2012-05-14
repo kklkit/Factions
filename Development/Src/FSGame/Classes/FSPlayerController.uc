@@ -140,6 +140,11 @@ reliable server function ServerSpawnStructure(Vector StructureLocation)
 	PlacingStructureIndex = 0;
 }
 
+exec function ReloadWeapon()
+{
+	FSWeapon(Pawn.Weapon).ServerReload();
+}
+
 exec function BuildVehicle()
 {
 	RequestVehicle();

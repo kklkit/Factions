@@ -7,6 +7,12 @@ var() class<Inventory> AmmoType;
 var() int AmmoCount;
 var() int AmmoCountMax;
 
+replication
+{
+	if (bNetDirty)
+		AmmoType, AmmoCount, AmmoCountMax;
+}
+
 function int AddAmmo(int Amount)
 {
 	AmmoCount = Clamp(AmmoCount + Amount, 0, AmmoCountMax);

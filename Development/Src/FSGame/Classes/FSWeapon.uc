@@ -76,11 +76,6 @@ simulated function TimeWeaponEquipping()
 	Super.TimeWeaponEquipping();
 }
 
-exec function ReloadWeapon()
-{
-	ServerReload();
-}
-
 reliable server function ServerReload()
 {
 	local FSMagazine M;
