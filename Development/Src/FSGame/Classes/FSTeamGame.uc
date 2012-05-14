@@ -168,17 +168,17 @@ function byte PickTeam(byte Current, Controller C)
 function float RatePlayerStart(PlayerStart P, byte Team, Controller Player)
 {
 	if (Player == None || (Player.PlayerReplicationInfo.Team == None && P.bPrimaryStart))
-		return 1.f;
+		return 1.0;
 
 	if (UDKTeamPlayerStart(P) != None && Team == UDKTeamPlayerStart(P).TeamNumber)
 	{
 		if (Player.Pawn != None)
 			return (FSMapInfo(WorldInfo.GetMapInfo()).MapRadius * 2) - VSize(Player.Pawn.Location - P.Location);
 		else
-			return 1.f;
+			return 1.0;
 	}
 
-	return -1.f;
+	return -1.0;
 }
 
 function RestartPlayer(Controller NewPlayer)

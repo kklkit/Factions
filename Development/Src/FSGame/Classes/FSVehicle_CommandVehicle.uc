@@ -4,7 +4,7 @@
 class FSVehicle_CommandVehicle extends FSVehicle
 	placeable;
 
-const TireRadius=80.f;
+const TireRadius=80.0;
 
 defaultproperties
 {

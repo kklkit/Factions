@@ -1,7 +1,7 @@
 class FSVehicle_Tank extends FSVehicle
 	placeable;
 
-const WheelRadius=45.f;
+const WheelRadius=45.0;
 
 defaultproperties
 {
@@ -94,5 +94,5 @@ defaultproperties
 	Wheels(7)=RWheel4
 
 	Seats(0)={(CameraTag=Main)}
-	DrawScale=2.f
+	DrawScale=2.0
 }
