@@ -27,6 +27,6 @@ defaultproperties
 		StaticMesh=StaticMesh'FSAssets.Structures.VehiclePad'
 	End Object
 
-	VehicleClass=class'FSVehicle_Jeep'
+	VehicleClass=class'FSVehicle_Tank'
 	VehicleCost=100
 }
