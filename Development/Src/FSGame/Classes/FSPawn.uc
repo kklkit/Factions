@@ -75,10 +75,25 @@ simulated function NotifyTeamChanged()
 
 simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
 {
-	Super.PlayDying(DamageType, HitLoc);
-
 	CurrentWeaponAttachmentClass = None;
 	WeaponAttachmentChanged();
+
+	SetPhysics(PHYS_RigidBody);
+
+	PreRagdollCollisionComponent = CollisionComponent;
+	CollisionComponent = Mesh;
+	
+	Mesh.PhysicsWeight = 1.0;
+	Mesh.bUpdateJointsFromAnimation = true;
+	Mesh.SetRBChannel(RBCC_Pawn);
+	Mesh.SetRBCollidesWithChannel(RBCC_Default, true);
+	Mesh.SetRBCollidesWithChannel(RBCC_Pawn, true);
+	Mesh.SetRBCollidesWithChannel(RBCC_Vehicle, true);
+	Mesh.SetRBCollidesWithChannel(RBCC_Untitled3, false);
+	Mesh.SetRBCollidesWithChannel(RBCC_BlockingVolume, true);
+	Mesh.PhysicsAssetInstance.SetAllBodiesFixed(false);
+
+	Super.PlayDying(DamageType, HitLoc);
 }
 
 simulated function WeaponFired(Weapon InWeapon, bool bViaReplication, optional vector HitLocation)
@@ -171,6 +186,10 @@ defaultproperties
 		PhysicsAsset=PhysicsAsset'CH_AnimCorrupt.Mesh.SK_CH_Corrupt_Male_Physics'
 		AnimSets(0)=AnimSet'CH_AnimHuman.Anims.K_AnimHuman_BaseMale'
 		LightEnvironment=PawnLightEnvironmentComponent
+		BlockRigidBody=true
+		bHasPhysicsAssetInstance=true
+		RBChannel=RBCC_Untitled3
+		RBCollideWithChannels=(Untitled3=true)
 	End Object
 	Mesh=PawnMeshComponent
 	Components.Add(PawnMeshComponent)
