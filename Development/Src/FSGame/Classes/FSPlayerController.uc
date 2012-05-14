@@ -130,14 +130,12 @@ reliable server function RequestVehicle()
 		VF.BuildVehicle(FSPawn(Pawn));
 }
 
-reliable server function ServerSpawnStructure(Vector StructureLocation)
+reliable server function ServerSpawnStructure(Vector StructureLocation, byte StructureIndex)
 {
 	local FSStructure S;
 
-	S = Spawn(class'FSStructure'.static.GetStructureClass(PlacingStructureIndex), , , StructureLocation, rot(0, 0, 0), , );
+	S = Spawn(class'FSStructure'.static.GetStructureClass(StructureIndex), , , StructureLocation, rot(0, 0, 0), , );
 	S.TeamNumber = PlayerReplicationInfo.Team.TeamIndex;
-	bPlacingStructure = false;
-	PlacingStructureIndex = 0;
 }
 
 exec function ReloadWeapon()

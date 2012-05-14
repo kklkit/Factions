@@ -122,7 +122,9 @@ function SpawnStructure(FSPlayerController FSPlayer)
 
 	Canvas.DeProject(GetMousePosition(), WorldOrigin, WorldDirection);
 	Trace(HitLocation, HitNormal, WorldOrigin + WorldDirection * 65536.0, WorldOrigin, true, , , );
-	FSPlayer.ServerSpawnStructure(HitLocation);
+	FSPlayer.ServerSpawnStructure(HitLocation, FSPlayer.PlacingStructureIndex);
+	FSPlayer.bPlacingStructure = false;
+	FSPlayer.PlacingStructureIndex = 0;
 }
 
 function BeginDragging()

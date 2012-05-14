@@ -31,6 +31,8 @@ static function class<FSStructure> GetStructureClass(byte StructureIndex)
 		return class'FSStruct_Barracks';
 	case 2:
 		return class'FSStruct_VehicleFactory';
+	default:
+		return None;
 	}
 }
 
