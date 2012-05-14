@@ -152,6 +152,6 @@ exec function ToggleOmniMenu()
 defaultproperties
 {
 	MinimapMaterial=Material'FSAssets.HUD.minimap_render'
-	MinimapPadding=(X=10,Y=55)
+	MinimapPadding=(X=10,Y=50)
 	LineColor=(A=255,B=0,G=255,R=0)
 }

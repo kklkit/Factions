@@ -156,7 +156,7 @@ defaultproperties
 	InputClass=class'FSGame.FSPlayerInput'
 	bPlacingStructure=false
 	PlacingStructureIndex=0
-	CommanderMoveSpeed=10
+	CommanderMoveSpeed=30
 	SpectatorCameraSpeed=5000.0
 
 	MinimapCaptureRotation=(Pitch=-16384,Yaw=-16384,Roll=0)
