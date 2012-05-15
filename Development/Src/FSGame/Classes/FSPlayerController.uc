@@ -4,9 +4,12 @@
 class FSPlayerController extends UDKPlayerController;
 
 // Commander
-var byte CommanderMoveSpeed;
-var bool bPlacingStructure;
-var byte PlacingStructureIndex;
+var() byte CommandViewMoveSpeed;
+
+// Structure placement: SelectStructure -> FSHUD.SpawnStructure -> ServerSpawnStructure
+// The spawn structure call is in the HUD because Canvas.DeProject is used to get the structure coordinates
+var bool bPlaceStructure; // True when the player has requested to place the structure
+var class<FSStructure> PlacingStructureClass; // Structure class selected to be placed
 
 // Minimap
 var SceneCapture2DComponent MinimapCaptureComponent;
@@ -20,49 +23,49 @@ simulated state Commanding
 	{
 		local Vector ViewLocation;
 
+		// Set commander view location and rotation
 		ViewLocation.X = Pawn.Location.X - 2048;
 		ViewLocation.Y = Pawn.Location.Y;
 		ViewLocation.Z = Pawn.Location.Z + 2048;
-
 		SetLocation(ViewLocation);
 		SetRotation(Rotator(Pawn.Location - ViewLocation));
 
 		FSHUD(myHUD).GFxCommanderHUD.Start();
+
+		Super.BeginState(PreviousStateName);
 	}
 
 	simulated function EndState(name NextStateName)
 	{
 		FSHUD(myHUD).GFxCommanderHUD.Close(False);
+
+		Super.EndState(NextStateName);
 	}
 
 	simulated function GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
 	{
+		// Set view point to controller location and rotation
 		out_Location = Location;
 		out_Rotation = Rotation;
 	}
 
 	function PlayerMove(float DeltaTime)
 	{
-		local Vector L;
+		local Vector NextLocation;
 
-		if (Pawn == None)
-			GotoState('Dead');
-		else
-		{
-			L = Location;
+		NextLocation = Location;
 
-			if (PlayerInput.aForward > 0)
-				L.X += CommanderMoveSpeed;
-			else if (PlayerInput.aForward < 0)
-				L.X -= CommanderMoveSpeed;
+		if (PlayerInput.aForward > 0)
+			NextLocation.X += CommandViewMoveSpeed;
+		else if (PlayerInput.aForward < 0)
+			NextLocation.X -= CommandViewMoveSpeed;
 
-			if (PlayerInput.aStrafe > 0)
-				L.Y += CommanderMoveSpeed;
-			else if (PlayerInput.aStrafe < 0)
-				L.Y -= CommanderMoveSpeed;
+		if (PlayerInput.aStrafe > 0)
+			NextLocation.Y += CommandViewMoveSpeed;
+		else if (PlayerInput.aStrafe < 0)
+			NextLocation.Y -= CommandViewMoveSpeed;
 
-			SetLocation(L);
-		}
+		SetLocation(NextLocation);
 	}
 
 	exec function StartFire(optional byte FireModeNum)
@@ -83,14 +86,17 @@ simulated state Commanding
 
 	exec function SelectStructure(byte StructureIndex)
 	{
-		PlacingStructureIndex = StructureIndex;
-		FSHUD(myHUD).StartPreviewStructure(StructureIndex);
+		local class<FSStructure> StructureClass;
+
+		StructureClass = class'FSStructure'.static.GetClass(StructureIndex);
+		PlacingStructureClass = StructureClass;
+		FSHUD(myHUD).StartPreviewStructure(StructureClass);
 	}
 
 	exec function PlaceStructure()
 	{
-		if (PlacingStructureIndex != 0)
-			bPlacingStructure = True;
+		if (PlacingStructureClass != None)
+			bPlaceStructure = True;
 	}
 }
 
@@ -131,11 +137,11 @@ reliable server function RequestVehicle()
 		VF.BuildVehicle(FSPawn(Pawn));
 }
 
-reliable server function ServerSpawnStructure(Vector StructureLocation, byte StructureIndex)
+reliable server function ServerSpawnStructure(Vector StructureLocation, class<FSStructure> StructureClass)
 {
 	local FSStructure S;
 
-	S = Spawn(class'FSStructure'.static.GetStructureClass(StructureIndex), , , StructureLocation, rot(0, 0, 0), , );
+	S = Spawn(StructureClass,,, StructureLocation, rot(0, 0, 0),,);
 	S.TeamNumber = PlayerReplicationInfo.Team.TeamIndex;
 }
 
@@ -158,9 +164,8 @@ exec function ToggleCommandView()
 defaultproperties
 {
 	InputClass=class'FSGame.FSPlayerInput'
-	bPlacingStructure=False
-	PlacingStructureIndex=0
-	CommanderMoveSpeed=30
+	bPlaceStructure=False
+	CommandViewMoveSpeed=30
 	SpectatorCameraSpeed=5000.0
 
 	MinimapCaptureRotation=(Pitch=-16384,Yaw=-16384,Roll=0)

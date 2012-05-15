@@ -7,14 +7,18 @@ var GFxObject StatusText;
 
 function TickHUD()
 {
+	local FSPlayerController PC;
+
 	if (!bMovieIsOpen)
 		return;
+
+	PC = FSPlayerController(GetPC());
 
 	// Update status text
 	if (StatusText != None)
 	{
-		if (FSPlayerController(GetPC()).PlacingStructureIndex != 0)
-			StatusText.SetText("Placing:" @ class'FSStructure'.static.GetStructureClass(FSPlayerController(GetPC()).PlacingStructureIndex));
+		if (PC.PlacingStructureClass != None)
+			StatusText.SetText("Placing:" @ PC.PlacingStructureClass);
 		else
 			StatusText.SetText("No structure selected");
 	}

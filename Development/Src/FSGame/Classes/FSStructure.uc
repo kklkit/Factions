@@ -10,20 +10,10 @@ var() byte TeamNumber;
 var() int Health;
 var() int HealthMax;
 
-simulated function byte ScriptGetTeamNum()
-{
-	return TeamNumber;
-}
-
-event TakeDamage(int DamageAmount, Controller EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional TraceHitInfo HitInfo, optional Actor DamageCauser)
-{
-	Super.TakeDamage(DamageAmount, EventInstigator, HitLocation, Momentum, DamageType, HitInfo, DamageCauser);
-	Health -= DamageAmount;
-	if (Health <= 0)
-		Destroy();
-}
-
-static function class<FSStructure> GetStructureClass(byte StructureIndex)
+/**
+ * Returns the class for the given structure index.
+ */
+static function class<FSStructure> GetClass(byte StructureIndex)
 {
 	switch (StructureIndex)
 	{
@@ -35,16 +25,30 @@ static function class<FSStructure> GetStructureClass(byte StructureIndex)
 		return None;
 	}
 }
+
 //TODO: Change these classes with something semitransparent or w/e
-static function class<FSStructurePreview> GetPreviewClass(byte StructureIndex)
+static function class<FSStructurePreview> GetPreviewClass(class<FSStructure> StructureClass)
 {
-	switch (StructureIndex)
+	switch (StructureClass)
 	{
-	case 1:
+	case class'FSStruct_Barracks':
 		return class'FSStructurePreview'; 
-	case 2:
+	case class'FSStruct_VehicleFactory':
 		return class'FSStructurePreview';
 	}
+}
+
+simulated function byte ScriptGetTeamNum()
+{
+	return TeamNumber;
+}
+
+event TakeDamage(int DamageAmount, Controller EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional TraceHitInfo HitInfo, optional Actor DamageCauser)
+{
+	Super.TakeDamage(DamageAmount, EventInstigator, HitLocation, Momentum, DamageType, HitInfo, DamageCauser);
+	Health -= DamageAmount;
+	if (Health <= 0)
+		Destroy();
 }
 
 defaultproperties
