@@ -175,6 +175,12 @@ defaultproperties
 {
 	Components.Remove(Sprite)
 
+	Begin Object Name=CollisionCylinder
+		CollisionRadius=+0021.000000
+		CollisionHeight=+0044.000000
+	End Object
+	CylinderComponent=CollisionCylinder
+
 	Begin Object Class=DynamicLightEnvironmentComponent Name=PawnLightEnvironmentComponent
 	End Object
 	Components.Add(PawnLightEnvironmentComponent)
@@ -190,9 +196,12 @@ defaultproperties
 		bHasPhysicsAssetInstance=True
 		RBChannel=RBCC_Untitled3
 		RBCollideWithChannels=(Untitled3=True)
+		Scale=1.075
 	End Object
 	Mesh=PawnMeshComponent
 	Components.Add(PawnMeshComponent)
+
+	BaseTranslationOffset=6.0
 
 	InventoryManagerClass=class'FSInventoryManager'
 
