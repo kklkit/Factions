@@ -21,8 +21,8 @@ defaultproperties
 		ChassisTorqueScale=0.0
 		StopThreshold=20
 		EngineDamping=2
-		InsideTrackTorqueFactor=0.4
-		TurnInPlaceThrottle=0.3
+		InsideTrackTorqueFactor=0.45
+		TurnInPlaceThrottle=0.1
 		TurnMaxGripReduction=0.980
 		TurnGripScaleRate=0.8
 		MaxEngineTorque=3800
@@ -32,6 +32,7 @@ defaultproperties
 	Begin Object Class=UDKVehicleWheel Name=LWheel1
 		BoneName="L_Wheel_1"
 		SkelControlName="L_Wheel_1_Cont"
+		SteerFactor=1.0
 		WheelRadius=WheelRadius
 		Side=SIDE_Left
 	End Object
@@ -40,6 +41,7 @@ defaultproperties
 	Begin Object Class=UDKVehicleWheel Name=LWheel2
 		BoneName="L_Wheel_2"
 		SkelControlName="L_Wheel_2_Cont"
+		SteerFactor=1.0
 		WheelRadius=WheelRadius
 		Side=SIDE_Left
 	End Object
@@ -48,6 +50,7 @@ defaultproperties
 	Begin Object Class=UDKVehicleWheel Name=LWheel3
 		BoneName="L_Wheel_3"
 		SkelControlName="L_Wheel_3_Cont"
+		SteerFactor=1.0
 		WheelRadius=WheelRadius
 		Side=SIDE_Left
 	End Object
@@ -56,6 +59,7 @@ defaultproperties
 	Begin Object Class=UDKVehicleWheel Name=LWheel4
 		BoneName="L_Wheel_4"
 		SkelControlName="L_Wheel_4_Cont"
+		SteerFactor=1.0
 		WheelRadius=WheelRadius
 		Side=SIDE_Left
 	End Object
@@ -64,6 +68,7 @@ defaultproperties
 	Begin Object Class=UDKVehicleWheel Name=RWheel1
 		BoneName="R_Wheel_1"
 		SkelControlName="R_Wheel_1_Cont"
+		SteerFactor=1.0
 		WheelRadius=WheelRadius
 		Side=SIDE_Right
 	End Object
@@ -72,6 +77,7 @@ defaultproperties
 	Begin Object Class=UDKVehicleWheel Name=RWheel2
 		BoneName="R_Wheel_2"
 		SkelControlName="R_Wheel_2_Cont"
+		SteerFactor=1.0
 		WheelRadius=WheelRadius
 		Side=SIDE_Right
 	End Object
@@ -80,6 +86,7 @@ defaultproperties
 	Begin Object Class=UDKVehicleWheel Name=RWheel3
 		BoneName="R_Wheel_3"
 		SkelControlName="R_Wheel_3_Cont"
+		SteerFactor=1.0
 		WheelRadius=WheelRadius
 		Side=SIDE_Right
 	End Object
@@ -88,6 +95,7 @@ defaultproperties
 	Begin Object Class=UDKVehicleWheel Name=RWheel4
 		BoneName="R_Wheel_4"
 		SkelControlName="R_Wheel_4_Cont"
+		SteerFactor=1.0
 		WheelRadius=WheelRadius
 		Side=SIDE_Right
 	End Object
