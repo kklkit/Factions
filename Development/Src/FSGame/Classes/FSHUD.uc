@@ -127,6 +127,7 @@ reliable client function StartPreviewStructure(byte StructureIndex)
 		PreviewBuilding.Destroy();
 	PreviewBuilding = Spawn(class'FSStructure'.static.GetPreviewClass(StructureIndex),,,,rot(0, 0, 0),,true);
 }
+
 reliable client function UpdatePreviewStructure()
 {
 	local Vector HitLocation, HitNormal, WorldOrigin, WorldDirection;
@@ -143,6 +144,8 @@ function SpawnStructure(FSPlayerController FSPlayer)
 	{
 		PreviewBuilding.Destroy();
 		FSPlayer.ServerSpawnStructure(PreviewBuilding.Location, FSPlayer.PlacingStructureIndex);
+		FSPlayer.bPlacingStructure = False;
+		FSPlayer.PlacingStructureIndex = 0;
 	}
 }
 
