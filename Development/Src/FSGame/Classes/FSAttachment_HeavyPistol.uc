@@ -1,3 +1,6 @@
+/**
+ * Copyright 2012 Factions Team. All Rights Reserved.
+ */
 class FSAttachment_HeavyPistol extends FSAttachment_Firearm;
 
 defaultproperties
