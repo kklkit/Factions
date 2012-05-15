@@ -4,45 +4,41 @@
 class FSPlayerController extends UDKPlayerController;
 
 // Commander
-var() byte CommandViewMoveSpeed;
-
-// Structure placement: SelectStructure -> FSHUD.SpawnStructure -> ServerSpawnStructure
-// The spawn structure call is in the HUD because Canvas.DeProject is used to get the structure coordinates
-var bool bPlaceStructure; // True when the player has requested to place the structure
+var() float CommanderCameraSpeed;
 var class<FSStructure> PlacingStructureClass; // Structure class selected to be placed
+var bool bPlaceStructure; // True when the player has requested to place the structure
 
 // Minimap
 var SceneCapture2DComponent MinimapCaptureComponent;
-var Vector MinimapCapturePosition;
+var Vector MinimapCaptureLocation;
 var Rotator MinimapCaptureRotation;
 const MinimapCaptureFOV=90;
 
 simulated state Commanding
 {
-	simulated function BeginState(name PreviousStateName)
+	simulated event BeginState(name PreviousStateName)
 	{
 		local Vector ViewLocation;
 
-		// Set commander view location and rotation
-		ViewLocation.X = Pawn.Location.X - 2048;
-		ViewLocation.Y = Pawn.Location.Y;
-		ViewLocation.Z = Pawn.Location.Z + 2048;
-		SetLocation(ViewLocation);
-		SetRotation(Rotator(Pawn.Location - ViewLocation));
+		if (Role == ROLE_Authority)
+		{
+			// Set commander view location and rotation
+			ViewLocation.X = Pawn.Location.X - 2048;
+			ViewLocation.Y = Pawn.Location.Y;
+			ViewLocation.Z = Pawn.Location.Z + 2048;
+			SetLocation(ViewLocation);
+			SetRotation(Rotator(Pawn.Location - ViewLocation));
+		}
 
 		FSHUD(myHUD).GFxCommanderHUD.Start();
-
-		Super.BeginState(PreviousStateName);
 	}
 
-	simulated function EndState(name NextStateName)
+	simulated event EndState(name NextStateName)
 	{
 		FSHUD(myHUD).GFxCommanderHUD.Close(False);
-
-		Super.EndState(NextStateName);
 	}
 
-	simulated function GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
+	simulated event GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
 	{
 		// Set view point to controller location and rotation
 		out_Location = Location;
@@ -51,21 +47,21 @@ simulated state Commanding
 
 	function PlayerMove(float DeltaTime)
 	{
-		local Vector NextLocation;
+		local Vector MoveAmount;
 
-		NextLocation = Location;
+		Super.PlayerMove(DeltaTime);
 
 		if (PlayerInput.aForward > 0)
-			NextLocation.X += CommandViewMoveSpeed;
+			MoveAmount.X = CommanderCameraSpeed;
 		else if (PlayerInput.aForward < 0)
-			NextLocation.X -= CommandViewMoveSpeed;
+			MoveAmount.X = -CommanderCameraSpeed;
 
 		if (PlayerInput.aStrafe > 0)
-			NextLocation.Y += CommandViewMoveSpeed;
+			MoveAmount.Y = CommanderCameraSpeed;
 		else if (PlayerInput.aStrafe < 0)
-			NextLocation.Y -= CommandViewMoveSpeed;
+			MoveAmount.Y = -CommanderCameraSpeed;
 
-		SetLocation(NextLocation);
+		Move(MoveAmount);
 	}
 
 	exec function StartFire(optional byte FireModeNum)
@@ -114,9 +110,9 @@ simulated function PostBeginPlay()
 		MinimapCaptureComponent.bUpdateMatrices = False;
 		AttachComponent(MinimapCaptureComponent);
 
-		MinimapCapturePosition.X = MI.MapCenter.X;
-		MinimapCapturePosition.Y = MI.MapCenter.Y;
-		MinimapCapturePosition.Z = MI.MapRadius;
+		MinimapCaptureLocation.X = MI.MapCenter.X;
+		MinimapCaptureLocation.Y = MI.MapCenter.Y;
+		MinimapCaptureLocation.Z = MI.MapRadius;
 	}
 }
 
@@ -124,10 +120,10 @@ function PlayerTick(float DeltaTime)
 {
 	Super.PlayerTick(DeltaTime);
 
-	MinimapCaptureComponent.SetView(MinimapCapturePosition, MinimapCaptureRotation);
+	MinimapCaptureComponent.SetView(MinimapCaptureLocation, MinimapCaptureRotation);
 }
 
-reliable server function RequestVehicle()
+reliable server function ServerSpawnVehicle()
 {
 	local FSStruct_VehicleFactory VF;
 
@@ -137,7 +133,7 @@ reliable server function RequestVehicle()
 		VF.BuildVehicle(FSPawn(Pawn));
 }
 
-reliable server function ServerSpawnStructure(Vector StructureLocation, class<FSStructure> StructureClass)
+reliable server function ServerSpawnStructure(class<FSStructure> StructureClass, Vector StructureLocation)
 {
 	local FSStructure S;
 
@@ -152,7 +148,7 @@ exec function ReloadWeapon()
 
 exec function BuildVehicle()
 {
-	RequestVehicle();
+	ServerSpawnVehicle();
 }
 
 exec function ToggleCommandView()
@@ -165,8 +161,7 @@ defaultproperties
 {
 	InputClass=class'FSGame.FSPlayerInput'
 	bPlaceStructure=False
-	CommandViewMoveSpeed=30
+	CommanderCameraSpeed=30.0
 	SpectatorCameraSpeed=5000.0
-
 	MinimapCaptureRotation=(Pitch=-16384,Yaw=-16384,Roll=0)
 }
