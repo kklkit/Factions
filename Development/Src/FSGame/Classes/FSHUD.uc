@@ -142,7 +142,7 @@ function SpawnStructure(FSPlayerController FSPlayer)
 	if (PreviewBuilding.CanBuildHere())
 	{
 		PreviewBuilding.Destroy();
-		FSPlayer.ServerSpawnStructure(PreviewBuilding.Location);
+		FSPlayer.ServerSpawnStructure(PreviewBuilding.Location, FSPlayer.PlacingStructureIndex);
 	}
 }
 
