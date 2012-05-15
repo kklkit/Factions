@@ -35,6 +35,17 @@ static function class<FSStructure> GetStructureClass(byte StructureIndex)
 		return None;
 	}
 }
+//TODO: Change these classes with something semitransparent or w/e
+static function class<FSStructurePreview> GetPreviewClass(byte StructureIndex)
+{
+	switch (StructureIndex)
+	{
+	case 1:
+		return class'FSStructurePreview'; 
+	case 2:
+		return class'FSStructurePreview';
+	}
+}
 
 defaultproperties
 {

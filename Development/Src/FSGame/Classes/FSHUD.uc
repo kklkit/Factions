@@ -13,6 +13,8 @@ var FSGFxCommanderHUD GFxCommanderHUD;
 var Material MinimapMaterial;
 var Vector2D MinimapPadding;
 
+var FSStructurePreview PreviewBuilding;
+
 var float MapSize;
 var Color LineColor;
 
@@ -69,6 +71,8 @@ function DrawHud()
 	if (FSPlayer != None)
 	{
 		DrawMinimap();
+		if (FSPlayer.PlacingStructureIndex != 0)
+			UpdatePreviewStructure();
 
 		if (bDragging)
 			DrawSelectionBox();
@@ -116,15 +120,30 @@ function DrawSelectionBox()
 	Canvas.DrawBox(Max(DragStart.X, MousePosition.X) - Min(DragStart.X, MousePosition.X), Max(DragStart.Y, MousePosition.Y) - Min(DragStart.Y, MousePosition.Y));
 }
 
-function SpawnStructure(FSPlayerController FSPlayer)
+reliable client function StartPreviewStructure(byte StructureIndex)
+{
+	// If we are already placing a building, kill it
+	if (PreviewBuilding != none)
+		PreviewBuilding.Destroy();
+	PreviewBuilding = Spawn(class'FSStructure'.static.GetPreviewClass(StructureIndex),,,,rot(0, 0, 0),,true);
+}
+reliable client function UpdatePreviewStructure()
 {
 	local Vector HitLocation, HitNormal, WorldOrigin, WorldDirection;
 
 	Canvas.DeProject(GetMousePosition(), WorldOrigin, WorldDirection);
-	Trace(HitLocation, HitNormal, WorldOrigin + WorldDirection * 65536.0, WorldOrigin, True, , , );
-	FSPlayer.ServerSpawnStructure(HitLocation, FSPlayer.PlacingStructureIndex);
-	FSPlayer.bPlacingStructure = False;
-	FSPlayer.PlacingStructureIndex = 0;
+	Trace(HitLocation, HitNormal, WorldOrigin + WorldDirection * 65536.0, WorldOrigin, False, , , );
+	
+	PreviewBuilding.SetLocation(HitLocation);
+}
+
+function SpawnStructure(FSPlayerController FSPlayer)
+{
+	if (PreviewBuilding.CanBuildHere())
+	{
+		PreviewBuilding.Destroy();
+		FSPlayer.ServerSpawnStructure(PreviewBuilding.Location);
+	}
 }
 
 function BeginDragging()

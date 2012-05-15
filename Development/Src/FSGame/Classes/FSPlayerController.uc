@@ -84,6 +84,7 @@ simulated state Commanding
 	exec function SelectStructure(byte StructureIndex)
 	{
 		PlacingStructureIndex = StructureIndex;
+		FSHUD(myHUD).StartPreviewStructure(StructureIndex);
 	}
 
 	exec function PlaceStructure()
