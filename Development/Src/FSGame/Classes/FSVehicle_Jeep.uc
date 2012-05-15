@@ -4,7 +4,7 @@
 class FSVehicle_Jeep extends FSVehicle
 	placeable;
 
-const TireRadius=75.0;
+const TireRadius=60.0;
 
 defaultproperties
 {
@@ -62,8 +62,6 @@ defaultproperties
 	Wheels(3)=BRWheel
 
 	Seats(0)={(CameraTag=Main_Root)}
-
-	DrawScale=1.5
 
 	AirSpeed=2000
 }
