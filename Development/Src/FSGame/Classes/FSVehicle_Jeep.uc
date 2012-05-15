@@ -1,16 +1,17 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSVehicle_Jeep extends FSVehicle;
+class FSVehicle_Jeep extends FSVehicle
+	placeable;
 
-const TireRadius=46.0;
+const TireRadius=75.0;
 
 defaultproperties
 {
 	Begin Object Name=SVehicleMesh
-		SkeletalMesh=SkeletalMesh'VH_Jeep.Mesh.SK_VH_Jeep'
-		AnimTreeTemplate=AnimTree'VH_Jeep.Anims.AT_VH_Jeep'
-		PhysicsAsset=PhysicsAsset'VH_Jeep.Mesh.SK_VH_Jeep_Physics'
+		SkeletalMesh=SkeletalMesh'VH_JeepMash.Mesh.SK_VH_JeepMash'
+		AnimTreeTemplate=AnimTree'VH_JeepMash.Anims.AT_VH_JeepMash'
+		PhysicsAsset=PhysicsAsset'VH_JeepMash.Mesh.SK_VH_JeepMash_Physics'
 	End Object
 
 	Begin Object Class=UDKVehicleSimCar Name=SimObject
