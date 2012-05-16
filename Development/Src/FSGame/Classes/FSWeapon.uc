@@ -104,11 +104,6 @@ function int GetDefaultMagazines()
 
 defaultproperties
 {
-	Begin Object Class=SkeletalMeshComponent Name=PickupMeshComponent
-	End Object
-	PickupFactoryMesh=PickupMeshComponent
-	DroppedPickupMesh=PickupMeshComponent
-
 	RespawnTime=1.0
 	bDelayedSpawn=False
 	bDropOnDeath=False
