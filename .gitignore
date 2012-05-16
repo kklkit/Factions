@@ -38,7 +38,8 @@ UDKGame/Config/DefaultInput.ini
 UDKGame/Config/DefaultInputDefaults.ini
 UDKGame/Config/DefaultL*
 UDKGame/Config/DefaultU*
-UDKGame/Config/DefaultW*
+UDKGame/Config/DefaultWeapon.ini
+UDKGame/Config/DefaultWeaponDefaults.ini
 UDKGame/Config/UDK*
 UDKGame/CookedMac/
 UDKGame/Localization/INT/Castle*
