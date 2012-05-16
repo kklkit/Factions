@@ -14,7 +14,9 @@ function TickHUD()
 
 	PC = FSPlayerController(GetPC());
 
-	// Update status text
+	if (StatusText == None)
+		StatusText = GetVariableObject("_root.statusText");
+
 	if (StatusText != None)
 	{
 		if (PC.PlacingStructureClass != None)
@@ -22,8 +24,6 @@ function TickHUD()
 		else
 			StatusText.SetText("No structure selected");
 	}
-	else
-		StatusText = GetVariableObject("_root.statusText");
 }
 
 defaultproperties

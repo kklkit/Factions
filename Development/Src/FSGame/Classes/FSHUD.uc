@@ -96,7 +96,7 @@ function DrawMinimap()
 	Canvas.SetDrawColor(0, 255, 0);
 	foreach DynamicActors(class'Actor', LevelActor)
 	{
-		if (FSActorInterface(LevelActor) != None || Projectile(LevelActor) != None || UDKVehicle(LevelActor) != None)
+		if (Pawn(LevelActor) != None || Projectile(LevelActor) != None)
 		{
 			UnitPosition.X = LevelActor.Location.X / (MapSize - LevelActor.Location.Z * 2) * MinimapSize + Canvas.ClipX - MinimapPadding.X - (MinimapSize / 2);
 			UnitPosition.Y = LevelActor.Location.Y / (MapSize - LevelActor.Location.Z * 2) * MinimapSize + MinimapPadding.Y + (MinimapSize / 2);

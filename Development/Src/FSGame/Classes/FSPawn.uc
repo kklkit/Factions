@@ -2,7 +2,6 @@
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSPawn extends UDKPawn
-	Implements(FSActorInterface)
 	config(GameFS)
 	notplaceable;
 
