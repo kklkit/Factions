@@ -5,14 +5,28 @@ class FSPlayerController extends UDKPlayerController;
 
 // Commander
 var() float CommanderCameraSpeed;
-var class<FSStructure> PlacingStructureClass; // Structure class selected to be placed
+
+// Structure placement
+var class<FSStructure> PlacingStructureClass;
 var bool bPlaceStructure; // True when the player has requested to place the structure
 
 // Minimap
 var SceneCapture2DComponent MinimapCaptureComponent;
 var Vector MinimapCaptureLocation;
 var Rotator MinimapCaptureRotation;
-const MinimapCaptureFOV=90;
+
+unreliable server function ServerSetCommanderLocation(Vector NewLoc)
+{
+	// This function is not supposed to be called globally, so move the client to the correct state
+	ClientGotoState(GetStateName());
+	ClientSetViewTarget(GetViewTarget());
+}
+
+reliable server function ServerToggleCommandView()
+{
+	if (PlayerReplicationInfo.Team != None) // Only enter command view when on a team
+		GotoState('Commanding');
+}
 
 simulated state Commanding
 {
@@ -20,22 +34,25 @@ simulated state Commanding
 	{
 		local Vector ViewLocation;
 
-		if (Role == ROLE_Authority)
-		{
-			// Set commander view location and rotation
-			ViewLocation.X = Pawn.Location.X - 2048;
-			ViewLocation.Y = Pawn.Location.Y;
-			ViewLocation.Z = Pawn.Location.Z + 2048;
-			SetLocation(ViewLocation);
-			SetRotation(Rotator(Pawn.Location - ViewLocation));
-		}
+		// Set commander view location and rotation
+		ViewLocation.X = Pawn.Location.X - 2048;
+		ViewLocation.Y = Pawn.Location.Y;
+		ViewLocation.Z = Pawn.Location.Z + 2048;
+		SetLocation(ViewLocation);
+		SetRotation(Rotator(Pawn.Location - ViewLocation));
 
-		FSHUD(myHUD).GFxCommanderHUD.Start();
+		if (WorldInfo.NetMode == NM_DedicatedServer)
+			ClientGotoState(GetStateName());
+		else
+			FSHUD(myHUD).GFxCommanderHUD.Start();
 	}
 
 	simulated event EndState(name NextStateName)
 	{
-		FSHUD(myHUD).GFxCommanderHUD.Close(False);
+		if (WorldInfo.NetMode == NM_DedicatedServer)
+			ClientGotoState(GetStateName());
+		else
+			FSHUD(myHUD).GFxCommanderHUD.Close(False);
 	}
 
 	simulated event GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
@@ -47,21 +64,36 @@ simulated state Commanding
 
 	function PlayerMove(float DeltaTime)
 	{
-		local Vector MoveAmount;
+		Velocity = Normal(PlayerInput.aForward * vect(1,0,0) + PlayerInput.aStrafe * vect(0,1,0) + PlayerInput.aUp * vect(0,0,1));
 
-		Super.PlayerMove(DeltaTime);
+		if (Role < ROLE_Authority)
+			ReplicateMove(DeltaTime, Velocity, DCLICK_None, rot(0,0,0));
+		else
+			ProcessMove(DeltaTime, Velocity, DCLICK_None, rot(0,0,0));
+	}
 
-		if (PlayerInput.aForward > 0)
-			MoveAmount.X = CommanderCameraSpeed;
-		else if (PlayerInput.aForward < 0)
-			MoveAmount.X = -CommanderCameraSpeed;
+	function ProcessMove(float DeltaTime, Vector NewVelocity, EDoubleClickDir DoubleClickMove, Rotator DeltaRot)
+	{
+		MoveSmooth((1 + bRun) * NewVelocity * CommanderCameraSpeed);
+	}
 
-		if (PlayerInput.aStrafe > 0)
-			MoveAmount.Y = CommanderCameraSpeed;
-		else if (PlayerInput.aStrafe < 0)
-			MoveAmount.Y = -CommanderCameraSpeed;
+	function ReplicateMove(float DeltaTime, Vector NewVelocity, EDoubleClickDir DoubleClickMove, Rotator DeltaRot)
+	{
+		ProcessMove(DeltaTime, NewVelocity, DoubleClickMove, DeltaRot);
+		ServerSetCommanderLocation(Location); // Client has authority for commander view
 
-		Move(MoveAmount);
+		if (PlayerCamera != None && PlayerCamera.bUseClientSideCameraUpdates)
+			PlayerCamera.bShouldSendClientSideCameraUpdate = True;
+	}
+
+	unreliable server function ServerSetCommanderLocation(Vector NewLoc)
+	{
+		SetLocation(NewLoc);
+	}
+
+	reliable server function ServerToggleCommandView()
+	{
+		GotoState('PlayerWalking');
 	}
 
 	exec function StartFire(optional byte FireModeNum)
@@ -73,11 +105,6 @@ simulated state Commanding
 	exec function StopFire(optional byte FireModeNum)
 	{
 		FSHUD(myHUD).EndDragging();
-	}
-
-	exec function ToggleCommandView()
-	{
-		GotoState('PlayerWalking');
 	}
 
 	exec function SelectStructure(byte StructureIndex)
@@ -96,7 +123,7 @@ simulated state Commanding
 	}
 }
 
-simulated function PostBeginPlay()
+simulated event PostBeginPlay()
 {
 	local FSMapInfo MI;
 
@@ -106,7 +133,7 @@ simulated function PostBeginPlay()
 	if (MI != None && WorldInfo.NetMode != NM_DedicatedServer)
 	{
 		MinimapCaptureComponent = new(self) class'SceneCapture2DComponent';
-		MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'FSAssets.HUD.minimap_render_texture', MinimapCaptureFOV, , 0);
+		MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'FSAssets.HUD.minimap_render_texture', 90,, 0);
 		MinimapCaptureComponent.bUpdateMatrices = False;
 		AttachComponent(MinimapCaptureComponent);
 
@@ -116,7 +143,7 @@ simulated function PostBeginPlay()
 	}
 }
 
-function PlayerTick(float DeltaTime)
+event PlayerTick(float DeltaTime)
 {
 	Super.PlayerTick(DeltaTime);
 
@@ -135,15 +162,18 @@ reliable server function ServerSpawnVehicle()
 
 reliable server function ServerSpawnStructure(class<FSStructure> StructureClass, Vector StructureLocation)
 {
-	local FSStructure S;
+	local FSStructure Structure;
 
-	S = Spawn(StructureClass,,, StructureLocation, rot(0, 0, 0),,);
-	S.TeamNumber = PlayerReplicationInfo.Team.TeamIndex;
+	Structure = Spawn(StructureClass,,, StructureLocation, rot(0,0,0),,);
+	Structure.TeamNumber = PlayerReplicationInfo.Team.TeamIndex;
 }
 
 exec function ReloadWeapon()
 {
-	FSWeapon(Pawn.Weapon).ServerReload();
+	if (Pawn != None && Pawn.Weapon != None && FSWeapon(Pawn.Weapon) != None)
+		FSWeapon(Pawn.Weapon).ServerReload();
+	else
+		`log("Failed to find weapon to reload!");
 }
 
 exec function BuildVehicle()
@@ -153,8 +183,7 @@ exec function BuildVehicle()
 
 exec function ToggleCommandView()
 {
-	if (PlayerReplicationInfo.Team != None)
-		GotoState('Commanding');
+	ServerToggleCommandView();
 }
 
 defaultproperties
