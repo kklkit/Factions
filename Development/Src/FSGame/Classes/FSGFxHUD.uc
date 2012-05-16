@@ -30,7 +30,7 @@ function TickHud()
 
 		if (GetPC().Pawn.InvManager != None)
 			foreach GetPC().Pawn.InvManager.InventoryActors(class'FSMagazine', Magazine)
-				if (Magazine.AmmoType == FSW.Class)
+				if (Magazine.AmmoType == FSW.AmmoType)
 					MagazineCount++;
 
 		UpdateMagazineCount(MagazineCount);

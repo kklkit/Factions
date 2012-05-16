@@ -1,11 +1,12 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSWeap_Firearm extends FSWeapon
-	abstract;
+class FSFirearmWeapon extends FSWeapon;
 
 defaultproperties
 {
+	AttachmentClass=class'FSFirearmAttachment'
+
 	FiringStatesArray(0)=WeaponFiring
 	WeaponFireTypes(0)=EWFT_InstantHit
 	FireInterval(0)=0.1

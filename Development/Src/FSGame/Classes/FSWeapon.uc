@@ -2,15 +2,35 @@
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSWeapon extends UDKWeapon
+	config(WeaponFS)
 	abstract;
 
 var FSMagazine Magazine;
 var class<FSWeaponAttachment> AttachmentClass;
+var WeaponInfo WeaponInfo;
+var name AmmoType;
 
 replication
 {
 	if (bNetDirty)
-		Magazine;
+		Magazine, WeaponInfo;
+}
+
+function Initialize(name WeaponName)
+{
+	local int Index;
+
+	AmmoType = WeaponName;
+
+	Index = class'FSWeaponInfo'.default.Weapons.Find('Name', WeaponName);
+
+	if (Index == INDEX_NONE)
+	{
+		`Log("Failed to find weapon info for weapon" @ WeaponName);
+		return;
+	}
+
+	WeaponInfo = class'FSWeaponInfo'.default.Weapons[Index];
 }
 
 function ConsumeAmmo(byte FireModeNum)
@@ -80,7 +100,7 @@ reliable server function ServerReload()
 	local FSMagazine M;
 
 	foreach InvManager.InventoryActors(class'FSMagazine', M)
-		if (M.AmmoType == Self.Class)
+		if (M.AmmoType == AmmoType)
 			break;
 
 	if (M == None)

@@ -9,6 +9,9 @@ var name MuzzleSocket;
 
 simulated function AttachTo(FSPawn TargetPawn)
 {
+	Mesh = new(Self) class'SkeletalMeshComponent';
+	Mesh.SetSkeletalMesh(SkeletalMesh(DynamicLoadObject(FSWeapon(TargetPawn.Weapon).WeaponInfo.Mesh, class'SkeletalMesh')));
+
 	if (TargetPawn.Mesh != None && Mesh != None)
 	{
 		Mesh.SetShadowParent(TargetPawn.Mesh);
@@ -82,12 +85,7 @@ simulated function Vector GetEffectLocation()
 
 defaultproperties
 {
-	Begin Object Class=SkeletalMeshComponent Name=AttachmentMeshComponent
-	End Object
-	Mesh=AttachmentMeshComponent
-
 	bReplicateInstigator=True
-
 	MuzzleSocket=Muzzle
 	NetUpdateFrequency=10.0
 	TickGroup=TG_DuringAsyncWork

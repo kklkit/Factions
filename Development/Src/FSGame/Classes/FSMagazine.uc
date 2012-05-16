@@ -3,16 +3,14 @@
  */
 class FSMagazine extends Inventory;
 
-var() class<Inventory> AmmoType;
+var() name AmmoType;
 var() int AmmoCount;
 var() int AmmoCountMax;
 
 replication
 {
-	if (bNetInitial)
-		AmmoType, AmmoCountMax;
 	if (bNetDirty)
-		AmmoCount;
+		AmmoType, AmmoCount, AmmoCountMax;
 }
 
 function int AddAmmo(int Amount)
