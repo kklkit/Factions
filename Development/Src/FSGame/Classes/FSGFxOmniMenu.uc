@@ -3,19 +3,12 @@
  */
 class FSGFxOmniMenu extends FSGFxMoviePlayer;
 
-function bool Start(optional bool StartPaused)
+event OnClose()
 {
-	Super.Start(StartPaused);
-
-	return True;
-}
-
-function OnClose()
-{
-	Super.OnClose();
-
 	if (GetPC().Pawn != None)
 		FSPawn(GetPC().Pawn).ResetEquipment();
+
+	Super.OnClose();
 }
 
 /*********************************************************************************************

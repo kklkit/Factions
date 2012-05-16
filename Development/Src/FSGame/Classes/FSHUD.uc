@@ -3,18 +3,16 @@
  */
 class FSHUD extends UDKHUD;
 
-const MinimapSize=256;
-const MinimapUnitBoxSize=10;
-
 var FSGFxHUD GFxHUD;
 var FSGFxOmniMenu GFxOmniMenu;
 var FSGFxCommanderHUD GFxCommanderHUD;
 
 var Material MinimapMaterial;
 var Vector2D MinimapPadding;
+const MinimapSize=256;
+const MinimapUnitBoxSize=10;
 
-var FSStructurePreview PreviewBuilding;
-
+var FSStructurePreview StructurePreview;
 var float MapSize;
 var Color LineColor;
 
@@ -22,15 +20,7 @@ var Color LineColor;
 var bool bDragging;
 var Vector2D DragStart;
 
-function PostRender()
-{
-	Super.PostRender();
-
-	GFxHUD.TickHud();
-	GFxCommanderHUD.TickHUD();
-}
-
-simulated function PostBeginPlay()
+simulated event PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
@@ -44,6 +34,14 @@ simulated function PostBeginPlay()
 	GFxCommanderHUD.Init();
 
 	MapSize = FSMapInfo(WorldInfo.GetMapInfo()).MapRadius * 2;
+}
+
+event PostRender()
+{
+	Super.PostRender();
+
+	GFxHUD.TickHud();
+	GFxCommanderHUD.TickHUD();
 }
 
 simulated function NotifyLocalPlayerTeamReceived()
@@ -124,28 +122,28 @@ function DrawSelectionBox()
 reliable client function StartPreviewStructure(class<FSStructure> StructureClass)
 {
 	// If we are already placing a building, kill it
-	if (PreviewBuilding != none)
-		PreviewBuilding.Destroy();
+	if (StructurePreview != None)
+		StructurePreview.Destroy();
 
-	PreviewBuilding = Spawn(class'FSStructure'.static.GetPreviewClass(StructureClass),,,,rot(0, 0, 0),,true);
+	StructurePreview = Spawn(class'FSStructure'.static.GetPreviewClass(StructureClass),,,, rot(0, 0, 0),, True);
 }
 
-reliable client function UpdatePreviewStructure()
+unreliable client function UpdatePreviewStructure()
 {
 	local Vector HitLocation, HitNormal, WorldOrigin, WorldDirection;
 
 	Canvas.DeProject(GetMousePosition(), WorldOrigin, WorldDirection);
-	Trace(HitLocation, HitNormal, WorldOrigin + WorldDirection * 65536.0, WorldOrigin, False, , , );
+	Trace(HitLocation, HitNormal, WorldOrigin + WorldDirection * 65536.0, WorldOrigin, False,,,);
 	
-	PreviewBuilding.SetLocation(HitLocation);
+	StructurePreview.SetLocation(HitLocation);
 }
 
 function SpawnStructure(FSPlayerController FSPlayer)
 {
-	if (PreviewBuilding.CanBuildHere())
+	if (StructurePreview.CanBuildHere())
 	{
-		PreviewBuilding.Destroy();
-		FSPlayer.ServerSpawnStructure(FSPlayer.PlacingStructureClass, PreviewBuilding.Location);
+		StructurePreview.Destroy();
+		FSPlayer.ServerSpawnStructure(FSPlayer.PlacingStructureClass, StructurePreview.Location);
 		FSPlayer.bPlaceStructure = False;
 		FSPlayer.PlacingStructureClass = None;
 	}

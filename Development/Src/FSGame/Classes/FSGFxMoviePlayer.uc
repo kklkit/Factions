@@ -7,16 +7,16 @@ var bool bDisplayMouseCursor;
 
 var private bool bDisplayedMouseCursor;
 
-function bool Start(optional bool StartPaused = False)
+event bool Start(optional bool StartPaused = False)
 {
-	local bool Result;
-
-	Result = Super.Start(StartPaused);
+	Super.Start(StartPaused);
 
 	if (bDisplayMouseCursor)
 	{
 		if (GetGameViewportClient().bDisplayHardwareMouseCursor)
+		{
 			bDisplayedMouseCursor = False;
+		}
 		else
 		{
 			GetGameViewportClient().SetHardwareMouseCursorVisibility(True);
@@ -24,13 +24,15 @@ function bool Start(optional bool StartPaused = False)
 		}
 	}
 
-	return Result;
+	return true;
 }
 
-function OnClose()
+event OnClose()
 {
 	if (bDisplayedMouseCursor)
 		GetGameViewportClient().SetHardwareMouseCursorVisibility(False);
+
+	Super.OnClose();
 }
 
 function FSPawn GetPlayerPawn()
@@ -56,7 +58,9 @@ function FSPawn GetPlayerPawn()
 			}
 		}
 		else
+		{
 			FSP = FSPawn(FSV.Driver);
+		}
 
 		if (FSV == None)
 			return None;
