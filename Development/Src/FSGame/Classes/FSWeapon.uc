@@ -13,7 +13,7 @@ var name AmmoType;
 replication
 {
 	if (bNetDirty)
-		Magazine, WeaponInfo;
+		Magazine, WeaponInfo, AmmoType;
 }
 
 function Initialize(name WeaponName)
