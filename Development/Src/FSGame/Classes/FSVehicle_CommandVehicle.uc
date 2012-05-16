@@ -1,8 +1,7 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSVehicle_CommandVehicle extends FSVehicle
-	placeable;
+class FSVehicle_CommandVehicle extends FSVehicle;
 
 const TireRadius=80.0;
 

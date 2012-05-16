@@ -1,8 +1,7 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSVehicle_Jeep extends FSVehicle
-	placeable;
+class FSVehicle_Jeep extends FSVehicle;
 
 const TireRadius=60.0;
 

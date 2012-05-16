@@ -1,9 +1,9 @@
 class FSStructurePreview extends KActorSpawnable
     placeable;
 
-static function Bool CanBuildHere()
+static function bool CanBuildHere()
 {
-	return true;
+	return True;
 }
 
 defaultproperties

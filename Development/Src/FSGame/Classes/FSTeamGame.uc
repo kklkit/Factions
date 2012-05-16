@@ -1,10 +1,9 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSTeamGame extends UDKGame
-	config(GameFS);
+class FSTeamGame extends UDKGame;
 
-const PSEUDO_TEAM_SPECTATOR=255;
+const PSEUDO_TEAM_SPECTATOR=255; // Used in ChangeTeam to switch to the spectator team
 
 enum ETeams
 {
@@ -12,9 +11,9 @@ enum ETeams
 	TEAM_BLUE
 };
 
-function PreBeginPlay()
+event PreBeginPlay()
 {
-	local byte i;
+	local byte TeamIndex;
 
 	Super.PreBeginPlay();
 
@@ -24,11 +23,11 @@ function PreBeginPlay()
 		WorldInfo.SetMapInfo(new class'FSMapInfo');
 	}
 
-	for (i = 0; i < ETeams.EnumCount; i++)
-		CreateTeam(i);
+	for (TeamIndex = 0; TeamIndex < ETeams.EnumCount; TeamIndex++)
+		CreateTeam(TeamIndex);
 }
 
-function PlayerController Login(string Portal, string Options, const UniqueNetID UniqueID, out string ErrorMessage)
+event PlayerController Login(string Portal, string Options, const UniqueNetID UniqueID, out string ErrorMessage)
 {
 	local PlayerController PC;
 
@@ -43,7 +42,7 @@ function PlayerController Login(string Portal, string Options, const UniqueNetID
 	return PC;
 }
 
-function PostLogin(PlayerController NewPlayer)
+event PostLogin(PlayerController NewPlayer)
 {
 	Super.PostLogin(NewPlayer);
 

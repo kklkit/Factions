@@ -3,8 +3,8 @@
  */
 class FSMapInfo extends UDKMapInfo;
 
-var(Minimap) Vector2D MapCenter;
-var(Minimap) float MapRadius;
+var() Vector2D MapCenter;
+var() float MapRadius;
 
 defaultproperties
 {

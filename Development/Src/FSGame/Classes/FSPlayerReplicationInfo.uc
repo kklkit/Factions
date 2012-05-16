@@ -3,7 +3,7 @@
  */
 class FSPlayerReplicationInfo extends PlayerReplicationInfo;
 
-simulated function ReplicatedEvent(name VarName)
+simulated event ReplicatedEvent(name VarName)
 {
 	if (VarName == 'Team')
 		FSHUD(GetALocalPlayerController().myHUD).GFxOmniMenu.Invalidate("team");

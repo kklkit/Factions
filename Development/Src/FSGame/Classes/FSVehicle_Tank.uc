@@ -1,5 +1,4 @@
-class FSVehicle_Tank extends FSVehicle
-	placeable;
+class FSVehicle_Tank extends FSVehicle;
 
 const WheelRadius=45.0;
 

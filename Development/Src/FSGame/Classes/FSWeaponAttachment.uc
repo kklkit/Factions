@@ -75,7 +75,9 @@ simulated function Vector GetEffectLocation()
 		return SocketLocation;
 	}
 	else
+	{
 		return Mesh.Bounds.Origin + (vect(45,0,0) >> Instigator.Rotation);
+	}
 }
 
 defaultproperties
@@ -87,7 +89,7 @@ defaultproperties
 	bReplicateInstigator=True
 
 	MuzzleSocket=Muzzle
-	NetUpdateFrequency=10
+	NetUpdateFrequency=10.0
 	TickGroup=TG_DuringAsyncWork
 	RemoteRole=ROLE_None
 }

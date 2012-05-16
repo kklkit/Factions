@@ -9,8 +9,10 @@ var() int AmmoCountMax;
 
 replication
 {
+	if (bNetInitial)
+		AmmoType, AmmoCountMax;
 	if (bNetDirty)
-		AmmoType, AmmoCount, AmmoCountMax;
+		AmmoCount;
 }
 
 function int AddAmmo(int Amount)

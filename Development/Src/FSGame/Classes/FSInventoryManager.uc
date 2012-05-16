@@ -1,12 +1,11 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSInventoryManager extends InventoryManager
-	config(GameFS);
+class FSInventoryManager extends InventoryManager;
 
-const NumSlots=4;
+const EquipmentSlots=4;
 
-var class<Inventory> RequestedEquipment[NumSlots];
+var class<Inventory> RequestedEquipment[EquipmentSlots];
 
 replication
 {
@@ -16,7 +15,7 @@ replication
 
 reliable server function SelectEquipment(byte Slot, string EquipmentName)
 {
-	if (Slot >= 0 && Slot < NumSlots)
+	if (Slot >= 0 && Slot < EquipmentSlots)
 	{
 		switch (EquipmentName) {
 		case "Heavy Pistol":
@@ -30,33 +29,33 @@ reliable server function SelectEquipment(byte Slot, string EquipmentName)
 			break;
 		default:
 			`log("Unknown equipment selected!");
-			return;
+			break;
 		}
 	}
 }
 
 reliable server function ResetEquipment()
 {
+	local byte EquipmentSlot;
 	local byte i;
-	local byte j;
-	local Inventory Inv;
+	local Inventory Item;
 	local FSMagazine Mag;
 
 	if (FSStruct_Barracks(FSPawn(Instigator).Base) != None)
 	{
 		DiscardInventory();
 
-		for (i = 0; i < NumSlots; i++)
+		for (EquipmentSlot = 0; EquipmentSlot < EquipmentSlots; EquipmentSlot++)
 		{
-			if (RequestedEquipment[i] != None)
+			if (RequestedEquipment[EquipmentSlot] != None)
 			{
-				Inv = CreateInventory(RequestedEquipment[i]);
-				if (FSWeapon(Inv) != None)
+				Item = CreateInventory(RequestedEquipment[EquipmentSlot]);
+				if (FSWeapon(Item) != None)
 				{
-					for (j = 0; j < FSWeapon(Inv).GetDefaultMagazines(); j++)
+					for (i = 0; i < FSWeapon(Item).GetDefaultMagazines(); i++)
 					{
 						Mag = FSMagazine(CreateInventory(class'FSMagazine'));
-						Mag.AmmoType = RequestedEquipment[i];
+						Mag.AmmoType = RequestedEquipment[EquipmentSlot];
 					}
 				}
 			}

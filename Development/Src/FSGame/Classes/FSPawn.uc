@@ -1,12 +1,9 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSPawn extends UDKPawn
-	config(GameFS)
-	notplaceable;
+class FSPawn extends UDKPawn;
 
 var DynamicLightEnvironmentComponent LightEnvironment;
-
 var repnotify class<FSWeaponAttachment> CurrentWeaponAttachmentClass;
 var FSWeaponAttachment CurrentWeaponAttachment;
 var name WeaponSocket;
@@ -18,7 +15,7 @@ replication
 		CurrentWeaponAttachmentClass;
 }
 
-simulated function ReplicatedEvent(name VarName)
+simulated event ReplicatedEvent(name VarName)
 {
 	if (VarName == 'CurrentWeaponAttachmentClass')
 		WeaponAttachmentChanged();
@@ -26,7 +23,7 @@ simulated function ReplicatedEvent(name VarName)
 	Super.ReplicatedEvent(VarName);
 }
 
-simulated function PostInitAnimTree(SkeletalMeshComponent SkelComp)
+simulated event PostInitAnimTree(SkeletalMeshComponent SkelComp)
 {
 	Super.PostInitAnimTree(SkelComp);
 
@@ -45,21 +42,19 @@ simulated function PostInitAnimTree(SkeletalMeshComponent SkelComp)
 	}
 }
 
-simulated function Destroyed()
+simulated event Destroyed()
 {
-	Super.Destroyed();
-
 	if (CurrentWeaponAttachment != None)
 	{
 		CurrentWeaponAttachment.DetachFrom(Mesh);
 		CurrentWeaponAttachment.Destroy();
 	}
+
+	Super.Destroyed();
 }
 
 simulated function NotifyTeamChanged()
 {
-	Super.NotifyTeamChanged();
-
 	if (CurrentWeaponAttachmentClass != None)
 	{
 		if (WorldInfo.NetMode != NM_DedicatedServer && CurrentWeaponAttachment != None)
@@ -70,6 +65,8 @@ simulated function NotifyTeamChanged()
 		}
 		WeaponAttachmentChanged();
 	}
+
+	Super.NotifyTeamChanged();
 }
 
 simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
@@ -97,8 +94,6 @@ simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
 
 simulated function WeaponFired(Weapon InWeapon, bool bViaReplication, optional vector HitLocation)
 {
-	Super.WeaponFired(InWeapon, bViaReplication, HitLocation);
-
 	if (CurrentWeaponAttachment != None)
 	{
 		if (IsFirstPerson())
@@ -106,17 +101,19 @@ simulated function WeaponFired(Weapon InWeapon, bool bViaReplication, optional v
 		else
 			CurrentWeaponAttachment.ThirdPersonFireEffects(HitLocation);
 	}
+
+	Super.WeaponFired(InWeapon, bViaReplication, HitLocation);
 }
 
 simulated function WeaponStoppedFiring(Weapon InWeapon, bool bViaReplication)
 {
-	Super.WeaponStoppedFiring(InWeapon, bViaReplication);
-
 	if (CurrentWeaponAttachment != None)
 	{
 		CurrentWeaponAttachment.StopFirstPersonFireEffects(Weapon);
 		CurrentWeaponAttachment.StopThirdPersonFireEffects();
 	}
+
+	Super.WeaponStoppedFiring(InWeapon, bViaReplication);
 }
 
 simulated function Rotator GetAdjustedAimFor(Weapon W, Vector StartFireLoc)
@@ -155,7 +152,9 @@ simulated function WeaponAttachmentChanged()
 			CurrentWeaponAttachment.Instigator = self;
 		}
 		else
+		{
 			CurrentWeaponAttachment = None;
+		}
 
 		if (CurrentWeaponAttachment != None)
 		{
@@ -205,7 +204,6 @@ defaultproperties
 	InventoryManagerClass=class'FSInventoryManager'
 
 	bCanCrouch=True
-	bCanPickupInventory=True
 	bWeaponAttachmentVisible=True
 
 	WeaponSocket=WeaponPoint

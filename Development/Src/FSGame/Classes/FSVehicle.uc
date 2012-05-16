@@ -2,10 +2,10 @@
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSVehicle extends UDKVehicle
-	abstract
-	notplaceable;
+	placeable
+	abstract;
 
-simulated function PostBeginPlay()
+simulated event PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
@@ -14,12 +14,12 @@ simulated function PostBeginPlay()
 
 defaultproperties
 {
-	Begin Object Class=DynamicLightEnvironmentComponent Name=MyLightEnvironment
+	Begin Object Class=DynamicLightEnvironmentComponent Name=LightEnvironment0
 	End Object
-	Components.Add(MyLightEnvironment)
+	Components.Add(LightEnvironment0)
 
 	Begin Object Name=SVehicleMesh
-		LightEnvironment=MyLightEnvironment
+		LightEnvironment=LightEnvironment0
 	End Object
 
 	DestroyOnPenetrationThreshold=50.0

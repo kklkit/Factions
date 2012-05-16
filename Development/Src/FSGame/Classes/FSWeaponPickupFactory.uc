@@ -1,12 +1,11 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSWeaponPickupFactory extends UDKPickupFactory
-	ClassGroup(Pickups,Weapon);
+class FSWeaponPickupFactory extends UDKPickupFactory;
 
 var() class<FSWeapon> WeaponPickupClass;
 
-simulated function ReplicatedEvent(name VarName)
+simulated event ReplicatedEvent(name VarName)
 {
 	if (VarName == 'InventoryType')
 	{

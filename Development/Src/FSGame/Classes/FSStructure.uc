@@ -34,10 +34,12 @@ static function class<FSStructurePreview> GetPreviewClass(class<FSStructure> Str
 		return class'FSStructurePreview'; 
 	case class'FSStruct_VehicleFactory':
 		return class'FSStructurePreview';
+	default:
+		return None;
 	}
 }
 
-simulated function byte ScriptGetTeamNum()
+simulated event byte ScriptGetTeamNum()
 {
 	return TeamNumber;
 }
@@ -53,11 +55,6 @@ event TakeDamage(int DamageAmount, Controller EventInstigator, vector HitLocatio
 defaultproperties
 {
 	Begin Object Class=DynamicLightEnvironmentComponent Name=StructureLightEnvironmentComponent
-		bSynthesizeSHLight=True
-		bUseBooleanEnvironmentShadowing=False
-		ModShadowFadeoutTime=0.75f
-		bIsCharacterLightEnvironment=True
-		bAllowDynamicShadowsOnTranslucency=True
 	End Object
 	Components.Add(StructureLightEnvironmentComponent)
 

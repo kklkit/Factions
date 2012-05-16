@@ -3,18 +3,18 @@
  */
 class FSStruct_Barracks extends FSStructure;
 
-function PostBeginPlay()
+event PostBeginPlay()
 {
-	local Vector SpawnLocation;
+	local Vector PlayerStartLocation;
 	local FSTeamPlayerStart BarracksPlayerStart;
 
 	Super.PostBeginPlay();
 
-	SpawnLocation.X = Location.X + 200;
-	SpawnLocation.Y = Location.Y + 200;
-	SpawnLocation.Z = Location.Z + 125;
+	PlayerStartLocation.X = Location.X + 200;
+	PlayerStartLocation.Y = Location.Y + 200;
+	PlayerStartLocation.Z = Location.Z + 125;
 
-	BarracksPlayerStart = Spawn(class'FSTeamPlayerStart', self, , SpawnLocation, , , );
+	BarracksPlayerStart = Spawn(class'FSTeamPlayerStart', self,, PlayerStartLocation,,,);
 
 	if (BarracksPlayerStart != None)
 	{

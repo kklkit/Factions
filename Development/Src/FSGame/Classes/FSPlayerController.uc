@@ -157,7 +157,7 @@ reliable server function ServerSpawnVehicle()
 	VF = FSStruct_VehicleFactory(Pawn.Base);
 
 	if (VF != None)
-		VF.BuildVehicle(FSPawn(Pawn));
+		VF.BuildVehicle(Pawn);
 }
 
 reliable server function ServerSpawnStructure(class<FSStructure> StructureClass, Vector StructureLocation)
