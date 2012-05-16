@@ -22,15 +22,12 @@ function Initialize(name WeaponName)
 
 	AmmoType = WeaponName;
 
+	// Set weapon info
 	Index = class'FSWeaponInfo'.default.Weapons.Find('Name', WeaponName);
-
-	if (Index == INDEX_NONE)
-	{
-		`Log("Failed to find weapon info for weapon" @ WeaponName);
-		return;
-	}
-
-	WeaponInfo = class'FSWeaponInfo'.default.Weapons[Index];
+	if (Index != INDEX_NONE)
+		WeaponInfo = class'FSWeaponInfo'.default.Weapons[Index];
+	else
+		`Log("Failed to find weapon info for weapon" @ WeaponName);	
 }
 
 function ConsumeAmmo(byte FireModeNum)
