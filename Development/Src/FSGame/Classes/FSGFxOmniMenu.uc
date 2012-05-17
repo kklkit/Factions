@@ -124,7 +124,7 @@ function array<string> InfantryEquipmentNames(int Slot)
 		Data.AddItem("Heavy Pistol");
 		break;
 	case 3:
-		Data.AddItem("None");
+		Data.AddItem("Repair Tool");
 		break;
 	}
 
