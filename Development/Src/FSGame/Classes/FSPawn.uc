@@ -106,20 +106,20 @@ reliable client function ClientUpdateWeaponAttachment()
 {
 	if (Mesh.SkeletalMesh != None)
 	{
-		if (CurrentWeaponAttachment != None)
+		if (CurrentWeaponAttachment != None) // Delete current weapon attachment
 		{
 			CurrentWeaponAttachment.DetachFrom(Mesh);
 			CurrentWeaponAttachment.Destroy();
 			CurrentWeaponAttachment = None;
 		}
 
-		if (FSWeapon(Weapon) != None)
+		if (FSWeapon(Weapon) != None) // Create new weapon attachment
 		{
 			CurrentWeaponAttachment = Spawn(FSWeapon(Weapon).AttachmentClass, Self);
 			CurrentWeaponAttachment.Instigator = Self;
 		}
 
-		if (CurrentWeaponAttachment != None)
+		if (CurrentWeaponAttachment != None) // Attach new weapon attachment to the mesh
 		{
 			CurrentWeaponAttachment.AttachTo(Self);
 			CurrentWeaponAttachment.ChangeVisibility(bWeaponAttachmentVisible);
