@@ -53,27 +53,8 @@ simulated event Destroyed()
 	Super.Destroyed();
 }
 
-simulated function NotifyTeamChanged()
-{
-	if (CurrentWeaponAttachmentClass != None)
-	{
-		if (WorldInfo.NetMode != NM_DedicatedServer && CurrentWeaponAttachment != None)
-		{
-			CurrentWeaponAttachment.DetachFrom(Mesh);
-			CurrentWeaponAttachment.Destroy();
-			CurrentWeaponAttachment = None;
-		}
-		WeaponAttachmentChanged();
-	}
-
-	Super.NotifyTeamChanged();
-}
-
 simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
 {
-	CurrentWeaponAttachmentClass = None;
-	WeaponAttachmentChanged();
-
 	SetPhysics(PHYS_RigidBody);
 
 	PreRagdollCollisionComponent = CollisionComponent;
