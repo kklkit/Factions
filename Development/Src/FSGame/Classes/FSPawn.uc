@@ -4,24 +4,9 @@
 class FSPawn extends UDKPawn;
 
 var DynamicLightEnvironmentComponent LightEnvironment;
-var repnotify class<FSWeaponAttachment> CurrentWeaponAttachmentClass;
 var FSWeaponAttachment CurrentWeaponAttachment;
 var name WeaponSocket;
 var bool bWeaponAttachmentVisible;
-
-replication
-{
-	if (bNetDirty)
-		CurrentWeaponAttachmentClass;
-}
-
-simulated event ReplicatedEvent(name VarName)
-{
-	if (VarName == 'CurrentWeaponAttachmentClass')
-		WeaponAttachmentChanged();
-
-	Super.ReplicatedEvent(VarName);
-}
 
 simulated event PostInitAnimTree(SkeletalMeshComponent SkelComp)
 {
@@ -117,29 +102,26 @@ simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out 
 	return True;
 }
 
-simulated function WeaponAttachmentChanged()
+reliable client function ClientUpdateWeaponAttachment()
 {
-	if ((CurrentWeaponAttachment == None || CurrentWeaponAttachment.Class != CurrentWeaponAttachmentClass) && Mesh.SkeletalMesh != None)
+	if (Mesh.SkeletalMesh != None)
 	{
 		if (CurrentWeaponAttachment != None)
 		{
 			CurrentWeaponAttachment.DetachFrom(Mesh);
 			CurrentWeaponAttachment.Destroy();
+			CurrentWeaponAttachment = None;
 		}
 
-		if (CurrentWeaponAttachmentClass != None)
+		if (FSWeapon(Weapon) != None)
 		{
-			CurrentWeaponAttachment = Spawn(CurrentWeaponAttachmentClass, self);
-			CurrentWeaponAttachment.Instigator = self;
-		}
-		else
-		{
-			CurrentWeaponAttachment = None;
+			CurrentWeaponAttachment = Spawn(FSWeapon(Weapon).AttachmentClass, Self);
+			CurrentWeaponAttachment.Instigator = Self;
 		}
 
 		if (CurrentWeaponAttachment != None)
 		{
-			CurrentWeaponAttachment.AttachTo(self);
+			CurrentWeaponAttachment.AttachTo(Self);
 			CurrentWeaponAttachment.ChangeVisibility(bWeaponAttachmentVisible);
 		}
 	}

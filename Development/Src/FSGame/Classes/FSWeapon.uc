@@ -62,11 +62,9 @@ simulated function AttachWeaponTo(SkeletalMeshComponent MeshCpnt, optional name 
 
 	InstigatorPawn = FSPawn(Instigator);
 
-	if (Role == ROLE_Authority && InstigatorPawn != None)
+	if (InstigatorPawn != None && Role == ROLE_Authority)
 	{
-		InstigatorPawn.CurrentWeaponAttachmentClass = AttachmentClass;
-		if (WorldInfo.NetMode == NM_ListenServer || WorldInfo.NetMode == NM_Standalone || (WorldInfo.NetMode == NM_Client && InstigatorPawn.IsLocallyControlled()))
-			InstigatorPawn.WeaponAttachmentChanged();
+		InstigatorPawn.ClientUpdateWeaponAttachment();
 	}
 }
 
@@ -77,11 +75,9 @@ simulated function DetachWeapon()
 	Super.DetachWeapon();
 
 	InstigatorPawn = FSPawn(Instigator);
-	if (InstigatorPawn != None && Role == ROLE_Authority && InstigatorPawn.CurrentWeaponAttachmentClass == AttachmentClass)
+	if (InstigatorPawn != None && Role == ROLE_Authority)
 	{
-		InstigatorPawn.CurrentWeaponAttachmentClass = None;
-		if (Instigator.IsLocallyControlled())
-			InstigatorPawn.WeaponAttachmentChanged();
+		InstigatorPawn.ClientUpdateWeaponAttachment();
 	}
 }
 
