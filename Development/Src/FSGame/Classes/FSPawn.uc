@@ -157,12 +157,9 @@ defaultproperties
 		bHasPhysicsAssetInstance=True
 		RBChannel=RBCC_Untitled3
 		RBCollideWithChannels=(Untitled3=True)
-		Scale=1.075
 	End Object
 	Mesh=PawnMeshComponent
 	Components.Add(PawnMeshComponent)
-
-	BaseTranslationOffset=6.0
 
 	InventoryManagerClass=class'FSInventoryManager'
 
