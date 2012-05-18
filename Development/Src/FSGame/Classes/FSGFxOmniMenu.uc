@@ -129,6 +129,7 @@ function array<string> InfantryEquipmentNames(int Slot)
 	{
 	case 0:
 		Data.AddItem("Heavy Rifle");
+		Data.AddItem("RPG");
 		break;
 	case 1:
 		Data.AddItem("None");
