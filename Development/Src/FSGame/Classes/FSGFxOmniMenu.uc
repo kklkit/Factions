@@ -229,6 +229,11 @@ function Invalidate(string Item)
 	ActionScriptVoid("_root.invalidate");
 }
 
+function GotoPanel(string Panel)
+{
+	ActionScriptVoid("_root.gotoAndStop");
+}
+
 defaultproperties
 {
 	MovieInfo=SwfMovie'FSFlashAssets.factions_omnimenu'

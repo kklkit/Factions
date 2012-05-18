@@ -168,9 +168,24 @@ function Vector2D GetMousePosition()
 exec function ToggleOmniMenu()
 {
 	if (GFxOmniMenu.bMovieIsOpen)
+	{
 		GFxOmniMenu.Close(False);
+	}
 	else
+	{
 		GFxOmniMenu.Start();
+		if (PlayerOwner.Pawn != None) // Player in the world
+		{
+			if (FSStruct_Barracks(PlayerOwner.Pawn.Base) != None)
+				GFxOmniMenu.GotoPanel("Infantry");
+			else if (FSStruct_VehicleFactory(PlayerOwner.Pawn.Base) != None)
+				GFxOmniMenu.GotoPanel("Vehicle");
+		}
+		else if (PlayerOwner.PlayerReplicationInfo.Team == None) // Player not on a team
+		{
+			GFxOmniMenu.GotoPanel("Team");
+		}
+	}
 }
 
 defaultproperties
