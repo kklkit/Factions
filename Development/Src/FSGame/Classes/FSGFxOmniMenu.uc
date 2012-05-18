@@ -77,6 +77,20 @@ function array<string> PlayerNames(string TeamName)
 	return Data;
 }
 
+function array<string> InfantryEquipment()
+{
+	local array<string> Data;
+	local int EquipmentIndex;
+	local FSInventoryManager PlayerInventory;
+
+	PlayerInventory = FSInventoryManager(GetPC().Pawn.InvManager);
+
+	for (EquipmentIndex = 0; EquipmentIndex < class'FSInventoryManager'.const.EquipmentSlots; EquipmentIndex++)
+		Data.InsertItem(EquipmentIndex, string(PlayerInventory.RequestedEquipmentName[EquipmentIndex]));
+
+	return Data;
+}
+
 function array<string> InfantryPresetNames()
 {
 	local array<string> Data;

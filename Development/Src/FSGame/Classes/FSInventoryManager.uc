@@ -20,6 +20,7 @@ reliable server function SelectEquipment(byte Slot, string EquipmentName)
 	{
 		RequestedEquipment[Slot] = class'FSFirearmWeapon';
 		RequestedEquipmentName[Slot] = name(EquipmentName);
+		FSHUD(FSPlayerController(Pawn(Owner).Controller).myHUD).GFxOmniMenu.Invalidate("equipment selection");
 	}
 }
 

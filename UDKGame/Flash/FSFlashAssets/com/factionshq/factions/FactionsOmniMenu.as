@@ -117,6 +117,8 @@ public class FactionsOmniMenu extends MovieClip {
 		
 		refreshEquipmentLabels();
 		refreshSkillLabels();
+		
+		refreshEquipmentSelection();
 	}
 	
 	public function frameScript2():void {
@@ -161,6 +163,12 @@ public class FactionsOmniMenu extends MovieClip {
 		joinSpectatorButton.selected = teamName == "Spectator";
 	}
 	
+	public function refreshEquipmentSelection():void {
+		for (var i:int = 0; i < infantryEquipmentLists.length; ++i) {
+			infantryEquipmentLists[i].selectedIndex = data.infantryEquipmentNames[i].indexOf(data.infantryEquipment.requestItemAt(i) as String);
+		}
+	}
+	
 	public function refreshEquipmentLabels():void {
 		for (var i:int = 0; i < infantryEquipmentLabels.length; ++i) {
 			data.infantryEquipmentLabels.requestItemAt(i, function(item:Object):void {
@@ -188,6 +196,9 @@ public class FactionsOmniMenu extends MovieClip {
 		} else if (item == "equipment labels") {
 			data.infantryEquipmentLabels.invalidate();
 			refreshEquipmentLabels();
+		} else if (item == "equipment selection") {
+			data.infantryEquipment.invalidate();
+			refreshEquipmentSelection();
 		}
 	}
 	
