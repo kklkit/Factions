@@ -52,8 +52,11 @@ public class FactionsOmniMenu extends MovieClip {
 	public var infantrySkillList3:ScrollingList;
 	
 	// Vehicle
+	public var vehicleChassisLabel:Label;
 	public var vehicleChassisList:ScrollingList;
+	public var vehicleArmorLabel:Label;
 	public var vehicleArmorList:ScrollingList;
+	public var vehicleBuildButton:Button;
 	
 	public function FactionsOmniMenu() {
 		super();
@@ -124,8 +127,14 @@ public class FactionsOmniMenu extends MovieClip {
 	public function frameScript2():void {
 		menuButtonBar.selectedIndex = 2;
 		
+		vehicleChassisLabel.text = "Chassis:";
+		vehicleArmorLabel.text = "Armor:";
+		
 		vehicleChassisList.dataProvider = data.vehicleChassis;
 		vehicleArmorList.dataProvider = data.vehicleArmor;
+		
+		vehicleBuildButton.label = "Build";
+		vehicleBuildButton.addEventListener(ButtonEvent.CLICK, buildVehicle);
 	}
 	
 	public function frameScript3():void {
@@ -218,7 +227,7 @@ public class FactionsOmniMenu extends MovieClip {
 		};
 	}
 	
-	public function closeMenu(e:ButtonEvent):void {
+	public function closeMenu(e:ButtonEvent = null):void {
 		ExternalInterface.call("CloseMenu", this.currentLabel);
 	}
 	
@@ -231,6 +240,13 @@ public class FactionsOmniMenu extends MovieClip {
 			ExternalInterface.call("SelectInfantryPreset", String(item));
 			infantryPresetNameBox.text = String(item);
 		});
+	}
+	
+	private function buildVehicle(e:ButtonEvent) {
+		data.vehicleChassis.requestItemAt(vehicleChassisList.selectedIndex, function (item:Object):void {
+			ExternalInterface.call("BuildVehicle", String(item));
+		});
+		closeMenu();
 	}
 }
 }

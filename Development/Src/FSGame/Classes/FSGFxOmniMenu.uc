@@ -40,6 +40,11 @@ function SelectInfantryEquipment(byte Slot, string EquipmentName)
 		FSInventoryManager(FSPawn(GetPC().Pawn).InvManager).SelectEquipment(Slot, EquipmentName);
 }
 
+function BuildVehicle(string ChassisName)
+{
+	FSPlayerController(GetPC()).BuildVehicle(name(ChassisName));
+}
+
 function array<string> PlayerTeam()
 {
 	local array<string> Data;
@@ -193,14 +198,8 @@ function array<string> VehicleChassisNames()
 	local array<string> Data;
 
 	Data.AddItem("Jeep");
-	Data.AddItem("Attack Buggy");
-	Data.AddItem("APC");
-	Data.AddItem("Light Tank");
-	Data.AddItem("Missile Tank");
-	Data.AddItem("Heavy Tank");
-	Data.AddItem("Attack Gunship");
-	Data.AddItem("Heavy Gunship");
-	Data.AddItem("Dropship");
+	Data.AddItem("Tank");
+	Data.AddItem("Gunship");
 
 	return Data;
 }

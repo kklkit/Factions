@@ -2,7 +2,6 @@
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSWeapon extends UDKWeapon
-	config(WeaponFS)
 	abstract;
 
 var FSMagazine Magazine;

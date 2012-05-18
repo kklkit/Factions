@@ -150,14 +150,14 @@ event PlayerTick(float DeltaTime)
 	MinimapCaptureComponent.SetView(MinimapCaptureLocation, MinimapCaptureRotation);
 }
 
-reliable server function ServerSpawnVehicle()
+reliable server function ServerSpawnVehicle(name ChassisName)
 {
 	local FSStruct_VehicleFactory VF;
 
 	VF = FSStruct_VehicleFactory(Pawn.Base);
 
 	if (VF != None)
-		VF.BuildVehicle(Pawn);
+		VF.BuildVehicle(ChassisName, Pawn);
 }
 
 reliable server function ServerSpawnStructure(class<FSStructure> StructureClass, Vector StructureLocation)
@@ -176,9 +176,9 @@ exec function ReloadWeapon()
 		`log("Failed to find weapon to reload!");
 }
 
-exec function BuildVehicle()
+exec function BuildVehicle(name ChassisName)
 {
-	ServerSpawnVehicle();
+	ServerSpawnVehicle(ChassisName);
 }
 
 exec function ToggleCommandView()
