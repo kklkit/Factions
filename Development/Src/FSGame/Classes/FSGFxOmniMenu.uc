@@ -60,7 +60,7 @@ function array<string> PlayerTeam()
 function array<string> PlayerNames(string TeamName)
 {
 	local array<string> Data;
-	local FSPlayerController FSPC;
+	local PlayerReplicationInfo PRI;
 	local byte TeamIndex;
 
 	if (TeamName ~= "red")
@@ -68,15 +68,15 @@ function array<string> PlayerNames(string TeamName)
 	else if (TeamName ~= "blue")
 		TeamIndex = TEAM_BLUE;
 
-	foreach GetPC().WorldInfo.AllControllers(class'FSPlayerController', FSPC)
+	foreach GetPC().WorldInfo.GRI.PRIArray(PRI)
 	{
 		if (TeamName ~= "spectator")
 		{
-			if (FSPC.PlayerReplicationInfo.Team == None) 
-				Data.AddItem(FSPC.PlayerReplicationInfo.PlayerName);
+			if (PRI.Team == None) 
+				Data.AddItem(PRI.PlayerName);
 		}
-		else if (FSPC.PlayerReplicationInfo.Team != None && FSPC.PlayerReplicationInfo.Team.TeamIndex == TeamIndex)
-			Data.AddItem(FSPC.PlayerReplicationInfo.PlayerName);
+		else if (PRI.Team != None && PRI.Team.TeamIndex == TeamIndex)
+			Data.AddItem(PRI.PlayerName);
 	}
 
 	return Data;
