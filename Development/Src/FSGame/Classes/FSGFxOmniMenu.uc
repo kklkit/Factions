@@ -114,17 +114,16 @@ function array<string> InfantryEquipmentNames(int Slot)
 	switch (Slot)
 	{
 	case 0:
-		Data.AddItem("Assault Rifle");
-		Data.AddItem("Battle Rifle");
+		Data.AddItem("Heavy Rifle");
 		break;
 	case 1:
 		Data.AddItem("None");
 		break;
 	case 2:
-		Data.AddItem("Heavy Pistol");
+		Data.AddItem("Repair Tool");
 		break;
 	case 3:
-		Data.AddItem("Repair Tool");
+		Data.AddItem("None");
 		break;
 	}
 

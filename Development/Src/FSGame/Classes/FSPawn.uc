@@ -116,11 +116,11 @@ reliable client function ClientUpdateWeaponAttachment()
 		if (FSWeapon(Weapon) != None) // Create new weapon attachment
 		{
 			CurrentWeaponAttachment = Spawn(FSWeapon(Weapon).AttachmentClass, Self);
-			CurrentWeaponAttachment.Instigator = Self;
 		}
 
 		if (CurrentWeaponAttachment != None) // Attach new weapon attachment to the mesh
 		{
+			CurrentWeaponAttachment.Instigator = Self;
 			CurrentWeaponAttachment.AttachTo(Self);
 			CurrentWeaponAttachment.ChangeVisibility(bWeaponAttachmentVisible);
 		}

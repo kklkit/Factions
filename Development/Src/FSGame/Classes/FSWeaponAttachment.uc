@@ -9,13 +9,16 @@ var name MuzzleSocket;
 
 simulated function AttachTo(FSPawn TargetPawn)
 {
-	Mesh.SetSkeletalMesh(SkeletalMesh(DynamicLoadObject(FSWeapon(TargetPawn.Weapon).WeaponInfo.Mesh, class'SkeletalMesh')));
+	local WeaponInfo WeapInfo;
 
+	WeapInfo = FSWeapon(TargetPawn.Weapon).WeaponInfo;
+
+	Mesh.SetSkeletalMesh(SkeletalMesh(DynamicLoadObject(WeapInfo.Mesh, class'SkeletalMesh')));
 	if (TargetPawn.Mesh != None && Mesh != None)
 	{
+		Mesh.SetScale(WeapInfo.DrawScale);
 		Mesh.SetShadowParent(TargetPawn.Mesh);
 		Mesh.SetLightEnvironment(TargetPawn.LightEnvironment);
-
 		TargetPawn.Mesh.AttachComponentToSocket(Mesh, TargetPawn.WeaponSocket);
 	}
 }

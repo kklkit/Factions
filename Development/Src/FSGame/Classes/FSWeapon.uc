@@ -27,7 +27,7 @@ function Initialize(name WeaponName)
 	if (Index != INDEX_NONE)
 		WeaponInfo = class'FSWeaponInfo'.default.Weapons[Index];
 	else
-		`Log("Failed to find weapon info for weapon" @ WeaponName);	
+		`Log("Failed to find weapon info for weapon" @ WeaponName);
 }
 
 function ConsumeAmmo(byte FireModeNum)

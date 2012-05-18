@@ -5,6 +5,7 @@ struct WeaponInfo
 {
 	var name Name;
 	var string Mesh;
+	var float DrawScale;
 };
 
 var config array<WeaponInfo> Weapons;
