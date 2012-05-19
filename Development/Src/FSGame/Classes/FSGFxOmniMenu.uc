@@ -226,12 +226,14 @@ function array<string> VehicleArmorNames()
 
 function Invalidate(string Item)
 {
-	ActionScriptVoid("_root.invalidate");
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.invalidate");
 }
 
 function GotoPanel(string Panel)
 {
-	ActionScriptVoid("_root.gotoAndStop");
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.gotoAndStop");
 }
 
 defaultproperties
