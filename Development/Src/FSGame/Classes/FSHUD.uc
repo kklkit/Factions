@@ -42,6 +42,7 @@ event PostRender()
 
 	GFxHUD.TickHud();
 	GFxCommanderHUD.TickHUD();
+	GFxOmniMenu.TickHUD();
 }
 
 simulated function NotifyLocalPlayerTeamReceived()

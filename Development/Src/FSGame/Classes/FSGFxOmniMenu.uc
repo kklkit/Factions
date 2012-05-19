@@ -3,12 +3,27 @@
  */
 class FSGFxOmniMenu extends FSGFxMoviePlayer;
 
+var array<string> PendingInvalidates;
+
 event OnClose()
 {
 	if (GetPC().Pawn != None)
 		FSPawn(GetPC().Pawn).ResetEquipment();
 
 	Super.OnClose();
+}
+
+function TickHUD()
+{
+	local string PendingInvalidate;
+
+	if (!bMovieIsOpen)
+		return;
+
+	foreach PendingInvalidates(PendingInvalidate)
+		Invalidate(PendingInvalidate);
+
+	PendingInvalidates.Length = 0;
 }
 
 /*********************************************************************************************
@@ -228,6 +243,8 @@ function Invalidate(string Item)
 {
 	if (bMovieIsOpen)
 		ActionScriptVoid("_root.invalidate");
+	else
+		PendingInvalidates.AddItem(Item);
 }
 
 function GotoPanel(string Panel)
