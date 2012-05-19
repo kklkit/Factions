@@ -61,42 +61,50 @@ function ResizeHUD()
 
 function UpdateResolution(float x0, float y0, float x1, float y1)
 {
-	ActionScriptVoid("_root.updateResolution");
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.updateResolution");
 }
 
 function UpdateHealth(int Health, int HealthMax)
 {
-	ActionScriptVoid("_root.updateHealth");
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.updateHealth");
 }
 
 function UpdateAmmo(int Ammo, int AmmoMax)
 {
-	ActionScriptVoid("_root.updateAmmo");
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.updateAmmo");
 }
 
 function UpdateMagazineCount(int MagazineCount)
 {
-	ActionScriptVoid("_root.updateMagazineCount");
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.updateMagazineCount");
 }
 
 function UpdateResources(int Resources)
 {
-	ActionScriptVoid("_root.updateResources");
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.updateResources");
 }
 
 function UpdateIsAlive(bool IsAlive)
 {
-	ActionScriptVoid("_root.updateIsAlive");
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.updateIsAlive");
 }
 
 function UpdateCommStatus(string CommName, int Health, int HealthMax)
 {
-	ActionScriptVoid("_root.updateCommStatus");
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.updateCommStatus");
 }
 
 function UpdateCurrentResearch(string ResearchName, int SecsLeft)
 {
-	ActionScriptVoid("_root.updateCurrentResearch");
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.updateCurrentResearch");
 }
 
 defaultproperties
