@@ -155,6 +155,7 @@ function array<string> InfantryEquipmentNames(int Slot)
 		Data.AddItem("None");
 		break;
 	case 2:
+		Data.AddItem("Pistol");
 		Data.AddItem("Repair Tool");
 		break;
 	case 3:
