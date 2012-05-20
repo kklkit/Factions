@@ -63,7 +63,7 @@ defaultproperties
 	End Object
 	Wheels(3)=BRWheel
 
+	COMOffset=(x=0.0,y=0.0,z=-35.0)
 	Seats(0)={(CameraTag=Main_Root)}
-
 	AirSpeed=2000
 }
