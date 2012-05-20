@@ -14,14 +14,17 @@ defaultproperties
 	End Object
 
 	Begin Object Class=UDKVehicleSimCar Name=SimObject
-		bClampedFrictionModel=True
-		WheelSuspensionStiffness=15
-		WheelSuspensionDamping=2.0
+		WheelSuspensionStiffness=400.0
+		WheelSuspensionDamping=60.0
 		WheelSuspensionBias=0.0
-		EngineBrakeFactor=0.025
-		TorqueVSpeedCurve=(Points=((InVal=-600.0,OutVal=0.0),(InVal=-300.0,OutVal=80.0),(InVal=0.0,OutVal=130.0),(InVal=950.0,OutVal=130.0),(InVal=1050.0,OutVal=10.0),(InVal=1150.0,OutVal=0.0)))
-		MaxSteerAngleCurve=(Points=((InVal=0,OutVal=45),(InVal=600.0,OutVal=15.0),(InVal=1100.0,OutVal=10.0),(InVal=1300.0,OutVal=6.0),(InVal=1600.0,OutVal=1.0)))
-		SteerSpeed=110
+		bClampedFrictionModel=True
+
+		MaxSteerAngleCurve=(Points=((InVal=0,OutVal=35),(InVal=1150.0,OutVal=5.0)))
+		EngineBrakeFactor=0.1
+		MaxBrakeTorque=5.0
+		SteerSpeed=100
+
+		TorqueVSpeedCurve=(Points=((InVal=-1000.0,OutVal=10.0),(InVal=0.0,OutVal=250.0),(InVal=1150.0,OutVal=10.0)))
 	End Object
 	SimObj=SimObject
 	Components.Add(SimObject);
@@ -92,9 +95,8 @@ defaultproperties
 	End Object
 	Wheels(7)=RWheel4
 
+	COMOffset=(x=0.0,y=0.0,z=-40.0)
 	Seats(0)={(CameraTag=Main_Root)}
-
 	DrawScale=2.6
-
 	AirSpeed=1150
 }
