@@ -14,14 +14,17 @@ defaultproperties
 	End Object
 
 	Begin Object Class=UDKVehicleSimCar Name=SimObject
-		bClampedFrictionModel=True
-		WheelSuspensionStiffness=15
+		WheelSuspensionStiffness=25.0
 		WheelSuspensionDamping=2.0
 		WheelSuspensionBias=0.0
-		EngineBrakeFactor=0.025
-		TorqueVSpeedCurve=(Points=((InVal=-1000.0,OutVal=10.0),(InVal=0.0,OutVal=250.0),(InVal=2000.0,OutVal=10.0)))
+		bClampedFrictionModel=True
+
 		MaxSteerAngleCurve=(Points=((InVal=0,OutVal=35),(InVal=2000.0,OutVal=5.0)))
+		EngineBrakeFactor=0.1
+		MaxBrakeTorque=5.0
 		SteerSpeed=100
+
+		TorqueVSpeedCurve=(Points=((InVal=-1000.0,OutVal=10.0),(InVal=0.0,OutVal=250.0),(InVal=2000.0,OutVal=10.0)))
 	End Object
 	SimObj=SimObject
 	Components.Add(SimObject);
