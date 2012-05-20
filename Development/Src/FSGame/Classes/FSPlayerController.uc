@@ -50,9 +50,17 @@ simulated state Commanding
 	simulated event EndState(name NextStateName)
 	{
 		if (WorldInfo.NetMode == NM_DedicatedServer)
+		{
 			ClientGotoState(GetStateName());
+		}
 		else
+		{
+			bPlaceStructure = False;
+			PlacingStructureClass = None;
+
+			FSHUD(myHUD).EndPreviewStructure();
 			FSHUD(myHUD).GFxCommanderHUD.Close(False);
+		}
 	}
 
 	simulated event GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)

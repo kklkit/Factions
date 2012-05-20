@@ -71,7 +71,7 @@ function DrawHud()
 	{
 		DrawMinimap();
 
-		if (FSPlayer.PlacingStructureClass != None)
+		if (StructurePreview != None)
 			UpdatePreviewStructure();
 
 		if (bDragging)
@@ -120,7 +120,7 @@ function DrawSelectionBox()
 	Canvas.DrawBox(Max(DragStart.X, MousePosition.X) - Min(DragStart.X, MousePosition.X), Max(DragStart.Y, MousePosition.Y) - Min(DragStart.Y, MousePosition.Y));
 }
 
-reliable client function StartPreviewStructure(class<FSStructure> StructureClass)
+function StartPreviewStructure(class<FSStructure> StructureClass)
 {
 	// If we are already placing a building, kill it
 	if (StructurePreview != None)
@@ -129,7 +129,16 @@ reliable client function StartPreviewStructure(class<FSStructure> StructureClass
 	StructurePreview = Spawn(class'FSStructure'.static.GetPreviewClass(StructureClass),,,, rot(0, 0, 0),, True);
 }
 
-unreliable client function UpdatePreviewStructure()
+function EndPreviewStructure()
+{
+	if (StructurePreview == None)
+		return;
+
+	StructurePreview.Destroy();
+	StructurePreview = None;
+}
+
+function UpdatePreviewStructure()
 {
 	local Vector HitLocation, HitNormal, WorldOrigin, WorldDirection;
 
@@ -143,10 +152,10 @@ function SpawnStructure(FSPlayerController FSPlayer)
 {
 	if (StructurePreview.CanBuildHere())
 	{
-		StructurePreview.Destroy();
 		FSPlayer.ServerSpawnStructure(FSPlayer.PlacingStructureClass, StructurePreview.Location);
 		FSPlayer.bPlaceStructure = False;
 		FSPlayer.PlacingStructureClass = None;
+		EndPreviewStructure();
 	}
 }
 
