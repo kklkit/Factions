@@ -120,4 +120,5 @@ defaultproperties
 	RespawnTime=1.0
 	bDelayedSpawn=False
 	bDropOnDeath=False
+	bCanThrow=False
 }
