@@ -26,6 +26,8 @@ event PostBeginPlay()
 defaultproperties
 {
 	Begin Object Name=StructureMeshComponent
-		StaticMesh=StaticMesh'FSAssets.Structures.Barracks'
+		StaticMesh=StaticMesh'ST_BarracksMash.Mesh.S_ST_BarracksMash'
 	End Object
+
+	DrawScale=1.2
 }

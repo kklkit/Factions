@@ -9,7 +9,7 @@ static function bool CanBuildHere()
 defaultproperties
 {
 	Begin Object Name=StaticMeshComponent0
-		StaticMesh=StaticMesh'FSAssets.Structures.Barracks'
+		StaticMesh=StaticMesh'ST_BarracksMash.Mesh.S_ST_BarracksMash'
 	End Object
 	Components.Add(StaticMeshComponent0)
 
