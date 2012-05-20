@@ -170,10 +170,18 @@ reliable server function ServerSpawnStructure(class<FSStructure> StructureClass,
 
 exec function ReloadWeapon()
 {
-	if (Pawn != None && Pawn.Weapon != None && FSWeapon(Pawn.Weapon) != None)
-		FSWeapon(Pawn.Weapon).ServerReload();
+	local FSWeapon PlayerWeapon;
+
+	if (Pawn != None && Pawn.Weapon != None)
+	{
+		PlayerWeapon = FSWeapon(Pawn.Weapon);
+		if (PlayerWeapon != None && (PlayerWeapon.Magazine == None || PlayerWeapon.AmmoCount != PlayerWeapon.Magazine.AmmoCountMax))
+			FSWeapon(Pawn.Weapon).ServerReload();
+	}
 	else
+	{
 		`log("Failed to find weapon to reload!");
+	}
 }
 
 exec function BuildVehicle(name ChassisName)
