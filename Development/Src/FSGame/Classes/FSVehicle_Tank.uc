@@ -100,6 +100,7 @@ defaultproperties
 	End Object
 	Wheels(7)=RWheel4
 
+	COMOffset=(x=0.0,y=0.0,z=-20.0)
 	Seats(0)={(CameraTag=Main)}
 	DrawScale=2.0
 }
