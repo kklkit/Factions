@@ -56,29 +56,24 @@ simulated function bool HasAnyAmmo()
 
 simulated function AttachWeaponTo(SkeletalMeshComponent MeshCpnt, optional name SocketName)
 {
-	local FSPawn InstigatorPawn;
-
 	Super.AttachWeaponTo(MeshCpnt, SocketName);
 
-	InstigatorPawn = FSPawn(Instigator);
+	if (Role == ROLE_Authority)
+		FSPawn(Instigator).CurrentWeaponInfo = WeaponInfo;
 
-	if (InstigatorPawn != None && Role == ROLE_Authority)
-	{
-		InstigatorPawn.ClientUpdateWeaponAttachment();
-	}
+	if (Instigator.IsLocallyControlled())
+		FSPawn(Instigator).UpdateWeaponAttachment();
 }
 
 simulated function DetachWeapon()
 {
-	local FSPawn InstigatorPawn;
-
 	Super.DetachWeapon();
 
-	InstigatorPawn = FSPawn(Instigator);
-	if (InstigatorPawn != None && Role == ROLE_Authority)
-	{
-		InstigatorPawn.ClientUpdateWeaponAttachment();
-	}
+	if (Role == ROLE_Authority && FSPawn(Instigator).CurrentWeaponInfo == WeaponInfo)
+		FSPawn(Instigator).CurrentWeaponInfo.Name = '';
+
+	if (Instigator.IsLocallyControlled())
+		FSPawn(Instigator).UpdateWeaponAttachment();
 }
 
 simulated function TimeWeaponEquipping()

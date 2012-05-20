@@ -2,21 +2,19 @@
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSWeaponAttachment extends Actor
+	dependson(FSWeaponInfo)
 	abstract;
 
 var SkeletalMeshComponent Mesh;
 var name MuzzleSocket;
+var WeaponInfo WeaponInfo;
 
 simulated function AttachTo(FSPawn TargetPawn)
 {
-	local WeaponInfo WeapInfo;
-
-	WeapInfo = FSWeapon(TargetPawn.Weapon).WeaponInfo;
-
-	Mesh.SetSkeletalMesh(SkeletalMesh(DynamicLoadObject(WeapInfo.Mesh, class'SkeletalMesh')));
+	Mesh.SetSkeletalMesh(SkeletalMesh(DynamicLoadObject(WeaponInfo.Mesh, class'SkeletalMesh')));
 	if (TargetPawn.Mesh != None && Mesh != None)
 	{
-		Mesh.SetScale(WeapInfo.DrawScale);
+		Mesh.SetScale(WeaponInfo.DrawScale);
 		Mesh.SetShadowParent(TargetPawn.Mesh);
 		Mesh.SetLightEnvironment(TargetPawn.LightEnvironment);
 		TargetPawn.Mesh.AttachComponentToSocket(Mesh, TargetPawn.WeaponSocket);

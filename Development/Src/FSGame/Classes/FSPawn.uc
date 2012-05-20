@@ -1,12 +1,30 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSPawn extends UDKPawn;
+class FSPawn extends UDKPawn
+	dependson(FSWeaponInfo);
 
 var DynamicLightEnvironmentComponent LightEnvironment;
-var FSWeaponAttachment CurrentWeaponAttachment;
 var name WeaponSocket;
+
+// Weapon attachment
+var repnotify WeaponInfo CurrentWeaponInfo;
+var FSWeaponAttachment CurrentWeaponAttachment;
 var bool bWeaponAttachmentVisible;
+
+replication
+{
+	if (bNetDirty)
+		CurrentWeaponInfo;
+}
+
+simulated event ReplicatedEvent(name VarName)
+{
+	Super.ReplicatedEvent(VarName);
+
+	if (VarName == 'CurrentWeaponInfo')
+		UpdateWeaponAttachment();
+}
 
 simulated event PostInitAnimTree(SkeletalMeshComponent SkelComp)
 {
@@ -102,7 +120,7 @@ simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out 
 	return True;
 }
 
-reliable client function ClientUpdateWeaponAttachment()
+simulated function UpdateWeaponAttachment()
 {
 	if (Mesh.SkeletalMesh != None)
 	{
@@ -113,16 +131,17 @@ reliable client function ClientUpdateWeaponAttachment()
 			CurrentWeaponAttachment = None;
 		}
 
-		if (FSWeapon(Weapon) != None) // Create new weapon attachment
+		if (CurrentWeaponInfo.Name != '') // Create new weapon attachment
 		{
-			CurrentWeaponAttachment = Spawn(FSWeapon(Weapon).AttachmentClass, Self);
-		}
+			CurrentWeaponAttachment = Spawn(class'FSFirearmAttachment', Self); //@todo set this to the actual weapon attachment
 
-		if (CurrentWeaponAttachment != None) // Attach new weapon attachment to the mesh
-		{
-			CurrentWeaponAttachment.Instigator = Self;
-			CurrentWeaponAttachment.AttachTo(Self);
-			CurrentWeaponAttachment.ChangeVisibility(bWeaponAttachmentVisible);
+			if (CurrentWeaponAttachment != None) // Attach new weapon attachment to the mesh
+			{
+				CurrentWeaponAttachment.WeaponInfo = CurrentWeaponInfo;
+				CurrentWeaponAttachment.Instigator = Self;
+				CurrentWeaponAttachment.AttachTo(Self);
+				CurrentWeaponAttachment.ChangeVisibility(bWeaponAttachmentVisible);
+			}
 		}
 	}
 }
