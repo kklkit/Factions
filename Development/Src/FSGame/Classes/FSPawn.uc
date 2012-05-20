@@ -58,22 +58,34 @@ simulated event Destroyed()
 
 simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
 {
-	SetPhysics(PHYS_RigidBody);
-
-	PreRagdollCollisionComponent = CollisionComponent;
-	CollisionComponent = Mesh;
+	Super.PlayDying(DamageType, HitLoc);
 	
-	Mesh.PhysicsWeight = 1.0;
-	Mesh.bUpdateJointsFromAnimation = True;
+	Mesh.MinDistFactorForKinematicUpdate = 0.0;
 	Mesh.SetRBChannel(RBCC_Pawn);
 	Mesh.SetRBCollidesWithChannel(RBCC_Default, True);
-	Mesh.SetRBCollidesWithChannel(RBCC_Pawn, True);
-	Mesh.SetRBCollidesWithChannel(RBCC_Vehicle, True);
+	Mesh.SetRBCollidesWithChannel(RBCC_Pawn, False);
+	Mesh.SetRBCollidesWithChannel(RBCC_Vehicle, False);
 	Mesh.SetRBCollidesWithChannel(RBCC_Untitled3, False);
 	Mesh.SetRBCollidesWithChannel(RBCC_BlockingVolume, True);
-	Mesh.PhysicsAssetInstance.SetAllBodiesFixed(False);
+	Mesh.ForceSkelUpdate();
+	Mesh.SetTickGroup(TG_PostAsyncWork);
+	PreRagdollCollisionComponent = CollisionComponent;
+	CollisionComponent = Mesh;
+	CylinderComponent.SetActorCollision(False, False);
+	Mesh.SetActorCollision(True, False);
+	Mesh.SetTraceBlocking(True, True);
+	SetPhysics(PHYS_RigidBody);
+	Mesh.PhysicsWeight = 1.0;
 
-	Super.PlayDying(DamageType, HitLoc);
+	if (Mesh.bNotUpdatingKinematicDueToDistance)
+		Mesh.UpdateRBBonesFromSpaceBases(True, True);
+
+	Mesh.PhysicsAssetInstance.SetAllBodiesFixed(False);
+	Mesh.bUpdateKinematicBonesFromAnimation = False;
+	Mesh.SetRBLinearVelocity(Velocity, False);
+	Mesh.ScriptRigidBodyCollisionThreshold = MaxFallSpeed;
+	Mesh.SetNotifyRigidBodyCollision(True);
+	Mesh.WakeRigidBody();
 }
 
 simulated function WeaponFired(Weapon InWeapon, bool bViaReplication, optional vector HitLocation)
