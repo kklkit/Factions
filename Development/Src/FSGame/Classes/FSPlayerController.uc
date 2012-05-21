@@ -172,7 +172,7 @@ reliable server function ServerSpawnStructure(class<FSStructure> StructureClass,
 {
 	local FSStructure Structure;
 
-	Structure = Spawn(StructureClass,,, StructureLocation, rot(0,0,0),,);
+	Structure = Spawn(StructureClass,,, StructureLocation, rot(0,0,0),, true);
 	Structure.Team = PlayerReplicationInfo.Team.TeamIndex;
 }
 
