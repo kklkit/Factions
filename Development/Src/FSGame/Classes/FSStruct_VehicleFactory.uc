@@ -17,7 +17,7 @@ function BuildVehicle(name ChassisName, Pawn Builder)
 	if (TeamInfo != None && TeamInfo.Resources >= 100)
 	{
 		TeamInfo.Resources -= 100;
-		V = Spawn(VI.Class,,, Location + vect(600, 600, 100));
+		V = Spawn(VI.Class,,, Location + vect(150, 0, 100));
 		V.Team = Builder.GetTeamNum();
 	}
 }
@@ -29,5 +29,5 @@ defaultproperties
 		PhysicsAsset=PhysicsAsset'ST_VehicleFactoryMash.Mesh.SK_ST_VehicleFactoryMash_Physics'
 	End Object
 
-	DrawScale=2.5
+	DrawScale=2.4
 }
