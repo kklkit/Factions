@@ -10,11 +10,9 @@ event PostBeginPlay()
 
 	Super.PostBeginPlay();
 
-	PlayerStartLocation.X = Location.X + 200;
-	PlayerStartLocation.Y = Location.Y + 200;
-	PlayerStartLocation.Z = Location.Z + 125;
+	Mesh.GetSocketWorldLocationAndRotation('Spawn_Point', PlayerStartLocation);
 
-	BarracksPlayerStart = Spawn(class'FSTeamPlayerStart', self,, PlayerStartLocation,,,);
+	BarracksPlayerStart = Spawn(class'FSTeamPlayerStart', Self,, PlayerStartLocation,,,);
 
 	if (BarracksPlayerStart != None)
 	{
