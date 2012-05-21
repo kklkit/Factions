@@ -17,6 +17,8 @@ static function class<FSStructure> GetClass(byte StructureIndex)
 		return class'FSStruct_Barracks';
 	case 2:
 		return class'FSStruct_VehicleFactory';
+	case 3:
+		return class'FSStruct_Wall';
 	default:
 		return None;
 	}
@@ -30,6 +32,8 @@ static function class<FSStructurePreview> GetPreviewClass(class<FSStructure> Str
 	case class'FSStruct_Barracks':
 		return class'FSStructurePreview'; 
 	case class'FSStruct_VehicleFactory':
+		return class'FSStructurePreview';
+	case class'FSStruct_Wall':
 		return class'FSStructurePreview';
 	default:
 		return None;
