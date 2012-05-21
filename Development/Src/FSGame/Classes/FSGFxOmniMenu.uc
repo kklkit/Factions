@@ -7,7 +7,7 @@ var array<string> PendingInvalidates;
 
 event OnClose()
 {
-	if (GetPC().Pawn != None)
+	if (FSPawn(GetPC().Pawn) != None)
 		FSPawn(GetPC().Pawn).ResetEquipment();
 
 	Super.OnClose();
