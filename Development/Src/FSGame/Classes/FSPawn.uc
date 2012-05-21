@@ -6,6 +6,7 @@ class FSPawn extends UDKPawn
 
 var DynamicLightEnvironmentComponent LightEnvironment;
 var name WeaponSocket;
+var TeamInfo LastTeam;
 
 // Weapon attachment
 var repnotify WeaponInfo CurrentWeaponInfo;
@@ -156,6 +157,14 @@ simulated function UpdateWeaponAttachment()
 			}
 		}
 	}
+}
+
+function PlayerChangedTeam()
+{
+	if (LastTeam != None)
+		Super.PlayerChangedTeam();
+
+	LastTeam = GetTeam();
 }
 
 exec function ResetEquipment()
