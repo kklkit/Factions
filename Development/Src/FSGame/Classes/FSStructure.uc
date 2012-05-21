@@ -36,6 +36,11 @@ static function class<FSStructurePreview> GetPreviewClass(class<FSStructure> Str
 	}
 }
 
+function bool AnySeatAvailable()
+{
+	return False;
+}
+
 simulated event byte ScriptGetTeamNum()
 {
 	return Team;
