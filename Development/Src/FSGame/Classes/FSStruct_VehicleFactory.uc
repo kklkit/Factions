@@ -19,6 +19,7 @@ function BuildVehicle(name ChassisName, Pawn Builder)
 		TeamInfo.Resources -= 100;
 		V = Spawn(VI.Class,,, Location + vect(150, 0, 100));
 		V.Team = Builder.GetTeamNum();
+		V.TryToDrive(Builder);
 	}
 }
 
