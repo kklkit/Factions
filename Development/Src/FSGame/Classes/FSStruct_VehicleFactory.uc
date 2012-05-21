@@ -25,6 +25,9 @@ function BuildVehicle(name ChassisName, Pawn Builder)
 defaultproperties
 {
 	Begin Object Name=StructureMesh
-		SkeletalMesh=SkeletalMesh'ST_BarracksMash.Mesh.SK_ST_BarracksMash'
+		SkeletalMesh=SkeletalMesh'ST_VehicleFactoryMash.Mesh.SK_ST_VehicleFactoryMash'
+		PhysicsAsset=PhysicsAsset'ST_VehicleFactoryMash.Mesh.SK_ST_VehicleFactoryMash_Physics'
 	End Object
+
+	DrawScale=2.5
 }
