@@ -18,15 +18,16 @@ event PostBeginPlay()
 
 	if (BarracksPlayerStart != None)
 	{
-		BarracksPlayerStart.TeamNumber = self.GetTeamNum();
-		BarracksPlayerStart.TeamIndex = self.GetTeamNum();
+		BarracksPlayerStart.TeamNumber = Team;
+		BarracksPlayerStart.TeamIndex = Team;
 	}
 }
 
 defaultproperties
 {
-	Begin Object Name=StructureMeshComponent
-		StaticMesh=StaticMesh'ST_BarracksMash.Mesh.S_ST_BarracksMash'
+	Begin Object Name=StructureMesh
+		SkeletalMesh=SkeletalMesh'ST_BarracksMash.Mesh.SK_ST_BarracksMash'
+		PhysicsAsset=PhysicsAsset'ST_BarracksMash.Mesh.SK_ST_BarracksMash_Physics'
 	End Object
 
 	DrawScale=1.2

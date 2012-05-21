@@ -173,7 +173,7 @@ reliable server function ServerSpawnStructure(class<FSStructure> StructureClass,
 	local FSStructure Structure;
 
 	Structure = Spawn(StructureClass,,, StructureLocation, rot(0,0,0),,);
-	Structure.TeamNumber = PlayerReplicationInfo.Team.TeamIndex;
+	Structure.Team = PlayerReplicationInfo.Team.TeamIndex;
 }
 
 exec function ReloadWeapon()

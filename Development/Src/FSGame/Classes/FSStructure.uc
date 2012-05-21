@@ -1,13 +1,10 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSStructure extends Actor
-	placeable
+class FSStructure extends Vehicle
 	abstract;
 
-var() byte TeamNumber;
-var() int Health;
-var() int HealthMax;
+var() byte Team;
 
 /**
  * Returns the class for the given structure index.
@@ -41,39 +38,34 @@ static function class<FSStructurePreview> GetPreviewClass(class<FSStructure> Str
 
 simulated event byte ScriptGetTeamNum()
 {
-	return TeamNumber;
-}
-
-event TakeDamage(int DamageAmount, Controller EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional TraceHitInfo HitInfo, optional Actor DamageCauser)
-{
-	Super.TakeDamage(DamageAmount, EventInstigator, HitLocation, Momentum, DamageType, HitInfo, DamageCauser);
-	Health -= DamageAmount;
-	if (Health <= 0)
-		Destroy();
+	return Team;
 }
 
 defaultproperties
 {
-	Begin Object Class=DynamicLightEnvironmentComponent Name=StructureLightEnvironmentComponent
+	Begin Object Class=DynamicLightEnvironmentComponent Name=LightEnvironment0
 	End Object
-	Components.Add(StructureLightEnvironmentComponent)
+	Components.Add(LightEnvironment0)
 
-	Begin Object Class=StaticMeshComponent Name=StructureMeshComponent
-		LightEnvironment=StructureLightEnvironmentComponent
+	Begin Object Class=UDKSkeletalMeshComponent Name=StructureMesh
+		LightEnvironment=LightEnvironment0
+		CollideActors=True
+		BlockActors=True
+		BlockRigidBody=True
+		BlockZeroExtent=True
+		BlockNonZeroExtent=True
+		bUseSingleBodyPhysics=1
 	End Object
-	Components.Add(StructureMeshComponent)
+	CollisionComponent=StructureMesh
+	Mesh=StructureMesh
+	Components.Add(StructureMesh)
 
+	bMovable=False
 	CollisionType=COLLIDE_BlockAll
-	BlockRigidBody=True
 	bCollideActors=True
 	bBlockActors=True
-	RemoteRole=ROLE_SimulatedProxy
-	NetPriority=2.0
-	bAlwaysRelevant=True
-	bReplicateMovement=False
-	bOnlyDirtyReplication=True
 
-	TeamNumber=0
+	Team=0
 	Health=1000
 	HealthMax=1000
 }
