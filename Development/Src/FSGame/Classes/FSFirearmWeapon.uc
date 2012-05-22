@@ -16,8 +16,8 @@ defaultproperties
 	InstantHitDamageTypes(0)=class'DamageType'
 	ShouldFireOnRelease(0)=0
 
-	EquipTime=+0.45
-	PutDownTime=+0.33
+	EquipTime=0.0
+	PutDownTime=0.0
 	WeaponRange=22000
 	AimTraceRange=22000
 }
