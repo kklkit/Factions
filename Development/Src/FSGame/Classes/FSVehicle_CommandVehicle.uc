@@ -20,7 +20,7 @@ defaultproperties
 		bClampedFrictionModel=True
 
 		MaxSteerAngleCurve=(Points=((InVal=0,OutVal=35),(InVal=1150.0,OutVal=5.0)))
-		EngineBrakeFactor=0.01
+		EngineBrakeFactor=0.02
 		MaxBrakeTorque=5.0
 		SteerSpeed=100
 
@@ -105,4 +105,5 @@ defaultproperties
 	Seats(0)={(CameraTag=Main_Root)}
 	DrawScale=2.6
 	AirSpeed=1150
+	ExitRadius=200.0
 }
