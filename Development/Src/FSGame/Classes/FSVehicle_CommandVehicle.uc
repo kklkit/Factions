@@ -3,7 +3,7 @@
  */
 class FSVehicle_CommandVehicle extends FSVehicle;
 
-const TireRadius=80.0;
+const TireRadius=65.0;
 
 defaultproperties
 {
@@ -42,6 +42,7 @@ defaultproperties
 		BoneName="L_Tire_2"
 		SkelControlName="L_Tire_2_Cont"
 		WheelRadius=TireRadius
+		SteerFactor=0.25
 		bPoweredWheel=True
 	End Object
 	Wheels(1)=LWheel2
@@ -50,6 +51,7 @@ defaultproperties
 		BoneName="L_Tire_3"
 		SkelControlName="L_Tire_3_Cont"
 		WheelRadius=TireRadius
+		SteerFactor=-0.25
 		bPoweredWheel=True
 	End Object
 	Wheels(2)=LWheel3
@@ -58,6 +60,7 @@ defaultproperties
 		BoneName="L_Tire_4"
 		SkelControlName="L_Tire_4_Cont"
 		WheelRadius=TireRadius
+		SteerFactor=-1.0
 		bPoweredWheel=True
 	End Object
 	Wheels(3)=LWheel4
@@ -75,6 +78,7 @@ defaultproperties
 		BoneName="R_Tire_2"
 		SkelControlName="R_Tire_2_Cont"
 		WheelRadius=TireRadius
+		SteerFactor=0.25
 		bPoweredWheel=True
 	End Object
 	Wheels(5)=RWheel2
@@ -83,6 +87,7 @@ defaultproperties
 		BoneName="R_Tire_3"
 		SkelControlName="R_Tire_3_Cont"
 		WheelRadius=TireRadius
+		SteerFactor=-0.25
 		bPoweredWheel=True
 	End Object
 	Wheels(6)=RWheel3
@@ -91,6 +96,7 @@ defaultproperties
 		BoneName="R_Tire_4"
 		SkelControlName="R_Tire_4_Cont"
 		WheelRadius=TireRadius
+		SteerFactor=-1.0
 		bPoweredWheel=True
 	End Object
 	Wheels(7)=RWheel4
