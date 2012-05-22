@@ -126,7 +126,7 @@ function StartPreviewStructure(class<FSStructure> StructureClass)
 	if (StructurePreview != None)
 		StructurePreview.Destroy();
 
-	StructurePreview = Spawn(class'FSStructure'.static.GetPreviewClass(StructureClass),,,, rot(0, 0, 0),, True);
+	StructurePreview = Spawn(class'FSStructurePreview',,,, rot(0, 0, 0),, True);
 }
 
 function EndPreviewStructure()

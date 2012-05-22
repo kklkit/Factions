@@ -115,11 +115,11 @@ simulated state Commanding
 		FSHUD(myHUD).EndDragging();
 	}
 
-	exec function SelectStructure(byte StructureIndex)
+	exec function SelectStructure(name StructureName)
 	{
 		local class<FSStructure> StructureClass;
 
-		StructureClass = class'FSStructure'.static.GetClass(StructureIndex);
+		StructureClass = class'FSStructureInfo'.default.Structures[class'FSStructureInfo'.default.Structures.Find('Name', StructureName)].Class;
 		PlacingStructureClass = StructureClass;
 		FSHUD(myHUD).StartPreviewStructure(StructureClass);
 	}

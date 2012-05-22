@@ -6,40 +6,6 @@ class FSStructure extends Vehicle
 
 var() byte Team;
 
-/**
- * Returns the class for the given structure index.
- */
-static function class<FSStructure> GetClass(byte StructureIndex)
-{
-	switch (StructureIndex)
-	{
-	case 1:
-		return class'FSStruct_Barracks';
-	case 2:
-		return class'FSStruct_VehicleFactory';
-	case 3:
-		return class'FSStruct_Wall';
-	default:
-		return None;
-	}
-}
-
-//TODO: Change these classes with something semitransparent or w/e
-static function class<FSStructurePreview> GetPreviewClass(class<FSStructure> StructureClass)
-{
-	switch (StructureClass)
-	{
-	case class'FSStruct_Barracks':
-		return class'FSStructurePreview'; 
-	case class'FSStruct_VehicleFactory':
-		return class'FSStructurePreview';
-	case class'FSStruct_Wall':
-		return class'FSStructurePreview';
-	default:
-		return None;
-	}
-}
-
 function bool AnySeatAvailable()
 {
 	return False;
