@@ -1,24 +1,28 @@
-class FSStructurePreview extends KActorSpawnable
-    placeable;
+class FSStructurePreview extends Actor
+	dependson(FSStructureInfo);
 
-static function bool CanBuildHere()
+var DynamicLightEnvironmentComponent LightEnvironment;
+
+simulated function Initialize(StructureInfo StructureInfo)
 {
-	return True;
+	local UDKSkeletalMeshComponent Mesh;
+
+	Mesh = new(Self) class'UDKSkeletalMeshComponent';
+	Mesh.SetSkeletalMesh(StructureInfo.Mesh);
+	Mesh.SetLightEnvironment(LightEnvironment);
+	AttachComponent(Mesh);
+	SetDrawScale(StructureInfo.Scale);
 }
 
 defaultproperties
 {
-	Begin Object Name=StaticMeshComponent0
-		StaticMesh=StaticMesh'ST_BarracksMash.Mesh.S_ST_BarracksMash'
+	Begin Object Class=DynamicLightEnvironmentComponent Name=LightEnvironment0
 	End Object
-	Components.Add(StaticMeshComponent0)
+	Components.Add(LightEnvironment0)
+	LightEnvironment=LightEnvironment0
+
+	RemoteRole=ROLE_None
 
 	// Need this to avoid console spam
-	Physics = PHYS_None
-
-	// Probably need to fiddle with these for CanBuildHere()
-	CollisionType=COLLIDE_BlockAll
-	BlockRigidBody=true
-	bCollideActors=false
-	bBlockActors=true
+	Physics=PHYS_None
 }

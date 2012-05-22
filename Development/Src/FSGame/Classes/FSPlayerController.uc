@@ -1,7 +1,8 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSPlayerController extends UDKPlayerController;
+class FSPlayerController extends UDKPlayerController
+	dependson(FSStructureInfo);
 
 // Commander
 var() float CommanderCameraSpeed;
@@ -117,11 +118,11 @@ simulated state Commanding
 
 	exec function SelectStructure(name StructureName)
 	{
-		local class<FSStructure> StructureClass;
+		local StructureInfo StructureInfo;
 
-		StructureClass = class'FSStructureInfo'.default.Structures[class'FSStructureInfo'.default.Structures.Find('Name', StructureName)].Class;
-		PlacingStructureClass = StructureClass;
-		FSHUD(myHUD).StartPreviewStructure(StructureClass);
+		StructureInfo = class'FSStructureInfo'.default.Structures[class'FSStructureInfo'.default.Structures.Find('Name', StructureName)];
+		PlacingStructureClass = StructureInfo.Class;
+		FSHUD(myHUD).StartPreviewStructure(StructureInfo);
 	}
 
 	exec function PlaceStructure()

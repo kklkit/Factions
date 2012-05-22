@@ -1,7 +1,8 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FSHUD extends UDKHUD;
+class FSHUD extends UDKHUD
+	dependson(FSStructureInfo);
 
 var FSGFxHUD GFxHUD;
 var FSGFxOmniMenu GFxOmniMenu;
@@ -120,13 +121,14 @@ function DrawSelectionBox()
 	Canvas.DrawBox(Max(DragStart.X, MousePosition.X) - Min(DragStart.X, MousePosition.X), Max(DragStart.Y, MousePosition.Y) - Min(DragStart.Y, MousePosition.Y));
 }
 
-function StartPreviewStructure(class<FSStructure> StructureClass)
+function StartPreviewStructure(StructureInfo StructureInfo)
 {
 	// If we are already placing a building, kill it
 	if (StructurePreview != None)
 		StructurePreview.Destroy();
 
 	StructurePreview = Spawn(class'FSStructurePreview',,,, rot(0, 0, 0),, True);
+	StructurePreview.Initialize(StructureInfo);
 }
 
 function EndPreviewStructure()
@@ -150,11 +152,8 @@ function UpdatePreviewStructure()
 
 function SpawnStructure(FSPlayerController PlayerController)
 {
-	if (StructurePreview.CanBuildHere())
-	{
-		PlayerController.SpawnStructure(StructurePreview.Location);
-		EndPreviewStructure();
-	}
+	PlayerController.SpawnStructure(StructurePreview.Location);
+	EndPreviewStructure();
 }
 
 function BeginDragging()
