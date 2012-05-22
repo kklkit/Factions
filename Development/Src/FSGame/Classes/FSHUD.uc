@@ -148,13 +148,11 @@ function UpdatePreviewStructure()
 	StructurePreview.SetLocation(HitLocation);
 }
 
-function SpawnStructure(FSPlayerController FSPlayer)
+function SpawnStructure(FSPlayerController PlayerController)
 {
 	if (StructurePreview.CanBuildHere())
 	{
-		FSPlayer.ServerSpawnStructure(FSPlayer.PlacingStructureClass, StructurePreview.Location);
-		FSPlayer.bPlaceStructure = False;
-		FSPlayer.PlacingStructureClass = None;
+		PlayerController.SpawnStructure(StructurePreview.Location);
 		EndPreviewStructure();
 	}
 }

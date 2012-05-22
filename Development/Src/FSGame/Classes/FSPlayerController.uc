@@ -158,6 +158,13 @@ event PlayerTick(float DeltaTime)
 	MinimapCaptureComponent.SetView(MinimapCaptureLocation, MinimapCaptureRotation);
 }
 
+simulated function SpawnStructure(Vector StructureLocation)
+{
+	ServerSpawnStructure(PlacingStructureClass, StructureLocation);
+	bPlaceStructure = False;
+	PlacingStructureClass = None;
+}
+
 reliable server function ServerSpawnVehicle(name ChassisName)
 {
 	local FSStruct_VehicleFactory VF;
