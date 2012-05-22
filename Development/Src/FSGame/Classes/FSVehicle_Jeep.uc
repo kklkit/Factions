@@ -3,7 +3,7 @@
  */
 class FSVehicle_Jeep extends FSVehicle;
 
-const TireRadius=60.0;
+const TireRadius=30.0;
 
 defaultproperties
 {
@@ -14,13 +14,13 @@ defaultproperties
 	End Object
 
 	Begin Object Class=UDKVehicleSimCar Name=SimObject
-		WheelSuspensionStiffness=25.0
-		WheelSuspensionDamping=2.0
+		WheelSuspensionStiffness=300.0
+		WheelSuspensionDamping=40.0
 		WheelSuspensionBias=0.0
 		bClampedFrictionModel=True
 
 		MaxSteerAngleCurve=(Points=((InVal=0,OutVal=35),(InVal=2000.0,OutVal=5.0)))
-		EngineBrakeFactor=0.1
+		EngineBrakeFactor=0.01
 		MaxBrakeTorque=5.0
 		SteerSpeed=100
 
