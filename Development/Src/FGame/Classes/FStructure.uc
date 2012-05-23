@@ -2,8 +2,7 @@
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FStructure extends Vehicle
-	notplaceable
-	abstract;
+	notplaceable;
 
 var() byte Team;
 
