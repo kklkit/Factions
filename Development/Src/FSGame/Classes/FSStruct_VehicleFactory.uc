@@ -6,29 +6,21 @@ class FSStruct_VehicleFactory extends FSStructure
 
 function BuildVehicle(name ChassisName, Pawn Builder)
 {
-	local FSTeamInfo TeamInfo;
-	local FSVehicle V;
-	local VehicleInfo VI;
+	local FSTeamInfo PlayerTeam;
+	local FSVehicle Vehicle;
+	local VehicleInfo VehicleInfo;
 
-	TeamInfo = FSTeamInfo(Builder.PlayerReplicationInfo.Team);
-
-	VI = class'FSVehicleInfo'.default.Vehicles[class'FSVehicleInfo'.default.Vehicles.Find('Name', ChassisName)];
-
-	if (TeamInfo != None && TeamInfo.Resources >= 100)
+	PlayerTeam = FSTeamInfo(Builder.PlayerReplicationInfo.Team);
+	VehicleInfo = class'FSVehicleInfo'.default.Vehicles[class'FSVehicleInfo'.default.Vehicles.Find('Name', ChassisName)];
+	if (PlayerTeam != None && PlayerTeam.Resources >= 100)
 	{
-		TeamInfo.Resources -= 100;
-		V = Spawn(VI.Class,,, Location + vect(150, 0, 100));
-		V.Team = Builder.GetTeamNum();
-		V.TryToDrive(Builder);
+		PlayerTeam.Resources -= 100;
+		Vehicle = Spawn(VehicleInfo.Class,,, Location + vect(150, 0, 100));
+		Vehicle.Team = Builder.GetTeamNum();
+		Vehicle.TryToDrive(Builder);
 	}
 }
 
 defaultproperties
 {
-	Begin Object Name=StructureMesh
-		SkeletalMesh=SkeletalMesh'ST_VehicleFactoryMash.Mesh.SK_ST_VehicleFactoryMash'
-		PhysicsAsset=PhysicsAsset'ST_VehicleFactoryMash.Mesh.SK_ST_VehicleFactoryMash_Physics'
-	End Object
-
-	DrawScale=2.4
 }

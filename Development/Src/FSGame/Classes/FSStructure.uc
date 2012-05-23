@@ -2,6 +2,7 @@
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FSStructure extends Vehicle
+	notplaceable
 	abstract;
 
 var() byte Team;
@@ -35,12 +36,11 @@ defaultproperties
 	Mesh=StructureMesh
 	Components.Add(StructureMesh)
 
-	bMovable=False
 	CollisionType=COLLIDE_BlockAll
 	bCollideActors=True
 	bBlockActors=True
+	bMovable=False
 
-	Team=0
 	Health=1000
 	HealthMax=1000
 }
