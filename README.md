@@ -25,9 +25,10 @@ This is the development repository for Factions.
 * __[Engine.GameInfo]__
   * `DefaultGame=FGame.FTeamGame`
   * `DefaultServerGame=FGame.FTeamGame`
+  * `PlayerControllerClassName=FGame.FPlayerController`
   * `DefaultGameType=FGame.FTeamGame`
 
 ## Updating
 
 * Always pull using the `rebase` option
-* The generated config files (UDK*.ini) need to be deleted when the default config (Default*.ini) is updated to reload the configuration
+* The generated config files (UDK\*.ini) need to be deleted when the default config (Default\*.ini) is updated in order to reload the configuration
