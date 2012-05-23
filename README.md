@@ -4,12 +4,30 @@ This is the development repository for Factions.
 
 ## Installation
 
-1. [Download and install UDK](http://udk.com/download).
-2. Clone this repository to your UDK installation directory (e.g. `C:\UDK\UDK-2012-03`)
-3. In _UDKGame/Config/DefaultEngine.ini_, under section **[URL]**, set `Map=TestMap.udk` and `LocalMap=TestMap.udk`. At the end of section **[UnrealEd.EditorEngine]**, add `+EditPackages=FSGame` 
-4. In _UDKGame/Config/DefaultGame.ini_, under section **[Engine.GameInfo]**, set `DefaultGame=FSGame.FSTeamGame`, `DefaultServerGame=FSGame.FSTeamGame`, and `DefaultGameType="FSGame.FSTeamGame";`
-5. Run the UDK Editor to compile the scripts.
+1. [Download the latest UDK](http://udk.com/download) 
+2. Install it to your computer
+3. Clone this repo to your UDK directory (e.g. `C:\UDK\UDK-2012-05`)
+4. Update the configuration files using the settings below
+
+## Configuration
+
+### UDKGame/Config/DefaultEngine.ini
+
+* __[URL]__
+  * `Map=TestMap.udk`
+  * `LocalMap=TestMap.udk`
+
+* __[UnrealEd.EditorEngine]__
+  * `+EditPackages=FGame`
+
+### UDKGame/Config/DefaultGame.ini
+
+* __[Engine.GameInfo]__
+  * `DefaultGame=FGame.FTeamGame`
+  * `DefaultServerGame=FGame.FTeamGame`
+  * `DefaultGameType=FGame.FTeamGame`
 
 ## Updating
 
-**Important:** Always pull using **rebase**. Do not use merge because this will cause a non-linear history.
+* Always pull using the `rebase` option
+* The generated config files (UDK*.ini) need to be deleted when the default config (Default*.ini) is updated to reload the configuration
