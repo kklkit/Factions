@@ -18,7 +18,7 @@ This is the development repository for Factions.
   * `LocalMap=TestMap.udk`
 
 * __[UnrealEd.EditorEngine]__
-  * `+EditPackages=FGame`
+  * Add this line at the bottom of the list: `+EditPackages=FGame`
 
 ### UDKGame/Config/DefaultGame.ini
 
