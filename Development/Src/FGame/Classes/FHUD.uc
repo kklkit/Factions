@@ -1,8 +1,7 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FHUD extends UDKHUD
-	dependson(FStructureInfo);
+class FHUD extends UDKHUD;
 
 var FGFxHUD GFxHUD;
 var FGFxOmniMenu GFxOmniMenu;
@@ -13,7 +12,6 @@ var Vector2D MinimapPadding;
 const MinimapSize=256;
 const MinimapUnitBoxSize=10;
 
-var FStructurePreview StructurePreview;
 var float MapSize;
 var Color LineColor;
 
@@ -63,23 +61,20 @@ simulated function NotifyLocalPlayerTeamReceived()
 
 function DrawHud()
 {
-	local FPlayerController FPlayer;
+	local FPlayerController PlayerController;
 	
 	Super.DrawHud();
 
-	FPlayer = FPlayerController(PlayerOwner);
-	if (FPlayer != None)
+	PlayerController = FPlayerController(PlayerOwner);
+	if (PlayerController != None)
 	{
 		DrawMinimap();
 
-		if (StructurePreview != None)
-			UpdatePreviewStructure();
+		if (PlayerController.PlacingStructurePreview != None)
+			UpdateStructurePreview();
 
 		if (bDragging)
 			DrawSelectionBox();
-
-		if (FPlayer.bPlaceStructure)
-			SpawnStructure(FPlayer);
 	}
 }
 
@@ -121,39 +116,14 @@ function DrawSelectionBox()
 	Canvas.DrawBox(Max(DragStart.X, MousePosition.X) - Min(DragStart.X, MousePosition.X), Max(DragStart.Y, MousePosition.Y) - Min(DragStart.Y, MousePosition.Y));
 }
 
-function StartPreviewStructure(StructureInfo StructureInfo)
-{
-	// If we are already placing a building, kill it
-	if (StructurePreview != None)
-		StructurePreview.Destroy();
-
-	StructurePreview = Spawn(class'FStructurePreview',,,, rot(0, 0, 0),, True);
-	StructurePreview.Initialize(StructureInfo);
-}
-
-function EndPreviewStructure()
-{
-	if (StructurePreview == None)
-		return;
-
-	StructurePreview.Destroy();
-	StructurePreview = None;
-}
-
-function UpdatePreviewStructure()
+function UpdateStructurePreview()
 {
 	local Vector HitLocation, HitNormal, WorldOrigin, WorldDirection;
 
 	Canvas.DeProject(GetMousePosition(), WorldOrigin, WorldDirection);
 	Trace(HitLocation, HitNormal, WorldOrigin + WorldDirection * 65536.0, WorldOrigin, False,,,);
 	
-	StructurePreview.SetLocation(HitLocation);
-}
-
-function SpawnStructure(FPlayerController PlayerController)
-{
-	PlayerController.SpawnStructure(StructurePreview.Location);
-	EndPreviewStructure();
+	FPlayerController(PlayerOwner).ServerUpdateStructurePlacement(HitLocation);
 }
 
 function BeginDragging()

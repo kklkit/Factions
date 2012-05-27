@@ -19,8 +19,8 @@ function TickHUD()
 
 	if (StatusText != None)
 	{
-		if (PC.PlacingStructureClass != None)
-			StatusText.SetText("Placing:" @ PC.PlacingStructureClass);
+		if (PC.PlacingStructureInfo.Name != '')
+			StatusText.SetText("Placing:" @ PC.PlacingStructureInfo.Name);
 		else
 			StatusText.SetText("No structure selected");
 	}

@@ -2,19 +2,101 @@
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FPlayerController extends UDKPlayerController
-	dependson(FStructureInfo);
+	dependson(FMapInfo);
 
-// Commander
-var() float CommanderCameraSpeed;
+var float CommanderCameraSpeed;
 
 // Structure placement
-var class<FStructure> PlacingStructureClass;
-var bool bPlaceStructure; // True when the player has requested to place the structure
+var FStructureInfo PlacingStructureInfo;
+var FStructurePreview PlacingStructurePreview;
 
 // Minimap
 var SceneCapture2DComponent MinimapCaptureComponent;
 var Vector MinimapCaptureLocation;
 var Rotator MinimapCaptureRotation;
+
+replication
+{
+	if (bNetDirty)
+		PlacingStructureInfo, PlacingStructurePreview;
+}
+
+simulated event PostBeginPlay()
+{
+	local FMapInfo MapInfo;
+
+	Super.PostBeginPlay();
+
+	MapInfo = FMapInfo(WorldInfo.GetMapInfo());
+	if (MapInfo != None && WorldInfo.NetMode != NM_DedicatedServer) // Create minimap capture component on clients
+	{
+		MinimapCaptureComponent = new(Self) class'SceneCapture2DComponent';
+		MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'Factions_Assets.minimap_render_texture', 90,, 0);
+		MinimapCaptureComponent.bUpdateMatrices = False;
+		AttachComponent(MinimapCaptureComponent);
+
+		MinimapCaptureLocation.X = MapInfo.MapCenter.X;
+		MinimapCaptureLocation.Y = MapInfo.MapCenter.Y;
+		MinimapCaptureLocation.Z = MapInfo.MapRadius;
+	}
+}
+
+simulated event PlayerTick(float DeltaTime)
+{
+	Super.PlayerTick(DeltaTime);
+
+	// Update minimap capture position
+	if (MinimapCaptureComponent != None)
+		MinimapCaptureComponent.SetView(MinimapCaptureLocation, MinimapCaptureRotation);
+}
+
+reliable server function ServerSpawnVehicle(name ChassisName)
+{
+	local FStructure_VehicleFactory VF;
+
+	VF = FStructure_VehicleFactory(Pawn.Base);
+	if (VF != None)
+		VF.BuildVehicle(ChassisName, Pawn);
+}
+
+// Structure placement
+
+reliable server function ServerBeginStructurePlacement(name StructureName)
+{
+	PlacingStructureInfo = FMapInfo(WorldInfo.GetMapInfo()).GetStructureInfo(StructureName);
+
+	if (PlacingStructurePreview != None)
+		PlacingStructurePreview.Destroy();
+
+	PlacingStructurePreview = Spawn(class'FStructurePreview',,,, rot(0, 0, 0),, True);
+	PlacingStructurePreview.Initialize(PlacingStructureInfo);
+}
+
+unreliable server function ServerUpdateStructurePlacement(Vector NewLocation)
+{
+	PlacingStructurePreview.SetLocation(NewLocation);
+}
+
+reliable server function ServerPlaceStructure()
+{
+	local FStructure SpawnedStructure;
+
+	//@todo Check to make sure player is commander
+
+	SpawnedStructure = Spawn(PlacingStructureInfo.Archetype.Class, Self,, PlacingStructurePreview.Location, rot(0,0,0), PlacingStructureInfo.Archetype, True);
+	SpawnedStructure.Team = PlayerReplicationInfo.Team.TeamIndex;
+
+	EndStructurePlacement();
+}
+
+function EndStructurePlacement()
+{
+	PlacingStructureInfo.Name = '';
+	PlacingStructureInfo.Archetype = None;
+	PlacingStructurePreview.Destroy();
+}
+
+// Commander view
 
 unreliable server function ServerSetCommanderLocation(Vector NewLoc)
 {
@@ -27,6 +109,34 @@ reliable server function ServerToggleCommandView()
 {
 	if (PlayerReplicationInfo.Team != None) // Only enter command view when on a team
 		GotoState('Commanding');
+}
+
+// Exec functions
+
+exec function ReloadWeapon()
+{
+	local FWeapon PlayerWeapon;
+
+	if (Pawn != None && Pawn.Weapon != None)
+	{
+		PlayerWeapon = FWeapon(Pawn.Weapon);
+		if (PlayerWeapon != None && (PlayerWeapon.Magazine == None || PlayerWeapon.AmmoCount != PlayerWeapon.Magazine.AmmoCountMax))
+			FWeapon(Pawn.Weapon).ServerReload();
+	}
+	else
+	{
+		`log("Failed to find weapon to reload!");
+	}
+}
+
+exec function BuildVehicle(name ChassisName)
+{
+	ServerSpawnVehicle(ChassisName);
+}
+
+exec function ToggleCommandView()
+{
+	ServerToggleCommandView();
 }
 
 simulated state Commanding
@@ -42,9 +152,10 @@ simulated state Commanding
 		SetLocation(ViewLocation);
 		SetRotation(Rotator(Pawn.Location - ViewLocation));
 
+		// Set client state if dedicated server
 		if (WorldInfo.NetMode == NM_DedicatedServer)
 			ClientGotoState(GetStateName());
-		else
+		else // Open commander HUD if client
 			FHUD(myHUD).GFxCommanderHUD.Start();
 	}
 
@@ -52,14 +163,11 @@ simulated state Commanding
 	{
 		if (WorldInfo.NetMode == NM_DedicatedServer)
 		{
+			EndStructurePlacement();
 			ClientGotoState(GetStateName());
 		}
 		else
 		{
-			bPlaceStructure = False;
-			PlacingStructureClass = None;
-
-			FHUD(myHUD).EndPreviewStructure();
 			FHUD(myHUD).GFxCommanderHUD.Close(False);
 		}
 	}
@@ -108,7 +216,9 @@ simulated state Commanding
 	exec function StartFire(optional byte FireModeNum)
 	{
 		FHUD(myHUD).BeginDragging();
-		PlaceStructure();
+
+		if (PlacingStructureInfo.Name != '')
+			ServerPlaceStructure();
 	}
 
 	exec function StopFire(optional byte FireModeNum)
@@ -118,102 +228,13 @@ simulated state Commanding
 
 	exec function SelectStructure(name StructureName)
 	{
-		local StructureInfo StructureInfo;
-
-		StructureInfo = class'FStructureInfo'.default.Structures[class'FStructureInfo'.default.Structures.Find('Name', StructureName)];
-		PlacingStructureClass = StructureInfo.Class;
-		FHUD(myHUD).StartPreviewStructure(StructureInfo);
+		ServerBeginStructurePlacement(StructureName);
 	}
-
-	exec function PlaceStructure()
-	{
-		if (PlacingStructureClass != None)
-			bPlaceStructure = True;
-	}
-}
-
-simulated event PostBeginPlay()
-{
-	local FMapInfo MI;
-
-	Super.PostBeginPlay();
-
-	MI = FMapInfo(WorldInfo.GetMapInfo());
-	if (MI != None && WorldInfo.NetMode != NM_DedicatedServer)
-	{
-		MinimapCaptureComponent = new(self) class'SceneCapture2DComponent';
-		MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'Factions_Assets.minimap_render_texture', 90,, 0);
-		MinimapCaptureComponent.bUpdateMatrices = False;
-		AttachComponent(MinimapCaptureComponent);
-
-		MinimapCaptureLocation.X = MI.MapCenter.X;
-		MinimapCaptureLocation.Y = MI.MapCenter.Y;
-		MinimapCaptureLocation.Z = MI.MapRadius;
-	}
-}
-
-event PlayerTick(float DeltaTime)
-{
-	Super.PlayerTick(DeltaTime);
-
-	MinimapCaptureComponent.SetView(MinimapCaptureLocation, MinimapCaptureRotation);
-}
-
-simulated function SpawnStructure(Vector StructureLocation)
-{
-	ServerSpawnStructure(PlacingStructureClass, StructureLocation);
-	bPlaceStructure = False;
-	PlacingStructureClass = None;
-}
-
-reliable server function ServerSpawnVehicle(name ChassisName)
-{
-	local FStructure_VehicleFactory VF;
-
-	VF = FStructure_VehicleFactory(Pawn.Base);
-
-	if (VF != None)
-		VF.BuildVehicle(ChassisName, Pawn);
-}
-
-reliable server function ServerSpawnStructure(class<FStructure> StructureClass, Vector StructureLocation)
-{
-	local FStructure Structure;
-
-	Structure = Spawn(StructureClass,,, StructureLocation, rot(0,0,0),, true);
-	Structure.Team = PlayerReplicationInfo.Team.TeamIndex;
-}
-
-exec function ReloadWeapon()
-{
-	local FWeapon PlayerWeapon;
-
-	if (Pawn != None && Pawn.Weapon != None)
-	{
-		PlayerWeapon = FWeapon(Pawn.Weapon);
-		if (PlayerWeapon != None && (PlayerWeapon.Magazine == None || PlayerWeapon.AmmoCount != PlayerWeapon.Magazine.AmmoCountMax))
-			FWeapon(Pawn.Weapon).ServerReload();
-	}
-	else
-	{
-		`log("Failed to find weapon to reload!");
-	}
-}
-
-exec function BuildVehicle(name ChassisName)
-{
-	ServerSpawnVehicle(ChassisName);
-}
-
-exec function ToggleCommandView()
-{
-	ServerToggleCommandView();
 }
 
 defaultproperties
 {
 	InputClass=class'FGame.FPlayerInput'
-	bPlaceStructure=False
 	CommanderCameraSpeed=30.0
 	SpectatorCameraSpeed=5000.0
 	MinimapCaptureRotation=(Pitch=-16384,Yaw=-16384,Roll=0)

@@ -1,17 +1,17 @@
 class FStructurePreview extends Actor
-	dependson(FStructureInfo);
+	dependson(FMapInfo);
 
 var DynamicLightEnvironmentComponent LightEnvironment;
 
-simulated function Initialize(StructureInfo StructureInfo)
+simulated function Initialize(FStructureInfo StructureInfo)
 {
 	local UDKSkeletalMeshComponent Mesh;
 
 	Mesh = new(Self) class'UDKSkeletalMeshComponent';
-	Mesh.SetSkeletalMesh(StructureInfo.Mesh);
+	Mesh.SetSkeletalMesh(StructureInfo.Archetype.Mesh.SkeletalMesh);
 	Mesh.SetLightEnvironment(LightEnvironment);
 	AttachComponent(Mesh);
-	SetDrawScale(StructureInfo.Scale);
+	SetDrawScale(StructureInfo.Archetype.DrawScale);
 }
 
 defaultproperties
@@ -21,8 +21,5 @@ defaultproperties
 	Components.Add(LightEnvironment0)
 	LightEnvironment=LightEnvironment0
 
-	RemoteRole=ROLE_None
-
-	// Need this to avoid console spam
-	Physics=PHYS_None
+	RemoteRole=ROLE_SimulatedProxy
 }
