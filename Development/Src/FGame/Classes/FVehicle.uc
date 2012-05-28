@@ -8,6 +8,7 @@ simulated event PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
+	AirSpeed=MaxSpeed;
 	Mesh.WakeRigidBody();
 }
 
@@ -20,6 +21,8 @@ defaultproperties
 	Begin Object Name=SVehicleMesh
 		LightEnvironment=LightEnvironment0
 	End Object
+
+	Seats(0)={()}
 
 	DestroyOnPenetrationThreshold=50.0
 	DestroyOnPenetrationDuration=1.0
