@@ -69,12 +69,14 @@ reliable server function ServerBeginStructurePlacement(name StructureName)
 		PlacingStructurePreview.Destroy();
 
 	PlacingStructurePreview = Spawn(class'FStructurePreview',,,, rot(0, 0, 0),, True);
-	PlacingStructurePreview.Initialize(PlacingStructureInfo);
+	PlacingStructurePreview.StructureInfo = PlacingStructureInfo;
+	PlacingStructurePreview.Initialize();
 }
 
 unreliable server function ServerUpdateStructurePlacement(Vector NewLocation)
 {
-	PlacingStructurePreview.SetLocation(NewLocation);
+	if (PlacingStructurePreview != None)
+		PlacingStructurePreview.SetLocation(NewLocation);
 }
 
 reliable server function ServerPlaceStructure()
@@ -93,7 +95,8 @@ function EndStructurePlacement()
 {
 	PlacingStructureInfo.Name = '';
 	PlacingStructureInfo.Archetype = None;
-	PlacingStructurePreview.Destroy();
+	if (PlacingStructurePreview != None)
+		PlacingStructurePreview.Destroy();
 }
 
 // Commander view
