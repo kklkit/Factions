@@ -18,12 +18,28 @@ struct FStructureInfo
 };
 var() config array<FStructureInfo> Structures;
 
+// Vehicle types
+struct FVehicleInfo
+{
+	var() name Name;
+	var() FVehicle Archetype;
+};
+var() config array<FVehicleInfo> Vehicles;
+
 /**
  * Returns the structure info for the given name.
  */
 function FStructureInfo GetStructureInfo(name StructureName)
 {
 	return Structures[Structures.Find('Name', StructureName)];
+}
+
+/**
+ * Returns the vehicle info for the given name.
+ */
+function FVehicleInfo GetVehicleInfo(name VehicleName)
+{
+	return Vehicles[Vehicles.Find('Name', VehicleName)];
 }
 
 defaultproperties

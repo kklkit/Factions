@@ -2,8 +2,7 @@
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FVehicle extends UDKVehicle
-	placeable
-	abstract;
+	notplaceable;
 
 simulated event PostBeginPlay()
 {
