@@ -72,7 +72,7 @@ reliable server function ServerBeginStructurePlacement(name StructureName)
 	if (PlacingStructurePreview != None)
 		PlacingStructurePreview.Destroy();
 
-	PlacingStructurePreview = Spawn(class'FStructurePreview',,,, rot(0, 0, 0),, True);
+	PlacingStructurePreview = Spawn(class'FStructurePreview', Self,,, rot(0,0,0),, True);
 	PlacingStructurePreview.StructureInfo = PlacingStructureInfo;
 	PlacingStructurePreview.Initialize();
 }
