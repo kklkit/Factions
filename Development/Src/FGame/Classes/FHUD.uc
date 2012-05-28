@@ -123,7 +123,7 @@ function UpdateStructurePreview()
 	Canvas.DeProject(GetMousePosition(), WorldOrigin, WorldDirection);
 	Trace(HitLocation, HitNormal, WorldOrigin + WorldDirection * 65536.0, WorldOrigin, False,,,);
 	
-	FPlayerController(PlayerOwner).ServerUpdateStructurePlacement(HitLocation);
+	FPlayerController(PlayerOwner).NextPlacingStructurePreviewLocation = HitLocation;
 }
 
 function BeginDragging()

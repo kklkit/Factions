@@ -9,6 +9,7 @@ var float CommanderCameraSpeed;
 // Structure placement
 var FStructureInfo PlacingStructureInfo;
 var FStructurePreview PlacingStructurePreview;
+var Vector NextPlacingStructurePreviewLocation;
 
 // Minimap
 var SceneCapture2DComponent MinimapCaptureComponent;
@@ -48,6 +49,9 @@ simulated event PlayerTick(float DeltaTime)
 	// Update minimap capture position
 	if (MinimapCaptureComponent != None)
 		MinimapCaptureComponent.SetView(MinimapCaptureLocation, MinimapCaptureRotation);
+
+	if (PlacingStructurePreview != None && PlacingStructurePreview.Location != NextPlacingStructurePreviewLocation)
+		ServerUpdateStructurePlacement(NextPlacingStructurePreviewLocation);
 }
 
 reliable server function ServerSpawnVehicle(name ChassisName)
