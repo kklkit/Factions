@@ -24,7 +24,7 @@ struct FVehicleInfo
 	var() name Name;
 	var() FVehicle Archetype;
 };
-var() config array<FVehicleInfo> Vehicles;
+var() array<FVehicleInfo> Vehicles;
 
 /**
  * Returns the structure info for the given name.
@@ -46,4 +46,8 @@ defaultproperties
 {
 	MapCenter=(X=0,Y=0)
 	MapRadius=20000.0
+
+	Vehicles(0)=(Name=Jeep, Archetype=FVehicle_Car'VH_Jeep.Mesh.A_VH_Jeep')
+	Vehicles(1)=(Name=Tank, Archetype=FVehicle_Tank'VH_Tank.Mesh.A_VH_Tank')
+	Vehicles(2)=(Name=Gunship, Archetype=FVehicle_Aircraft'VH_Gunship.Mesh.A_VH_Gunship')
 }
