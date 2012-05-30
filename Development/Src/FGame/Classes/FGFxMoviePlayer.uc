@@ -37,36 +37,36 @@ event OnClose()
 
 function FPawn GetPlayerPawn()
 {
-	local FPawn FP;
-	local UDKVehicle FV; //@todo change to FVehicle
-	local UDKWeaponPawn FWP; //@todo change to FWeaponPawn
+	local UDKPawn PlayerPawn;
+	local UDKVehicle PlayerVehicle;
+	local UDKWeaponPawn PlayerWeaponPawn;
 
-	FP = FPawn(GetPC().Pawn);
+	PlayerPawn = UDKPawn(GetPC().Pawn);
 
-	// Set the pawn if driving a vehicle or mounted weapon
-	if (FP == None)
+	// Return the pawn for driven vehicles
+	if (PlayerPawn == None)
 	{
-		FV = UDKVehicle(GetPC().Pawn);
+		PlayerVehicle = UDKVehicle(GetPC().Pawn);
 
-		if (FV == None)
+		if (PlayerVehicle == None)
 		{
-			FWP = UDKWeaponPawn(GetPC().Pawn);
-			if (FWP != None)
+			PlayerWeaponPawn = UDKWeaponPawn(GetPC().Pawn);
+			if (PlayerWeaponPawn != None)
 			{
-				FV = FWP.MyVehicle;
-				FP = FPawn(FWP.Driver);
+				PlayerVehicle = PlayerWeaponPawn.MyVehicle;
+				PlayerPawn = UDKPawn(PlayerWeaponPawn.Driver);
 			}
 		}
 		else
 		{
-			FP = FPawn(FV.Driver);
+			PlayerPawn = FPawn(PlayerVehicle.Driver);
 		}
 
-		if (FV == None)
+		if (PlayerVehicle == None)
 			return None;
 	}
 
-	return FP;
+	return FPawn(PlayerPawn);
 }
 
 defaultproperties

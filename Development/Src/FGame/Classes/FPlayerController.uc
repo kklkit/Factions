@@ -122,12 +122,12 @@ reliable server function ServerToggleCommandView()
 
 exec function ReloadWeapon()
 {
-	local FWeapon InfantryEquipment;
+	local FWeapon PlayerWeapon;
 
 	if (Pawn != None && Pawn.Weapon != None)
 	{
-		InfantryEquipment = FWeapon(Pawn.Weapon);
-		if (InfantryEquipment != None && (InfantryEquipment.Magazine == None || InfantryEquipment.AmmoCount != InfantryEquipment.Magazine.AmmoCountMax))
+		PlayerWeapon = FWeapon(Pawn.Weapon);
+		if (PlayerWeapon != None && (PlayerWeapon.Magazine == None || PlayerWeapon.AmmoCount != PlayerWeapon.Magazine.AmmoCountMax))
 			FWeapon(Pawn.Weapon).ServerReload();
 	}
 	else

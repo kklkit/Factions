@@ -5,32 +5,32 @@ class FGFxHUD extends FGFxMoviePlayer;
 
 function TickHud()
 {
-	local FPawn FP;
-	local FWeapon FW;
+	local FPawn PlayerPawn;
+	local FWeapon PlayerWeapon;
 	local FMagazine Magazine;
 	local int MagazineCount;
 
 	if (!bMovieIsOpen)
 		return;
 
-	FP = GetPlayerPawn();
+	PlayerPawn = GetPlayerPawn();
 
-	if (FP != None)
+	if (PlayerPawn != None)
 	{
-		UpdateHealth(FP.Health, FP.HealthMax);
+		UpdateHealth(PlayerPawn.Health, PlayerPawn.HealthMax);
 
-		if (FP.PlayerReplicationInfo != None && FP.PlayerReplicationInfo.Team != None)
-			UpdateResources(FTeamInfo(FP.PlayerReplicationInfo.Team).Resources);
+		if (PlayerPawn.PlayerReplicationInfo != None && PlayerPawn.PlayerReplicationInfo.Team != None)
+			UpdateResources(FTeamInfo(PlayerPawn.PlayerReplicationInfo.Team).Resources);
 
-		FW = FWeapon(FP.Weapon);
-		if (FW != None && FW.Magazine != None)
-			UpdateAmmo(FW.AmmoCount, FW.Magazine.AmmoCountMax);
+		PlayerWeapon = FWeapon(PlayerPawn.Weapon);
+		if (PlayerWeapon != None && PlayerWeapon.Magazine != None)
+			UpdateAmmo(PlayerWeapon.AmmoCount, PlayerWeapon.Magazine.AmmoCountMax);
 		else
 			UpdateAmmo(0, 1);
 
-		if (GetPC().Pawn.InvManager != None)
-			foreach GetPC().Pawn.InvManager.InventoryActors(class'FMagazine', Magazine)
-				if (Magazine.AmmoFor == FW.Name)
+		if (PlayerPawn.InvManager != None)
+			foreach PlayerPawn.InvManager.InventoryActors(class'FMagazine', Magazine)
+				if (Magazine.AmmoFor == PlayerWeapon.Name)
 					MagazineCount++;
 
 		UpdateMagazineCount(MagazineCount);

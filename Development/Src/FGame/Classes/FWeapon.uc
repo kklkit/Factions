@@ -5,7 +5,7 @@
  */
 class FWeapon extends UDKWeapon;
 
-var FMagazine Magazine; //todo: make this private
+var FMagazine Magazine;
 var name WeaponName;
 
 replication
