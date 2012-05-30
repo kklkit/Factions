@@ -82,10 +82,7 @@ reliable server function ServerReload()
 
 	// Abort reloading if no magazine was found
 	if (NextMagazine == None)
-	{
-		`log("Failed to reload weapon; No magazine found!");
 		return;
-	}
 
 	if (Magazine != None)
 	{
