@@ -3,7 +3,7 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FFirearmAttachment extends FWeaponAttachment;
+class FWeaponAttachment_Firearm extends FWeaponAttachment;
 
 var ParticleSystem BulletTrail;
 

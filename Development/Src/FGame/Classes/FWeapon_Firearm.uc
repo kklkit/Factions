@@ -1,12 +1,10 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FFirearmWeapon extends FWeapon;
+class FWeapon_Firearm extends FWeapon;
 
 defaultproperties
 {
-	AttachmentClass=class'FFirearmAttachment'
-
 	FiringStatesArray(0)=WeaponFiring
 	WeaponFireTypes(0)=EWFT_InstantHit
 	FireInterval(0)=0.1

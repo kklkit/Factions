@@ -52,7 +52,7 @@ function SelectTeam(string TeamName)
 function SelectInfantryEquipment(byte Slot, string EquipmentName)
 {
 	if (GetPC().Pawn != None)
-		FInventoryManager(FPawn(GetPC().Pawn).InvManager).SelectEquipment(Slot, EquipmentName);
+		FInventoryManager(FPawn(GetPC().Pawn).InvManager).SelectEquipment(Slot, name(EquipmentName));
 }
 
 function BuildVehicle(string ChassisName)
@@ -106,7 +106,7 @@ function array<string> InfantryEquipment()
 	PlayerInventory = FInventoryManager(GetPC().Pawn.InvManager);
 
 	for (EquipmentIndex = 0; EquipmentIndex < class'FInventoryManager'.const.EquipmentSlots; EquipmentIndex++)
-		Data.InsertItem(EquipmentIndex, string(PlayerInventory.RequestedEquipmentName[EquipmentIndex]));
+		Data.InsertItem(EquipmentIndex, string(PlayerInventory.RequestedEquipment[EquipmentIndex].Name));
 
 	return Data;
 }

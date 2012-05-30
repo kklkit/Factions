@@ -1,8 +1,7 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FTeamGame extends UDKGame
-	dependson(FWeaponInfo);
+class FTeamGame extends UDKGame;
 
 const PSEUDO_TEAM_SPECTATOR=255; // Used in ChangeTeam to switch to the spectator team
 

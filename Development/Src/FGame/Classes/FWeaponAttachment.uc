@@ -1,33 +1,30 @@
 /**
+ * Physical equipment attachment used for viewing equipment on other pawns.
+ * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FWeaponAttachment extends Actor
-	dependson(FWeaponInfo)
-	abstract;
+class FWeaponAttachment extends Actor;
 
-var SkeletalMeshComponent Mesh;
-var name MuzzleSocket;
-var WeaponInfo WeaponInfo;
+var() instanced SkeletalMeshComponent Mesh;
+var() name MuzzleSocketName;
 
-simulated function AttachTo(FPawn TargetPawn)
+simulated function AttachTo(FPawn Pawn)
 {
-	Mesh.SetSkeletalMesh(SkeletalMesh(DynamicLoadObject(WeaponInfo.Mesh, class'SkeletalMesh')));
-	if (TargetPawn.Mesh != None && Mesh != None)
+	if (Mesh != None && Pawn.Mesh != None)
 	{
-		Mesh.SetScale(WeaponInfo.DrawScale);
-		Mesh.SetShadowParent(TargetPawn.Mesh);
-		Mesh.SetLightEnvironment(TargetPawn.LightEnvironment);
-		TargetPawn.Mesh.AttachComponentToSocket(Mesh, TargetPawn.WeaponSocket);
+		Mesh.SetShadowParent(Pawn.Mesh);
+		Mesh.SetLightEnvironment(Pawn.LightEnvironment);
+		Pawn.Mesh.AttachComponentToSocket(Mesh, Pawn.WeaponSocketName);
 	}
 }
 
-simulated function DetachFrom(SkeletalMeshComponent TargetMeshComponent)
+simulated function DetachFrom(SkeletalMeshComponent MeshComponent)
 {
-	if (TargetMeshComponent != None && Mesh != None)
+	if (Mesh != None && MeshComponent != None)
 	{
 		Mesh.SetShadowParent(None);
 		Mesh.SetLightEnvironment(None);
-		TargetMeshComponent.DetachComponent(Mesh);
+		MeshComponent.DetachComponent(Mesh);
 	}
 }
 
@@ -35,8 +32,6 @@ simulated function FirstPersonFireEffects(Weapon PawnWeapon, Vector HitLocation)
 {
 	if (PawnWeapon != None)
 		PawnWeapon.PlayFireEffects(Pawn(Owner).FiringMode, HitLocation);
-
-	PlayRecoil();
 }
 
 simulated function StopFirstPersonFireEffects(Weapon PawnWeapon)
@@ -72,9 +67,9 @@ simulated function Vector GetEffectLocation()
 {
 	local Vector SocketLocation;
 
-	if (MuzzleSocket != 'None')
+	if (MuzzleSocketName != 'None')
 	{
-		Mesh.GetSocketWorldLocationAndRotation(MuzzleSocket, SocketLocation);
+		Mesh.GetSocketWorldLocationAndRotation(MuzzleSocketName, SocketLocation);
 		return SocketLocation;
 	}
 	else
@@ -85,12 +80,8 @@ simulated function Vector GetEffectLocation()
 
 defaultproperties
 {
-	Begin Object Class=SkeletalMeshComponent Name=SkeletalMeshComponent0
-	End Object
-	Mesh=SkeletalMeshComponent0
-
 	bReplicateInstigator=True
-	MuzzleSocket=Muzzle
+	MuzzleSocketName=Muzzle
 	NetUpdateFrequency=10.0
 	TickGroup=TG_DuringAsyncWork
 	RemoteRole=ROLE_None

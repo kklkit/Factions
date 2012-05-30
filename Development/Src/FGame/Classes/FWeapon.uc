@@ -1,33 +1,17 @@
 /**
+ * Equippable inventory items such as rifles or repair tools.
+ * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FWeapon extends UDKWeapon
-	dependson(FWeaponInfo)
-	abstract;
+class FWeapon extends UDKWeapon;
 
-var FMagazine Magazine;
-var class<FWeaponAttachment> AttachmentClass;
-var WeaponInfo WeaponInfo;
-var name AmmoType;
+var FMagazine Magazine; //todo: make this private
+var name WeaponName;
 
 replication
 {
 	if (bNetDirty)
-		Magazine, WeaponInfo, AmmoType;
-}
-
-function Initialize(name WeaponName)
-{
-	local int Index;
-
-	AmmoType = WeaponName;
-
-	// Set weapon info
-	Index = class'FWeaponInfo'.default.Weapons.Find('Name', WeaponName);
-	if (Index != INDEX_NONE)
-		WeaponInfo = class'FWeaponInfo'.default.Weapons[Index];
-	else
-		`Log("Failed to find weapon info for weapon" @ WeaponName);
+		Magazine;
 }
 
 function ConsumeAmmo(byte FireModeNum)
@@ -58,9 +42,11 @@ simulated function AttachWeaponTo(SkeletalMeshComponent MeshCpnt, optional name 
 {
 	Super.AttachWeaponTo(MeshCpnt, SocketName);
 
+	// Update equipment name on the pawn to replicate to clients
 	if (Role == ROLE_Authority)
-		FPawn(Instigator).CurrentWeaponInfo = WeaponInfo;
+		FPawn(Instigator).EquippedWeaponName = WeaponName;
 
+	// Update weapon attachment on local player
 	if (Instigator.IsLocallyControlled())
 		FPawn(Instigator).UpdateWeaponAttachment();
 }
@@ -69,9 +55,11 @@ simulated function DetachWeapon()
 {
 	Super.DetachWeapon();
 
-	if (Role == ROLE_Authority && FPawn(Instigator).CurrentWeaponInfo == WeaponInfo)
-		FPawn(Instigator).CurrentWeaponInfo.Name = '';
+	// Clear equipment name on pawn
+	if (Role == ROLE_Authority && FPawn(Instigator).EquippedWeaponName == WeaponName)
+		FPawn(Instigator).EquippedWeaponName = '';
 
+	// Update weapon attachment on local player
 	if (Instigator.IsLocallyControlled())
 		FPawn(Instigator).UpdateWeaponAttachment();
 }
@@ -85,35 +73,36 @@ simulated function TimeWeaponEquipping()
 
 reliable server function ServerReload()
 {
-	local FMagazine M;
+	local FMagazine NextMagazine;
 
-	foreach InvManager.InventoryActors(class'FMagazine', M)
-		if (M.AmmoType == AmmoType)
+	// Get the next magazine of the equipment's type
+	foreach InvManager.InventoryActors(class'FMagazine', NextMagazine)
+		if (NextMagazine.AmmoFor == Name)
 			break;
 
-	if (M == None)
+	// Abort reloading if no magazine was found
+	if (NextMagazine == None)
+	{
+		`log("Failed to reload weapon; No magazine found!");
 		return;
+	}
 
 	if (Magazine != None)
 	{
+		// Throw away old magazine
 		Magazine.Destroy();
 		AmmoCount = 0;
 	}
 
-	InvManager.RemoveFromInventory(M);
-	Magazine = M;
-	AmmoCount = Magazine.AmmoCount;
-}
+	// Remove next magazine from inventory
+	InvManager.RemoveFromInventory(NextMagazine);
 
-function int GetDefaultMagazines()
-{
-	return 4;
+	// Insert magazine into weapon
+	Magazine = NextMagazine;
+	AmmoCount = Magazine.AmmoCount;
 }
 
 defaultproperties
 {
-	RespawnTime=1.0
-	bDelayedSpawn=False
-	bDropOnDeath=False
 	bCanThrow=False
 }

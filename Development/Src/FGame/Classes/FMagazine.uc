@@ -3,14 +3,14 @@
  */
 class FMagazine extends Inventory;
 
-var() name AmmoType;
+var() name AmmoFor;
 var() int AmmoCount;
 var() int AmmoCountMax;
 
 replication
 {
 	if (bNetDirty)
-		AmmoType, AmmoCount, AmmoCountMax;
+		AmmoFor, AmmoCount, AmmoCountMax;
 }
 
 function int AddAmmo(int Amount)

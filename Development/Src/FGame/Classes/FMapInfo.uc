@@ -26,20 +26,28 @@ struct FVehicleInfo
 };
 var() array<FVehicleInfo> Vehicles;
 
-/**
- * Returns the structure info for the given name.
- */
+// Weapon types
+struct FWeaponInfo
+{
+	var() name Name;
+	var() FWeapon Archetype;
+	var() FWeaponAttachment AttachmentArchetype;
+};
+var() array<FWeaponInfo> Weapons;
+
 function FStructureInfo GetStructureInfo(name StructureName)
 {
 	return Structures[Structures.Find('Name', StructureName)];
 }
 
-/**
- * Returns the vehicle info for the given name.
- */
 function FVehicleInfo GetVehicleInfo(name VehicleName)
 {
 	return Vehicles[Vehicles.Find('Name', VehicleName)];
+}
+
+function FWeaponInfo GetWeaponInfo(name WeaponName)
+{
+	return Weapons[Weapons.Find('Name', WeaponName)];
 }
 
 defaultproperties
@@ -50,4 +58,7 @@ defaultproperties
 	Vehicles(0)=(Name=Jeep, Archetype=FVehicle_Car'VH_Jeep.Mesh.A_VH_Jeep')
 	Vehicles(1)=(Name=Tank, Archetype=FVehicle_Tank'VH_Tank.Mesh.A_VH_Tank')
 	Vehicles(2)=(Name=Gunship, Archetype=FVehicle_Aircraft'VH_Gunship.Mesh.A_VH_Gunship')
+
+	Weapons(0)=(Name=Pistol, Archetype=FWeapon_Firearm'WP_Pistol.Mesh.A_WP_Pistol', AttachmentArchetype=FWeaponAttachment_Firearm'WP_Pistol.Mesh.A_WP_Pistol_Attachment')
+	Weapons(1)=(Name="Heavy Rifle", Archetype=FWeapon_Firearm'WP_Rifle.Mesh.A_WP_Rifle', AttachmentArchetype=FWeaponAttachment_Firearm'WP_Rifle.Mesh.A_WP_Rifle_Attachment')
 }

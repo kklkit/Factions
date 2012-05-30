@@ -1,29 +1,27 @@
 /**
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FPawn extends UDKPawn
-	dependson(FWeaponInfo);
+class FPawn extends UDKPawn;
 
 var DynamicLightEnvironmentComponent LightEnvironment;
-var name WeaponSocket;
-var TeamInfo LastTeam;
+var TeamInfo LastTeam; // Used to detect when the player has joined a new team
+var name WeaponSocketName;
 
 // Weapon attachment
-var repnotify WeaponInfo CurrentWeaponInfo;
-var FWeaponAttachment CurrentWeaponAttachment;
-var bool bWeaponAttachmentVisible;
+var repnotify name EquippedWeaponName;
+var FWeaponAttachment WeaponAttachment;
 
 replication
 {
 	if (bNetDirty)
-		CurrentWeaponInfo;
+		EquippedWeaponName;
 }
 
 simulated event ReplicatedEvent(name VarName)
 {
 	Super.ReplicatedEvent(VarName);
 
-	if (VarName == 'CurrentWeaponInfo')
+	if (VarName == 'EquippedWeaponName')
 		UpdateWeaponAttachment();
 }
 
@@ -31,6 +29,7 @@ simulated event PostInitAnimTree(SkeletalMeshComponent SkelComp)
 {
 	Super.PostInitAnimTree(SkelComp);
 
+	// Sets skeletal controls for animations to play correctly
 	if (SkelComp == Mesh)
 	{
 		LeftLegControl = SkelControlFootPlacement(Mesh.FindSkelControl(LeftFootControlName));
@@ -48,10 +47,11 @@ simulated event PostInitAnimTree(SkeletalMeshComponent SkelComp)
 
 simulated event Destroyed()
 {
-	if (CurrentWeaponAttachment != None)
+	if (WeaponAttachment != None)
 	{
-		CurrentWeaponAttachment.DetachFrom(Mesh);
-		CurrentWeaponAttachment.Destroy();
+		WeaponAttachment.DetachFrom(Mesh);
+		WeaponAttachment.Destroy();
+		WeaponAttachment = None;
 	}
 
 	Super.Destroyed();
@@ -91,12 +91,12 @@ simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
 
 simulated function WeaponFired(Weapon InWeapon, bool bViaReplication, optional vector HitLocation)
 {
-	if (CurrentWeaponAttachment != None)
+	if (WeaponAttachment != None)
 	{
 		if (IsFirstPerson())
-			CurrentWeaponAttachment.FirstPersonFireEffects(Weapon, HitLocation);
+			WeaponAttachment.FirstPersonFireEffects(Weapon, HitLocation);
 		else
-			CurrentWeaponAttachment.ThirdPersonFireEffects(HitLocation);
+			WeaponAttachment.ThirdPersonFireEffects(HitLocation);
 	}
 
 	Super.WeaponFired(InWeapon, bViaReplication, HitLocation);
@@ -104,10 +104,10 @@ simulated function WeaponFired(Weapon InWeapon, bool bViaReplication, optional v
 
 simulated function WeaponStoppedFiring(Weapon InWeapon, bool bViaReplication)
 {
-	if (CurrentWeaponAttachment != None)
+	if (WeaponAttachment != None)
 	{
-		CurrentWeaponAttachment.StopFirstPersonFireEffects(Weapon);
-		CurrentWeaponAttachment.StopThirdPersonFireEffects();
+		WeaponAttachment.StopFirstPersonFireEffects(Weapon);
+		WeaponAttachment.StopThirdPersonFireEffects();
 	}
 
 	Super.WeaponStoppedFiring(InWeapon, bViaReplication);
@@ -118,10 +118,10 @@ simulated function Rotator GetAdjustedAimFor(Weapon W, Vector StartFireLoc)
 	local Vector MuzVec;
 	local Rotator MuzRot;
 	
-	if (CurrentWeaponAttachment == None)
+	if (WeaponAttachment == None)
 		return GetBaseAimRotation();
 
-	CurrentWeaponAttachment.Mesh.GetSocketWorldLocationAndRotation(CurrentWeaponAttachment.MuzzleSocket, MuzVec, MuzRot);
+	WeaponAttachment.Mesh.GetSocketWorldLocationAndRotation(WeaponAttachment.MuzzleSocketName, MuzVec, MuzRot);
 
 	return MuzRot;
 }
@@ -135,25 +135,33 @@ simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out 
 
 simulated function UpdateWeaponAttachment()
 {
+	local FWeaponAttachment WeaponAttachmentArchetype;
+
 	if (Mesh.SkeletalMesh != None)
 	{
-		if (CurrentWeaponAttachment != None) // Delete current weapon attachment
+		if (WeaponAttachment != None)
 		{
-			CurrentWeaponAttachment.DetachFrom(Mesh);
-			CurrentWeaponAttachment.Destroy();
-			CurrentWeaponAttachment = None;
+			// Delete current weapon attachment
+			WeaponAttachment.DetachFrom(Mesh);
+			WeaponAttachment.Destroy();
 		}
 
-		if (CurrentWeaponInfo.Name != '') // Create new weapon attachment
+		if (EquippedWeaponName != '')
 		{
-			CurrentWeaponAttachment = Spawn(class'FFirearmAttachment', Self); //@todo set this to the actual weapon attachment
+			WeaponAttachmentArchetype = FMapInfo(WorldInfo.GetMapInfo()).GetWeaponInfo(EquippedWeaponName).AttachmentArchetype;
 
-			if (CurrentWeaponAttachment != None) // Attach new weapon attachment to the mesh
+			// Create the new weapon attachment
+			WeaponAttachment = Spawn(WeaponAttachmentArchetype.Class, Self,,,, WeaponAttachmentArchetype);
+
+			if (WeaponAttachment != None)
 			{
-				CurrentWeaponAttachment.WeaponInfo = CurrentWeaponInfo;
-				CurrentWeaponAttachment.Instigator = Self;
-				CurrentWeaponAttachment.AttachTo(Self);
-				CurrentWeaponAttachment.ChangeVisibility(bWeaponAttachmentVisible);
+				WeaponAttachment.Instigator = Self;
+				WeaponAttachment.AttachTo(Self);
+				WeaponAttachment.ChangeVisibility(True);
+			}
+			else
+			{
+				`log("Failed to spawn weapon attachment for archetype" @ WeaponAttachmentArchetype @ "for weapon" @ EquippedWeaponName @ "!");
 			}
 		}
 	}
@@ -182,31 +190,28 @@ defaultproperties
 	End Object
 	CylinderComponent=CollisionCylinder
 
-	Begin Object Class=DynamicLightEnvironmentComponent Name=PawnLightEnvironmentComponent
+	Begin Object Class=DynamicLightEnvironmentComponent Name=LightEnvironment0
 	End Object
-	Components.Add(PawnLightEnvironmentComponent)
-	LightEnvironment=PawnLightEnvironmentComponent
+	Components.Add(LightEnvironment0)
+	LightEnvironment=LightEnvironment0
 
-	Begin Object Class=SkeletalMeshComponent Name=PawnMeshComponent
+	Begin Object Class=SkeletalMeshComponent Name=SkeletalMesh0
 		SkeletalMesh=SkeletalMesh'Factions_Assets.Mesh.CH_IronGuard'
 		AnimTreeTemplate=AnimTree'CH_AnimHuman_Tree.AT_CH_Human'
 		PhysicsAsset=PhysicsAsset'CH_AnimCorrupt.Mesh.SK_CH_Corrupt_Male_Physics'
 		AnimSets(0)=AnimSet'CH_AnimHuman.Anims.K_AnimHuman_BaseMale'
-		LightEnvironment=PawnLightEnvironmentComponent
+		LightEnvironment=LightEnvironment0
 		BlockRigidBody=True
 		bHasPhysicsAssetInstance=True
 		RBChannel=RBCC_Untitled3
 		RBCollideWithChannels=(Untitled3=True)
 	End Object
-	Mesh=PawnMeshComponent
-	Components.Add(PawnMeshComponent)
+	Mesh=SkeletalMesh0
+	Components.Add(SkeletalMesh0)
 
 	InventoryManagerClass=class'FInventoryManager'
-
 	bCanCrouch=True
-	bWeaponAttachmentVisible=True
-
-	WeaponSocket=WeaponPoint
+	WeaponSocketName=WeaponPoint
 	LeftFootControlName=LeftFootControl
 	RightFootControlName=RightFootControl
 	bEnableFootPlacement=True
