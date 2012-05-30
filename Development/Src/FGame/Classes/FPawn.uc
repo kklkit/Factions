@@ -203,6 +203,7 @@ defaultproperties
 		LightEnvironment=LightEnvironment0
 		BlockRigidBody=True
 		bHasPhysicsAssetInstance=True
+		bEnableFullAnimWeightBodies=True
 		RBChannel=RBCC_Untitled3
 		RBCollideWithChannels=(Untitled3=True)
 	End Object
