@@ -22,6 +22,7 @@ function BuildVehicle(name VehicleName, Pawn Builder)
 		Vehicle = Spawn(VehicleInfo.Archetype.Class, Builder,, VehicleSpawnLocation,, VehicleInfo.Archetype);
 		Vehicle.Team = Builder.GetTeamNum();
 		Vehicle.TryToDrive(Builder);
+		Vehicle.bFinishedConstructing = True;
 	}
 }
 

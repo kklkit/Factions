@@ -4,12 +4,24 @@
 class FVehicle extends UDKVehicle
 	notplaceable;
 
+// True when the vehicle has been fully constructed and the builder is in the vehicle
+var bool bFinishedConstructing;
+
 simulated event PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
 	AirSpeed=MaxSpeed;
 	Mesh.WakeRigidBody();
+}
+
+function PancakeOther(Pawn Other)
+{
+	// Don't kill vehicle builder while building the vehicle
+	if (Other == Owner && !bFinishedConstructing)
+		return;
+
+	Super.PancakeOther(Other);
 }
 
 defaultproperties
@@ -26,4 +38,5 @@ defaultproperties
 
 	DestroyOnPenetrationThreshold=50.0
 	DestroyOnPenetrationDuration=1.0
+	bFinishedConstructing=False
 }
