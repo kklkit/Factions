@@ -30,6 +30,11 @@ defaultproperties
 	End Object
 	Components.Add(LightEnvironment0)
 
+	Begin Object Class=AudioComponent Name=EngineSound0
+	End Object
+	EngineSound=EngineSound0
+	Components.Add(EngineSound0)
+
 	Begin Object Name=SVehicleMesh
 		LightEnvironment=LightEnvironment0
 	End Object
