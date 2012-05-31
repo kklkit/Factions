@@ -1,1 +1,1 @@
-start Binaries\Win64\UDK.exe 127.0.0.1 -nomoviestartup -log
+start Binaries\Win32\UDK.exe 127.0.0.1 -nomoviestartup -log
