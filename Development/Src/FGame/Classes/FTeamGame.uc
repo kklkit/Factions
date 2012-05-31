@@ -196,6 +196,28 @@ function CreateTeam(int TeamIndex)
 	GameReplicationInfo.SetTeam(TeamIndex, Team);
 }
 
+function DriverEnteredVehicle(Vehicle Vehicle, Pawn Pawn)
+{
+	local FPlayerController PlayerController;
+
+	Super.DriverEnteredVehicle(Vehicle, Pawn);
+
+	foreach WorldInfo.AllControllers(class'FPlayerController', PlayerController)
+		if (PlayerController.ViewTarget == Pawn)
+			PlayerController.SetViewTarget(Vehicle);
+}
+
+function DriverLeftVehicle(Vehicle Vehicle, Pawn Pawn)
+{
+	local FPlayerController PlayerController;
+
+	Super.DriverLeftVehicle(Vehicle, Pawn);
+
+	foreach WorldInfo.AllControllers(class'FPlayerController', PlayerController)
+		if (PlayerController.ViewTarget == Vehicle)
+			PlayerController.SetViewTarget(Pawn);
+}
+
 defaultproperties
 {
 	PlayerControllerClass=class'FPlayerController'
