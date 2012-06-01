@@ -89,6 +89,23 @@ simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
 	Mesh.WakeRigidBody();
 }
 
+simulated function bool CalcCamera( float fDeltaTime, out Vector out_CamLoc, out Rotator out_CamRot, out float out_FOV )
+{
+	local bool bUseCamera;
+
+	if (IsFirstPerson())
+	{
+		GetActorEyesViewPoint(out_CamLoc, out_CamRot);
+		bUseCamera = True;
+	}
+	else
+	{
+		bUseCamera = False;
+	}
+
+	return bUseCamera;
+}
+
 simulated function WeaponFired(Weapon InWeapon, bool bViaReplication, optional vector HitLocation)
 {
 	if (WeaponAttachment != None)
@@ -111,26 +128,6 @@ simulated function WeaponStoppedFiring(Weapon InWeapon, bool bViaReplication)
 	}
 
 	Super.WeaponStoppedFiring(InWeapon, bViaReplication);
-}
-
-simulated function Rotator GetAdjustedAimFor(Weapon W, Vector StartFireLoc)
-{
-	local Vector MuzVec;
-	local Rotator MuzRot;
-	
-	if (WeaponAttachment == None)
-		return GetBaseAimRotation();
-
-	WeaponAttachment.Mesh.GetSocketWorldLocationAndRotation(WeaponAttachment.MuzzleSocketName, MuzVec, MuzRot);
-
-	return MuzRot;
-}
-
-simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out Rotator out_CamRot, out float out_FOV)
-{
-	Mesh.GetSocketWorldLocationAndRotation('Eyes', out_CamLoc);
-	out_CamRot = GetViewRotation();
-	return True;
 }
 
 simulated function UpdateWeaponAttachment()
@@ -212,6 +209,8 @@ defaultproperties
 	Components.Add(SkeletalMesh0)
 
 	InventoryManagerClass=class'FInventoryManager'
+	BaseEyeHeight=38.0
+	EyeHeight=38.0
 	bCanCrouch=True
 	WeaponSocketName=WeaponPoint
 	LeftFootControlName=LeftFootControl

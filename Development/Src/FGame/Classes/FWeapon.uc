@@ -5,6 +5,7 @@
  */
 class FWeapon extends UDKWeapon;
 
+var() Vector DrawOffset;
 var FMagazine Magazine;
 var name WeaponName;
 
@@ -40,28 +41,67 @@ simulated function bool HasAnyAmmo()
 
 simulated function AttachWeaponTo(SkeletalMeshComponent MeshCpnt, optional name SocketName)
 {
-	Super.AttachWeaponTo(MeshCpnt, SocketName);
+	local FPawn PlayerPawn;
+
+	PlayerPawn = FPawn(Instigator);
+	if (PlayerPawn.IsFirstPerson())
+	{
+		AttachComponent(Mesh);
+		EnsureWeaponOverlayComponentLast();
+		Mesh.SetLightEnvironment(PlayerPawn.LightEnvironment);
+	}
 
 	// Update equipment name on the pawn to replicate to clients
-	if (Role == ROLE_Authority)
-		FPawn(Instigator).EquippedWeaponName = WeaponName;
+	if (PlayerPawn != None && Role == ROLE_Authority)
+	{
+		PlayerPawn.EquippedWeaponName = WeaponName;
 
-	// Update weapon attachment on local player
-	if (Instigator.IsLocallyControlled())
-		FPawn(Instigator).UpdateWeaponAttachment();
+		// Update weapon attachment on local player
+		if (PlayerPawn.IsLocallyControlled())
+			PlayerPawn.UpdateWeaponAttachment();
+	}
 }
 
 simulated function DetachWeapon()
 {
-	Super.DetachWeapon();
+	local FPawn PlayerPawn;
+
+	DetachComponent(Mesh);
+	if (OverlayMesh != None)
+		DetachComponent(OverlayMesh);
+
+	PlayerPawn = FPawn(Instigator);
 
 	// Clear equipment name on pawn
-	if (Role == ROLE_Authority && FPawn(Instigator).EquippedWeaponName == WeaponName)
-		FPawn(Instigator).EquippedWeaponName = '';
+	if (PlayerPawn != None && Role == ROLE_Authority && FPawn(Instigator).EquippedWeaponName == WeaponName)
+	{
+		PlayerPawn.EquippedWeaponName = '';
 
-	// Update weapon attachment on local player
-	if (Instigator.IsLocallyControlled())
-		FPawn(Instigator).UpdateWeaponAttachment();
+		// Update weapon attachment on local player
+		if (Instigator.IsLocallyControlled())
+			PlayerPawn.UpdateWeaponAttachment();
+	}
+
+	SetBase(None);
+	SetHidden(True);
+	Mesh.SetLightEnvironment(None);
+}
+
+simulated event SetPosition(UDKPawn Holder)
+{
+	local Vector DrawLocation;
+
+	if (!Holder.IsFirstPerson())
+		return;
+	
+	DrawLocation = Holder.GetPawnViewLocation();
+	DrawLocation += DrawOffset >> Holder.Controller.Rotation;
+	SetLocation(DrawLocation);
+
+	SetHidden(False);
+	SetBase(Holder);
+
+	SetRotation(Holder.Controller.Rotation);
 }
 
 simulated function TimeWeaponEquipping()
@@ -101,5 +141,13 @@ reliable server function ServerReload()
 
 defaultproperties
 {
+	Begin Object Class=UDKSkeletalMeshComponent Name=FirstPersonMesh
+		DepthPriorityGroup=SDPG_Foreground
+		bOnlyOwnerSee=True
+		bOverrideAttachmentOwnerVisibility=True
+		Rotation=(Yaw=-16384)
+	End Object
+	Mesh=FirstPersonMesh
+
 	bCanThrow=False
 }
