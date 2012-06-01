@@ -206,6 +206,7 @@ defaultproperties
 		bEnableFullAnimWeightBodies=True
 		RBChannel=RBCC_Untitled3
 		RBCollideWithChannels=(Untitled3=True)
+		bOwnerNoSee=True
 	End Object
 	Mesh=SkeletalMesh0
 	Components.Add(SkeletalMesh0)

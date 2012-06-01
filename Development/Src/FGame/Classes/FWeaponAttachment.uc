@@ -5,7 +5,7 @@
  */
 class FWeaponAttachment extends Actor;
 
-var() instanced SkeletalMeshComponent Mesh;
+var() SkeletalMeshComponent Mesh;
 var() name MuzzleSocketName;
 
 simulated function AttachTo(FPawn Pawn)
@@ -80,6 +80,11 @@ simulated function Vector GetEffectLocation()
 
 defaultproperties
 {
+	Begin Object Class=UDKSkeletalMeshComponent Name=SkeletalMeshComponent0
+		bOwnerNoSee=True
+	End Object
+	Mesh=SkeletalMeshComponent0
+
 	bReplicateInstigator=True
 	MuzzleSocketName=Muzzle
 	NetUpdateFrequency=10.0
