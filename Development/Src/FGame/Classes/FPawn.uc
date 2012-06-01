@@ -7,6 +7,11 @@ var DynamicLightEnvironmentComponent LightEnvironment;
 var TeamInfo LastTeam; // Used to detect when the player has joined a new team
 var name WeaponSocketName;
 
+var float Bob;
+var	float AppliedBob;
+var float BobTime;
+var	Vector	WalkBob;
+
 // Weapon attachment
 var repnotify name EquippedWeaponName;
 var FWeaponAttachment WeaponAttachment;
@@ -55,6 +60,34 @@ simulated event Destroyed()
 	}
 
 	Super.Destroyed();
+}
+
+event UpdateEyeHeight(float DeltaTime)
+{
+	local Vector X, Y, Z;
+	local float Speed2D;
+
+	Bob = FClamp(Bob, -0.05, 0.05);
+	GetAxes(Rotation, X, Y, Z);
+	Speed2D = VSize(Velocity);
+	if (Speed2D < 10.0)
+		BobTime += 0.2 * DeltaTime;
+	else
+		BobTime += DeltaTime * (0.3 + 0.7 * Speed2D / GroundSpeed);
+	WalkBob = Y * Bob * Speed2D * sin(8 * BobTime);
+	AppliedBob = AppliedBob * (1 - FMin(1, 16 * DeltaTime));
+	WalkBob.Z = AppliedBob;
+	if (Speed2D > 10.0)
+		WalkBob.Z = WalkBob.Z + 0.75 * Bob * Speed2D * sin(16 * BobTime);
+}
+
+simulated function Vector WeaponBob(float BobDamping)
+{
+	local Vector BobAmount;
+
+	BobAmount = BobDamping * WalkBob;
+	BobAmount.Z = (0.45 + 0.55 * BobDamping) * WalkBob.Z;
+	return BobAmount;
 }
 
 simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
@@ -216,4 +249,6 @@ defaultproperties
 	LeftFootControlName=LeftFootControl
 	RightFootControlName=RightFootControl
 	bEnableFootPlacement=True
+	bUpdateEyeheight=True
+	Bob=0.001
 }

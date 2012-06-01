@@ -5,9 +5,9 @@
  */
 class FWeapon extends UDKWeapon;
 
+var name WeaponName;
 var() Vector DrawOffset;
 var FMagazine Magazine;
-var name WeaponName;
 
 replication
 {
@@ -96,6 +96,8 @@ simulated event SetPosition(UDKPawn Holder)
 	
 	DrawLocation = Holder.GetPawnViewLocation();
 	DrawLocation += DrawOffset >> Holder.Controller.Rotation;
+	DrawLocation += FPawn(Holder).WeaponBob(0.85);
+	DrawLocation += UDKPlayerController(Holder.Controller).ShakeOffset >> Holder.Controller.Rotation;
 	SetLocation(DrawLocation);
 
 	SetHidden(False);
