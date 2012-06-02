@@ -62,6 +62,20 @@ simulated event Destroyed()
 	Super.Destroyed();
 }
 
+simulated event StartDriving(Vehicle PlayerVehicle)
+{
+	Super.StartDriving(PlayerVehicle);
+
+	SetWeaponVisibility(False);
+}
+
+simulated event StopDriving(Vehicle PlayerVehicle)
+{
+	Super.StopDriving(PlayerVehicle);
+
+	SetWeaponVisibility(IsFirstPerson());
+}
+
 event UpdateEyeHeight(float DeltaTime)
 {
 	local Vector X, Y, Z;
@@ -137,6 +151,15 @@ simulated function bool CalcCamera( float fDeltaTime, out Vector out_CamLoc, out
 	}
 
 	return bUseCamera;
+}
+
+simulated function SetWeaponVisibility(bool bWeaponVisible)
+{
+	local FWeapon PlayerWeapon;
+
+	PlayerWeapon = FWeapon(Weapon);
+	if (PlayerWeapon != None)
+		PlayerWeapon.ChangeVisibility(bWeaponVisible);
 }
 
 simulated function WeaponFired(Weapon InWeapon, bool bViaReplication, optional vector HitLocation)

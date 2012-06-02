@@ -19,7 +19,7 @@ function BuildVehicle(name VehicleName, Pawn Builder)
 	if (PlayerTeam != None && PlayerTeam.Resources >= 100)
 	{
 		PlayerTeam.Resources -= 100;
-		Vehicle = Spawn(VehicleInfo.Archetype.Class, Builder,, VehicleSpawnLocation,, VehicleInfo.Archetype);
+		Vehicle = Spawn(VehicleInfo.Archetype.Class, Builder.Controller,, VehicleSpawnLocation,, VehicleInfo.Archetype);
 		Vehicle.Team = Builder.GetTeamNum();
 		Vehicle.TryToDrive(Builder);
 		Vehicle.bFinishedConstructing = True;

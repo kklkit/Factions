@@ -87,6 +87,28 @@ simulated function DetachWeapon()
 	Mesh.SetLightEnvironment(None);
 }
 
+simulated function ChangeVisibility(bool bIsVisible)
+{
+	local SkeletalMeshComponent WeaponSkeletalMesh;
+	local PrimitiveComponent SkeletalMeshPrimitive;
+
+	if (Mesh != None)
+	{
+		if (bIsVisible && !Mesh.bAttached)
+		{
+			AttachComponent(Mesh);
+			EnsureWeaponOverlayComponentLast();
+		}
+
+		SetHidden(!bIsVisible);
+
+		WeaponSkeletalMesh = SkeletalMeshComponent(Mesh);
+		if (WeaponSkeletalMesh != None)
+			foreach WeaponSkeletalMesh.AttachedComponents(class'PrimitiveComponent', SkeletalMeshPrimitive)
+				SkeletalMeshPrimitive.SetHidden(!bIsVisible);
+	}
+}
+
 simulated event SetPosition(UDKPawn Holder)
 {
 	local Vector DrawLocation;
