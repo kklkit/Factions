@@ -41,8 +41,21 @@ defaultproperties
 	TireAudioComp=TireSound0
 	Components.Add(TireSound0);
 
+	Begin Object Name=CollisionCylinder
+		BlockNonZeroExtent=False
+		BlockZeroExtent=False
+		BlockActors=False
+		BlockRigidBody=False
+		CollideActors=False
+	End Object
+
 	Begin Object Name=SVehicleMesh
 		LightEnvironment=LightEnvironment0
+		CastShadow=True
+		bCastDynamicShadow=True
+		bOverrideAttachmentOwnerVisibility=True
+		bAcceptsDynamicDecals=False
+		bPerBoneMotionBlur=True
 	End Object
 
 	TireSoundList(0)=(MaterialType=Dirt,Sound=SoundCue'A_Vehicle_Generic.Vehicle.VehicleSurface_TireDirt01Cue')
