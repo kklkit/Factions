@@ -6,6 +6,7 @@ class FVehicle_Car extends FVehicle;
 defaultproperties
 {
 	Begin Object Class=UDKVehicleSimCar Name=SimObject
+		bClampedFrictionModel=True
 	End Object
 	SimObj=SimObject
 
