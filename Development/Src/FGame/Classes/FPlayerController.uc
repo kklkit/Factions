@@ -54,6 +54,18 @@ simulated event PlayerTick(float DeltaTime)
 		ServerUpdateStructurePlacement(NextPlacingStructurePreviewLocation);
 }
 
+function CheckJumpOrDuck()
+{
+	if (Pawn == None)
+		return;
+
+	if (bPressedJump)
+		Pawn.DoJump(bUpdating);
+
+	if (Pawn.Physics != PHYS_Falling && Pawn.bCanCrouch)
+		Pawn.ShouldCrouch(bDuck != 0);
+}
+
 reliable server function ServerSpawnVehicle(name ChassisName)
 {
 	local FStructure_VehicleFactory VF;

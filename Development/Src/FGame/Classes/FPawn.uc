@@ -215,40 +215,70 @@ defaultproperties
 	Components.Remove(Sprite)
 
 	Begin Object Name=CollisionCylinder
-		CollisionRadius=+0021.000000
-		CollisionHeight=+0044.000000
+		CollisionRadius=21.0
+		CollisionHeight=44.0
 	End Object
 	CylinderComponent=CollisionCylinder
 
 	Begin Object Class=DynamicLightEnvironmentComponent Name=LightEnvironment0
+		bSynthesizeSHLight=True
+		bIsCharacterLightEnvironment=True
+		bUseBooleanEnvironmentShadowing=False
+		InvisibleUpdateTime=1
+		MinTimeBetweenFullUpdates=0.2
 	End Object
 	Components.Add(LightEnvironment0)
 	LightEnvironment=LightEnvironment0
 
 	Begin Object Class=SkeletalMeshComponent Name=SkeletalMesh0
-		SkeletalMesh=SkeletalMesh'Factions_Assets.Mesh.CH_IronGuard'
+		SkeletalMesh=SkeletalMesh'CH_IronGuard_Male.Mesh.SK_CH_IronGuard_MaleA'
 		AnimTreeTemplate=AnimTree'CH_AnimHuman_Tree.AT_CH_Human'
 		PhysicsAsset=PhysicsAsset'CH_AnimCorrupt.Mesh.SK_CH_Corrupt_Male_Physics'
 		AnimSets(0)=AnimSet'CH_AnimHuman.Anims.K_AnimHuman_BaseMale'
+		Translation=(Z=8.0)
+		Scale=1.075
 		LightEnvironment=LightEnvironment0
+		RBChannel=RBCC_Untitled3
+		RBCollideWithChannels=(Untitled3=True)
 		BlockRigidBody=True
 		bHasPhysicsAssetInstance=True
 		bEnableFullAnimWeightBodies=True
-		RBChannel=RBCC_Untitled3
-		RBCollideWithChannels=(Untitled3=True)
 		bOwnerNoSee=True
+		CastShadow=True
+		bCastDynamicShadow=true
 	End Object
 	Mesh=SkeletalMesh0
 	Components.Add(SkeletalMesh0)
 
 	InventoryManagerClass=class'FInventoryManager'
+	FallImpactSound=SoundCue'A_Character_BodyImpacts.BodyImpacts.A_Character_BodyImpact_BodyFall_Cue'
+
+	BaseTranslationOffset=6.0
+	WalkingPct=0.4
+	CrouchedPct=0.4
 	BaseEyeHeight=38.0
 	EyeHeight=38.0
+	GroundSpeed=440.0
+	AirSpeed=440.0
+	WaterSpeed=220.0
+	AccelRate=2048.0
+	JumpZ=322.0
+	CrouchHeight=29.0
+	CrouchRadius=21.0
+	Bob=0.001
+	MaxStepHeight=26.0
+	MaxJumpHeight=49.0
+	MaxFootPlacementDistSquared=56250000.0
+	FallSpeedThreshold=125.0
+
+	bUpdateEyeheight=True
 	bCanCrouch=True
+	bEnableFootPlacement=True
+	bPhysRigidBodyOutOfWorldCheck=True
+	bRunPhysicsWithNoController=True
+
 	WeaponSocketName=WeaponPoint
 	LeftFootControlName=LeftFootControl
 	RightFootControlName=RightFootControl
-	bEnableFootPlacement=True
-	bUpdateEyeheight=True
-	Bob=0.001
+	TorsoBoneName=b_Spine2
 }
