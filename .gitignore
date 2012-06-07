@@ -17,9 +17,7 @@ Development/Src/UTEditor/
 Development/Src/UTGame/
 Development/Src/UTGameContent/
 Development/Src/WinDrv/
-*.sln
 *.suo
-*.ucproj
 *.ucproj.user
 *.udkproj
 Engine/
