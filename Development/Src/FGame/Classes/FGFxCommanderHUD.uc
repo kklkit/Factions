@@ -1,26 +1,36 @@
 /**
+ * Updates the command view interface.
+ * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FGFxCommanderHUD extends FGFxMoviePlayer;
 
+// Shown at the top of the screen to show the current action (e.g. what building class is selected for placement)
 var GFxObject StatusText;
 
+/**
+ * Updates the interface elements in Flash.
+ */
 function TickHUD()
 {
-	local FPlayerController PC;
+	local FPlayerController PlayerController;
 
+	// Calling functions in Flash while the movie is closed can cause a crash.
 	if (!bMovieIsOpen)
 		return;
 
-	PC = FPlayerController(GetPC());
+	// Get the owning player controller.
+	PlayerController = FPlayerController(GetPC());
 
+	// Set the status text object if it doesn't exist.
 	if (StatusText == None)
 		StatusText = GetVariableObject("_root.statusText");
 
 	if (StatusText != None)
 	{
-		if (PC.PlacingStructureInfo.Name != '')
-			StatusText.SetText("Placing:" @ PC.PlacingStructureInfo.Name);
+		// Display the name of the structure being placed.
+		if (PlayerController.PlacingStructureInfo.Name != '')
+			StatusText.SetText("Placing:" @ PlayerController.PlacingStructureInfo.Name);
 		else
 			StatusText.SetText("No structure selected");
 	}

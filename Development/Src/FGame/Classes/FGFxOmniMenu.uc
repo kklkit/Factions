@@ -1,28 +1,41 @@
 /**
+ * Updates the omnimenu GUI.
+ * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FGFxOmniMenu extends FGFxMoviePlayer;
 
+// A list of elements that need to be invalidated the next time the movie clip is open.
 var array<string> PendingInvalidates;
 
+/**
+ * @extends
+ */
 event OnClose()
 {
+	// Set the player's loadout when the menu is closed. The called function is responsible for checking if the player is in a barracks/armory.
 	if (FPawn(GetPC().Pawn) != None)
 		FPawn(GetPC().Pawn).ResetEquipment();
 
 	Super.OnClose();
 }
 
+/**
+ * Updates the interface elements in Flash.
+ */
 function TickHUD()
 {
 	local string PendingInvalidate;
 
+	// Calling functions in Flash while the movie is closed can cause a crash.
 	if (!bMovieIsOpen)
 		return;
 
+	// Invalidate any HUD elements that were changed while the menu was closed.
 	foreach PendingInvalidates(PendingInvalidate)
 		Invalidate(PendingInvalidate);
 
+	// All changed HUD elements should have been invalidated.
 	PendingInvalidates.Length = 0;
 }
 
@@ -30,15 +43,22 @@ function TickHUD()
  Functions called from ActionScript
 **********************************************************************************************/
 
+/**
+ * Closes the omnimenu.
+ */
 function CloseMenu(string FrameLabelOnClose)
 {
 	Close(False);
 }
 
+/**
+ * Select what team the player is on.
+ */
 function SelectTeam(string TeamName)
 {
 	local int TeamIndex;
 
+	// Get the team index for the given team name.
 	if (TeamName ~= "red")
 		TeamIndex = TEAM_RED;
 	else if (TeamName ~= "blue")
@@ -46,20 +66,35 @@ function SelectTeam(string TeamName)
 	else if (TeamName ~= "spectator")
 		TeamIndex = class'FTeamGame'.const.PSEUDO_TEAM_SPECTATOR;
 
+	// Send the team change request to the server.
 	GetPC().ServerChangeTeam(TeamIndex);
 }
 
+/**
+ * Select the player's equipment for the given slot.
+ */
 function SelectInfantryEquipment(byte Slot, string EquipmentName)
 {
+	// Forward the parameters to the inventory manager.
 	if (GetPC().Pawn != None)
 		FInventoryManager(FPawn(GetPC().Pawn).InvManager).SelectEquipment(Slot, name(EquipmentName));
 }
 
+/**
+ * Build a vehicle for the player.
+ */
 function BuildVehicle(string ChassisName)
 {
 	FPlayerController(GetPC()).BuildVehicle(name(ChassisName));
 }
 
+/*********************************************************************************************
+ Data providers
+**********************************************************************************************/
+
+/**
+ * Returns the team name of the team the player is on.
+ */
 function array<string> PlayerTeam()
 {
 	local array<string> Data;
@@ -72,10 +107,13 @@ function array<string> PlayerTeam()
 	return Data;
 }
 
+/**
+ * Returns a list of the player names on the given team.
+ */
 function array<string> PlayerNames(string TeamName)
 {
 	local array<string> Data;
-	local PlayerReplicationInfo PRI;
+	local PlayerReplicationInfo PlayerReplicationInfo;
 	local byte TeamIndex;
 
 	if (TeamName ~= "red")
@@ -83,20 +121,27 @@ function array<string> PlayerNames(string TeamName)
 	else if (TeamName ~= "blue")
 		TeamIndex = TEAM_BLUE;
 
-	foreach GetPC().WorldInfo.GRI.PRIArray(PRI)
+	foreach GetPC().WorldInfo.GRI.PRIArray(PlayerReplicationInfo)
 	{
 		if (TeamName ~= "spectator")
 		{
-			if (PRI.Team == None) 
-				Data.AddItem(PRI.PlayerName);
+			if (PlayerReplicationInfo.Team == None)
+			{
+				Data.AddItem(PlayerReplicationInfo.PlayerName);
+			}
 		}
-		else if (PRI.Team != None && PRI.Team.TeamIndex == TeamIndex)
-			Data.AddItem(PRI.PlayerName);
+		else if (PlayerReplicationInfo.Team != None && PlayerReplicationInfo.Team.TeamIndex == TeamIndex)
+		{
+			Data.AddItem(PlayerReplicationInfo.PlayerName);
+		}
 	}
 
 	return Data;
 }
 
+/**
+ * Returns a list of the names of the player's selected infantry equipment.
+ */
 function array<string> InfantryEquipment()
 {
 	local array<string> Data;
@@ -111,14 +156,17 @@ function array<string> InfantryEquipment()
 	return Data;
 }
 
+/**
+ * Returns a list of the names of the player's equipment presets.
+ */
 function array<string> InfantryPresetNames()
 {
 	local array<string> Data;
 
-	Data.AddItem("Engineer");
-	Data.AddItem("Grenadier");
-	Data.AddItem("Rifleman");
-	Data.AddItem("Scout");
+	Data.AddItem("Preset 1");
+	Data.AddItem("Preset 2");
+	Data.AddItem("Preset 3");
+	Data.AddItem("Preset 4");
 	Data.AddItem("Preset 5");
 	Data.AddItem("Preset 6");
 	Data.AddItem("Preset 7");
@@ -129,6 +177,9 @@ function array<string> InfantryPresetNames()
 	return Data;
 }
 
+/**
+ * Returns a list of the available equipment slot names.
+ */
 function array<string> InfantryEquipmentLabels()
 {
 	local array<string> Data;
@@ -141,6 +192,9 @@ function array<string> InfantryEquipmentLabels()
 	return Data;
 }
 
+/**
+ * Returns a list of the equipment names for the given slot.
+ */
 function array<string> InfantryEquipmentNames(int Slot)
 {
 	local array<string> Data;
@@ -166,6 +220,9 @@ function array<string> InfantryEquipmentNames(int Slot)
 	return Data;
 }
 
+/**
+ * Returns a list of the available skill slot names.
+ */
 function array<string> InfantrySkillLabels()
 {
 	local array<string> Data;
@@ -178,6 +235,9 @@ function array<string> InfantrySkillLabels()
 	return Data;
 }
 
+/**
+ * Returns a list of the skill names for the given skill slot.
+ */
 function array<string> InfantrySkillNames(int Slot)
 {
 	local array<string> Data;
@@ -209,6 +269,9 @@ function array<string> InfantrySkillNames(int Slot)
 	return Data;
 }
 
+/**
+ * Returns a list of the available vehicle chassis.
+ */
 function array<string> VehicleChassisNames()
 {
 	local array<string> Data;
@@ -220,6 +283,9 @@ function array<string> VehicleChassisNames()
 	return Data;
 }
 
+/**
+ * Returns a list of the available vehicle armor names.
+ */
 function array<string> VehicleArmorNames()
 {
 	local array<string> Data;
@@ -238,6 +304,11 @@ function array<string> VehicleArmorNames()
 
 /*********************************************************************************************
  Functions calling ActionScript
+ 
+ These functions simply forwards the call with its parameters to Flash.
+ 
+ Always check to make sure the movie is open before calling Flash. The game will crash if a
+ function is called while the movie is closed.
 **********************************************************************************************/
 
 function Invalidate(string Item)
