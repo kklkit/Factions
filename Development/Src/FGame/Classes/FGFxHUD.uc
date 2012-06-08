@@ -1,8 +1,13 @@
 /**
+ * Updates the infantry and vehicle HUD.
+ * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FGFxHUD extends FGFxMoviePlayer;
 
+/**
+ * Updates the interface elements in Flash.
+ */
 function TickHud()
 {
 	local FPawn PlayerPawn;
@@ -10,21 +15,22 @@ function TickHud()
 	local FMagazine Magazine;
 	local int MagazineCount;
 
+	// Calling functions in Flash while the movie is closed can cause a crash.
 	if (!bMovieIsOpen)
 		return;
 
+	// Get the actual player pawn (infantry pawn).
 	PlayerPawn = GetPlayerPawn();
 
+	// Update each HUD element.
 	if (PlayerPawn != None)
 	{
 		UpdateHealth(PlayerPawn.Health, PlayerPawn.HealthMax);
 
-		if (PlayerPawn.PlayerReplicationInfo != None && PlayerPawn.PlayerReplicationInfo.Team != None)
-			UpdateResources(FTeamInfo(PlayerPawn.PlayerReplicationInfo.Team).Resources);
-
 		PlayerWeapon = FWeapon(PlayerPawn.Weapon);
+
 		if (PlayerWeapon != None && PlayerWeapon.Magazine != None)
-			UpdateAmmo(PlayerWeapon.AmmoCount, PlayerWeapon.Magazine.AmmoCountMax);
+			UpdateAmmo(PlayerWeapon.Magazine.AmmoCount, PlayerWeapon.Magazine.AmmoCountMax);
 		else
 			UpdateAmmo(0, 1);
 
@@ -34,6 +40,9 @@ function TickHud()
 					MagazineCount++;
 
 		UpdateMagazineCount(MagazineCount);
+
+		if (PlayerPawn.PlayerReplicationInfo != None && PlayerPawn.PlayerReplicationInfo.Team != None)
+			UpdateResources(FTeamInfo(PlayerPawn.PlayerReplicationInfo.Team).Resources);
 	}
 	else
 	{
@@ -46,6 +55,9 @@ function TickHud()
  Functions called from ActionScript
 **********************************************************************************************/
 
+/**
+ * Calls the update resolution function with the current screen size.
+ */
 function ResizeHUD()
 {
 	local float x0, y0, x1, y1;
@@ -57,6 +69,11 @@ function ResizeHUD()
 
 /*********************************************************************************************
  Functions calling ActionScript
+ 
+ These functions simply forwards the call with its parameters to Flash.
+ 
+ Always check to make sure the movie is open before calling Flash. The game will crash if a
+ function is called while the movie is closed.
 **********************************************************************************************/
 
 function UpdateResolution(float x0, float y0, float x1, float y1)
