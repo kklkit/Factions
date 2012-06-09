@@ -1,5 +1,5 @@
 /**
- * Weapon attachment for infantry guns.
+ * Weapon attachment for firearm-type infantry weapons.
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */

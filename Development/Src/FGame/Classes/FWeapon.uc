@@ -6,7 +6,11 @@
 class FWeapon extends UDKWeapon;
 
 var name WeaponName;
+
+// First-person model location offset relative to the pawn view location
 var() Vector DrawOffset;
+
+// Loaded magazine
 var FMagazine Magazine;
 
 replication
@@ -15,17 +19,26 @@ replication
 		Magazine;
 }
 
+/**
+ * @extends
+ */
 function ConsumeAmmo(byte FireModeNum)
 {
 	AddAmmo(-1);
 }
 
+/**
+ * @extends
+ */
 function int AddAmmo(int Amount)
 {
 	AmmoCount = Magazine.AddAmmo(Amount);
 	return AmmoCount;
 }
 
+/**
+ * @extends
+ */
 simulated function bool HasAmmo(byte FireModeNum, optional int Amount)
 {
 	if (Amount != 0)
@@ -34,11 +47,17 @@ simulated function bool HasAmmo(byte FireModeNum, optional int Amount)
 		return (AmmoCount > 0);
 }
 
+/**
+ * @extends
+ */
 simulated function bool HasAnyAmmo()
 {
 	return AmmoCount > 0;
 }
 
+/**
+ * @extends
+ */
 simulated function AttachWeaponTo(SkeletalMeshComponent MeshCpnt, optional name SocketName)
 {
 	local FPawn PlayerPawn;
@@ -56,12 +75,15 @@ simulated function AttachWeaponTo(SkeletalMeshComponent MeshCpnt, optional name 
 	{
 		PlayerPawn.EquippedWeaponName = WeaponName;
 
-		// Update weapon attachment on local player
+		// Update weapon attachment when in single player mode
 		if (PlayerPawn.IsLocallyControlled())
 			PlayerPawn.UpdateWeaponAttachment();
 	}
 }
 
+/**
+ * @extends
+ */
 simulated function DetachWeapon()
 {
 	local FPawn PlayerPawn;
@@ -77,7 +99,7 @@ simulated function DetachWeapon()
 	{
 		PlayerPawn.EquippedWeaponName = '';
 
-		// Update weapon attachment on local player
+		// Update weapon attachment when in single player mode
 		if (Instigator.IsLocallyControlled())
 			PlayerPawn.UpdateWeaponAttachment();
 	}
@@ -87,6 +109,9 @@ simulated function DetachWeapon()
 	Mesh.SetLightEnvironment(None);
 }
 
+/**
+ * Toggles visibility of the first-person weapon model.
+ */
 simulated function ChangeVisibility(bool bIsVisible)
 {
 	local SkeletalMeshComponent WeaponSkeletalMesh;
@@ -109,6 +134,9 @@ simulated function ChangeVisibility(bool bIsVisible)
 	}
 }
 
+/**
+ * @extends
+ */
 simulated event SetPosition(UDKPawn Holder)
 {
 	local Vector DrawLocation;
@@ -128,6 +156,9 @@ simulated event SetPosition(UDKPawn Holder)
 	SetRotation(Holder.Controller.Rotation);
 }
 
+/**
+ * @extends
+ */
 simulated function TimeWeaponEquipping()
 {
 	AttachWeaponTo(Instigator.Mesh);
@@ -135,6 +166,9 @@ simulated function TimeWeaponEquipping()
 	Super.TimeWeaponEquipping();
 }
 
+/**
+ * Executes reloading the weapon.
+ */
 reliable server function ServerReload()
 {
 	local FMagazine NextMagazine;
