@@ -1,20 +1,25 @@
 /**
+ * Pawn class for infantry.
+ * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FPawn extends UDKPawn;
 
-var DynamicLightEnvironmentComponent LightEnvironment;
-var TeamInfo LastTeam; // Used to detect when the player has joined a new team
+// Weapon attachment
+var repnotify name EquippedWeaponName;
+var FWeaponAttachment WeaponAttachment;
 var name WeaponSocketName;
 
+// Movement bob
 var float Bob;
 var	float AppliedBob;
 var float BobTime;
 var	Vector	WalkBob;
 
-// Weapon attachment
-var repnotify name EquippedWeaponName;
-var FWeaponAttachment WeaponAttachment;
+// The last team the player was on before joining their current team
+var TeamInfo LastTeam;
+
+var DynamicLightEnvironmentComponent LightEnvironment;
 
 replication
 {
@@ -22,19 +27,26 @@ replication
 		EquippedWeaponName;
 }
 
+/**
+ * @extends
+ */
 simulated event ReplicatedEvent(name VarName)
 {
 	Super.ReplicatedEvent(VarName);
 
+	// Update the pawn's weapon attachment when their equipped weapon has changed
 	if (VarName == 'EquippedWeaponName')
 		UpdateWeaponAttachment();
 }
 
+/**
+ * @extends
+ */
 simulated event PostInitAnimTree(SkeletalMeshComponent SkelComp)
 {
 	Super.PostInitAnimTree(SkelComp);
 
-	// Sets skeletal controls for animations to play correctly
+	// Sets the skeletal controls for animations to play correctly
 	if (SkelComp == Mesh)
 	{
 		LeftLegControl = SkelControlFootPlacement(Mesh.FindSkelControl(LeftFootControlName));
@@ -50,8 +62,12 @@ simulated event PostInitAnimTree(SkeletalMeshComponent SkelComp)
 	}
 }
 
+/**
+ * @extends
+ */
 simulated event Destroyed()
 {
+	// Remove the pawn's weapon attachment
 	if (WeaponAttachment != None)
 	{
 		WeaponAttachment.DetachFrom(Mesh);
@@ -62,25 +78,37 @@ simulated event Destroyed()
 	Super.Destroyed();
 }
 
+/**
+ * @extends
+ */
 simulated event StartDriving(Vehicle PlayerVehicle)
 {
 	Super.StartDriving(PlayerVehicle);
 
+	// Hide the pawn's first-person weapon model while in a vehicle
 	SetWeaponVisibility(False);
 }
 
+/**
+ * @extends
+ */
 simulated event StopDriving(Vehicle PlayerVehicle)
 {
 	Super.StopDriving(PlayerVehicle);
 
+	// Unhide the first-person weapon model when exiting a vehicle
 	SetWeaponVisibility(IsFirstPerson());
 }
 
+/**
+ * @extends
+ */
 event UpdateEyeHeight(float DeltaTime)
 {
 	local Vector X, Y, Z;
 	local float Speed2D;
 
+	// This block is taken from UTPawn
 	Bob = FClamp(Bob, -0.05, 0.05);
 	GetAxes(Rotation, X, Y, Z);
 	Speed2D = VSize(Velocity);
@@ -95,6 +123,9 @@ event UpdateEyeHeight(float DeltaTime)
 		WalkBob.Z = WalkBob.Z + 0.75 * Bob * Speed2D * sin(16 * BobTime);
 }
 
+/**
+ * Returns the current amount of bob to apply to the weapon.
+ */
 simulated function Vector WeaponBob(float BobDamping)
 {
 	local Vector BobAmount;
@@ -104,10 +135,15 @@ simulated function Vector WeaponBob(float BobDamping)
 	return BobAmount;
 }
 
+/**
+ * @extends
+ */
 simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
 {
 	Super.PlayDying(DamageType, HitLoc);
 	
+	// Ragdoll the pawn
+	// This is taken from the UDN
 	Mesh.MinDistFactorForKinematicUpdate = 0.0;
 	Mesh.SetRBChannel(RBCC_Pawn);
 	Mesh.SetRBCollidesWithChannel(RBCC_Default, True);
@@ -136,10 +172,14 @@ simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
 	Mesh.WakeRigidBody();
 }
 
+/**
+ * @extends
+ */
 simulated function bool CalcCamera( float fDeltaTime, out Vector out_CamLoc, out Rotator out_CamRot, out float out_FOV )
 {
 	local bool bUseCamera;
 
+	// Set the camera to view from the actor's eyes if in first person
 	if (IsFirstPerson())
 	{
 		GetActorEyesViewPoint(out_CamLoc, out_CamRot);
@@ -153,6 +193,9 @@ simulated function bool CalcCamera( float fDeltaTime, out Vector out_CamLoc, out
 	return bUseCamera;
 }
 
+/**
+ * Sets the visibility of the pawn's weapon.
+ */
 simulated function SetWeaponVisibility(bool bWeaponVisible)
 {
 	local FWeapon PlayerWeapon;
@@ -162,8 +205,12 @@ simulated function SetWeaponVisibility(bool bWeaponVisible)
 		PlayerWeapon.ChangeVisibility(bWeaponVisible);
 }
 
+/**
+ * @extends
+ */
 simulated function WeaponFired(Weapon InWeapon, bool bViaReplication, optional vector HitLocation)
 {
+	// Fire effects on the pawn's weapon attachment
 	if (WeaponAttachment != None)
 	{
 		if (IsFirstPerson())
@@ -175,8 +222,12 @@ simulated function WeaponFired(Weapon InWeapon, bool bViaReplication, optional v
 	Super.WeaponFired(InWeapon, bViaReplication, HitLocation);
 }
 
+/**
+ * @extends
+ */
 simulated function WeaponStoppedFiring(Weapon InWeapon, bool bViaReplication)
 {
+	// Stop firing effects on the pawn's weapon attachment
 	if (WeaponAttachment != None)
 	{
 		WeaponAttachment.StopFirstPersonFireEffects(Weapon);
@@ -186,6 +237,9 @@ simulated function WeaponStoppedFiring(Weapon InWeapon, bool bViaReplication)
 	Super.WeaponStoppedFiring(InWeapon, bViaReplication);
 }
 
+/**
+ * Updates the pawn's current weapon attachment.
+ */
 simulated function UpdateWeaponAttachment()
 {
 	local FWeaponAttachment WeaponAttachmentArchetype;
@@ -220,14 +274,21 @@ simulated function UpdateWeaponAttachment()
 	}
 }
 
+/**
+ * @extends
+ */
 function PlayerChangedTeam()
 {
+	// Only signal player changed team if they player didn't join from spectator
 	if (LastTeam != None)
 		Super.PlayerChangedTeam();
 
 	LastTeam = GetTeam();
 }
 
+/**
+ * Resets the player's equipment loadout.
+ */
 exec function ResetEquipment()
 {
 	FInventoryManager(InvManager).ResetEquipment();

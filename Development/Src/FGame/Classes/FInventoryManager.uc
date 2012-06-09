@@ -1,10 +1,15 @@
 /**
+ * Manages the player's equipment.
+ * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FInventoryManager extends InventoryManager
 	dependson(FMapInfo);
 
+// Total number of equipment slots.
 const EquipmentSlots=4;
+
+// The requested equipment in each slot.
 var FWeaponInfo RequestedEquipment[EquipmentSlots];
 
 replication
@@ -13,13 +18,18 @@ replication
 		RequestedEquipment;
 }
 
+/**
+ * Sets the requested equipment for the given equipment slot.
+ */
 reliable server function SelectEquipment(byte Slot, name EquipmentName)
 {
+	// Ensure equipment slot is not out of bounds.
 	if (Slot >= 0 && Slot < EquipmentSlots)
 	{
+		// Set the requested equipment slot to the weapon info for the given equipment name.
 		RequestedEquipment[Slot] = FMapInfo(WorldInfo.GetMapInfo()).GetWeaponInfo(EquipmentName);
 
-		// Update the equipment selection GUI
+		// Update the omnimenu.
 		if (WorldInfo.NetMode != NM_DedicatedServer)
 			FHUD(FPlayerController(Pawn(Owner).Controller).myHUD).GFxOmniMenu.Invalidate("equipment selection");
 	}
@@ -29,6 +39,9 @@ reliable server function SelectEquipment(byte Slot, name EquipmentName)
 	}
 }
 
+/**
+ * Clears the player's inventory and populates it with the requested equipment.
+ */
 reliable server function ResetEquipment()
 {
 	local FWeapon InfantryEquipment;
@@ -36,33 +49,33 @@ reliable server function ResetEquipment()
 	local byte EquipmentSlot;
 	local byte MagazineCount;
 
-	// Need to be standing on a barracks to re-equip
+	// Need to be standing on a barracks to re-equip.
 	if (FStructure_Barracks(FPawn(Instigator).Base) != None)
 	{
-		// Remove old inventory
+		// Remove old inventory.
 		DiscardInventory();
 
-		// Equip each requested equipment
+		// Equip each requested equipment.
 		for (EquipmentSlot = 0; EquipmentSlot < EquipmentSlots; EquipmentSlot++)
 		{
-			// If there is a selection in the requested equipment slot
+			// If there is a selection in the requested equipment slot.
 			if (RequestedEquipment[EquipmentSlot].Archetype != None)
 			{
-				// Spawn the equipment
+				// Spawn the equipment.
 				InfantryEquipment = Spawn(RequestedEquipment[EquipmentSlot].Archetype.Class, Owner,,,, RequestedEquipment[EquipmentSlot].Archetype);
 				InfantryEquipment.WeaponName = RequestedEquipment[EquipmentSlot].Name;
 
-				// Add default magazines to inventory
+				// Add default magazines to inventory.
 				for (MagazineCount = 0; MagazineCount < 4; MagazineCount++)
 				{
 					Magazine = FMagazine(CreateInventory(class'FMagazine'));
 					Magazine.AmmoFor = InfantryEquipment.Name;
 				}
 
-				// Add the equipment to the inventory
+				// Add the equipment to the inventory.
 				AddInventory(InfantryEquipment);
 
-				// Reload the weapon if there's a magazine available
+				// Reload the weapon if there's a magazine available.
 				if (Magazine != None)
 					InfantryEquipment.ServerReload();
 			}
