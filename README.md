@@ -39,7 +39,7 @@ Once you have successfully installed Tortoise Git and have set up your public - 
 1. Go to the UDK folder and right click -> Git Clone (context menu choice should be supplied by Tortoise)
 2. URL target is "gitolite@gitlab.factionshq.com:factions.git"
 3. Use the Load Putty Key option and locate your private SSH key.
-4. Make sure you clone to the root of the UDK, this should mean you need to remove the "factions" folder at the end of destination.
+4. Make sure you clone to the root of the project eg. "C:\UDK\UDK-2012-05\", this should mean you need to remove the "factions" folder at the end of destination.
 
 IDE:
 
