@@ -1,11 +1,17 @@
 /**
+ * Class for structures that can build vehicles.
+ * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FStructure_VehicleFactory extends FStructure
 	dependson(FMapInfo);
 
+// Socket name for positioning the built vehicle in the world
 var() name VehicleSpawnSocket;
 
+/**
+ * Builds a vehicle in the vehicle factory.
+ */
 function BuildVehicle(name VehicleName, Pawn Builder)
 {
 	local Vector VehicleSpawnLocation;

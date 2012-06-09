@@ -1,3 +1,10 @@
+/**
+ * Actor used to display the structure preview.
+ * 
+ * Structure preview is created on the server and is replicated to clients.
+ * 
+ * Copyright 2012 Factions Team. All Rights Reserved.
+ */
 class FStructurePreview extends Actor
 	dependson(FMapInfo);
 
@@ -10,18 +17,28 @@ replication
 		StructureInfo;
 }
 
+/**
+ * @extends
+ */
 simulated event ReplicatedEvent(name VarName)
 {
+	// Initialize the structure once the structure info has been set
 	if (VarName == 'StructureInfo')
 		Initialize();
 }
 
+/**
+ * Sets the structure preview properties.
+ * 
+ * Requires the structure info to already be set.
+ */
 simulated function Initialize()
 {
 	local UDKSkeletalMeshComponent Mesh;
 
 	if (StructureInfo.Name != '')
 	{
+		// Create the structure mesh on clients
 		if (WorldInfo.NetMode != NM_DedicatedServer)
 		{
 			Mesh = new(Self) class'UDKSkeletalMeshComponent';

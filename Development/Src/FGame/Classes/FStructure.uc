@@ -1,16 +1,26 @@
 /**
+ * Base class for all structures.
+ * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FStructure extends Vehicle
 	notplaceable;
 
+// Team index of the team this structure is on
 var() byte Team;
 
+/**
+ * @extends
+ */
 function bool AnySeatAvailable()
 {
+	// Don't allow players to drive structures
 	return False;
 }
 
+/**
+ * @extends
+ */
 simulated event byte ScriptGetTeamNum()
 {
 	return Team;

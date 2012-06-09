@@ -1,10 +1,16 @@
 /**
+ * Class for structures that can spawn infantry.
+ * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FStructure_Barracks extends FStructure;
 
+// List of socket names where players can spawn
 var() array<name> PlayerStartSockets;
 
+/**
+ * @extends
+ */
 event PostBeginPlay()
 {
 	local name PlayerStartSocketName;
@@ -13,6 +19,7 @@ event PostBeginPlay()
 
 	Super.PostBeginPlay();
 
+	// Create a start location at each socket
 	foreach PlayerStartSockets(PlayerStartSocketName)
 	{
 		Mesh.GetSocketWorldLocationAndRotation(PlayerStartSocketName, PlayerStartLocation);
