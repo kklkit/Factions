@@ -1,5 +1,5 @@
 /**
- * Base for 8-wheeled vehicles that use car physics.
+ * Base for 8-wheeled vehicles.
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */

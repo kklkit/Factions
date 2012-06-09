@@ -1,4 +1,6 @@
 /**
+ * Base class for tracked vehicles.
+ * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FVehicle_Tank extends FVehicle;

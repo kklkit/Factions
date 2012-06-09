@@ -1,4 +1,6 @@
 /**
+ * Base class for all vehicles.
+ * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FVehicle extends UDKVehicle
@@ -7,6 +9,9 @@ class FVehicle extends UDKVehicle
 // True when the vehicle has been fully constructed and the builder is in the vehicle
 var bool bFinishedConstructing;
 
+/**
+ * @extends
+ */
 simulated event PostBeginPlay()
 {
 	Super.PostBeginPlay();
@@ -15,6 +20,9 @@ simulated event PostBeginPlay()
 	Mesh.WakeRigidBody();
 }
 
+/**
+ * @extends
+ */
 function PancakeOther(Pawn Other)
 {
 	// Don't kill vehicle builder while building the vehicle

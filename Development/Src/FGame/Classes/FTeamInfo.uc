@@ -1,4 +1,6 @@
 /**
+ * Replicated information about each team.
+ * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FTeamInfo extends TeamInfo;
@@ -12,8 +14,12 @@ replication
 		Resources;
 }
 
+/**
+ * @extends
+ */
 simulated function string GetHumanReadableName()
 {
+	// Return the localized team name
 	if (TeamName == Default.TeamName)
 	{
 		if (TeamIndex < ArrayCount(TeamNames))

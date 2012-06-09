@@ -1,38 +1,54 @@
 /**
+ * Manages the gameplay.
+ * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FTeamGame extends UDKGame;
 
-const PSEUDO_TEAM_SPECTATOR=255; // Used in ChangeTeam to switch to the spectator team
+/*
+ * The change team code needs to be given a team index when changing teams.
+ * Since spectator does not have a team index, this value is used instead.
+ */
+const PSEUDO_TEAM_SPECTATOR=255;
 
+// Enumeration of all the available teams
 enum ETeams
 {
 	TEAM_RED,
 	TEAM_BLUE
 };
 
+/**
+ * @extends
+ */
 event PreBeginPlay()
 {
 	local byte TeamIndex;
 
 	Super.PreBeginPlay();
 
+	// Set the map info if none exists
 	if (WorldInfo.GetMapInfo() == None)
 	{
 		`log("Factions: MapInfo not set!");
 		WorldInfo.SetMapInfo(new class'FMapInfo');
 	}
 
+	// Create all the teams
 	for (TeamIndex = 0; TeamIndex < ETeams.EnumCount; TeamIndex++)
 		CreateTeam(TeamIndex);
 }
 
+/**
+ * @extends
+ */
 event PlayerController Login(string Portal, string Options, const UniqueNetID UniqueID, out string ErrorMessage)
 {
 	local PlayerController PC;
 
 	PC = Super.Login(Portal, Options, UniqueID, ErrorMessage);
 
+	// Move the player to spectator if not on a team
 	if (PC.PlayerReplicationInfo.Team == None)
 	{
 		PC.GotoState('Spectating');
@@ -42,18 +58,27 @@ event PlayerController Login(string Portal, string Options, const UniqueNetID Un
 	return PC;
 }
 
+/**
+ * @extends
+ */
 event PostLogin(PlayerController NewPlayer)
 {
 	Super.PostLogin(NewPlayer);
 
 	if (NewPlayer.PlayerReplicationInfo.bIsSpectator)
 	{
+		// Update player counts
 		NumSpectators++;
 		NumPlayers--;
+
+		// Move the client to spectator state
 		NewPlayer.ClientGotoState('Spectating');
 	}
 }
 
+/**
+ * @extends
+ */
 function Logout(Controller Exiting)
 {
 	local PlayerController PC;
@@ -63,6 +88,7 @@ function Logout(Controller Exiting)
 	{
 		if (PC.PlayerReplicationInfo.bIsSpectator)
 		{
+			// Update player counts
 			NumSpectators--;
 			NumPlayers++;
 		}
@@ -71,14 +97,19 @@ function Logout(Controller Exiting)
 	Super.Logout(Exiting);
 }
 
+/**
+ * @extends
+ */
 function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
 {
+	// Ensure given team index is valid
 	if (N >= 0 && N < ETeams.EnumCount)
 	{
 		SetTeam(Other, GameReplicationInfo.Teams[N], bNewTeam);
 		return True;
 	}
 
+	// Handle joining spectator
 	if (N == PSEUDO_TEAM_SPECTATOR)
 	{
 		SetTeam(Other, None, bNewTeam);
@@ -88,6 +119,9 @@ function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
 	return False;
 }
 
+/**
+ * Sets the team of the given player controller.
+ */
 function SetTeam(Controller Other, TeamInfo NewTeam, bool bNewTeam)
 {
 	local GameInfo Game;
@@ -108,7 +142,8 @@ function SetTeam(Controller Other, TeamInfo NewTeam, bool bNewTeam)
 		Other.PlayerReplicationInfo.Team = None;
 	}
 
-	if (NewTeam == None) // Becoming spectator
+	// Handle joining spectator
+	if (NewTeam == None)
 	{
 		if (!Other.PlayerReplicationInfo.bIsSpectator)
 		{
@@ -120,9 +155,11 @@ function SetTeam(Controller Other, TeamInfo NewTeam, bool bNewTeam)
 				PlayerController(Other).ClientGotoState('Spectating');
 		}
 		
+		// Broadcast that the player has joined spectator
 		BroadcastLocalizedMessage(GameMessageClass, 14, Other.PlayerReplicationInfo);
 	}
-	else if (NewTeam.AddToTeam(Other)) // Joining a team
+	// Handle joining a team
+	else if (NewTeam.AddToTeam(Other))
 	{
 		if (Other.PlayerReplicationInfo.bIsSpectator)
 		{
@@ -147,14 +184,19 @@ function SetTeam(Controller Other, TeamInfo NewTeam, bool bNewTeam)
 			}
 		}
 
+		// Broadcast that the player has changed team
 		BroadcastLocalizedMessage(GameMessageClass, 3, Other.PlayerReplicationInfo, , NewTeam);
 	}
 
+	// Notify actors when playing in single player
 	if ((PlayerController(Other) != None) && (LocalPlayer(PlayerController(Other).Player) != None))
 		foreach AllActors(class'Actor', A)
 			A.NotifyLocalPlayerTeamReceived();
 }
 
+/**
+ * @extends
+ */
 function byte PickTeam(byte Current, Controller C)
 {
 	if (C == None)
@@ -164,11 +206,16 @@ function byte PickTeam(byte Current, Controller C)
 	return GameReplicationInfo.Teams[TEAM_RED].Size <= GameReplicationInfo.Teams[TEAM_BLUE].Size ? TEAM_RED : TEAM_BLUE;
 }
 
+/**
+ * @extends
+ */
 function float RatePlayerStart(PlayerStart P, byte Team, Controller Player)
 {
+	// Return a value for the initial player spawn
 	if (Player == None || (Player.PlayerReplicationInfo.Team == None && P.bPrimaryStart))
 		return 1.0;
 
+	// Return closest team spawn point
 	if (UDKTeamPlayerStart(P) != None && Team == UDKTeamPlayerStart(P).TeamNumber)
 	{
 		if (Player.Pawn != None)
@@ -180,12 +227,18 @@ function float RatePlayerStart(PlayerStart P, byte Team, Controller Player)
 	return -1.0;
 }
 
+/**
+ * @extends
+ */
 function RestartPlayer(Controller NewPlayer)
 {
 	if (!NewPlayer.PlayerReplicationInfo.bIsSpectator)
 		Super.RestartPlayer(NewPlayer);
 }
 
+/**
+ * Creates the team info for the given team index.
+ */
 function CreateTeam(int TeamIndex)
 {
 	local FTeamInfo Team;
@@ -196,23 +249,31 @@ function CreateTeam(int TeamIndex)
 	GameReplicationInfo.SetTeam(TeamIndex, Team);
 }
 
+/**
+ * @extends
+ */
 function DriverEnteredVehicle(Vehicle Vehicle, Pawn Pawn)
 {
 	local FPlayerController PlayerController;
 
 	Super.DriverEnteredVehicle(Vehicle, Pawn);
 
+	// Update the view target for spectators
 	foreach WorldInfo.AllControllers(class'FPlayerController', PlayerController)
 		if (PlayerController.ViewTarget == Pawn)
 			PlayerController.SetViewTarget(Vehicle);
 }
 
+/**
+ * @extends
+ */
 function DriverLeftVehicle(Vehicle Vehicle, Pawn Pawn)
 {
 	local FPlayerController PlayerController;
 
 	Super.DriverLeftVehicle(Vehicle, Pawn);
 
+	// Update the view target for spectators
 	foreach WorldInfo.AllControllers(class'FPlayerController', PlayerController)
 		if (PlayerController.ViewTarget == Vehicle)
 			PlayerController.SetViewTarget(Pawn);
