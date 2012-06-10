@@ -26,7 +26,7 @@ simulated event PostBeginPlay()
 function PancakeOther(Pawn Other)
 {
 	// Don't kill vehicle builder while building the vehicle
-	if (Other == Owner && !bFinishedConstructing)
+	if (Other == FPlayerController(Owner).Pawn && !bFinishedConstructing)
 		return;
 
 	Super.PancakeOther(Other);
