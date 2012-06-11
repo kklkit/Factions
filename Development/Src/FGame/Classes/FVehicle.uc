@@ -6,8 +6,13 @@
 class FVehicle extends UDKVehicle
 	notplaceable;
 
+const FVEHICLE_UNSET_TEAM=255;
+
 // True when the vehicle has been fully constructed and the builder is in the vehicle
 var bool bFinishedConstructing;
+
+// Used to set the initial team of the vehicle in UDK Editor
+var() byte InitialTeam;
 
 /**
  * @extends
@@ -15,6 +20,9 @@ var bool bFinishedConstructing;
 simulated event PostBeginPlay()
 {
 	Super.PostBeginPlay();
+
+	if (InitialTeam != FVEHICLE_UNSET_TEAM)
+		Team = InitialTeam;
 
 	AirSpeed=MaxSpeed;
 	Mesh.WakeRigidBody();
@@ -78,6 +86,7 @@ defaultproperties
 
 	Seats(0)={()}
 
+	InitialTeam=FVEHICLE_UNSET_TEAM
 	DestroyOnPenetrationThreshold=50.0
 	DestroyOnPenetrationDuration=1.0
 	bFinishedConstructing=False
