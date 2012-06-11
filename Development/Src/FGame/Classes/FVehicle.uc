@@ -24,8 +24,62 @@ simulated event PostBeginPlay()
 	if (InitialTeam != FVEHICLE_UNSET_TEAM)
 		Team = InitialTeam;
 
+	InitializeTurrets();
+
 	AirSpeed=MaxSpeed;
 	Mesh.WakeRigidBody();
+}
+
+/**
+ * Returns the world position of the gun barrel for the given seat.
+ */
+simulated function GetBarrelLocationAndRotation(int SeatIndex, out Vector SocketLocation, optional out Rotator SocketRotation)
+{
+	if (Seats[SeatIndex].GunSocket.Length > 0)
+	{
+		Mesh.GetSocketWorldLocationAndRotation(Seats[SeatIndex].GunSocket[GetBarrelIndex(SeatIndex)], SocketLocation, SocketRotation);
+	}
+	else
+	{
+		SocketLocation = Location;
+		SocketRotation = Rotation;
+	}
+}
+
+/**
+ * Sets up turret skeletal controllers.
+ */
+simulated function InitializeTurrets()
+{
+	local int Seat, TurretControl;
+	local UDKSkelControl_TurretConstrained Turret;
+	local Vector PivotLoc, MuzzleLoc;
+
+	for (Seat = 0; Seat < Seats.Length; Seat++)
+	{
+		for (TurretControl = 0; TurretControl < Seats[Seat].TurretControls.Length; TurretControl++)
+		{
+			Turret = UDKSkelControl_TurretConstrained(Mesh.FindSkelControl(Seats[Seat].TurretControls[TurretControl]));
+			if (Turret != None)
+			{
+				Turret.AssociatedSeatIndex = Seat;
+				Seats[Seat].TurretControllers[TurretControl] = Turret;
+				Turret.InitTurret(Rotation, Mesh);
+			}
+			else
+			{
+				`log("Failed to set up turret control" @ TurretControl);
+			}
+		}
+
+		if (Role == ROLE_Authority)
+			SeatWeaponRotation(Seat, Rotation, False);
+
+		PivotLoc = GetSeatPivotPoint(Seat);
+		GetBarrelLocationAndRotation(Seat, MuzzleLoc);
+
+		Seats[Seat].PivotFireOffsetZ = MuzzleLoc.Z - PivotLoc.Z;
+	}
 }
 
 /**
