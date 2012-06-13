@@ -30,7 +30,7 @@ simulated event PostBeginPlay()
 	PreCacheSeatNames();
 	InitializeTurrets();
 
-	AirSpeed=MaxSpeed;
+	AirSpeed = MaxSpeed;
 	Mesh.WakeRigidBody();
 }
 
@@ -64,7 +64,7 @@ function InitializeSeats()
 		return;
 	}
 
-	for(i = 0; i < Seats.Length; i++)
+	for (i = 0; i < Seats.Length; i++)
 	{
 		if (i > 0)
 		{
