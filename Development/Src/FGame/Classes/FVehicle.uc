@@ -24,6 +24,10 @@ simulated event PostBeginPlay()
 	if (InitialTeam != FVEHICLE_UNSET_TEAM)
 		Team = InitialTeam;
 
+	if (Role == ROLE_Authority)
+		InitializeSeats();
+
+	PreCacheSeatNames();
 	InitializeTurrets();
 
 	AirSpeed=MaxSpeed;
@@ -43,6 +47,72 @@ simulated function GetBarrelLocationAndRotation(int SeatIndex, out Vector Socket
 	{
 		SocketLocation = Location;
 		SocketRotation = Rotation;
+	}
+}
+
+/**
+ * Create the vehicle weapons.
+ */
+function InitializeSeats()
+{
+	local int i;
+
+	if (Seats.Length == 0)
+	{
+		`log("Vehicle (" $ Self $ ") has no seats! Deleting!");
+		Destroy();
+		return;
+	}
+
+	for(i = 0; i < Seats.Length; i++)
+	{
+		if (i > 0)
+		{
+			Seats[i].SeatPawn = Spawn(class'UDKWeaponPawn');
+			Seats[i].SeatPawn.SetBase(Self);
+			Seats[i].Gun = FVehicleWeapon(Seats[i].SeatPawn.InvManager.CreateInventory(Seats[i].GunClass));
+			Seats[i].Gun.SetBase(Self);
+			Seats[i].SeatPawn.EyeHeight = Seats[i].SeatPawn.BaseEyeheight;
+			UDKWeaponPawn(Seats[i].SeatPawn).MyVehicleWeapon = FVehicleWeapon(Seats[i].Gun);
+			UDKWeaponPawn(Seats[i].SeatPawn).MyVehicle = Self;
+			UDKWeaponPawn(Seats[i].SeatPawn).MySeatIndex = i;
+
+			if (Seats[i].ViewPitchMin != 0.0)
+				UDKWeaponPawn(Seats[i].SeatPawn).ViewPitchMin = Seats[i].ViewPitchMin;
+			else
+				UDKWeaponPawn(Seats[i].SeatPawn).ViewPitchMin = ViewPitchMin;
+
+
+			if (Seats[i].ViewPitchMax != 0.0)
+				UDKWeaponPawn(Seats[i].SeatPawn).ViewPitchMax = Seats[i].ViewPitchMax;
+			else
+				UDKWeaponPawn(Seats[i].SeatPawn).ViewPitchMax = ViewPitchMax;
+		}
+		// Driver's seat doesn't get a weapon pawn
+		else
+		{
+			Seats[i].SeatPawn = Self;
+			Seats[i].Gun = FVehicleWeapon(InvManager.CreateInventory(Seats[i].GunClass));
+			Seats[i].Gun.SetBase(Self);
+		}
+
+		Seats[i].SeatPawn.DriverDamageMult = Seats[i].DriverDamageMult;
+		Seats[i].SeatPawn.bDriverIsVisible = Seats[i].bSeatVisible;
+	}
+}
+
+/**
+ * Set seat names.
+ */
+simulated function PreCacheSeatNames()
+{
+	local int i;
+	for (i = 0; i < Seats.Length; i++)
+	{
+		Seats[i].WeaponRotationName	= name(Seats[i].TurretVarPrefix $ "WeaponRotation");
+		Seats[i].FlashLocationName = name(Seats[i].TurretVarPrefix $ "FlashLocation");
+		Seats[i].FlashCountName = name(Seats[i].TurretVarPrefix $ "FlashCount");
+		Seats[i].FiringModeName = name(Seats[i].TurretVarPrefix $ "FiringMode");
 	}
 }
 
@@ -80,6 +150,59 @@ simulated function InitializeTurrets()
 
 		Seats[Seat].PivotFireOffsetZ = MuzzleLoc.Z - PivotLoc.Z;
 	}
+}
+
+/**
+ * @extends
+ */
+function PossessedBy(Controller C, bool bVehicleTransition)
+{
+	Super.PossessedBy(C, bVehicleTransition);
+
+	if (Seats[0].Gun != None)
+		Seats[0].Gun.ClientWeaponSet(False);
+}
+
+/**
+ * @extends
+ */
+simulated function SetFiringMode(Weapon Weap, byte FiringModeNum)
+{
+	SeatFiringMode(0, FiringModeNum, false);
+}
+
+/**
+ * @extends
+ */
+simulated function GetSVehicleDebug(out Array<String> DebugInfo)
+{
+	local int i;
+
+	Super.GetSVehicleDebug(DebugInfo);
+
+	DebugInfo[DebugInfo.Length] = "";
+	DebugInfo[DebugInfo.Length] = "----Seats----: ";
+	for (i = 0; i < Seats.Length; i++)
+	{
+		DebugInfo[DebugInfo.Length] = "Seat" @ i $ ":" @Seats[i].Gun @ "Rotation" @ SeatWeaponRotation(i,, true) @ "FiringMode" @ SeatFiringMode(i,, true) @ "Barrel" @ Seats[i].BarrelIndex;
+		if (Seats[i].Gun != None)
+			DebugInfo[DebugInfo.length - 1] @= "IsAimCorrect" @ Seats[i].Gun.IsAimCorrect();
+	}
+}
+
+/**
+ * @extends
+ */
+function bool DriverEnter(Pawn P)
+{
+	P.StopFiring();
+
+	if (Seats[0].Gun != None)
+		InvManager.SetCurrentWeapon(Seats[0].Gun);
+
+	Instigator = Self;
+
+	return Super.DriverEnter(P);
 }
 
 /**
@@ -127,6 +250,8 @@ defaultproperties
 		bAcceptsDynamicDecals=False
 		bPerBoneMotionBlur=True
 	End Object
+
+	InventoryManagerClass=class'FInventoryManager'
 
 	TireSoundList(0)=(MaterialType=Dirt,Sound=SoundCue'A_Vehicle_Generic.Vehicle.VehicleSurface_TireDirt01Cue')
 	TireSoundList(1)=(MaterialType=Foliage,Sound=SoundCue'A_Vehicle_Generic.Vehicle.VehicleSurface_TireFoliage01Cue')
