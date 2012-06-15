@@ -14,21 +14,33 @@ var() name VehicleSpawnSocket;
  */
 function BuildVehicle(name VehicleName, Pawn Builder)
 {
-	local Vector VehicleSpawnLocation;
-	local FTeamInfo PlayerTeam;
-	local FVehicleInfo VehicleInfo;
-	local FVehicle Vehicle;
+	`log("Unable to build vehicle" @ VehicleName @ "for" @ Builder @ "while structure is not active!");
+}
 
-	Mesh.GetSocketWorldLocationAndRotation(VehicleSpawnSocket, VehicleSpawnLocation);
-	PlayerTeam = FTeamInfo(Builder.PlayerReplicationInfo.Team);
-	VehicleInfo = FMapInfo(WorldInfo.GetMapInfo()).GetVehicleInfo(VehicleName);
-	if (PlayerTeam != None && PlayerTeam.Resources >= 100)
+auto state StructureActive
+{
+
+	/**
+	 * @extends
+	 */
+	function BuildVehicle(name VehicleName, Pawn Builder)
 	{
-		PlayerTeam.Resources -= 100;
-		Vehicle = Spawn(VehicleInfo.Archetype.Class, Builder.Controller,, VehicleSpawnLocation,, VehicleInfo.Archetype);
-		Vehicle.Team = Builder.GetTeamNum();
-		Vehicle.TryToDrive(Builder);
-		Vehicle.bFinishedConstructing = True;
+		local Vector VehicleSpawnLocation;
+		local FTeamInfo PlayerTeam;
+		local FVehicleInfo VehicleInfo;
+		local FVehicle Vehicle;
+
+		Mesh.GetSocketWorldLocationAndRotation(VehicleSpawnSocket, VehicleSpawnLocation);
+		PlayerTeam = FTeamInfo(Builder.PlayerReplicationInfo.Team);
+		VehicleInfo = FMapInfo(WorldInfo.GetMapInfo()).GetVehicleInfo(VehicleName);
+		if (PlayerTeam != None && PlayerTeam.Resources >= 100)
+		{
+			PlayerTeam.Resources -= 100;
+			Vehicle = Spawn(VehicleInfo.Archetype.Class, Builder.Controller,, VehicleSpawnLocation,, VehicleInfo.Archetype);
+			Vehicle.Team = Builder.GetTeamNum();
+			Vehicle.TryToDrive(Builder);
+			Vehicle.bFinishedConstructing = True;
+		}
 	}
 }
 
