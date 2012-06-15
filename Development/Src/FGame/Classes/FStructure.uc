@@ -34,6 +34,8 @@ state StructurePreview
 	 */
 	event BeginState(name PreviousStateName)
 	{
+		Super.BeginState(PreviousStateName);
+
 		Mesh.SetBlockRigidBody(False);
 		Mesh.SetActorCollision(False, False);
 		Mesh.SetTraceBlocking(False, False);
@@ -51,6 +53,8 @@ auto state StructureActive
 	 */
 	event BeginState(name PreviousStateName)
 	{
+		Super.BeginState(PreviousStateName);
+
 		Mesh.SetBlockRigidBody(True);
 		Mesh.SetActorCollision(True, True);
 		Mesh.SetTraceBlocking(True, True);

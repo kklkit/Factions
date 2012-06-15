@@ -15,6 +15,8 @@ auto state StructureActive
 	 */
 	event BeginState(name PreviousStateName)
 	{
+		Super.BeginState(PreviousStateName);
+
 		// Begin transferring resources
 		SetTimer(TransferRate, True, NameOf(TransferResources));
 	}
@@ -26,6 +28,8 @@ auto state StructureActive
 	{
 		// Stop transferring resources
 		ClearTimer(NameOf(TransferResources));
+
+		Super.EndState(NextStateName);
 	}
 
 	/**
