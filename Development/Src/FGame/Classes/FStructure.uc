@@ -36,7 +36,10 @@ state StructurePreview
 	{
 		Mesh.SetBlockRigidBody(False);
 		Mesh.SetActorCollision(False, False);
+		Mesh.SetTraceBlocking(False, False);
+		Mesh.SetRBChannel(RBCC_Nothing);
 		SetCollisionType(COLLIDE_NoCollision);
+		SetCollision(False, False);
 	}
 }
 
@@ -50,7 +53,10 @@ auto state StructureActive
 	{
 		Mesh.SetBlockRigidBody(True);
 		Mesh.SetActorCollision(True, True);
+		Mesh.SetTraceBlocking(True, True);
+		Mesh.SetRBChannel(RBCC_Vehicle);
 		SetCollisionType(COLLIDE_BlockAll);
+		SetCollision(True, True);
 	}
 }
 
