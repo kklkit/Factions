@@ -26,8 +26,12 @@ simulated event byte ScriptGetTeamNum()
 	return Team;
 }
 
+// Structure has not yet been built
 state StructurePreview
 {
+	/**
+	 * @extends
+	 */
 	event BeginState(name PreviousStateName)
 	{
 		Mesh.SetBlockRigidBody(False);
@@ -36,8 +40,12 @@ state StructurePreview
 	}
 }
 
+// Structure has been built
 auto state StructureActive
 {
+	/**
+	 * @extends
+	 */
 	event BeginState(name PreviousStateName)
 	{
 		Mesh.SetBlockRigidBody(True);
