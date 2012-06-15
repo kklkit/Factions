@@ -24,6 +24,7 @@ Download all the following:
 * Install all the above programs appropriately.
 * Make sure you have privileges in the GitLab to get the repository (contact Jephir)
 * Have a clean install of the UDK when doing the first pull, just to be safe.
+* You may also need to install these redistributables for Visual Studio 2005: http://msdn.microsoft.com/en-us/library/bb165454(v=vs.80).aspx
 
 SSH Keys:
 
