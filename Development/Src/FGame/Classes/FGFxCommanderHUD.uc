@@ -29,8 +29,8 @@ function TickHUD()
 	if (StatusText != None)
 	{
 		// Display the name of the structure being placed.
-		if (PlayerController.PlacingStructureInfo.Name != '')
-			StatusText.SetText("Placing:" @ PlayerController.PlacingStructureInfo.Name);
+		if (PlayerController.PlacingStructure != None)
+			StatusText.SetText("Placing:" @ PlayerController.PlacingStructure.GetHumanReadableName());
 		else
 			StatusText.SetText("No structure selected");
 	}

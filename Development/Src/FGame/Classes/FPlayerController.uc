@@ -3,16 +3,12 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FPlayerController extends UDKPlayerController
-	dependson(FMapInfo);
+class FPlayerController extends UDKPlayerController;
 
 var float CommanderCameraSpeed;
 
-// Structure info for the structure that is being placed
-var FStructureInfo PlacingStructureInfo;
-
 // Structure preview actor for the structure being placed
-var FStructurePreview PlacingStructurePreview;
+var FStructure PlacingStructure;
 
 // The location the structure preview should be moved to in the next tick
 var Vector NextPlacingStructurePreviewLocation;
@@ -25,7 +21,7 @@ var Rotator MinimapCaptureRotation;
 replication
 {
 	if (bNetDirty)
-		PlacingStructureInfo, PlacingStructurePreview;
+		PlacingStructure;
 }
 
 /**
@@ -65,7 +61,7 @@ simulated event PlayerTick(float DeltaTime)
 		MinimapCaptureComponent.SetView(MinimapCaptureLocation, MinimapCaptureRotation);
 
 	// Send the structure placement location to the server if it has changed
-	if (PlacingStructurePreview != None && PlacingStructurePreview.Location != NextPlacingStructurePreviewLocation)
+	if (PlacingStructure != None && PlacingStructure.Location != NextPlacingStructurePreviewLocation)
 		ServerUpdateStructurePlacement(NextPlacingStructurePreviewLocation);
 }
 
@@ -100,20 +96,22 @@ reliable server function ServerSpawnVehicle(name ChassisName)
 // Structure placement
 
 /**
- * Spawn the structure preview in the world.
+ * Begins structure placement.
  */
 reliable server function ServerBeginStructurePlacement(name StructureName)
 {
+	local FStructureInfo PlacingStructureInfo;
+	
 	PlacingStructureInfo = FMapInfo(WorldInfo.GetMapInfo()).GetStructureInfo(StructureName);
 
 	// Remove the old structure preview if it exists
-	if (PlacingStructurePreview != None)
-		PlacingStructurePreview.Destroy();
+	if (PlacingStructure != None)
+		PlacingStructure.Destroy();
 
 	// Spawn a structure preview for the requested structure
-	PlacingStructurePreview = Spawn(class'FStructurePreview', Self,,, rot(0,0,0),, True);
-	PlacingStructurePreview.StructureInfo = PlacingStructureInfo;
-	PlacingStructurePreview.Initialize();
+	PlacingStructure = Spawn(PlacingStructureInfo.Archetype.Class, Self,,, rot(0,0,0), PlacingStructureInfo.Archetype, True);
+	PlacingStructure.GotoState('StructurePreview');
+	PlacingStructure.Team = GetTeamNum();
 }
 
 /**
@@ -122,8 +120,8 @@ reliable server function ServerBeginStructurePlacement(name StructureName)
 unreliable server function ServerUpdateStructurePlacement(Vector NewLocation)
 {
 	// Check to make sure structure preview exists before settings its location
-	if (PlacingStructurePreview != None)
-		PlacingStructurePreview.SetLocation(NewLocation);
+	if (PlacingStructure != None)
+		PlacingStructure.SetLocation(NewLocation);
 }
 
 /**
@@ -131,12 +129,7 @@ unreliable server function ServerUpdateStructurePlacement(Vector NewLocation)
  */
 reliable server function ServerPlaceStructure()
 {
-	local FStructure SpawnedStructure;
-
-	// TODO: Check to make sure player is commander
-
-	SpawnedStructure = Spawn(PlacingStructureInfo.Archetype.Class, Self,, PlacingStructurePreview.Location, rot(0,0,0), PlacingStructureInfo.Archetype, True);
-	SpawnedStructure.Team = PlayerReplicationInfo.Team.TeamIndex;
+	PlacingStructure.GotoState('StructureActive');
 
 	EndStructurePlacement();
 }
@@ -148,10 +141,12 @@ reliable server function ServerPlaceStructure()
  */
 function EndStructurePlacement()
 {
-	PlacingStructureInfo.Name = '';
-	PlacingStructureInfo.Archetype = None;
-	if (PlacingStructurePreview != None)
-		PlacingStructurePreview.Destroy();
+	if (PlacingStructure != None && PlacingStructure.IsInState('StructurePreview'))
+	{
+		PlacingStructure.Destroy();
+	}
+
+	PlacingStructure = None;
 }
 
 // Commander view
@@ -260,6 +255,22 @@ simulated state Commanding
 	/**
 	 * @extends
 	 */
+	simulated event DrawHUD(HUD H)
+	{
+		local Vector HitLocation, HitNormal, WorldOrigin, WorldDirection;
+
+		// Use the canvas project function to get the new structure preview location
+		if (PlacingStructure != None)
+		{
+			H.Canvas.DeProject(LocalPlayer(Player).ViewportClient.GetMousePosition(), WorldOrigin, WorldDirection);
+			Trace(HitLocation, HitNormal, WorldOrigin + WorldDirection * 65536.0, WorldOrigin, False,,,);
+			NextPlacingStructurePreviewLocation = HitLocation;
+		}
+	}
+
+	/**
+	 * @extends
+	 */
 	simulated event GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
 	{
 		// Set view point to controller location and rotation
@@ -333,7 +344,7 @@ simulated state Commanding
 		FHUD(myHUD).BeginDragging();
 
 		// Place the structure if in structure placement mode
-		if (PlacingStructureInfo.Name != '')
+		if (PlacingStructure != None)
 			ServerPlaceStructure();
 	}
 

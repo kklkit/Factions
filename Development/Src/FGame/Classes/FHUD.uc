@@ -86,8 +86,6 @@ function DrawHud()
 
 	DrawSelectionBox();
 	DrawMinimap();
-
-	UpdateStructurePreview();
 }
 
 /**
@@ -135,22 +133,6 @@ function DrawSelectionBox()
 	Canvas.SetDrawColor(0, 255, 0);
 	Canvas.SetPos(Min(DragStart.X, MousePosition.X), Min(DragStart.Y, MousePosition.Y));
 	Canvas.DrawBox(Max(DragStart.X, MousePosition.X) - Min(DragStart.X, MousePosition.X), Max(DragStart.Y, MousePosition.Y) - Min(DragStart.Y, MousePosition.Y));
-}
-
-/**
- * Updates the preview structure location to where the mouse is.
- */
-function UpdateStructurePreview()
-{
-	local Vector HitLocation, HitNormal, WorldOrigin, WorldDirection;
-
-	if (FPlayerController(PlayerOwner).PlacingStructurePreview == None)
-		return;
-
-	Canvas.DeProject(GetMousePosition(), WorldOrigin, WorldDirection);
-	Trace(HitLocation, HitNormal, WorldOrigin + WorldDirection * 65536.0, WorldOrigin, False,,,);
-	
-	FPlayerController(PlayerOwner).NextPlacingStructurePreviewLocation = HitLocation;
 }
 
 /**

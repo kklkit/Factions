@@ -26,6 +26,26 @@ simulated event byte ScriptGetTeamNum()
 	return Team;
 }
 
+state StructurePreview
+{
+	event BeginState(name PreviousStateName)
+	{
+		Mesh.SetBlockRigidBody(False);
+		Mesh.SetActorCollision(False, False);
+		SetCollisionType(COLLIDE_NoCollision);
+	}
+}
+
+auto state StructureActive
+{
+	event BeginState(name PreviousStateName)
+	{
+		Mesh.SetBlockRigidBody(True);
+		Mesh.SetActorCollision(True, True);
+		SetCollisionType(COLLIDE_BlockAll);
+	}
+}
+
 defaultproperties
 {
 	Begin Object Class=DynamicLightEnvironmentComponent Name=LightEnvironment0
@@ -34,22 +54,11 @@ defaultproperties
 
 	Begin Object Class=UDKSkeletalMeshComponent Name=StructureMesh
 		LightEnvironment=LightEnvironment0
-		CollideActors=True
-		BlockActors=True
-		BlockRigidBody=True
-		BlockZeroExtent=True
-		BlockNonZeroExtent=True
 		bUseSingleBodyPhysics=1
 	End Object
 	CollisionComponent=StructureMesh
 	Mesh=StructureMesh
 	Components.Add(StructureMesh)
 
-	CollisionType=COLLIDE_BlockAll
-	bCollideActors=True
-	bBlockActors=True
-	bMovable=False
-
-	Health=1000
-	HealthMax=1000
+	bCollideWorld=False
 }
