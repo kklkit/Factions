@@ -72,11 +72,19 @@ defaultproperties
 
 	Begin Object Class=UDKSkeletalMeshComponent Name=StructureMesh
 		LightEnvironment=LightEnvironment0
+		CollideActors=True
+		BlockActors=True
+		BlockRigidBody=True
+		BlockZeroExtent=True
+		BlockNonZeroExtent=True
 		bUseSingleBodyPhysics=1
 	End Object
 	CollisionComponent=StructureMesh
 	Mesh=StructureMesh
 	Components.Add(StructureMesh)
 
+	CollisionType=COLLIDE_BlockAll
+	bCollideActors=True
+	bBlockActors=True
 	bCollideWorld=False
 }
