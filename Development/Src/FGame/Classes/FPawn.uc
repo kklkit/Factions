@@ -275,18 +275,6 @@ simulated function UpdateWeaponAttachment()
 }
 
 /**
- * @extends
- */
-function PlayerChangedTeam()
-{
-	// Only signal player changed team if they player didn't join from spectator
-	if (LastTeam != None)
-		Super.PlayerChangedTeam();
-
-	LastTeam = GetTeam();
-}
-
-/**
  * Resets the player's equipment loadout.
  */
 exec function ResetEquipment()

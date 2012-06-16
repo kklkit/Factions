@@ -81,6 +81,33 @@ function CheckJumpOrDuck()
 }
 
 /**
+ * @extends
+ */
+reliable server function ServerChangeTeam(int N)
+{
+	local TeamInfo OldTeam;
+	local Pawn OldPawn;
+
+	OldTeam = PlayerReplicationInfo.Team;
+	OldPawn = Pawn;
+
+	WorldInfo.Game.ChangeTeam(Self, N, True);
+
+	// Only signal player changed team if not changing from spectator
+	if (WorldInfo.Game.bTeamGame && OldTeam != None && PlayerReplicationInfo.Team != OldTeam)
+	{
+		if (Pawn != None)
+		{
+			Pawn.PlayerChangedTeam();
+		}
+		else
+		{
+			OldPawn.PlayerChangedTeam();
+		}
+	}
+}
+
+/**
  * Spawns a vehicle for the player.
  */
 reliable server function ServerSpawnVehicle(name ChassisName)
