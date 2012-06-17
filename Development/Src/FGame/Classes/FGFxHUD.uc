@@ -41,8 +41,8 @@ function TickHud()
 
 		UpdateMagazineCount(MagazineCount);
 
-		if (PlayerPawn.PlayerReplicationInfo != None && PlayerPawn.PlayerReplicationInfo.Team != None)
-			UpdateResources(FTeamInfo(PlayerPawn.PlayerReplicationInfo.Team).Resources);
+		if (GetPC().PlayerReplicationInfo != None && GetPC().PlayerReplicationInfo.Team != None)
+			UpdateResources(FTeamInfo(GetPC().PlayerReplicationInfo.Team).Resources);
 	}
 	else
 	{
