@@ -1,12 +1,13 @@
 /**
- * Base class for all structures.
+ * Structures are stationary units that belong to a team.
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FStructure extends Vehicle
+	perobjectlocalized
 	notplaceable;
 
-// Team index of the team this structure is on
+// Team index
 var() byte Team;
 
 /**
