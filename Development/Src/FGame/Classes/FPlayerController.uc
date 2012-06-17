@@ -7,6 +7,9 @@ class FPlayerController extends UDKPlayerController;
 
 var float CommanderCameraSpeed;
 
+// Store the player's last state before entering command view
+var name StateBeforeCommanding;
+
 // Structure preview actor for the structure being placed
 var FStructure PlacingStructure;
 
@@ -246,6 +249,8 @@ simulated state Commanding
 	{
 		local Vector ViewLocation;
 
+		StateBeforeCommanding = PreviousStateName;
+
 		// Set commander view location and rotation
 		ViewLocation.X = Pawn.Location.X - 2048;
 		ViewLocation.Y = Pawn.Location.Y;
@@ -257,7 +262,7 @@ simulated state Commanding
 		if (WorldInfo.NetMode == NM_DedicatedServer)
 			ClientGotoState(GetStateName());
 		// Open commander HUD on client
-		else 
+		else
 			FHUD(myHUD).GFxCommanderHUD.Start();
 	}
 
@@ -359,8 +364,7 @@ simulated state Commanding
 	 */
 	reliable server function ServerToggleCommandView()
 	{
-		// TODO: go to the state the player was in before entering command view
-		GotoState('PlayerWalking');
+		GotoState(StateBeforeCommanding);
 	}
 
 	/**
