@@ -269,4 +269,5 @@ defaultproperties
 	DestroyOnPenetrationThreshold=50.0
 	DestroyOnPenetrationDuration=1.0
 	bFinishedConstructing=False
+	bAlwaysRelevant=True
 }

@@ -87,4 +87,5 @@ defaultproperties
 	bCollideActors=True
 	bBlockActors=True
 	bCollideWorld=False
+	bAlwaysRelevant=True
 }
