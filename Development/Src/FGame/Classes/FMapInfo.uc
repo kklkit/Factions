@@ -3,8 +3,7 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FMapInfo extends UDKMapInfo
-	config(MapInfo);
+class FMapInfo extends UDKMapInfo;
 
 // Minimap
 var() Vector2D MapCenter;
@@ -14,7 +13,7 @@ struct FStructureInfo
 {
 	var() FStructure Archetype;
 };
-var() config array<FStructureInfo> Structures;
+var() array<FStructureInfo> Structures;
 
 struct FVehicleInfo
 {
@@ -44,6 +43,11 @@ defaultproperties
 	MapRadius=20000.0
 
 	// TODO: These should be in the config file, but are causing errors when loading the game.
+	Structures(0)=(Archetype=FStructure_Barracks'ST_Barracks.Archetypes.ST_Barracks')
+	Structures(1)=(Archetype=FStructure_VehicleFactory'ST_VehicleFactory.Archetypes.ST_VehicleFactory')
+	Structures(2)=(Archetype=FStructure'ST_Wall.Archetypes.ST_Wall')
+	Structures(3)=(Archetype=FStructure_Refinery'ST_Refinery.Archetypes.Refinery')
+
 	Vehicles(0)=(Archetype=FVehicle_Car'VH_Jeep.Archetypes.VH_Jeep')
 	Vehicles(1)=(Archetype=FVehicle_Tank'VH_Tank.Archetypes.VH_Tank')
 	Vehicles(2)=(Archetype=FVehicle_Aircraft'VH_Gunship.Archetypes.VH_Gunship')
