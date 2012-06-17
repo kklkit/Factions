@@ -243,9 +243,7 @@ public class FactionsOmniMenu extends MovieClip {
 	}
 	
 	private function buildVehicle(e:ButtonEvent) {
-		data.vehicleChassis.requestItemAt(vehicleChassisList.selectedIndex, function (item:Object):void {
-			ExternalInterface.call("BuildVehicle", String(item));
-		});
+		ExternalInterface.call("BuildVehicle", vehicleChassisList.selectedIndex);
 		closeMenu();
 	}
 }

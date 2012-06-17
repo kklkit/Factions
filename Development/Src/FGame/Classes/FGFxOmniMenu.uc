@@ -3,7 +3,8 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FGFxOmniMenu extends FGFxMoviePlayer;
+class FGFxOmniMenu extends FGFxMoviePlayer
+	dependson(FMapInfo);
 
 // A list of elements that need to be invalidated the next time the movie clip is open.
 var array<string> PendingInvalidates;
@@ -83,9 +84,9 @@ function SelectInfantryEquipment(byte Slot, string EquipmentName)
 /**
  * Build a vehicle for the player.
  */
-function BuildVehicle(string ChassisName)
+function BuildVehicle(int ChassisIndex)
 {
-	FPlayerController(GetPC()).BuildVehicle(name(ChassisName));
+	FPlayerController(GetPC()).ServerSpawnVehicle(ChassisIndex);
 }
 
 /*********************************************************************************************
@@ -274,11 +275,13 @@ function array<string> InfantrySkillNames(int Slot)
  */
 function array<string> VehicleChassisNames()
 {
+	local FVehicleInfo VehicleInfo;
 	local array<string> Data;
 
-	Data.AddItem("Jeep");
-	Data.AddItem("Tank");
-	Data.AddItem("Gunship");
+	foreach FMapInfo(GetPC().WorldInfo.GetMapInfo()).Vehicles(VehicleInfo)
+	{
+		Data.AddItem(VehicleInfo.Archetype.MenuName);
+	}
 
 	return Data;
 }

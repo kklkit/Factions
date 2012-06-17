@@ -12,9 +12,9 @@ var() name VehicleSpawnSocket;
 /**
  * Builds a vehicle in the vehicle factory.
  */
-function BuildVehicle(name VehicleName, Pawn Builder)
+function BuildVehicle(int VehicleIndex, Pawn Builder)
 {
-	`log("Unable to build vehicle" @ VehicleName @ "for" @ Builder @ "while structure is not active!");
+	`log("Structure not active: Unable to build vehicle with index" @ VehicleIndex @ "for" @ Builder);
 }
 
 state() StructureActive
@@ -23,7 +23,7 @@ state() StructureActive
 	/**
 	 * @extends
 	 */
-	function BuildVehicle(name VehicleName, Pawn Builder)
+	function BuildVehicle(int VehicleIndex, Pawn Builder)
 	{
 		local Vector VehicleSpawnLocation;
 		local FTeamInfo PlayerTeam;
@@ -32,7 +32,7 @@ state() StructureActive
 
 		Mesh.GetSocketWorldLocationAndRotation(VehicleSpawnSocket, VehicleSpawnLocation);
 		PlayerTeam = FTeamInfo(Builder.PlayerReplicationInfo.Team);
-		VehicleInfo = FMapInfo(WorldInfo.GetMapInfo()).GetVehicleInfo(VehicleName);
+		VehicleInfo = FMapInfo(WorldInfo.GetMapInfo()).Vehicles[VehicleIndex];
 		if (PlayerTeam != None && PlayerTeam.Resources >= 100)
 		{
 			PlayerTeam.Resources -= 100;

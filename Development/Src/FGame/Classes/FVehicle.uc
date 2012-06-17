@@ -4,6 +4,7 @@
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FVehicle extends UDKVehicle
+	perobjectlocalized
 	notplaceable;
 
 const FVEHICLE_UNSET_TEAM=255;

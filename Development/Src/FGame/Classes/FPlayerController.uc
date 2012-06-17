@@ -113,14 +113,14 @@ reliable server function ServerChangeTeam(int N)
 /**
  * Spawns a vehicle for the player.
  */
-reliable server function ServerSpawnVehicle(name ChassisName)
+reliable server function ServerSpawnVehicle(int ChassisIndex)
 {
 	local FStructure_VehicleFactory VF;
 
 	// Get the VF the player is standing on
 	VF = FStructure_VehicleFactory(Pawn.Base);
 	if (VF != None)
-		VF.BuildVehicle(ChassisName, Pawn);
+		VF.BuildVehicle(ChassisIndex, Pawn);
 }
 
 // Structure placement
@@ -222,14 +222,6 @@ exec function ReloadWeapon()
 	{
 		`log("Failed to find weapon to reload!");
 	}
-}
-
-/**
- * Builds a vehicle with the given chassis name.
- */
-exec function BuildVehicle(name ChassisName)
-{
-	ServerSpawnVehicle(ChassisName);
 }
 
 /**
