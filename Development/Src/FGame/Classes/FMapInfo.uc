@@ -1,23 +1,6 @@
 /**
  * Contains game information specific to the current map.
  * 
- * Each map can define its own set of structures, vehicles, and weapons to use.
- * The default set is defined in the UDKMapInfo.ini configuration file. This
- * can be overridden in a map by using the MyMapInfo property under
- * World Properties in UDK Editor.
- * 
- * A structure, vehicle, or weapon in the game is defined using an archetype
- * instead of instantiating from a class. An archetype is an instance of a
- * class with properties that have been set using the property editor in
- * UDK Editor. This allows unit property values to be changed without having to
- * recompile the code.
- * 
- * Each unit info structure is a mapping between a name and an archetype. The
- * name is used internally in the UnrealScript code to identify different
- * units. The getter functions can be used to get the unit info for a given
- * name. The archetype can then be obtained from the unit info to spawn an
- * instance of the unit in the world.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FMapInfo extends UDKMapInfo
@@ -29,7 +12,6 @@ var() float MapRadius;
 
 struct FStructureInfo
 {
-	var() name Name;
 	var() FStructure Archetype;
 };
 var() config array<FStructureInfo> Structures;
@@ -48,14 +30,6 @@ struct FWeaponInfo
 	var() FWeaponAttachment AttachmentArchetype;
 };
 var() array<FWeaponInfo> Weapons;
-
-/**
- * Returns the structure info for the given structure name.
- */
-function FStructureInfo GetStructureInfo(name StructureName)
-{
-	return Structures[Structures.Find('Name', StructureName)];
-}
 
 /**
  * Returns the vehicle info for the given vehicle name.

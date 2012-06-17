@@ -128,11 +128,11 @@ reliable server function ServerSpawnVehicle(name ChassisName)
 /**
  * Begins structure placement.
  */
-reliable server function ServerBeginStructurePlacement(name StructureName)
+reliable server function ServerBeginStructurePlacement(byte StructureIndex)
 {
 	local FStructureInfo PlacingStructureInfo;
-	
-	PlacingStructureInfo = FMapInfo(WorldInfo.GetMapInfo()).GetStructureInfo(StructureName);
+
+	PlacingStructureInfo = FMapInfo(WorldInfo.GetMapInfo()).Structures[StructureIndex];
 
 	// Remove the old structure preview if it exists
 	if (PlacingStructure != None)
@@ -402,9 +402,9 @@ simulated state Commanding
 	/**
 	 * Enters structure placement mode.
 	 */
-	exec function SelectStructure(name StructureName)
+	exec function SelectStructure(byte StructureIndex)
 	{
-		ServerBeginStructurePlacement(StructureName);
+		ServerBeginStructurePlacement(StructureIndex);
 	}
 }
 
