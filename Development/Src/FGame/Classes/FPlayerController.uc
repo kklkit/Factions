@@ -251,6 +251,18 @@ simulated state Commanding
 
 		StateBeforeCommanding = PreviousStateName;
 
+		// If not driving a vehicle
+		if (Vehicle(Pawn) == None)
+		{
+			// Stop pawn inputs
+			Pawn.Acceleration = vect(0,0,0);
+		}
+		else
+		{
+			// Stop vehicle inputs
+			Vehicle(Pawn).SetInputs(0, 0, 0);
+		}
+
 		// Set commander view location and rotation
 		ViewLocation.X = Pawn.Location.X - 2048;
 		ViewLocation.Y = Pawn.Location.Y;
