@@ -17,7 +17,7 @@ function BuildVehicle(name VehicleName, Pawn Builder)
 	`log("Unable to build vehicle" @ VehicleName @ "for" @ Builder @ "while structure is not active!");
 }
 
-auto state StructureActive
+state() StructureActive
 {
 
 	/**

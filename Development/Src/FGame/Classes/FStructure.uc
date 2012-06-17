@@ -21,13 +21,25 @@ function bool AnySeatAvailable()
 /**
  * @extends
  */
+simulated event SetInitialState()
+{
+	// Hack: Fully build structures placed by the mapper
+	if (WorldInfo.bStartup)
+		InitialState = 'StructureActive';
+
+	Super.SetInitialState();
+}
+
+/**
+ * @extends
+ */
 simulated event byte ScriptGetTeamNum()
 {
 	return Team;
 }
 
 // Structure has not yet been built
-state StructurePreview
+auto state() StructurePreview
 {
 	/**
 	 * @extends
@@ -46,7 +58,7 @@ state StructurePreview
 }
 
 // Structure has been built
-auto state StructureActive
+state() StructureActive
 {
 	/**
 	 * @extends
