@@ -221,9 +221,7 @@ public class FactionsOmniMenu extends MovieClip {
 	
 	public function createInfantryEquipmentSelector(i:int):Function {
 		return function(e:ListEvent):void {
-			data.infantryEquipmentNames[i].requestItemAt(e.index, function (item:Object):void {
-				ExternalInterface.call("SelectInfantryEquipment", i, String(item));
-			});
+			ExternalInterface.call("SelectInfantryEquipment", i, e.index);
 		};
 	}
 	

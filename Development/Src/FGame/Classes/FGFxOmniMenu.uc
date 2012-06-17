@@ -74,11 +74,10 @@ function SelectTeam(string TeamName)
 /**
  * Select the player's equipment for the given slot.
  */
-function SelectInfantryEquipment(byte Slot, string EquipmentName)
+function SelectInfantryEquipment(byte Slot, int EquipmentIndex)
 {
-	// Forward the parameters to the inventory manager.
 	if (GetPC().Pawn != None)
-		FInventoryManager(FPawn(GetPC().Pawn).InvManager).SelectEquipment(Slot, name(EquipmentName));
+		FInventoryManager(FPawn(GetPC().Pawn).InvManager).SelectEquipment(Slot, EquipmentIndex);
 }
 
 /**
@@ -152,7 +151,12 @@ function array<string> InfantryEquipment()
 	PlayerInventory = FInventoryManager(GetPC().Pawn.InvManager);
 
 	for (EquipmentIndex = 0; EquipmentIndex < class'FInventoryManager'.const.EquipmentSlots; EquipmentIndex++)
-		Data.InsertItem(EquipmentIndex, string(PlayerInventory.RequestedEquipment[EquipmentIndex].Name));
+	{
+		if (PlayerInventory.RequestedEquipment[EquipmentIndex].Archetype != None)
+		{
+			Data.InsertItem(EquipmentIndex, PlayerInventory.RequestedEquipment[EquipmentIndex].Archetype.ItemName);
+		}
+	}
 
 	return Data;
 }
@@ -198,24 +202,12 @@ function array<string> InfantryEquipmentLabels()
  */
 function array<string> InfantryEquipmentNames(int Slot)
 {
+	local FWeaponInfo WeaponInfo;
 	local array<string> Data;
 
-	switch (Slot)
+	foreach FMapInfo(GetPC().WorldInfo.GetMapInfo()).Weapons(WeaponInfo)
 	{
-	case 0:
-		Data.AddItem("Heavy Rifle");
-		Data.AddItem("RPG");
-		break;
-	case 1:
-		Data.AddItem("None");
-		break;
-	case 2:
-		Data.AddItem("Pistol");
-		Data.AddItem("Repair Tool");
-		break;
-	case 3:
-		Data.AddItem("None");
-		break;
+		Data.AddItem(WeaponInfo.Archetype.ItemName);
 	}
 
 	return Data;

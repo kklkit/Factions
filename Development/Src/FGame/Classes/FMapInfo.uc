@@ -23,19 +23,10 @@ var() array<FVehicleInfo> Vehicles;
 
 struct FWeaponInfo
 {
-	var() name Name;
 	var() FWeapon Archetype;
 	var() FWeaponAttachment AttachmentArchetype;
 };
 var() array<FWeaponInfo> Weapons;
-
-/**
- * Returns the weapon info for the given weapon name.
- */
-function FWeaponInfo GetWeaponInfo(name WeaponName)
-{
-	return Weapons[Weapons.Find('Name', WeaponName)];
-}
 
 defaultproperties
 {
@@ -52,6 +43,6 @@ defaultproperties
 	Vehicles(1)=(Archetype=FVehicle_Tank'VH_Tank.Archetypes.VH_Tank')
 	Vehicles(2)=(Archetype=FVehicle_Aircraft'VH_Gunship.Archetypes.VH_Gunship')
 
-	Weapons(0)=(Name=Pistol, Archetype=FWeapon_Firearm'WP_Pistol.Archetypes.WP_Pistol', AttachmentArchetype=FWeaponAttachment_Firearm'WP_Pistol.Archetypes.WP_Pistol_Attachment')
-	Weapons(1)=(Name="Heavy Rifle", Archetype=FWeapon_Firearm'WP_Rifle.Archetypes.WP_Rifle', AttachmentArchetype=FWeaponAttachment_Firearm'WP_Rifle.Archetypes.WP_Rifle_Attachment')
+	Weapons(0)=(Archetype=FWeapon_Firearm'WP_Pistol.Archetypes.WP_Pistol', AttachmentArchetype=FWeaponAttachment_Firearm'WP_Pistol.Archetypes.WP_Pistol_Attachment')
+	Weapons(1)=(Archetype=FWeapon_Firearm'WP_Rifle.Archetypes.WP_Rifle', AttachmentArchetype=FWeaponAttachment_Firearm'WP_Rifle.Archetypes.WP_Rifle_Attachment')
 }

@@ -1,0 +1,4 @@
+[Archetypes.WP_Pistol FWeapon_Firearm]
+ItemName="Pistol"
+PickupMessage="Snagged an item."
+

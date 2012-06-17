@@ -3,9 +3,10 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FWeapon extends UDKWeapon;
+class FWeapon extends UDKWeapon
+	perobjectlocalized;
 
-var name WeaponName;
+var FWeaponAttachment AttachmentArchetype;
 
 // First-person model location offset relative to the pawn view location
 var() Vector DrawOffset;
@@ -73,7 +74,7 @@ simulated function AttachWeaponTo(SkeletalMeshComponent MeshCpnt, optional name 
 	// Update equipment name on the pawn to replicate to clients
 	if (PlayerPawn != None && Role == ROLE_Authority)
 	{
-		PlayerPawn.EquippedWeaponName = WeaponName;
+		PlayerPawn.WeaponAttachmentArchetype = AttachmentArchetype;
 
 		// Update weapon attachment when in single player mode
 		if (PlayerPawn.IsLocallyControlled())
@@ -95,9 +96,9 @@ simulated function DetachWeapon()
 	PlayerPawn = FPawn(Instigator);
 
 	// Clear equipment name on pawn
-	if (PlayerPawn != None && Role == ROLE_Authority && FPawn(Instigator).EquippedWeaponName == WeaponName)
+	if (PlayerPawn != None && Role == ROLE_Authority && FPawn(Instigator).WeaponAttachmentArchetype == AttachmentArchetype)
 	{
-		PlayerPawn.EquippedWeaponName = '';
+		PlayerPawn.WeaponAttachmentArchetype = None;
 
 		// Update weapon attachment when in single player mode
 		if (Instigator.IsLocallyControlled())

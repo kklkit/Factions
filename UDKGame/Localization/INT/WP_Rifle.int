@@ -1,0 +1,4 @@
+[Archetypes.WP_Rifle FWeapon_Firearm]
+ItemName="Rifle"
+PickupMessage="Snagged an item."
+

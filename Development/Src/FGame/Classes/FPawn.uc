@@ -6,7 +6,7 @@
 class FPawn extends UDKPawn;
 
 // Weapon attachment
-var repnotify name EquippedWeaponName;
+var repnotify FWeaponAttachment WeaponAttachmentArchetype;
 var FWeaponAttachment WeaponAttachment;
 var name WeaponSocketName;
 
@@ -24,7 +24,7 @@ var DynamicLightEnvironmentComponent LightEnvironment;
 replication
 {
 	if (bNetDirty)
-		EquippedWeaponName;
+		WeaponAttachmentArchetype;
 }
 
 /**
@@ -35,7 +35,7 @@ simulated event ReplicatedEvent(name VarName)
 	Super.ReplicatedEvent(VarName);
 
 	// Update the pawn's weapon attachment when their equipped weapon has changed
-	if (VarName == 'EquippedWeaponName')
+	if (VarName == 'WeaponAttachmentArchetype')
 		UpdateWeaponAttachment();
 }
 
@@ -242,8 +242,6 @@ simulated function WeaponStoppedFiring(Weapon InWeapon, bool bViaReplication)
  */
 simulated function UpdateWeaponAttachment()
 {
-	local FWeaponAttachment WeaponAttachmentArchetype;
-
 	if (Mesh.SkeletalMesh != None)
 	{
 		if (WeaponAttachment != None)
@@ -253,10 +251,8 @@ simulated function UpdateWeaponAttachment()
 			WeaponAttachment.Destroy();
 		}
 
-		if (EquippedWeaponName != '')
+		if (WeaponAttachmentArchetype != None)
 		{
-			WeaponAttachmentArchetype = FMapInfo(WorldInfo.GetMapInfo()).GetWeaponInfo(EquippedWeaponName).AttachmentArchetype;
-
 			// Create the new weapon attachment
 			WeaponAttachment = Spawn(WeaponAttachmentArchetype.Class, Self,,,, WeaponAttachmentArchetype);
 
@@ -268,7 +264,7 @@ simulated function UpdateWeaponAttachment()
 			}
 			else
 			{
-				`log("Failed to spawn weapon attachment for archetype" @ WeaponAttachmentArchetype @ "for weapon" @ EquippedWeaponName @ "!");
+				`log("Failed to spawn weapon attachment for archetype" @ WeaponAttachmentArchetype);
 			}
 		}
 	}

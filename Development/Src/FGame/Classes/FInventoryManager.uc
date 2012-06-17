@@ -21,15 +21,15 @@ replication
 /**
  * Sets the requested equipment for the given equipment slot.
  */
-reliable server function SelectEquipment(byte Slot, name EquipmentName)
+reliable server function SelectEquipment(byte Slot, int EquipmentIndex)
 {
 	// Ensure equipment slot is not out of bounds.
 	if (Slot >= 0 && Slot < EquipmentSlots)
 	{
 		// Set the requested equipment slot to the weapon info for the given equipment name.
-		RequestedEquipment[Slot] = FMapInfo(WorldInfo.GetMapInfo()).GetWeaponInfo(EquipmentName);
+		RequestedEquipment[Slot] = FMapInfo(WorldInfo.GetMapInfo()).Weapons[EquipmentIndex];
 
-		// Update the omnimenu.
+		// Update the omnimenu in single player mode.
 		if (WorldInfo.NetMode != NM_DedicatedServer)
 			FHUD(FPlayerController(Pawn(Owner).Controller).myHUD).GFxOmniMenu.Invalidate("equipment selection");
 	}
@@ -63,7 +63,7 @@ reliable server function ResetEquipment()
 			{
 				// Spawn the equipment.
 				InfantryEquipment = Spawn(RequestedEquipment[EquipmentSlot].Archetype.Class, Owner,,,, RequestedEquipment[EquipmentSlot].Archetype);
-				InfantryEquipment.WeaponName = RequestedEquipment[EquipmentSlot].Name;
+				InfantryEquipment.AttachmentArchetype = RequestedEquipment[EquipmentSlot].AttachmentArchetype;
 
 				// Add default magazines to inventory.
 				for (MagazineCount = 0; MagazineCount < 4; MagazineCount++)

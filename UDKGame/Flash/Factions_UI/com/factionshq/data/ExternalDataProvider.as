@@ -16,7 +16,7 @@ public class ExternalDataProvider extends EventDispatcher implements IDataProvid
 	}
 	
 	public function get data():Array {
-		return ExternalInterface.call.apply(null, externalCall) || ["NO DATA"];
+		return ExternalInterface.call.apply(null, externalCall) || ["NO DATA", "NO DATA (2)", "NO DATA (3)"];
 	}
 	
 	public function get length():uint {
