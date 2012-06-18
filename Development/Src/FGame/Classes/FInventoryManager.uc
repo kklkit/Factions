@@ -29,9 +29,9 @@ reliable server function SelectEquipment(byte Slot, int EquipmentIndex)
 		// Set the requested equipment slot to the weapon info for the given equipment name.
 		RequestedEquipment[Slot] = FMapInfo(WorldInfo.GetMapInfo()).Weapons[EquipmentIndex];
 
-		// Update the omnimenu in single player mode.
-		if (WorldInfo.NetMode != NM_DedicatedServer)
-			FHUD(FPlayerController(Pawn(Owner).Controller).myHUD).GFxOmniMenu.Invalidate("equipment selection");
+		// Update the omnimenu
+		if (FPlayerController(Instigator.Controller).myHUD != None)
+			FHUD(FPlayerController(Instigator.Controller).myHUD).GFxOmniMenu.Invalidate("equipment selection");
 	}
 	else
 	{
