@@ -18,6 +18,9 @@ replication
 		CurrentStateName;
 }
 
+/**
+ * @extends
+ */
 simulated event ReplicatedEvent(name VarName)
 {
 	if (VarName == 'CurrentStateName')
