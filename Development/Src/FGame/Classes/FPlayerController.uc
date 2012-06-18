@@ -259,11 +259,10 @@ simulated state Commanding
 		SetLocation(ViewLocation);
 		SetRotation(Rotator(Pawn.Location - ViewLocation));
 
-		// Update the client state
 		if (WorldInfo.NetMode == NM_DedicatedServer)
 			ClientGotoState(GetStateName());
-		// Open commander HUD on client
-		else
+
+		if (myHUD != None)
 			FHUD(myHUD).GFxCommanderHUD.Start();
 	}
 
@@ -272,17 +271,14 @@ simulated state Commanding
 	 */
 	simulated event EndState(name NextStateName)
 	{
-		// End structure placement
-		if (WorldInfo.NetMode == NM_DedicatedServer)
-		{
+		if (Role == ROLE_Authority)
 			EndStructurePlacement();
+
+		if (WorldInfo.NetMode == NM_DedicatedServer)
 			ClientGotoState(GetStateName());
-		}
-		// Close commander HUD on client
-		else
-		{
+
+		if (myHUD != None)
 			FHUD(myHUD).GFxCommanderHUD.Close(False);
-		}
 	}
 
 	/**
