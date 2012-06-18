@@ -63,7 +63,6 @@ reliable server function ResetEquipment()
 			{
 				// Spawn the equipment.
 				InfantryEquipment = Spawn(RequestedEquipment[EquipmentSlot].Archetype.Class, Owner,,,, RequestedEquipment[EquipmentSlot].Archetype);
-				InfantryEquipment.AttachmentArchetype = RequestedEquipment[EquipmentSlot].AttachmentArchetype;
 
 				// Add default magazines to inventory.
 				for (MagazineCount = 0; MagazineCount < 4; MagazineCount++)

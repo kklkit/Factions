@@ -6,7 +6,7 @@
 class FWeapon extends UDKWeapon
 	perobjectlocalized;
 
-var FWeaponAttachment AttachmentArchetype;
+var() FWeaponAttachment AttachmentArchetype;
 
 // First-person model location offset relative to the pawn view location
 var() Vector DrawOffset;
