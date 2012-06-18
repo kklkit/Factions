@@ -7,8 +7,22 @@ class FStructure extends Vehicle
 	perobjectlocalized
 	notplaceable;
 
+var repnotify name CurrentStateName;
+
 // Team index
 var() byte Team;
+
+replication
+{
+	if (bNetDirty)
+		CurrentStateName;
+}
+
+simulated event ReplicatedEvent(name VarName)
+{
+	if (VarName == 'CurrentStateName')
+		GotoState(CurrentStateName);
+}
 
 /**
  * @extends
@@ -39,21 +53,6 @@ simulated event byte ScriptGetTeamNum()
 	return Team;
 }
 
-/**
- * Sets the object on the client to the given state.
- */
-reliable client function ClientGotoState(name NewState, optional name NewLabel)
-{
-	if ((NewLabel == 'Begin' || NewLabel == '') && !IsInState(NewState))
-	{
-		GotoState(NewState);
-	}
-	else
-	{
-		GotoState(NewState, NewLabel);
-	}
-}
-
 // Structure has not yet been built
 auto simulated state() StructurePreview
 {
@@ -71,7 +70,8 @@ auto simulated state() StructurePreview
 		SetCollisionType(COLLIDE_NoCollision);
 		SetCollision(False, False);
 
-		ClientGotoState(GetStateName());
+		if (Role == ROLE_Authority)
+			CurrentStateName = GetStateName();
 	}
 }
 
@@ -92,7 +92,8 @@ simulated state() StructureActive
 		SetCollisionType(COLLIDE_BlockAll);
 		SetCollision(True, True);
 
-		ClientGotoState(GetStateName());
+		if (Role == ROLE_Authority)
+			CurrentStateName = GetStateName();
 	}
 }
 
