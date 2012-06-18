@@ -22,6 +22,8 @@ simulated event ReplicatedEvent(name VarName)
 {
 	if (VarName == 'CurrentStateName')
 		GotoState(CurrentStateName);
+
+	Super.ReplicatedEvent(VarName);
 }
 
 /**
