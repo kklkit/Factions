@@ -39,13 +39,28 @@ simulated event byte ScriptGetTeamNum()
 	return Team;
 }
 
+/**
+ * Sets the object on the client to the given state.
+ */
+reliable client function ClientGotoState(name NewState, optional name NewLabel)
+{
+	if ((NewLabel == 'Begin' || NewLabel == '') && !IsInState(NewState))
+	{
+		GotoState(NewState);
+	}
+	else
+	{
+		GotoState(NewState, NewLabel);
+	}
+}
+
 // Structure has not yet been built
-auto state() StructurePreview
+auto simulated state() StructurePreview
 {
 	/**
 	 * @extends
 	 */
-	event BeginState(name PreviousStateName)
+	simulated event BeginState(name PreviousStateName)
 	{
 		Super.BeginState(PreviousStateName);
 
@@ -55,16 +70,18 @@ auto state() StructurePreview
 		Mesh.SetRBChannel(RBCC_Nothing);
 		SetCollisionType(COLLIDE_NoCollision);
 		SetCollision(False, False);
+
+		ClientGotoState(GetStateName());
 	}
 }
 
 // Structure has been built
-state() StructureActive
+simulated state() StructureActive
 {
 	/**
 	 * @extends
 	 */
-	event BeginState(name PreviousStateName)
+	simulated event BeginState(name PreviousStateName)
 	{
 		Super.BeginState(PreviousStateName);
 
@@ -74,6 +91,8 @@ state() StructureActive
 		Mesh.SetRBChannel(RBCC_Vehicle);
 		SetCollisionType(COLLIDE_BlockAll);
 		SetCollision(True, True);
+
+		ClientGotoState(GetStateName());
 	}
 }
 

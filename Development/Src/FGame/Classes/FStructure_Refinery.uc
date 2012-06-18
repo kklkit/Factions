@@ -13,12 +13,13 @@ state() StructureActive
 	/**
 	 * @extends
 	 */
-	event BeginState(name PreviousStateName)
+	simulated event BeginState(name PreviousStateName)
 	{
 		Super.BeginState(PreviousStateName);
 
 		// Begin transferring resources
-		SetTimer(TransferRate, True, NameOf(TransferResources));
+		if (Role == ROLE_Authority)
+			SetTimer(TransferRate, True, NameOf(TransferResources));
 	}
 
 	/**
