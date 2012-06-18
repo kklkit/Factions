@@ -5,16 +5,13 @@
  */
 class FPlayerController extends UDKPlayerController;
 
-var float CommanderCameraSpeed;
+var Vector LastMouseWorldLocation;
 
-// Store the player's last state before entering command view
+var float CommanderCameraSpeed;
 var name StateBeforeCommanding;
 
-// Structure preview actor for the structure being placed
 var FStructure PlacingStructure;
-
-// The location the structure preview should be moved to in the next tick
-var Vector NextPlacingStructurePreviewLocation;
+var Vector NextPlacingStructurePreviewLocation; // The location the structure preview should be moved to in the next tick
 
 // Minimap
 var SceneCapture2DComponent MinimapCaptureComponent;
@@ -128,7 +125,7 @@ reliable server function ServerSpawnVehicle(int ChassisIndex)
 /**
  * Begins structure placement.
  */
-reliable server function ServerBeginStructurePlacement(byte StructureIndex)
+reliable server function ServerBeginStructurePlacement(byte StructureIndex, Vector WorldLocation)
 {
 	local FStructureInfo PlacingStructureInfo;
 
@@ -139,7 +136,7 @@ reliable server function ServerBeginStructurePlacement(byte StructureIndex)
 		PlacingStructure.Destroy();
 
 	// Spawn a structure preview for the requested structure
-	PlacingStructure = Spawn(PlacingStructureInfo.Archetype.Class, Self,,, rot(0,0,0), PlacingStructureInfo.Archetype, True);
+	PlacingStructure = Spawn(PlacingStructureInfo.Archetype.Class, Self,, WorldLocation, rot(0,0,0), PlacingStructureInfo.Archetype, True);
 	PlacingStructure.GotoState('StructurePreview');
 	PlacingStructure.Team = GetTeamNum();
 }
@@ -291,16 +288,28 @@ simulated state Commanding
 	/**
 	 * @extends
 	 */
+	simulated event PlayerTick(float DeltaTime)
+	{
+		// Update the placing structure location
+		if (PlacingStructure != None)
+			NextPlacingStructurePreviewLocation = LastMouseWorldLocation;
+
+		Global.PlayerTick(DeltaTime);
+	}
+
+	/**
+	 * @extends
+	 */
 	simulated event DrawHUD(HUD H)
 	{
 		local Vector HitLocation, HitNormal, WorldOrigin, WorldDirection;
 
-		// Use the canvas project function to get the new structure preview location
-		if (PlacingStructure != None)
+		// Set the last mouse world location
+		if (LocalPlayer(Player).ViewportClient.bDisplayHardwareMouseCursor)
 		{
 			H.Canvas.DeProject(LocalPlayer(Player).ViewportClient.GetMousePosition(), WorldOrigin, WorldDirection);
 			Trace(HitLocation, HitNormal, WorldOrigin + WorldDirection * 65536.0, WorldOrigin, False,,,);
-			NextPlacingStructurePreviewLocation = HitLocation;
+			LastMouseWorldLocation = HitLocation;
 		}
 	}
 
@@ -396,7 +405,7 @@ simulated state Commanding
 	 */
 	exec function SelectStructure(byte StructureIndex)
 	{
-		ServerBeginStructurePlacement(StructureIndex);
+		ServerBeginStructurePlacement(StructureIndex, LastMouseWorldLocation);
 	}
 }
 
