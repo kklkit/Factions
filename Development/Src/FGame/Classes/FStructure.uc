@@ -17,7 +17,7 @@ var() byte Team;
 replication
 {
 	if (bNetDirty)
-		CurrentStateName;
+		CurrentStateName, Team;
 }
 
 /**
