@@ -32,6 +32,17 @@ simulated event ReplicatedEvent(name VarName)
 }
 
 /**
+	* @extends
+	*/
+simulated event BeginState(name PreviousStateName)
+{
+	Super.BeginState(PreviousStateName);
+
+	if (Role == ROLE_Authority)
+		CurrentStateName = GetStateName();
+}
+
+/**
  * @extends
  */
 function bool AnySeatAvailable()
@@ -60,8 +71,8 @@ simulated event byte ScriptGetTeamNum()
 	return Team;
 }
 
-// Structure has not yet been built
-auto simulated state StructurePreview
+// Structure is being placed
+auto simulated state StructurePlacing
 {
 	/**
 	 * @extends
@@ -70,7 +81,7 @@ auto simulated state StructurePreview
 	{
 		local int i;
 
-		Super.BeginState(PreviousStateName);
+		Global.BeginState(PreviousStateName);
 
 		Mesh.SetBlockRigidBody(False);
 		Mesh.SetActorCollision(False, False);
@@ -88,10 +99,12 @@ auto simulated state StructurePreview
 				Mesh.SetMaterial(i, Material'Factions_Assets.Materials.StructurePreviewMaterial');
 			}
 		}
-
-		if (Role == ROLE_Authority)
-			CurrentStateName = GetStateName();
 	}
+}
+
+// Structure is placed and is waiting to be built
+simulated state StructurePreview
+{
 }
 
 // Structure has been built
@@ -104,7 +117,7 @@ simulated state StructureActive
 	{
 		local int i;
 
-		Super.BeginState(PreviousStateName);
+		Global.BeginState(PreviousStateName);
 
 		Mesh.SetBlockRigidBody(True);
 		Mesh.SetActorCollision(True, True);
@@ -117,9 +130,6 @@ simulated state StructureActive
 		if (Worldinfo.NetMode != NM_DedicatedServer)
 			for (i = 0; i < OriginalMaterials.Length; i++)
 				Mesh.SetMaterial(i, OriginalMaterials[i]);
-
-		if (Role == ROLE_Authority)
-			CurrentStateName = GetStateName();
 	}
 }
 

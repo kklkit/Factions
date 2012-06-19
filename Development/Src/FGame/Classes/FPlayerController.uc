@@ -137,7 +137,6 @@ reliable server function ServerBeginStructurePlacement(byte StructureIndex, Vect
 
 	// Spawn a structure preview for the requested structure
 	PlacingStructure = Spawn(PlacingStructureInfo.Archetype.Class, Self,, WorldLocation, rot(0,0,0), PlacingStructureInfo.Archetype, True);
-	PlacingStructure.GotoState('StructurePreview');
 	PlacingStructure.Team = GetTeamNum();
 }
 
@@ -168,7 +167,7 @@ reliable server function ServerPlaceStructure()
  */
 function EndStructurePlacement()
 {
-	if (PlacingStructure != None && PlacingStructure.IsInState('StructurePreview'))
+	if (PlacingStructure != None && PlacingStructure.IsInState('StructurePlacing'))
 	{
 		PlacingStructure.Destroy();
 	}
