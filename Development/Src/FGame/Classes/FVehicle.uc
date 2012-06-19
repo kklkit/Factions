@@ -71,8 +71,11 @@ function InitializeSeats()
 		{
 			Seats[i].SeatPawn = Spawn(class'UDKWeaponPawn');
 			Seats[i].SeatPawn.SetBase(Self);
-			Seats[i].Gun = FVehicleWeapon(Seats[i].SeatPawn.InvManager.CreateInventory(Seats[i].GunClass));
-			Seats[i].Gun.SetBase(Self);
+			if (Seats[i].GunClass != None)
+			{
+				Seats[i].Gun = FVehicleWeapon(Seats[i].SeatPawn.InvManager.CreateInventory(Seats[i].GunClass));
+				Seats[i].Gun.SetBase(Self);
+			}
 			Seats[i].SeatPawn.EyeHeight = Seats[i].SeatPawn.BaseEyeheight;
 			UDKWeaponPawn(Seats[i].SeatPawn).MyVehicleWeapon = FVehicleWeapon(Seats[i].Gun);
 			UDKWeaponPawn(Seats[i].SeatPawn).MyVehicle = Self;
@@ -93,8 +96,11 @@ function InitializeSeats()
 		else
 		{
 			Seats[i].SeatPawn = Self;
-			Seats[i].Gun = FVehicleWeapon(InvManager.CreateInventory(Seats[i].GunClass));
-			Seats[i].Gun.SetBase(Self);
+			if (Seats[i].GunClass != None)
+			{
+				Seats[i].Gun = FVehicleWeapon(InvManager.CreateInventory(Seats[i].GunClass));
+				Seats[i].Gun.SetBase(Self);
+			}
 		}
 
 		Seats[i].SeatPawn.DriverDamageMult = Seats[i].DriverDamageMult;
