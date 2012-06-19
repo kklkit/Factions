@@ -101,9 +101,30 @@ function DrawMinimap()
 	Canvas.DrawMaterialTile(MinimapMaterial, MinimapSize, MinimapSize, 0, 0, 1, 1);
 
 	// Draw actor overlays on the minimap.
-	Canvas.SetDrawColor(0, 255, 0);
 	foreach DynamicActors(class'Actor', LevelActor)
 	{
+		if (LevelActor.GetTeamNum() == TEAM_RED)
+		{
+			Canvas.SetDrawColor(200, 0, 0);
+			LineColor.R = 200;
+			LineColor.G = 0;
+			LineColor.B = 0;
+		}
+		else if (LevelActor.GetTeamNum() == TEAM_BLUE)
+		{
+			Canvas.SetDrawColor(0, 0, 255);
+			LineColor.R = 0;
+			LineColor.G = 0;
+			LineColor.B = 255;
+		}
+		else
+		{
+			Canvas.SetDrawColor(255, 255, 255);
+			LineColor.R = 255;
+			LineColor.G = 255;
+			LineColor.B = 255;
+		}
+
 		if (Pawn(LevelActor) != None || Projectile(LevelActor) != None)
 		{
 			UnitPosition.X = LevelActor.Location.X / (MapSize - LevelActor.Location.Z * 2) * MinimapSize + Canvas.ClipX - MinimapPadding.X - (MinimapSize / 2);
@@ -190,5 +211,4 @@ defaultproperties
 {
 	MinimapMaterial=Material'Factions_Assets.minimap_render'
 	MinimapPadding=(X=10,Y=50)
-	LineColor=(A=255,B=0,G=255,R=0)
 }
