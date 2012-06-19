@@ -37,6 +37,7 @@ defaultproperties
 	Structures(1)=(Archetype=FStructure_VehicleFactory'ST_VehicleFactory.Archetypes.ST_VehicleFactory')
 	Structures(2)=(Archetype=FStructure'ST_Wall.Archetypes.ST_Wall')
 	Structures(3)=(Archetype=FStructure_Refinery'ST_Refinery.Archetypes.Refinery')
+	Structures(4)=(Archetype=FStructure'ST_Armory.Archetypes.Armory')
 
 	Vehicles(0)=(Archetype=FVehicle_Car'VH_Jeep.Archetypes.VH_Jeep')
 	Vehicles(1)=(Archetype=FVehicle_Tank'VH_Tank.Archetypes.VH_Tank')
