@@ -64,19 +64,22 @@ reliable server function ResetEquipment()
 				// Spawn the equipment.
 				InfantryEquipment = Spawn(RequestedEquipment[EquipmentSlot].Archetype.Class, Owner,,,, RequestedEquipment[EquipmentSlot].Archetype);
 
-				// Add default magazines to inventory.
-				for (MagazineCount = 0; MagazineCount < 4; MagazineCount++)
-				{
-					Magazine = FMagazine(CreateInventory(class'FMagazine'));
-					Magazine.AmmoFor = InfantryEquipment.Name;
-				}
-
 				// Add the equipment to the inventory.
 				AddInventory(InfantryEquipment);
 
-				// Reload the weapon if there's a magazine available.
-				if (Magazine != None)
-					InfantryEquipment.ServerReload();
+				// Add default magazines to inventory.
+				if (FWeapon_Firearm(InfantryEquipment) != None)
+				{
+					for (MagazineCount = 0; MagazineCount < 4; MagazineCount++)
+					{
+						Magazine = FMagazine(CreateInventory(class'FMagazine'));
+						Magazine.AmmoFor = InfantryEquipment.Name;
+					}
+
+					// Reload the weapon if there's a magazine available.
+					if (Magazine != None)
+						FWeapon_Firearm(InfantryEquipment).ServerReload();
+				}
 			}
 		}
 	}

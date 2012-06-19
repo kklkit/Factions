@@ -11,30 +11,12 @@ var() FWeaponAttachment AttachmentArchetype;
 // First-person model location offset relative to the pawn view location
 var() Vector DrawOffset;
 
-// Loaded magazine
-var FMagazine Magazine;
+var int MaxAmmoCount;
 
 replication
 {
 	if (bNetDirty)
-		Magazine;
-}
-
-/**
- * @extends
- */
-function ConsumeAmmo(byte FireModeNum)
-{
-	AddAmmo(-1);
-}
-
-/**
- * @extends
- */
-function int AddAmmo(int Amount)
-{
-	AmmoCount = Magazine.AddAmmo(Amount);
-	return AmmoCount;
+		MaxAmmoCount;
 }
 
 /**
@@ -46,6 +28,14 @@ simulated function bool HasAmmo(byte FireModeNum, optional int Amount)
 		return (AmmoCount >= Amount);
 	else
 		return (AmmoCount > 0);
+}
+
+/**
+ * @extends
+ */
+function ConsumeAmmo(byte FireModeNum)
+{
+	AddAmmo(-1);
 }
 
 /**
@@ -165,37 +155,6 @@ simulated function TimeWeaponEquipping()
 	AttachWeaponTo(Instigator.Mesh);
 
 	Super.TimeWeaponEquipping();
-}
-
-/**
- * Executes reloading the weapon.
- */
-reliable server function ServerReload()
-{
-	local FMagazine NextMagazine;
-
-	// Get the next magazine of the equipment's type
-	foreach InvManager.InventoryActors(class'FMagazine', NextMagazine)
-		if (NextMagazine.AmmoFor == Name)
-			break;
-
-	// Abort reloading if no magazine was found
-	if (NextMagazine == None)
-		return;
-
-	if (Magazine != None)
-	{
-		// Throw away old magazine
-		Magazine.Destroy();
-		AmmoCount = 0;
-	}
-
-	// Remove next magazine from inventory
-	InvManager.RemoveFromInventory(NextMagazine);
-
-	// Insert magazine into weapon
-	Magazine = NextMagazine;
-	AmmoCount = Magazine.AmmoCount;
 }
 
 defaultproperties

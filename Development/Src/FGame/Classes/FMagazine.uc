@@ -9,12 +9,12 @@ class FMagazine extends Inventory;
 var() name AmmoFor;
 
 var() int AmmoCount;
-var() int AmmoCountMax;
+var() int MaxAmmoCount;
 
 replication
 {
 	if (bNetDirty)
-		AmmoFor, AmmoCount, AmmoCountMax;
+		AmmoFor, AmmoCount, MaxAmmoCount;
 }
 
 /**
@@ -24,7 +24,7 @@ replication
  */
 function int AddAmmo(int Amount)
 {
-	AmmoCount = Clamp(AmmoCount + Amount, 0, AmmoCountMax);
+	AmmoCount = Clamp(AmmoCount + Amount, 0, MaxAmmoCount);
 
 	return AmmoCount;
 }
@@ -32,5 +32,5 @@ function int AddAmmo(int Amount)
 defaultproperties
 {
 	AmmoCount=30
-	AmmoCountMax=30
+	MaxAmmoCount=30
 }

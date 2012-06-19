@@ -29,8 +29,8 @@ function TickHud()
 
 		PlayerWeapon = FWeapon(PlayerPawn.Weapon);
 
-		if (PlayerWeapon != None && PlayerWeapon.Magazine != None)
-			UpdateAmmo(PlayerWeapon.AmmoCount, PlayerWeapon.Magazine.AmmoCountMax);
+		if (PlayerWeapon != None)
+			UpdateAmmo(PlayerWeapon.AmmoCount, PlayerWeapon.MaxAmmoCount);
 		else
 			UpdateAmmo(0, 1);
 
