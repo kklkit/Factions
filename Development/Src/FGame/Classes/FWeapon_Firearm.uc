@@ -19,5 +19,4 @@ defaultproperties
 	EquipTime=0.0
 	PutDownTime=0.0
 	WeaponRange=22000
-	AimTraceRange=22000
 }
