@@ -8,7 +8,7 @@ class FStructure_Refinery extends FStructure;
 var() float TransferRate;
 var() int TransferAmount;
 
-state() StructureActive
+state StructureActive
 {
 	/**
 	 * @extends

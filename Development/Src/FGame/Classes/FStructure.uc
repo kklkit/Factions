@@ -61,7 +61,7 @@ simulated event byte ScriptGetTeamNum()
 }
 
 // Structure has not yet been built
-auto simulated state() StructurePreview
+auto simulated state StructurePreview
 {
 	/**
 	 * @extends
@@ -79,6 +79,7 @@ auto simulated state() StructurePreview
 		SetCollisionType(COLLIDE_NoCollision);
 		SetCollision(False, False);
 
+		// Save original materials before replacing with preview materials
 		if (Worldinfo.NetMode != NM_DedicatedServer)
 		{
 			for (i = 0; i < Mesh.GetNumElements(); i++)
@@ -94,7 +95,7 @@ auto simulated state() StructurePreview
 }
 
 // Structure has been built
-simulated state() StructureActive
+simulated state StructureActive
 {
 	/**
 	 * @extends
@@ -112,6 +113,7 @@ simulated state() StructureActive
 		SetCollisionType(COLLIDE_BlockAll);
 		SetCollision(True, True);
 
+		// Restore original materials
 		if (Worldinfo.NetMode != NM_DedicatedServer)
 			for (i = 0; i < OriginalMaterials.Length; i++)
 				Mesh.SetMaterial(i, OriginalMaterials[i]);
