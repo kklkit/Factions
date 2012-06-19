@@ -155,7 +155,7 @@ unreliable server function ServerUpdateStructurePlacement(Vector NewLocation)
  */
 reliable server function ServerPlaceStructure()
 {
-	PlacingStructure.GotoState('StructureActive');
+	PlacingStructure.GotoState('StructurePreview');
 
 	EndStructurePlacement();
 }

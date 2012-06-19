@@ -1,0 +1,4 @@
+[Archetypes.WP_RepairTool FWeapon_Healer]
+ItemName="Repair Tool"
+PickupMessage="Snagged an item."
+

@@ -45,4 +45,5 @@ defaultproperties
 
 	Weapons(0)=(Archetype=FWeapon_Firearm'WP_Pistol.Archetypes.WP_Pistol')
 	Weapons(1)=(Archetype=FWeapon_Firearm'WP_Rifle.Archetypes.WP_Rifle')
+	Weapons(2)=(Archetype=FWeapon_Healer'WP_RepairTool.Archetypes.WP_RepairTool')
 }

@@ -32,26 +32,6 @@ simulated event ReplicatedEvent(name VarName)
 }
 
 /**
-	* @extends
-	*/
-simulated event BeginState(name PreviousStateName)
-{
-	Super.BeginState(PreviousStateName);
-
-	if (Role == ROLE_Authority)
-		CurrentStateName = GetStateName();
-}
-
-/**
- * @extends
- */
-function bool AnySeatAvailable()
-{
-	// Don't allow players to drive structures
-	return False;
-}
-
-/**
  * @extends
  */
 simulated event SetInitialState()
@@ -66,9 +46,29 @@ simulated event SetInitialState()
 /**
  * @extends
  */
+simulated event BeginState(name PreviousStateName)
+{
+	Super.BeginState(PreviousStateName);
+
+	if (Role == ROLE_Authority)
+		CurrentStateName = GetStateName();
+}
+
+/**
+ * @extends
+ */
 simulated event byte ScriptGetTeamNum()
 {
 	return Team;
+}
+
+/**
+ * @extends
+ */
+function bool AnySeatAvailable()
+{
+	// Don't allow players to drive structures
+	return False;
 }
 
 // Structure is being placed
@@ -105,6 +105,26 @@ auto simulated state StructurePlacing
 // Structure is placed and is waiting to be built
 simulated state StructurePreview
 {
+	/**
+	 * @extends
+	 */
+	simulated event BeginState(name PreviousStateName)
+	{
+		Global.BeginState(PreviousStateName);
+
+		SetCollisionType(COLLIDE_TouchWeapons);
+	}
+
+	/**
+	 * @extends
+	 */
+	event bool HealDamage(int Amount, Controller Healer, class<DamageType> DamageType)
+	{
+		GotoState('StructureActive');
+		Health = Min(HealthMax, Health + Amount);
+
+		return True;
+	}
 }
 
 // Structure has been built
@@ -157,4 +177,7 @@ defaultproperties
 	bBlockActors=True
 	bCollideWorld=False
 	bAlwaysRelevant=True
+
+	Health=1
+	HealthMax=1000
 }
