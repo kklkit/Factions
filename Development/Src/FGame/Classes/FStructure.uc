@@ -7,17 +7,17 @@ class FStructure extends Vehicle
 	perobjectlocalized
 	notplaceable;
 
-var repnotify name CurrentStateName;
-
-var array<MaterialInterface> OriginalMaterials;
+var() repnotify name CurrentState;
 
 // Team index
 var() byte Team;
 
+var array<MaterialInterface> OriginalMaterials;
+
 replication
 {
 	if (bNetDirty)
-		CurrentStateName, Team;
+		CurrentState, Team;
 }
 
 /**
@@ -25,8 +25,8 @@ replication
  */
 simulated event ReplicatedEvent(name VarName)
 {
-	if (VarName == 'CurrentStateName')
-		GotoState(CurrentStateName);
+	if (VarName == 'CurrentState')
+		GotoState(CurrentState);
 
 	Super.ReplicatedEvent(VarName);
 }
@@ -36,9 +36,8 @@ simulated event ReplicatedEvent(name VarName)
  */
 simulated event SetInitialState()
 {
-	// Hack: Fully build structures placed by the mapper
-	if (WorldInfo.bStartup)
-		InitialState = 'StructureActive';
+	if (WorldInfo.bStartup && CurrentState != '')
+		InitialState = CurrentState;
 
 	Super.SetInitialState();
 }
@@ -51,7 +50,7 @@ simulated event BeginState(name PreviousStateName)
 	Super.BeginState(PreviousStateName);
 
 	if (Role == ROLE_Authority)
-		CurrentStateName = GetStateName();
+		CurrentState = GetStateName();
 }
 
 /**
@@ -71,6 +70,30 @@ function bool AnySeatAvailable()
 	return False;
 }
 
+/**
+ * Puts the structure in a preview state.
+ */
+simulated function SetupPreview()
+{
+	local int i;
+
+	Mesh.SetBlockRigidBody(False);
+	Mesh.SetActorCollision(False, False);
+	Mesh.SetTraceBlocking(False, False);
+	Mesh.SetRBChannel(RBCC_Nothing);
+	SetCollision(False, False);
+
+	// Save original materials before replacing with preview materials
+	if (Worldinfo.NetMode != NM_DedicatedServer)
+	{
+		for (i = 0; i < Mesh.GetNumElements(); i++)
+		{
+			OriginalMaterials[i] = Mesh.GetMaterial(i);
+			Mesh.SetMaterial(i, Material'Factions_Assets.Materials.StructurePreviewMaterial');
+		}
+	}
+}
+
 // Structure is being placed
 auto simulated state StructurePlacing
 {
@@ -79,26 +102,12 @@ auto simulated state StructurePlacing
 	 */
 	simulated event BeginState(name PreviousStateName)
 	{
-		local int i;
-
 		Global.BeginState(PreviousStateName);
 
-		Mesh.SetBlockRigidBody(False);
-		Mesh.SetActorCollision(False, False);
-		Mesh.SetTraceBlocking(False, False);
-		Mesh.SetRBChannel(RBCC_Nothing);
-		SetCollisionType(COLLIDE_NoCollision);
-		SetCollision(False, False);
+		if (PreviousStateName != 'StructurePreview')
+			SetupPreview();
 
-		// Save original materials before replacing with preview materials
-		if (Worldinfo.NetMode != NM_DedicatedServer)
-		{
-			for (i = 0; i < Mesh.GetNumElements(); i++)
-			{
-				OriginalMaterials[i] = Mesh.GetMaterial(i);
-				Mesh.SetMaterial(i, Material'Factions_Assets.Materials.StructurePreviewMaterial');
-			}
-		}
+		SetCollisionType(COLLIDE_NoCollision);
 	}
 }
 
@@ -112,6 +121,9 @@ simulated state StructurePreview
 	{
 		Global.BeginState(PreviousStateName);
 
+		if (PreviousStateName != 'StructurePlacing')
+			SetupPreview();
+
 		SetCollisionType(COLLIDE_TouchWeapons);
 	}
 
@@ -120,8 +132,12 @@ simulated state StructurePreview
 	 */
 	event bool HealDamage(int Amount, Controller Healer, class<DamageType> DamageType)
 	{
-		GotoState('StructureActive');
+		if (Team == 255)
+			Team = Healer.GetTeamNum();
+
 		Health = Min(HealthMax, Health + Amount);
+
+		GotoState('StructureActive');
 
 		return True;
 	}
@@ -178,6 +194,8 @@ defaultproperties
 	bCollideWorld=False
 	bAlwaysRelevant=True
 
+	Team=255
 	Health=1
 	HealthMax=1000
+	CurrentState=StructureActive
 }
