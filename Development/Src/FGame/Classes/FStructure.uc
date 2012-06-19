@@ -9,6 +9,8 @@ class FStructure extends Vehicle
 
 var repnotify name CurrentStateName;
 
+var MaterialInterface PreviousMaterial;
+
 // Team index
 var() byte Team;
 
@@ -72,6 +74,8 @@ auto simulated state() StructurePreview
 		Mesh.SetActorCollision(False, False);
 		Mesh.SetTraceBlocking(False, False);
 		Mesh.SetRBChannel(RBCC_Nothing);
+		PreviousMaterial = Mesh.GetMaterial(0);
+		Mesh.SetMaterial(0, Material'Factions_Assets.Materials.StructurePreviewMaterial');
 		SetCollisionType(COLLIDE_NoCollision);
 		SetCollision(False, False);
 
@@ -94,6 +98,7 @@ simulated state() StructureActive
 		Mesh.SetActorCollision(True, True);
 		Mesh.SetTraceBlocking(True, True);
 		Mesh.SetRBChannel(RBCC_Vehicle);
+		Mesh.SetMaterial(0, PreviousMaterial);
 		SetCollisionType(COLLIDE_BlockAll);
 		SetCollision(True, True);
 
