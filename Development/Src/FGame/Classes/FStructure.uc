@@ -9,7 +9,7 @@ class FStructure extends Vehicle
 
 var repnotify name CurrentStateName;
 
-var MaterialInterface PreviousMaterial;
+var array<MaterialInterface> OriginalMaterials;
 
 // Team index
 var() byte Team;
@@ -68,16 +68,25 @@ auto simulated state() StructurePreview
 	 */
 	simulated event BeginState(name PreviousStateName)
 	{
+		local int i;
+
 		Super.BeginState(PreviousStateName);
 
 		Mesh.SetBlockRigidBody(False);
 		Mesh.SetActorCollision(False, False);
 		Mesh.SetTraceBlocking(False, False);
 		Mesh.SetRBChannel(RBCC_Nothing);
-		PreviousMaterial = Mesh.GetMaterial(0);
-		Mesh.SetMaterial(0, Material'Factions_Assets.Materials.StructurePreviewMaterial');
 		SetCollisionType(COLLIDE_NoCollision);
 		SetCollision(False, False);
+
+		if (Worldinfo.NetMode != NM_DedicatedServer)
+		{
+			for (i = 0; i < Mesh.GetNumElements(); i++)
+			{
+				OriginalMaterials[i] = Mesh.GetMaterial(i);
+				Mesh.SetMaterial(i, Material'Factions_Assets.Materials.StructurePreviewMaterial');
+			}
+		}
 
 		if (Role == ROLE_Authority)
 			CurrentStateName = GetStateName();
@@ -92,15 +101,20 @@ simulated state() StructureActive
 	 */
 	simulated event BeginState(name PreviousStateName)
 	{
+		local int i;
+
 		Super.BeginState(PreviousStateName);
 
 		Mesh.SetBlockRigidBody(True);
 		Mesh.SetActorCollision(True, True);
 		Mesh.SetTraceBlocking(True, True);
 		Mesh.SetRBChannel(RBCC_Vehicle);
-		Mesh.SetMaterial(0, PreviousMaterial);
 		SetCollisionType(COLLIDE_BlockAll);
 		SetCollision(True, True);
+
+		if (Worldinfo.NetMode != NM_DedicatedServer)
+			for (i = 0; i < OriginalMaterials.Length; i++)
+				Mesh.SetMaterial(i, OriginalMaterials[i]);
 
 		if (Role == ROLE_Authority)
 			CurrentStateName = GetStateName();
