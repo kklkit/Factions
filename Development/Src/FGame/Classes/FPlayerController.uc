@@ -36,16 +36,16 @@ simulated event PostBeginPlay()
 	MapInfo = FMapInfo(WorldInfo.GetMapInfo());
 
 	// Create the minimap capture component on clients
-	if (MapInfo != None && WorldInfo.NetMode != NM_DedicatedServer) 
+	if (MapInfo != None && WorldInfo.NetMode != NM_DedicatedServer)
 	{
 		MinimapCaptureComponent = new(Self) class'SceneCapture2DComponent';
-		MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'Factions_Assets.minimap_render_texture', 90,, 0);
+		MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'Factions_Assets.minimap_render_texture', 1,, 0);
 		MinimapCaptureComponent.bUpdateMatrices = False;
 		AttachComponent(MinimapCaptureComponent);
 
 		MinimapCaptureLocation.X = MapInfo.MapCenter.X;
 		MinimapCaptureLocation.Y = MapInfo.MapCenter.Y;
-		MinimapCaptureLocation.Z = MapInfo.MapRadius;
+		MinimapCaptureLocation.Z = MapInfo.MapRadius * 90;
 	}
 }
 
