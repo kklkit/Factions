@@ -1,81 +1,90 @@
 # Factions
 
-This is the development repository for Factions.
+This is the development repository for Factions. Everything is stored in the repository except for asset (models and sound) sources (which are stored in Dropbox).
 
 ## Installation
 
-1. [Download the latest UDK](http://udk.com/download)
-2. Install it to your computer (see additional instructions below if using Windows XP 64-bit)
-3. Clone this repo to your UDK directory (e.g. `C:\UDK\UDK-2012-05`)
-4. Update the configuration files using the settings below
+### Installing UDK
 
-## Setting up development environment
+1. [Install the latest UDK](http://udk.com/download)
+2. Open each file listed below and make the following replacements
 
-There are other programs that can be utilized instead, but these are very good and popular
-
-Download all the following:
-
-1. msysGit - code.google.com/p/msysgit/downloads/list?can=2&q="Full+installer+for+official+Git+for+Windows"
-2. TortoseGit - http://code.google.com/p/tortoisegit/
-3. Visual Studio 2010 Shell - http://www.microsoft.com/en-us/download/details.aspx?id=115
-4. nFringe - http://wiki.pixelminegames.com/index.php?title=Tools:nFringe:Releases
-5. PuttyGen - http://the.earth.li/~sgtatham/putty/latest/x86/puttygen.exe
-
-* Install all the above programs appropriately.
-* Make sure you have privileges in the GitLab to get the repository (contact Jephir)
-* Have a clean install of the UDK when doing the first pull, just to be safe.
-* You may also need to install these redistributables for Visual Studio 2005: http://msdn.microsoft.com/en-us/library/bb165454(v=vs.80).aspx
-
-SSH Keys:
-
-1. Generate SSH keys. Open up PuttyGen and generate SSH2-RSA 1024-bit key (the default).
-2. Copy paste the public key into the GitLab account page where you manage your public SSH keys.
-3. Enter a passphrase and save your private key somewhere wise in your computer where you can access it.
-4. The passphrase is the password you will be using every time you access the git repository.
-
-Repository:
-
-Once you have successfully installed Tortoise Git and have set up your public - private key pair
-
-1. Go to the UDK folder and right click -> Git Clone (context menu choice should be supplied by Tortoise)
-2. URL target is "gitolite@gitlab.factionshq.com:factions.git"
-3. Use the Load Putty Key option and locate your private SSH key.
-4. Make sure you clone to the root of the project eg. "C:\UDK\UDK-2012-05\", this should mean you need to remove the "factions" folder at the end of destination.
-
-IDE:
-
-Installing nFringe and Visual Studio should be straight forward. Remember to install Visual Studio first as nFringe is a plugin for that.
-
-1. Once you have both of them, launch up the Visual Studio.
-2. If the license pop up does not appear, there should be an icon in your system tray labeled "nFringe Licensing Notification"
-3. Open that up and set up a new non-commercial license for the project (requires e-mail validation).
-
-## Configuration
-
-### UDKGame/Config/DefaultEngine.ini
+#### UDKGame/Config/DefaultEngine.ini
 
 * __[URL]__
   * `Map=TestMap.udk`
   * `LocalMap=TestMap.udk`
 
 * __[UnrealEd.EditorEngine]__
-  * Add this line at the bottom of the list: `+EditPackages=FGame`
+  * Add this at the bottom of the list: `+EditPackages=FGame`
 
-### UDKGame/Config/DefaultGame.ini
+#### UDKGame/Config/DefaultGame.ini
 
 * __[Engine.GameInfo]__
   * `DefaultGame=FGame.FTeamGame`
   * `DefaultServerGame=FGame.FTeamGame`
   * `PlayerControllerClassName=FGame.FPlayerController`
   * `DefaultGameType=FGame.FTeamGame`
+  
+### Creating an SSH Key
 
-## Updating
+SSH keys are used to authorize access to the Git repository. You upload the *public* key to GitLab, and keep the *private* key safe on your own computer.
 
-* Always pull using the `rebase` option
-* The generated config files (UDK\*.ini) need to be deleted when the default config (Default\*.ini) is updated in order to reload the configuration
+1. [Install PuTTY](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) using the Windows installer
+2. Launch PuTTYgen
+3. Click **Generate**
+4. Enter a comment and passphrase
+5. Click **Save private key** and save the private key on your computer
+6. Copy the entire contents of the "Public key for pasting into OpenSSH" textbox to your [GitLab SSH Keys](https://gitlab.factionshq.com/keys/new)
 
-## Windows XP 64-bit
+### Loading the SSH Key
 
-For those users that use Windows XP 64bit, since there is no actual SP3, you can make a shortcut of the UDKinstaller. Right click the shortcut, and select Properties. At the end of the .exe string add -progressonly. That will skip the installer having to look for SP3. So for example it should look like:
+Whenever you want to pull or push from Git, you need to first load your SSH key.
 
-D:\UDKInstall-2011-09-BETA.exe -progressonly
+1. Launch Pageant (PuTTY authentication agent)
+2. Right-click the Pageant icon in your notification area and select Add Key
+3. Select the private key you saved earlier
+
+### Setting up Git
+
+1. [Install Git Extensions](http://code.google.com/p/gitextensions/) using the default settings
+2. Launch Git Extensions and follow the setup instructions
+3. Click **Clone repository**
+4. Enter the settings below and then click **Clone**
+
+Repository to clone: `gitolite@gitlab.factionshq.com:factions.git`
+Destination: Desktop (or anywhere, this is just temporary)
+Subdirectory to create: TemporaryFactions (or anything)
+Branch: `master`
+
+5. Git will clone the repository to your computer
+6. Click File > **Close**
+7. Go to where the repository was cloned and copy everthing (including the hidden .git folder) and paste it into your UDK install directory (e.g. `C:\UDK\UDK-2012-05`)
+8. In Git Extensions, click File > **Open** and select your UDK install directory (e.g. `C:\UDK\UDK-2012-05`)
+9. The repository should be open and you can delete the temporary folder created earlier
+
+## Usage
+
+### Updating Git
+
+Whenever you want to update, click the Pull button (blue down arrow). In the Pull dialog, select "Rebase current branch on top of remote branch" in the Merge options. Then click Pull. Finally, run the UDK Editor to compile the scripts.
+
+Your working directory has to be clean (no un-committed changes) to Pull. If you have un-committed changes, either click Stash first or Commit your changes.
+
+Sometimes a config file will be updated, which means you have to delete the generated configuration files for the change to take effect. Check the commit diff and delete the matching UDK\*.ini file for the Default\*.ini file that was changed.
+
+If your get a merge error, then someone else has modified a file at the same time as you. If you know how to resolve the merge, then you can do so, otherwise contact Jephir.
+
+### Committing changes
+
+Click the Commit button to open the commit dialog. Press the blue double down arrow to choose all your changes (or select your changes individually if you only want to commit parts). Enter a summary of what has changed into the commit message textbox (use present tense). Click Commit & push to make the commit.
+
+If your get a merge error, then someone else has modified a file at the same time as you. If you know how to resolve the merge, then you can do so, otherwise contact Jephir.
+
+## Troubleshooting
+
+### Windows XP 64-bit
+
+UDK needs to be installed with this command-line argument as SP3 is not available for Windows XP 64-bit.
+
+`D:\UDKInstall-2011-09-BETA.exe -progressonly`
