@@ -219,7 +219,7 @@ function float RatePlayerStart(PlayerStart P, byte Team, Controller Player)
 	if (UDKTeamPlayerStart(P) != None && Team == UDKTeamPlayerStart(P).TeamNumber)
 	{
 		if (Player.Pawn != None)
-			return (FMapInfo(WorldInfo.GetMapInfo()).MapRadius * 2) - VSize(Player.Pawn.Location - P.Location);
+			return FMapInfo(WorldInfo.GetMapInfo()).MapLength - VSize(Player.Pawn.Location - P.Location);
 		else
 			return 1.0;
 	}

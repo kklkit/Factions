@@ -38,7 +38,7 @@ simulated event PostBeginPlay()
 	GFxCommanderHUD.Init();
 
 	// Get the map size.
-	MapSize = FMapInfo(WorldInfo.GetMapInfo()).MapRadius * 2;
+	MapSize = FMapInfo(WorldInfo.GetMapInfo()).MapLength;
 }
 
 /**
@@ -94,7 +94,7 @@ function DrawHud()
 function DrawMinimap()
 {
 	local Actor LevelActor;
-	local Vector2D UnitPosition, UnitGroundPosition;
+	local Vector2D UnitPosition;
 
 	// Draw the minimap material.
 	Canvas.SetPos(Canvas.ClipX - MinimapSize - MinimapPadding.X, MinimapPadding.Y);
@@ -127,14 +127,10 @@ function DrawMinimap()
 
 		if (Pawn(LevelActor) != None || Projectile(LevelActor) != None)
 		{
-			UnitPosition.X = LevelActor.Location.X / (MapSize - LevelActor.Location.Z * 2) * MinimapSize + Canvas.ClipX - MinimapPadding.X - (MinimapSize / 2);
-			UnitPosition.Y = LevelActor.Location.Y / (MapSize - LevelActor.Location.Z * 2) * MinimapSize + MinimapPadding.Y + (MinimapSize / 2);
-			//@todo Ground position should be calculated from the actual ground
-			UnitGroundPosition.X = LevelActor.Location.X / MapSize * MinimapSize + Canvas.ClipX - MinimapPadding.X - (MinimapSize / 2);
-			UnitGroundPosition.Y = LevelActor.Location.Y / MapSize * MinimapSize + MinimapPadding.Y + (MinimapSize / 2);
+			UnitPosition.X = LevelActor.Location.X / MapSize * MinimapSize + Canvas.ClipX - MinimapPadding.X - (MinimapSize / 2);
+			UnitPosition.Y = LevelActor.Location.Y / MapSize * MinimapSize + MinimapPadding.Y + (MinimapSize / 2);
 			Canvas.SetPos(UnitPosition.X - (MinimapUnitBoxSize / 2), UnitPosition.Y - (MinimapUnitBoxSize / 2));
 			Canvas.DrawBox(MinimapUnitBoxSize, MinimapUnitBoxSize);
-			Canvas.Draw2DLine(UnitPosition.X, UnitPosition.Y, UnitGroundPosition.X, UnitGroundPosition.Y, LineColor);
 		}
 	}
 }

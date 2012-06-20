@@ -29,23 +29,15 @@ replication
  */
 simulated event PostBeginPlay()
 {
-	local FMapInfo MapInfo;
-
 	Super.PostBeginPlay();
 
-	MapInfo = FMapInfo(WorldInfo.GetMapInfo());
-
 	// Create the minimap capture component on clients
-	if (MapInfo != None && WorldInfo.NetMode != NM_DedicatedServer)
+	if (WorldInfo.NetMode != NM_DedicatedServer)
 	{
 		MinimapCaptureComponent = new(Self) class'SceneCapture2DComponent';
 		MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'Factions_Assets.minimap_render_texture', 1,, 0);
 		MinimapCaptureComponent.bUpdateMatrices = False;
 		AttachComponent(MinimapCaptureComponent);
-
-		MinimapCaptureLocation.X = MapInfo.MapCenter.X;
-		MinimapCaptureLocation.Y = MapInfo.MapCenter.Y;
-		MinimapCaptureLocation.Z = MapInfo.MapRadius * 90;
 	}
 }
 
@@ -55,6 +47,8 @@ simulated event PostBeginPlay()
 simulated event PlayerTick(float DeltaTime)
 {
 	Super.PlayerTick(DeltaTime);
+
+	MinimapCaptureLocation = FMapInfo(WorldInfo.GetMapInfo()).MapOrigin;
 
 	// Update minimap capture position
 	if (MinimapCaptureComponent != None)

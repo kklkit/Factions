@@ -6,8 +6,8 @@
 class FMapInfo extends UDKMapInfo;
 
 // Minimap
-var() Vector2D MapCenter;
-var() float MapRadius;
+var() Vector MapOrigin;
+var() float MapLength;
 
 struct FStructureInfo
 {
@@ -29,8 +29,8 @@ var() array<FWeaponInfo> Weapons;
 
 defaultproperties
 {
-	MapCenter=(X=0,Y=0)
-	MapRadius=20000.0
+	MapOrigin=(X=0,Y=0,Z=1900000)
+	MapLength=40000.0
 
 	// TODO: These should be in the config file, but are causing errors when loading the game.
 	Structures(0)=(Archetype=FStructure_Barracks'ST_Barracks.Archetypes.ST_Barracks')
