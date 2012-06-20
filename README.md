@@ -61,7 +61,7 @@ We need to clone the repository to a temporary location first since Git won't al
 
 5. Git will clone the repository to your computer
 6. Click File > **Close**
-7. Go to where the repository was cloned and copy everthing (including the hidden .git folder) and paste it into your UDK install directory (e.g. `C:\UDK\UDK-2012-05`)
+7. Go to where the repository was cloned and copy everything (including the hidden .git folder) and paste it into your UDK install directory (e.g. `C:\UDK\UDK-2012-05`)
 8. In Git Extensions, click File > **Open** and select your UDK install directory (e.g. `C:\UDK\UDK-2012-05`)
 9. The repository should be open and you can delete the temporary folder created earlier
 
@@ -75,13 +75,9 @@ Your working directory has to be clean (no un-committed changes) to Pull. If you
 
 Sometimes a config file will be updated, which means you have to delete the generated configuration files for the change to take effect. Check the commit diff and delete the matching UDK\*.ini file for the Default\*.ini file that was changed.
 
-If your get a merge error, then someone else has modified a file at the same time as you. If you know how to resolve the merge, then you can do so, otherwise contact Jephir.
-
 ### Committing changes
 
 Click the Commit button to open the commit dialog. Press the blue double down arrow to choose all your changes (or select your changes individually if you only want to commit parts). Enter a summary of what has changed into the commit message textbox (use present tense). Click Commit & push to make the commit.
-
-If your get a merge error, then someone else has modified a file at the same time as you. If you know how to resolve the merge, then you can do so, otherwise contact Jephir.
 
 ## Troubleshooting
 
