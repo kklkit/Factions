@@ -52,13 +52,10 @@ Whenever you want to pull or push from Git, you need to first load your SSH key.
 3. Click **Clone repository**
 4. Enter the settings below and then click **Clone**
 
-Repository to clone: `gitolite@gitlab.factionshq.com:factions.git`
-
-Destination: Desktop (or anywhere, this is just temporary)
-
-Subdirectory to create: TemporaryFactions (or anything)
-
-Branch: `master`
+* Repository to clone: `gitolite@gitlab.factionshq.com:factions.git`
+* Destination: Desktop (or anywhere, this is just temporary)
+* Subdirectory to create: TemporaryFactions (or anything)
+* Branch: `master`
 
 5. Git will clone the repository to your computer
 6. Click File > **Close**
