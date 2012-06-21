@@ -9,6 +9,12 @@ var() float TransferRate; // Resources transferred per second
 var() int TransferAmount;
 var() int Resources; // Total resources this refinery has
 
+replication
+{
+	if (bNetDirty)
+		TransferRate, TransferAmount, Resources;
+}
+
 state Active
 {
 	/**
