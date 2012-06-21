@@ -5,8 +5,9 @@
  */
 class FStructure_Refinery extends FStructure;
 
-var() float TransferRate;
+var() float TransferRate; // Resources transferred per second
 var() int TransferAmount;
+var() int Resources; // Total resources this refinery has
 
 state Active
 {
@@ -38,7 +39,22 @@ state Active
 	 */
 	function TransferResources()
 	{
-		FTeamInfo(WorldInfo.Game.GameReplicationInfo.Teams[Team]).Resources += TransferAmount;
+		local int ResourcesToTransfer;
+
+		// Transfer the full amount of resources if there are enough resources in the refinery
+		if (Resources >= TransferAmount)
+		{
+			ResourcesToTransfer = TransferAmount;
+		}
+		// Otherwise stop transferring resources and transfer what's left
+		else
+		{
+			ClearTimer(NameOf(TransferResources));
+			ResourcesToTransfer = Resources;
+		}
+
+		Resources -= ResourcesToTransfer;
+		FTeamInfo(WorldInfo.Game.GameReplicationInfo.Teams[Team]).Resources += ResourcesToTransfer;
 	}
 }
 
@@ -46,4 +62,5 @@ defaultproperties
 {
 	TransferRate=1.0
 	TransferAmount=1
+	Resources=5000
 }

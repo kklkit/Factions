@@ -209,7 +209,7 @@ defaultproperties
 	bCollideWorld=False
 	bAlwaysRelevant=True
 
-	Team=255
+	Team=255 // TODO use a constant for the no team variable
 	Health=1
 	HealthMax=1000
 }
