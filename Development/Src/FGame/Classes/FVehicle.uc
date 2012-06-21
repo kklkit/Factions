@@ -9,9 +9,24 @@ class FVehicle extends UDKVehicle
 
 const FVEHICLE_UNSET_TEAM=255;
 
-var bool bFinishedConstructing;
 var() byte InitialTeam;
 var() int ResourceCost;
+
+simulated event ReplicatedEvent(name VarName)
+{
+	local string VarString;
+	local int SeatIndex;
+
+	VarString = "" $ VarName;
+	if (Right(VarString, 14) ~= "weaponrotation")
+	{
+		SeatIndex = GetSeatIndexFromPrefix(Left(VarString, Len(VarString) - 14));
+		if (SeatIndex >= 0)
+		{
+			WeaponRotationChanged(SeatIndex);
+		}
+	}
+}
 
 /**
  * @extends
@@ -25,12 +40,90 @@ simulated event PostBeginPlay()
 
 	if (Role == ROLE_Authority)
 		InitializeSeats();
+	else if (Seats.Length > 0)
+		Seats[0].SeatPawn = Self;
 
 	PreCacheSeatNames();
 	InitializeTurrets();
 
 	AirSpeed = MaxSpeed;
 	Mesh.WakeRigidBody();
+}
+
+/**
+ * @extends
+ */
+event OnPropertyChange(name PropName)
+{
+	local int i;
+
+	for (i = 0; i < Seats.Length; i++)
+	{
+		if (Seats[i].bSeatVisible)
+		{
+			Seats[i].StoragePawn.SetRelativeLocation(Seats[i].SeatOffset);
+			Seats[i].StoragePawn.SetRelativeRotation(Seats[i].SeatRotation);
+		}
+	}
+}
+
+/**
+ * Updates the SeatMask.
+ */
+function SetSeatStoragePawn(int SeatIndex, Pawn PawnToSit)
+{
+	local int Mask;
+
+	Seats[SeatIndex].StoragePawn = PawnToSit;
+
+	Mask = 1 << SeatIndex;
+
+	if (PawnToSit != none)
+	{
+		SeatMask = SeatMask | Mask;
+	}
+	else
+	{
+		if ((SeatMask & Mask) > 0)
+		{
+			SeatMask = SeatMask ^ Mask;
+		}
+	}
+
+}
+
+/**
+ * Returns the seat index for the given seat prefix.
+ */
+simulated function int GetSeatIndexFromPrefix(string Prefix)
+{
+	local int i;
+
+	for (i = 0; i < Seats.Length; i++)
+	{
+		if (Seats[i].TurretVarPrefix ~= Prefix)
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+/**
+ * Updates the weapon rotation for the given seat.
+ */
+simulated function WeaponRotationChanged(int SeatIndex)
+{
+	local int i;
+
+	if (SeatIndex >= 0)
+	{
+		for (i = 0; i < Seats[SeatIndex].TurretControllers.Length; i++)
+		{
+			Seats[SeatIndex].TurretControllers[i].DesiredBoneRotation = SeatWeaponRotation(SeatIndex,, True);
+		}
+	}
 }
 
 /**
@@ -207,19 +300,39 @@ function bool DriverEnter(Pawn P)
 
 	Instigator = Self;
 
-	return Super.DriverEnter(P);
+	if (!Super.DriverEnter(P))
+		return False;
+
+	SetSeatStoragePawn(0, P);
+
+	StuckCount = 0;
+	ResetTime = WorldInfo.TimeSeconds - 1;
+
+	return True;
 }
 
 /**
  * @extends
  */
-function PancakeOther(Pawn Other)
+event bool DriverLeave(bool bForceLeave)
 {
-	// Don't kill vehicle builder while building the vehicle
-	if (Other == FPlayerController(Owner).Pawn && !bFinishedConstructing)
-		return;
+	local bool bResult;
+	local Pawn OldDriver;
 
-	Super.PancakeOther(Other);
+	if (!bForceLeave && !bAllowedExit)
+	{
+		return False;
+	}
+
+	OldDriver = Driver;
+	bResult = Super.DriverLeave(bForceLeave);
+	if (bResult)
+	{
+		SetSeatStoragePawn(0, None);
+		Instigator = OldDriver;
+	}
+
+	return bResult;
 }
 
 defaultproperties
@@ -273,6 +386,5 @@ defaultproperties
 	InitialTeam=FVEHICLE_UNSET_TEAM
 	DestroyOnPenetrationThreshold=50.0
 	DestroyOnPenetrationDuration=1.0
-	bFinishedConstructing=False
 	bAlwaysRelevant=True
 }

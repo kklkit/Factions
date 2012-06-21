@@ -28,7 +28,6 @@ state Active
 		local Vector VehicleSpawnLocation;
 		local FTeamInfo PlayerTeam;
 		local FVehicleInfo VehicleInfo;
-		local FVehicle Vehicle;
 
 		Mesh.GetSocketWorldLocationAndRotation(VehicleSpawnSocket, VehicleSpawnLocation);
 		PlayerTeam = FTeamInfo(Builder.PlayerReplicationInfo.Team);
@@ -36,10 +35,7 @@ state Active
 		if (PlayerTeam != None && PlayerTeam.Resources >= VehicleInfo.Archetype.ResourceCost)
 		{
 			PlayerTeam.Resources -= VehicleInfo.Archetype.ResourceCost;
-			Vehicle = Spawn(VehicleInfo.Archetype.Class, Builder.Controller,, VehicleSpawnLocation,, VehicleInfo.Archetype);
-			Vehicle.Team = Builder.GetTeamNum();
-			Vehicle.TryToDrive(Builder);
-			Vehicle.bFinishedConstructing = True;
+			Spawn(VehicleInfo.Archetype.Class,,, VehicleSpawnLocation,, VehicleInfo.Archetype);
 		}
 	}
 }
