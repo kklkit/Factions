@@ -32,7 +32,8 @@ defaultproperties
 	MapOrigin=(X=0,Y=0,Z=1900000)
 	MapLength=40000.0
 
-	// TODO: These should be in the config file, but are causing errors when loading the game.
+	// Each item below will be spawnable in-game
+
 	Structures(0)=(Archetype=FStructure_Barracks'ST_Barracks.Archetypes.ST_Barracks')
 	Structures(1)=(Archetype=FStructure_VehicleFactory'ST_VehicleFactory.Archetypes.ST_VehicleFactory')
 	Structures(2)=(Archetype=FStructure'ST_Wall.Archetypes.ST_Wall')
