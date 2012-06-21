@@ -14,7 +14,7 @@ var name WeaponSocketName;
 var float Bob;
 var	float AppliedBob;
 var float BobTime;
-var	Vector	WalkBob;
+var	Vector WalkBob;
 
 // The last team the player was on before joining their current team
 var TeamInfo LastTeam;
