@@ -17,7 +17,7 @@ function BuildVehicle(int VehicleIndex, Pawn Builder)
 	`log("Structure not active: Unable to build vehicle with index" @ VehicleIndex @ "for" @ Builder);
 }
 
-state StructureActive
+state Active
 {
 
 	/**

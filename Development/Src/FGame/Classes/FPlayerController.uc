@@ -149,7 +149,7 @@ unreliable server function ServerUpdateStructurePlacement(Vector NewLocation)
  */
 reliable server function ServerPlaceStructure()
 {
-	PlacingStructure.GotoState('StructurePreview');
+	PlacingStructure.GotoState('Preview');
 
 	EndStructurePlacement();
 }
@@ -161,7 +161,7 @@ reliable server function ServerPlaceStructure()
  */
 function EndStructurePlacement()
 {
-	if (PlacingStructure != None && PlacingStructure.IsInState('StructurePlacing'))
+	if (PlacingStructure != None && PlacingStructure.IsInState('Placing'))
 	{
 		PlacingStructure.Destroy();
 	}

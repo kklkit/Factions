@@ -36,8 +36,7 @@ simulated event ReplicatedEvent(name VarName)
  */
 simulated event SetInitialState()
 {
-	if (WorldInfo.bStartup && CurrentState != '')
-		InitialState = CurrentState;
+	InitialState = CurrentState;
 
 	Super.SetInitialState();
 }
@@ -94,8 +93,24 @@ simulated function SetupPreview()
 	}
 }
 
+/**
+ * Structures must have a CurrentState set.
+ * 
+ * @extends
+ */
+function bool CheckForErrors()
+{
+	if (CurrentState == '')
+	{
+		`log(Self @ "has no CurrentState!");
+		return true;
+	}
+
+	return Super.CheckForErrors();
+}
+
 // Structure is being placed
-auto simulated state StructurePlacing
+auto simulated state Placing
 {
 	/**
 	 * @extends
@@ -104,7 +119,7 @@ auto simulated state StructurePlacing
 	{
 		Global.BeginState(PreviousStateName);
 
-		if (PreviousStateName != 'StructurePreview')
+		if (PreviousStateName != 'Preview')
 			SetupPreview();
 
 		SetCollisionType(COLLIDE_NoCollision);
@@ -112,7 +127,7 @@ auto simulated state StructurePlacing
 }
 
 // Structure is placed and is waiting to be built
-simulated state StructurePreview
+simulated state Preview
 {
 	/**
 	 * @extends
@@ -121,7 +136,7 @@ simulated state StructurePreview
 	{
 		Global.BeginState(PreviousStateName);
 
-		if (PreviousStateName != 'StructurePlacing')
+		if (PreviousStateName != 'Placing')
 			SetupPreview();
 
 		SetCollisionType(COLLIDE_TouchWeapons);
@@ -137,14 +152,14 @@ simulated state StructurePreview
 
 		Health = Min(HealthMax, Health + Amount);
 
-		GotoState('StructureActive');
+		GotoState('Active');
 
 		return True;
 	}
 }
 
 // Structure has been built
-simulated state StructureActive
+simulated state Active
 {
 	/**
 	 * @extends
@@ -197,5 +212,4 @@ defaultproperties
 	Team=255
 	Health=1
 	HealthMax=1000
-	CurrentState=StructureActive
 }
