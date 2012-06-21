@@ -275,7 +275,8 @@ simulated function UpdateWeaponAttachment()
  */
 exec function ResetEquipment()
 {
-	FInventoryManager(InvManager).ResetEquipment();
+	if (InvManager != None)
+		FInventoryManager(InvManager).ResetEquipment();
 }
 
 defaultproperties
