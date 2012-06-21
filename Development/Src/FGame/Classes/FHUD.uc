@@ -132,7 +132,7 @@ function DrawMinimap()
 			Canvas.SetPos(UnitPosition.X - (MinimapUnitBoxSize / 2), UnitPosition.Y - (MinimapUnitBoxSize / 2));
 			Canvas.DrawBox(MinimapUnitBoxSize, MinimapUnitBoxSize);
 
-			if (FStructure_Refinery(LevelActor) != None && LevelActor.GetTeamNum() == PlayerOwner.GetTeamNum())
+			if (FStructure_Refinery(LevelActor) != None && (PlayerOwner.IsSpectating() || LevelActor.GetTeamNum() == PlayerOwner.GetTeamNum()))
 			{
 				Canvas.SetPos(UnitPosition.X, UnitPosition.Y);
 				Canvas.DrawText(FStructure_Refinery(LevelActor).Resources);
