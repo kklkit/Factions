@@ -8,10 +8,8 @@ class FStructure extends Vehicle
 	notplaceable;
 
 var() repnotify name CurrentState;
-
-// Team index
-var() byte Team;
-
+var() byte Team; // Team index
+var() int ResourceCost;
 var array<MaterialInterface> OriginalMaterials;
 
 replication

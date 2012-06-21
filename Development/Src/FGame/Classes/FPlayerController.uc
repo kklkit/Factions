@@ -149,9 +149,16 @@ unreliable server function ServerUpdateStructurePlacement(Vector NewLocation)
  */
 reliable server function ServerPlaceStructure()
 {
-	PlacingStructure.GotoState('Preview');
-
-	EndStructurePlacement();
+	if (FTeamInfo(PlayerReplicationInfo.Team).Resources >= PlacingStructure.ResourceCost)
+	{
+		FTeamInfo(PlayerReplicationInfo.Team).Resources -= PlacingStructure.ResourceCost;
+		PlacingStructure.GotoState('Preview');
+		EndStructurePlacement();
+	}
+	else
+	{
+		`log("Not enough resources to place" @ PlacingStructure);
+	}
 }
 
 /**
