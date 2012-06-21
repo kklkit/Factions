@@ -9,11 +9,9 @@ class FVehicle extends UDKVehicle
 
 const FVEHICLE_UNSET_TEAM=255;
 
-// True when the vehicle has been fully constructed and the builder is in the vehicle
 var bool bFinishedConstructing;
-
-// Used to set the initial team of the vehicle in UDK Editor
 var() byte InitialTeam;
+var() int ResourceCost;
 
 /**
  * @extends

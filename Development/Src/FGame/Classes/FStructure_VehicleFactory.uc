@@ -33,9 +33,9 @@ state Active
 		Mesh.GetSocketWorldLocationAndRotation(VehicleSpawnSocket, VehicleSpawnLocation);
 		PlayerTeam = FTeamInfo(Builder.PlayerReplicationInfo.Team);
 		VehicleInfo = FMapInfo(WorldInfo.GetMapInfo()).Vehicles[VehicleIndex];
-		if (PlayerTeam != None && PlayerTeam.Resources >= 100)
+		if (PlayerTeam != None && PlayerTeam.Resources >= VehicleInfo.Archetype.ResourceCost)
 		{
-			PlayerTeam.Resources -= 100;
+			PlayerTeam.Resources -= VehicleInfo.Archetype.ResourceCost;
 			Vehicle = Spawn(VehicleInfo.Archetype.Class, Builder.Controller,, VehicleSpawnLocation,, VehicleInfo.Archetype);
 			Vehicle.Team = Builder.GetTeamNum();
 			Vehicle.TryToDrive(Builder);
