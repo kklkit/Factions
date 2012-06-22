@@ -52,7 +52,6 @@ simulated event PostBeginPlay()
 	InitializeTurrets();
 
 	AirSpeed = MaxSpeed;
-	Mesh.WakeRigidBody();
 }
 
 /**
@@ -266,6 +265,17 @@ function PossessedBy(Controller C, bool bVehicleTransition)
 
 	if (Seats[0].Gun != None)
 		Seats[0].Gun.ClientWeaponSet(False);
+}
+
+/**
+ * Sets the team of the vehicle.
+ */
+function SetTeamNum(byte T)
+{
+	if (T != Team)
+	{
+		Team = T;
+	}
 }
 
 /**

@@ -25,9 +25,11 @@ state Active
 	 */
 	function BuildVehicle(int VehicleIndex, Pawn Builder)
 	{
+		local int i;
 		local Vector VehicleSpawnLocation;
 		local FTeamInfo PlayerTeam;
 		local FVehicleInfo VehicleInfo;
+		local FVehicle SpawnedVehicle;
 
 		Mesh.GetSocketWorldLocationAndRotation(VehicleSpawnSocket, VehicleSpawnLocation);
 		PlayerTeam = FTeamInfo(Builder.PlayerReplicationInfo.Team);
@@ -35,7 +37,12 @@ state Active
 		if (PlayerTeam != None && PlayerTeam.Resources >= VehicleInfo.Archetype.ResourceCost)
 		{
 			PlayerTeam.Resources -= VehicleInfo.Archetype.ResourceCost;
-			Spawn(VehicleInfo.Archetype.Class,,, VehicleSpawnLocation,, VehicleInfo.Archetype);
+			SpawnedVehicle = Spawn(VehicleInfo.Archetype.Class,,, VehicleSpawnLocation,, VehicleInfo.Archetype);
+			SpawnedVehicle.SetTeamNum(Team);
+			SpawnedVehicle.Mesh.WakeRigidBody();
+
+			for (i = 0; i < SpawnedVehicle.Seats.Length; i++)
+				SpawnedVehicle.ForceWeaponRotation(i, SpawnedVehicle.Rotation);
 		}
 	}
 }
