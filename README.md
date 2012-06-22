@@ -47,7 +47,7 @@ Whenever you want to pull or push from Git, you need to first load your SSH key.
 
 ### Setting up Git
 
-We need to clone the repository to a temporary location first since Git won't allow you to clone to an existing directory.
+We first need to clone the repository to a temporary location since Git won't allow you to clone into an existing directory. This is just for the initial clone. Onced cloned, you use git pull to get updates.
 
 1. [Install Git Extensions](http://code.google.com/p/gitextensions/) using the default settings
 2. Launch Git Extensions and follow the setup instructions
