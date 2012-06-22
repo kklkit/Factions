@@ -12,6 +12,9 @@ const FVEHICLE_UNSET_TEAM=255;
 var() byte InitialTeam;
 var() int ResourceCost;
 
+/**
+ * @extends
+ */
 simulated event ReplicatedEvent(name VarName)
 {
 	local string VarString;
@@ -26,6 +29,8 @@ simulated event ReplicatedEvent(name VarName)
 			WeaponRotationChanged(SeatIndex);
 		}
 	}
+
+	Super.ReplicatedEvent(VarName);
 }
 
 /**
@@ -56,6 +61,8 @@ simulated event PostBeginPlay()
 event OnPropertyChange(name PropName)
 {
 	local int i;
+
+	Super.OnPropertyChange(PropName);
 
 	for (i = 0; i < Seats.Length; i++)
 	{
@@ -160,7 +167,7 @@ function InitializeSeats()
 	{
 		if (i > 0)
 		{
-			Seats[i].SeatPawn = Spawn(class'UDKWeaponPawn');
+			Seats[i].SeatPawn = Spawn(class'FWeaponPawn');
 			Seats[i].SeatPawn.SetBase(Self);
 			if (Seats[i].GunClass != None)
 			{
@@ -333,6 +340,40 @@ event bool DriverLeave(bool bForceLeave)
 	}
 
 	return bResult;
+}
+
+/**
+ * Adds a passenger to the vehicle.
+ */
+function bool PassengerEnter(Pawn P, int SeatIndex)
+{
+	if (WorldInfo.Game.bTeamGame && !WorldInfo.GRI.OnSameTeam(P, self))
+	{
+		return False;
+	}
+
+	if (SeatIndex <= 0 || SeatIndex >= Seats.Length)
+	{
+		`warn("Attempted to add a passenger to unavailable passenger seat" @ SeatIndex);
+		return False;
+	}
+
+	if (!Seats[SeatIndex].SeatPawn.DriverEnter(P))
+	{
+		return False;
+	}
+
+	SetSeatStoragePawn(SeatIndex, P);
+
+	return True;
+}
+
+/**
+ * Updates the storage pawn after a passenger leaves.
+ */
+function PassengerLeave(int SeatIndex)
+{
+	SetSeatStoragePawn(SeatIndex, None);
 }
 
 defaultproperties
