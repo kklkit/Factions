@@ -42,6 +42,7 @@ defaultproperties
 	Vehicles(0)=(Archetype=FVehicle_Car'VH_Jeep.Archetypes.VH_Jeep')
 	Vehicles(1)=(Archetype=FVehicle_Tank'VH_Tank.Archetypes.VH_Tank')
 	Vehicles(2)=(Archetype=FVehicle_Aircraft'VH_Gunship.Archetypes.VH_Gunship')
+	Vehicles(3)=(Archetype=FVehicle_Car8'VH_APC.Archetype.APC')
 
 	Weapons(0)=(Archetype=FWeapon_Firearm'WP_Pistol.Archetypes.WP_Pistol')
 	Weapons(1)=(Archetype=FWeapon_Firearm'WP_Rifle.Archetypes.WP_Rifle')
