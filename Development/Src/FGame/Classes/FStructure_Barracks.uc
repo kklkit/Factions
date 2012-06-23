@@ -8,26 +8,48 @@ class FStructure_Barracks extends FStructure;
 // List of socket names where players can spawn
 var() array<name> PlayerStartSockets;
 
-/**
- * @extends
- */
-event PostBeginPlay()
+var array<FTeamPlayerStart> PlayerStarts;
+
+state Active
 {
-	local name PlayerStartSocketName;
-	local Vector PlayerStartLocation;
-	local FTeamPlayerStart BarracksPlayerStart;
-
-	Super.PostBeginPlay();
-
-	// Create a start location at each socket
-	foreach PlayerStartSockets(PlayerStartSocketName)
+	/**
+	 * @extends
+	 */
+	simulated event BeginState(name PreviousStateName)
 	{
-		Mesh.GetSocketWorldLocationAndRotation(PlayerStartSocketName, PlayerStartLocation);
-		BarracksPlayerStart = Spawn(class'FTeamPlayerStart', Self,, PlayerStartLocation,,,);
-		if (BarracksPlayerStart != None)
+		local name PlayerStartSocketName;
+		local Vector PlayerStartLocation;
+
+		Super.BeginState(PreviousStateName);
+
+		if (Role == ROLE_Authority)
 		{
-			BarracksPlayerStart.TeamNumber = Team;
-			BarracksPlayerStart.TeamIndex = Team;
+			// Create a start location at each socket
+			foreach PlayerStartSockets(PlayerStartSocketName)
+			{
+				Mesh.GetSocketWorldLocationAndRotation(PlayerStartSocketName, PlayerStartLocation);
+				PlayerStarts.AddItem(Spawn(class'FTeamPlayerStart', Self,, PlayerStartLocation, Rotation,,));
+				if (PlayerStarts[PlayerStarts.Length - 1] != None)
+				{
+					PlayerStarts[PlayerStarts.Length - 1].TeamNumber = Team;
+					PlayerStarts[PlayerStarts.Length - 1].TeamIndex = Team;
+				}
+			}
+		}
+	}
+
+	/**
+	 * @extends
+	 */
+	event EndState(name NextStateName)
+	{
+		local FTeamPlayerStart PlayerStart;
+
+		Super.EndState(NextStateName);
+
+		foreach PlayerStarts(PlayerStart)
+		{
+			PlayerStart.Destroy();
 		}
 	}
 }
