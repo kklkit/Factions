@@ -11,6 +11,7 @@ const FVEHICLE_UNSET_TEAM=255;
 
 var() byte InitialTeam;
 var() int ResourceCost;
+var() bool bIsCommandVehicle;
 
 /**
  * @extends

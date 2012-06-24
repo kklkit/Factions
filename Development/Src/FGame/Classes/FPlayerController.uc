@@ -193,8 +193,7 @@ unreliable server function ServerSetCommanderLocation(Vector NewLoc)
  */
 reliable server function ServerToggleCommandView()
 {
-	// Only enter command view when on a team
-	if (PlayerReplicationInfo.Team != None)
+	if (PlayerReplicationInfo.Team != None && Pawn != None && FVehicle(Pawn) != None && FVehicle(Pawn).bIsCommandVehicle)
 		GotoState('Commanding');
 }
 
