@@ -7,11 +7,12 @@ class FTeamInfo extends TeamInfo;
 
 var int Resources;
 var localized string TeamNames[ETeams];
+var Pawn Commander;
 
 replication
 {
 	if (bNetDirty)
-		Resources;
+		Resources, Commander;
 }
 
 /**

@@ -13,6 +13,7 @@ function TickHud()
 	local FPawn PlayerPawn;
 	local FWeapon PlayerWeapon;
 	local FMagazine Magazine;
+	local FTeamInfo PlayerTeam;
 	local int MagazineCount;
 
 	// Calling functions in Flash while the movie is closed can cause a crash.
@@ -41,8 +42,20 @@ function TickHud()
 
 		UpdateMagazineCount(MagazineCount);
 
-		if (GetPC().PlayerReplicationInfo != None && GetPC().PlayerReplicationInfo.Team != None)
-			UpdateResources(FTeamInfo(GetPC().PlayerReplicationInfo.Team).Resources);
+		PlayerTeam = FTeamInfo(PlayerPawn.GetTeam());
+
+		if (PlayerTeam != None)
+		{
+			UpdateResources(PlayerTeam.Resources);
+
+			if (PlayerTeam.Commander != None)
+			{
+				if (PlayerTeam.Commander.PlayerReplicationInfo != None)
+					UpdateCommStatus(PlayerTeam.Commander.PlayerReplicationInfo.GetHumanReadableName(), PlayerTeam.Commander.Health, PlayerTeam.Commander.HealthMax);
+				else
+					UpdateCommStatus("", PlayerTeam.Commander.Health, PlayerTeam.Commander.HealthMax);
+			}
+		}
 	}
 	else
 	{

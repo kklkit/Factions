@@ -21,13 +21,20 @@ simulated event ReplicatedEvent(name VarName)
 	local string VarString;
 	local int SeatIndex;
 
-	VarString = "" $ VarName;
-	if (Right(VarString, 14) ~= "weaponrotation")
+	if (VarName == 'Team')
 	{
-		SeatIndex = GetSeatIndexFromPrefix(Left(VarString, Len(VarString) - 14));
-		if (SeatIndex >= 0)
+		NotifyTeamChanged();
+	}
+	else
+	{
+		VarString = "" $ VarName;
+		if (Right(VarString, 14) ~= "weaponrotation")
 		{
-			WeaponRotationChanged(SeatIndex);
+			SeatIndex = GetSeatIndexFromPrefix(Left(VarString, Len(VarString) - 14));
+			if (SeatIndex >= 0)
+			{
+				WeaponRotationChanged(SeatIndex);
+			}
 		}
 	}
 
@@ -41,18 +48,38 @@ simulated event PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
-	if (InitialTeam != FVEHICLE_UNSET_TEAM)
-		Team = InitialTeam;
-
 	if (Role == ROLE_Authority)
+	{
 		InitializeSeats();
+
+		if (InitialTeam != FVEHICLE_UNSET_TEAM)
+		{
+			Team = InitialTeam;
+			NotifyTeamChanged();
+		}
+	}
 	else if (Seats.Length > 0)
+	{
 		Seats[0].SeatPawn = Self;
+	}
 
 	PreCacheSeatNames();
 	InitializeTurrets();
 
 	AirSpeed = MaxSpeed;
+}
+
+/**
+ * @extends
+ */
+simulated event NotifyTeamChanged()
+{
+	Super.NotifyTeamChanged();
+
+	if (Role == ROLE_Authority && bIsCommandVehicle)
+	{
+		FTeamInfo(WorldInfo.Game.GameReplicationInfo.Teams[GetTeamNum()]).Commander = Self;
+	}
 }
 
 /**
