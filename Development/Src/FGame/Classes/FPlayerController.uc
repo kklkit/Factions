@@ -410,4 +410,11 @@ defaultproperties
 	CommanderCameraSpeed=30.0
 	SpectatorCameraSpeed=5000.0
 	MinimapCaptureRotation=(Pitch=-16384,Yaw=-16384,Roll=0)
+	DesiredFOV=90.0
+	DefaultFOV=90.0
+	FOVAngle=90.0
+	bCheckSoundOcclusion=True
+	VehicleCheckRadiusScaling=1.0
+	PulseTimer=5.0
+	MinRespawnDelay=1.5
 }
