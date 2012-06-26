@@ -228,6 +228,28 @@ exec function ToggleCommandView()
 	ServerToggleCommandView();
 }
 
+state PlayerDriving
+{
+
+	/**
+	 * @extends
+	 */
+	function UpdateRotation(float DeltaTime)
+	{
+		local Rotator InputRotation;
+
+		Super.UpdateRotation(DeltaTime);
+
+		// Rotate vehicle turret
+		if (FVehicle(Pawn) != None)
+		{
+			InputRotation.Yaw = PlayerInput.aTurn;
+			InputRotation.Pitch = PlayerInput.aLookUp;
+			FVehicle(Pawn).RotateTurret(0, InputRotation);
+		}
+	}
+}
+
 simulated state Commanding
 {
 	/**

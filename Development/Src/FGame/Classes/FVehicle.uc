@@ -9,33 +9,53 @@ class FVehicle extends UDKVehicle
 
 const FVEHICLE_UNSET_TEAM=255;
 
-var() byte InitialTeam;
-var() int ResourceCost;
-var() bool bIsCommandVehicle;
+enum ERotationConstraint
+{
+	RC_Pitch,
+	RC_Yaw,
+	RC_Roll
+};
+
+struct TurretConstraint
+{
+	var() ERotationConstraint RotationConstraint;
+	var() int MinAngle;
+	var() int MaxAngle;
+};
+
+struct TurretControl
+{
+	var() int SeatIndex;
+	var() name RotateControl;
+	var() array<TurretConstraint> TurretConstraints;
+	var UDKSkelControl_Rotate RotateController;
+};
+
+var(Factions) byte InitialTeam;
+var(Factions) int ResourceCost;
+var(Factions) bool bIsCommandVehicle;
+var(Seats) array<TurretControl> TurretControls;
+
+var repnotify Rotator TurretRotations[2];
+
+replication
+{
+	if (bNetDirty)
+		TurretRotations;
+}
 
 /**
  * @extends
  */
 simulated event ReplicatedEvent(name VarName)
 {
-	local string VarString;
-	local int SeatIndex;
-
 	if (VarName == 'Team')
 	{
 		NotifyTeamChanged();
 	}
-	else
+	else if (VarName == 'TurretRotations')
 	{
-		VarString = "" $ VarName;
-		if (Right(VarString, 14) ~= "weaponrotation")
-		{
-			SeatIndex = GetSeatIndexFromPrefix(Left(VarString, Len(VarString) - 14));
-			if (SeatIndex >= 0)
-			{
-				WeaponRotationChanged(SeatIndex);
-			}
-		}
+		TurretRotationChanged();
 	}
 
 	Super.ReplicatedEvent(VarName);
@@ -63,8 +83,8 @@ simulated event PostBeginPlay()
 		Seats[0].SeatPawn = Self;
 	}
 
-	PreCacheSeatNames();
 	InitializeTurrets();
+	PreCacheSeatNames();
 
 	AirSpeed = MaxSpeed;
 }
@@ -145,19 +165,85 @@ simulated function int GetSeatIndexFromPrefix(string Prefix)
 }
 
 /**
- * Updates the weapon rotation for the given seat.
+ * Caches the turret controllers.
  */
-simulated function WeaponRotationChanged(int SeatIndex)
+simulated function InitializeTurrets()
 {
+	local UDKSkelControl_Rotate RotateController;
 	local int i;
 
-	if (SeatIndex >= 0)
+	for (i = 0; i < TurretControls.Length; i++)
 	{
-		for (i = 0; i < Seats[SeatIndex].TurretControllers.Length; i++)
+		RotateController = UDKSkelControl_Rotate(Mesh.FindSkelControl(TurretControls[i].RotateControl));
+
+		if (RotateController != None)
+			TurretControls[i].RotateController = RotateController;
+		else
+			`Warn(Self @ "failed to setup turret controller" @ i);
+	}
+}
+
+/**
+ * Constrains the rotation of the given turret controller.
+ * 
+ * TODO: This should be done on the server.
+ */
+simulated function ApplyTurretConstraints(TurretControl TC)
+{
+	local TurretConstraint C;
+
+	foreach TC.TurretConstraints(C)
+	{
+		if (C.RotationConstraint == RC_Pitch)
+			TC.RotateController.DesiredBoneRotation.Pitch = Clamp(TC.RotateController.DesiredBoneRotation.Pitch, C.MinAngle * DegToUnrRot, C.MaxAngle * DegToUnrRot);
+		else if (C.RotationConstraint == RC_Yaw)
+			TC.RotateController.DesiredBoneRotation.Yaw = Clamp(TC.RotateController.DesiredBoneRotation.Yaw, C.MinAngle * DegToUnrRot, C.MaxAngle * DegToUnrRot);
+		else if (C.RotationConstraint == RC_Roll)
+			TC.RotateController.DesiredBoneRotation.Roll = Clamp(TC.RotateController.DesiredBoneRotation.Roll, C.MinAngle * DegToUnrRot, C.MaxAngle * DegToUnrRot);
+	}
+}
+
+/**
+ * Rotates the turret by the given amount.
+ */
+simulated function RotateTurret(int SeatIndex, Rotator RotationAmount)
+{
+	local int i;
+	local TurretControl TC;
+	
+	foreach TurretControls(TC, i)
+	{
+		if (TC.SeatIndex == SeatIndex)
 		{
-			Seats[SeatIndex].TurretControllers[i].DesiredBoneRotation = SeatWeaponRotation(SeatIndex,, True);
+			TC.RotateController.DesiredBoneRotation += RotationAmount;
+			ApplyTurretConstraints(TC);
+
+			if (Role < ROLE_Authority)
+				ServerSetTurretRotation(i, TC.RotateController.DesiredBoneRotation);
 		}
 	}
+}
+
+/**
+ * Sets the weapon rotation on the server.
+ */
+unreliable server function ServerSetTurretRotation(int ControlIndex, Rotator TurretRotation)
+{
+	TurretRotations[ControlIndex] = TurretRotation;
+}
+
+/**
+ * Updates all the turret bone rotations to the turret rotations array.
+ * 
+ * Used in multiplayer to update turret rotation on remote clients.
+ */
+simulated function TurretRotationChanged()
+{
+	local int i;
+	local TurretControl TC;
+	
+	foreach TurretControls(TC, i)
+		TC.RotateController.DesiredBoneRotation = TurretRotations[i];
 }
 
 /**
@@ -249,42 +335,6 @@ simulated function PreCacheSeatNames()
 }
 
 /**
- * Sets up turret skeletal controllers.
- */
-simulated function InitializeTurrets()
-{
-	local int Seat, TurretControl;
-	local UDKSkelControl_TurretConstrained Turret;
-	local Vector PivotLoc, MuzzleLoc;
-
-	for (Seat = 0; Seat < Seats.Length; Seat++)
-	{
-		for (TurretControl = 0; TurretControl < Seats[Seat].TurretControls.Length; TurretControl++)
-		{
-			Turret = UDKSkelControl_TurretConstrained(Mesh.FindSkelControl(Seats[Seat].TurretControls[TurretControl]));
-			if (Turret != None)
-			{
-				Turret.AssociatedSeatIndex = Seat;
-				Seats[Seat].TurretControllers[TurretControl] = Turret;
-				Turret.InitTurret(Rotation, Mesh);
-			}
-			else
-			{
-				`log("Failed to set up turret control" @ TurretControl);
-			}
-		}
-
-		if (Role == ROLE_Authority)
-			SeatWeaponRotation(Seat, Rotation, False);
-
-		PivotLoc = GetSeatPivotPoint(Seat);
-		GetBarrelLocationAndRotation(Seat, MuzzleLoc);
-
-		Seats[Seat].PivotFireOffsetZ = MuzzleLoc.Z - PivotLoc.Z;
-	}
-}
-
-/**
  * @extends
  */
 function PossessedBy(Controller C, bool bVehicleTransition)
@@ -293,6 +343,27 @@ function PossessedBy(Controller C, bool bVehicleTransition)
 
 	if (Seats[0].Gun != None)
 		Seats[0].Gun.ClientWeaponSet(False);
+}
+
+/**
+ * @extends
+ */
+simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out rotator out_CamRot, out float out_FOV)
+{
+	local int SeatIndex;
+
+	SeatIndex = 0;
+
+	if (Seats[SeatIndex].CameraTag != '')
+	{
+		Mesh.GetSocketWorldLocationAndRotation(Seats[0].CameraTag, out_CamLoc, out_CamRot);
+	}
+	else
+	{
+		return Super.CalcCamera(fDeltaTime, out_CamLoc, out_CamRot, out_FOV);
+	}
+
+	return True;
 }
 
 /**
