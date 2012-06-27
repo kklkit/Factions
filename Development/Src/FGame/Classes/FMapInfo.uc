@@ -36,4 +36,5 @@ defaultproperties
 	Weapons(2)=FWeapon_Healer'WP_RepairTool.Archetypes.WP_RepairTool'
 
 	VehicleWeapons(0)=FVehicleWeapon_Projectile'VWP_RangedCannon.Archetypes.VWP_RangedCannon'
+	VehicleWeapons(1)=FVehicleWeapon_Instant'VWP_MG.Archetypes.VWP_MG'
 }

@@ -1,4 +1,3 @@
 [Archetypes.VWP_RangedCannon FVehicleWeapon_Projectile]
 ItemName="Ranged Cannon"
-PickupMessage="Snagged an item."
 
