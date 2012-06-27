@@ -37,11 +37,15 @@ var(Factions) bool bIsCommandVehicle;
 var(Seats) array<TurretControl> TurretControls;
 
 var repnotify Rotator TurretRotations[2];
+var FVehicleWeapon VehicleWeapons[8];
 
 replication
 {
 	if (bNetDirty && !bNetOwner)
 		TurretRotations;
+
+	if (bNetDirty && bNetOwner)
+		VehicleWeapons;
 }
 
 /**
@@ -329,17 +333,6 @@ simulated function PreCacheSeatNames()
 /**
  * @extends
  */
-function PossessedBy(Controller C, bool bVehicleTransition)
-{
-	Super.PossessedBy(C, bVehicleTransition);
-
-	if (Seats[0].Gun != None)
-		Seats[0].Gun.ClientWeaponSet(False);
-}
-
-/**
- * @extends
- */
 simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out rotator out_CamRot, out float out_FOV)
 {
 	local int SeatIndex;
@@ -390,9 +383,7 @@ simulated function GetSVehicleDebug(out Array<String> DebugInfo)
 	DebugInfo[DebugInfo.Length] = "----Seats----: ";
 	for (i = 0; i < Seats.Length; i++)
 	{
-		DebugInfo[DebugInfo.Length] = "Seat" @ i $ ":" @Seats[i].Gun @ "Rotation" @ SeatWeaponRotation(i,, true) @ "FiringMode" @ SeatFiringMode(i,, true) @ "Barrel" @ Seats[i].BarrelIndex;
-		if (Seats[i].Gun != None)
-			DebugInfo[DebugInfo.length - 1] @= "IsAimCorrect" @ Seats[i].Gun.IsAimCorrect();
+		DebugInfo[DebugInfo.Length] = "Seat" @ i @ "Rotation" @ SeatWeaponRotation(i,, true) @ "FiringMode" @ SeatFiringMode(i,, true) @ "Barrel" @ Seats[i].BarrelIndex;
 	}
 }
 
@@ -402,9 +393,6 @@ simulated function GetSVehicleDebug(out Array<String> DebugInfo)
 function bool DriverEnter(Pawn P)
 {
 	P.StopFiring();
-
-	if (Seats[0].Gun != None)
-		InvManager.SetCurrentWeapon(Seats[0].Gun);
 
 	Instigator = Self;
 
@@ -484,17 +472,41 @@ function SetWeapon(int SeatIndex, FVehicleWeapon WeaponArchetype)
 {
 	local FVehicleWeapon VehicleWeapon;
 
-	VehicleWeapon = Spawn(WeaponArchetype.Class, InvManager.Owner,,,, WeaponArchetype);
+	VehicleWeapon = Spawn(WeaponArchetype.Class, Self,,,, WeaponArchetype);
 
-	if (InvManager.AddInventory(VehicleWeapon))
+	if (VehicleWeapon != None)
 	{
+		VehicleWeapon.Instigator = Self;
 		VehicleWeapon.SeatIndex = SeatIndex;
 		VehicleWeapon.MyVehicle = Self;
 		VehicleWeapon.SetBase(Self);
 
-		Seats[SeatIndex].Gun = VehicleWeapon;
-		if (UDKWeaponPawn(Seats[SeatIndex].SeatPawn) != None)
-			UDKWeaponPawn(Seats[SeatIndex].SeatPawn).MyVehicleWeapon = VehicleWeapon;
+		VehicleWeapons[0] = VehicleWeapon;
+	}
+}
+
+/**
+ * @extends
+ */
+simulated function StartFire(byte FireModeNum)
+{
+	if (bNoWeaponFiring)
+		return;
+
+	if (VehicleWeapons[0] != None)
+	{
+		VehicleWeapons[0].StartFire();
+	}
+}
+
+/**
+ * @extends
+ */
+simulated function StopFire(byte FireModeNum)
+{
+	if (VehicleWeapons[0] != None)
+	{
+		VehicleWeapons[0].StopFire();
 	}
 }
 
@@ -531,8 +543,6 @@ defaultproperties
 		bAcceptsDynamicDecals=False
 		bPerBoneMotionBlur=True
 	End Object
-
-	InventoryManagerClass=class'FInventoryManager'
 
 	TireSoundList(0)=(MaterialType=Dirt, Sound=SoundCue'A_Vehicle_Generic.Vehicle.VehicleSurface_TireDirt01Cue')
 	TireSoundList(1)=(MaterialType=Foliage, Sound=SoundCue'A_Vehicle_Generic.Vehicle.VehicleSurface_TireFoliage01Cue')

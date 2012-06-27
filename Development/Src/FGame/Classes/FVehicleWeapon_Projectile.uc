@@ -1,8 +1,27 @@
 class FVehicleWeapon_Projectile extends FVehicleWeapon;
 
+/**
+ * @extends
+ */
+simulated function Fire()
+{
+	local Vector SpawnLocation;
+	local Rotator SpawnRotation;
+	local Projectile SpawnedProjectile;
+
+	Super.Fire();
+
+	if (Role == ROLE_Authority)
+	{
+		MyVehicle.GetBarrelLocationAndRotation(SeatIndex, SpawnLocation, SpawnRotation);
+
+		SpawnedProjectile = Spawn(class'UTProj_ScorpionGlob',,, SpawnLocation);
+
+		if (SpawnedProjectile != None)
+			SpawnedProjectile.Init(Vector(SpawnRotation));
+	}
+}
+
 defaultproperties
 {
-	FireInterval(0)=1
-	WeaponFireTypes(0)=EWFT_Projectile
-	WeaponProjectiles(0)=class'UTProj_ScorpionGlob'
 }

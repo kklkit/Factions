@@ -3,10 +3,12 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FVehicleWeapon extends FWeapon;
+class FVehicleWeapon extends Actor
+	perobjectlocalized;
 
 var int SeatIndex;
 var FVehicle MyVehicle;
+var	localized string ItemName;
 
 replication
 {
@@ -14,50 +16,82 @@ replication
 		SeatIndex, MyVehicle;
 }
 
-simulated function bool HasAmmo(byte FireModeNum, optional int Amount)
+/**
+ * Starts firing the weapon.
+ */
+simulated function StartFire()
 {
-	return True;
-}
+	if (!Instigator.bNoWeaponFiring)
+	{
+		if (Role < Role_Authority)
+		{
+			ServerStartFire();
+		}
 
-simulated function bool HasAnyAmmo()
-{
-	return True;
+		BeginFire();
+	}
 }
 
 /**
- * @extends
+ * Starts firing the weapon on the server.
  */
-simulated function Projectile ProjectileFire()
+private reliable server function ServerStartFire()
 {
-	local Vector SpawnLocation;
-	local Rotator SpawnRotation;
-	local Projectile SpawnedProjectile;
-
-	IncrementFlashCount();
-
-	if (Role == ROLE_Authority)
+	if (!Instigator.bNoWeaponFiring)
 	{
-		MyVehicle.GetBarrelLocationAndRotation(SeatIndex, SpawnLocation, SpawnRotation);
+		BeginFire();
+	}
+}
 
-		SpawnedProjectile = Spawn(GetProjectileClass(),,, SpawnLocation);
+/**
+ * Sets the weapon fire timer.
+ */
+private simulated function BeginFire()
+{
+	Fire();
+	SetTimer(1.0, True, NameOf(Fire));
+}
 
-		if (SpawnedProjectile != None)
-			SpawnedProjectile.Init(Vector(AddSpread(SpawnRotation)));
+/**
+ * Stops firing the weapon.
+ */
+simulated function StopFire()
+{
+	if (Role < Role_Authority)
+	{
+		ServerStopFire();
 	}
 
-	return SpawnedProjectile;
+	EndFire();
 }
 
 /**
- * @extends
+ * Stops firing the weapon on the server.
  */
-simulated function AttachWeaponTo(SkeletalMeshComponent MeshCpnt, optional Name SocketName);
+private reliable server function ServerStopFire()
+{
+	EndFire();
+}
 
 /**
- * @extends
+ * Clears the weapon timer.
  */
-simulated function DetachWeapon();
+private simulated function EndFire()
+{
+	ClearTimer(NameOf(Fire));
+}
+
+simulated function Fire();
 
 defaultproperties
 {
+	NetPriority=1.4
+	TickGroup=TG_PreAsyncWork
+	Physics=PHYS_None
+	RemoteRole=ROLE_SimulatedProxy
+
+	bHidden=True
+	bReplicateMovement=False
+	bReplicateInstigator=True
+	bOnlyRelevantToOwner=True
 }
