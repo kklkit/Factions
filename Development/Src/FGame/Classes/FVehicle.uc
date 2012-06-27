@@ -213,11 +213,15 @@ simulated function RotateTurret(int SeatIndex, Rotator RotationAmount)
 	{
 		if (TC.SeatIndex == SeatIndex)
 		{
-			TC.RotateController.DesiredBoneRotation += RotationAmount;
-			ApplyTurretConstraints(TC);
+			// Only update rotation if there is any rotation amount
+			if (RotationAmount.Pitch != 0 || RotationAmount.Roll != 0 || RotationAmount.Yaw != 0)
+			{
+				TC.RotateController.DesiredBoneRotation += RotationAmount;
+				ApplyTurretConstraints(TC);
 
-			if (Role < ROLE_Authority)
-				ServerSetTurretRotation(i, TC.RotateController.DesiredBoneRotation);
+				if (Role < ROLE_Authority)
+					ServerSetTurretRotation(i, TC.RotateController.DesiredBoneRotation);
+			}
 		}
 	}
 }
