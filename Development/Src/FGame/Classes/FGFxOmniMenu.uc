@@ -3,8 +3,7 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FGFxOmniMenu extends FGFxMoviePlayer
-	dependson(FMapInfo);
+class FGFxOmniMenu extends FGFxMoviePlayer;
 
 // A list of elements that need to be invalidated the next time the movie clip is open.
 var array<string> PendingInvalidates;
@@ -152,9 +151,9 @@ function array<string> InfantryEquipment()
 
 	for (EquipmentIndex = 0; EquipmentIndex < class'FInventoryManager'.const.EquipmentSlots; EquipmentIndex++)
 	{
-		if (PlayerInventory.RequestedEquipment[EquipmentIndex].Archetype != None)
+		if (PlayerInventory.RequestedEquipment[EquipmentIndex] != None)
 		{
-			Data.InsertItem(EquipmentIndex, PlayerInventory.RequestedEquipment[EquipmentIndex].Archetype.ItemName);
+			Data.InsertItem(EquipmentIndex, PlayerInventory.RequestedEquipment[EquipmentIndex].ItemName);
 		}
 	}
 
@@ -202,12 +201,12 @@ function array<string> InfantryEquipmentLabels()
  */
 function array<string> InfantryEquipmentNames(int Slot)
 {
-	local FWeaponInfo WeaponInfo;
+	local FWeapon WeaponArchetype;
 	local array<string> Data;
 
-	foreach FMapInfo(GetPC().WorldInfo.GetMapInfo()).Weapons(WeaponInfo)
+	foreach FMapInfo(GetPC().WorldInfo.GetMapInfo()).Weapons(WeaponArchetype)
 	{
-		Data.AddItem(WeaponInfo.Archetype.ItemName);
+		Data.AddItem(WeaponArchetype.ItemName);
 	}
 
 	return Data;
@@ -267,12 +266,12 @@ function array<string> InfantrySkillNames(int Slot)
  */
 function array<string> VehicleChassisNames()
 {
-	local FVehicleInfo VehicleInfo;
+	local FVehicle VehicleArchetype;
 	local array<string> Data;
 
-	foreach FMapInfo(GetPC().WorldInfo.GetMapInfo()).Vehicles(VehicleInfo)
+	foreach FMapInfo(GetPC().WorldInfo.GetMapInfo()).Vehicles(VehicleArchetype)
 	{
-		Data.AddItem(VehicleInfo.Archetype.MenuName);
+		Data.AddItem(VehicleArchetype.MenuName);
 	}
 
 	return Data;

@@ -3,14 +3,13 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FInventoryManager extends InventoryManager
-	dependson(FMapInfo);
+class FInventoryManager extends InventoryManager;
 
 // Total number of equipment slots.
 const EquipmentSlots=4;
 
-// The requested equipment in each slot.
-var FWeaponInfo RequestedEquipment[EquipmentSlots];
+// The requested equipment archetype in each slot.
+var FWeapon RequestedEquipment[EquipmentSlots];
 
 replication
 {
@@ -59,10 +58,10 @@ reliable server function ResetEquipment()
 		for (EquipmentSlot = 0; EquipmentSlot < EquipmentSlots; EquipmentSlot++)
 		{
 			// If there is a selection in the requested equipment slot.
-			if (RequestedEquipment[EquipmentSlot].Archetype != None)
+			if (RequestedEquipment[EquipmentSlot] != None)
 			{
 				// Spawn the equipment.
-				InfantryEquipment = Spawn(RequestedEquipment[EquipmentSlot].Archetype.Class, Owner,,,, RequestedEquipment[EquipmentSlot].Archetype);
+				InfantryEquipment = Spawn(RequestedEquipment[EquipmentSlot].Class, Owner,,,, RequestedEquipment[EquipmentSlot]);
 
 				// Add the equipment to the inventory.
 				AddInventory(InfantryEquipment);

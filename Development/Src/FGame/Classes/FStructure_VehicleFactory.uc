@@ -3,8 +3,7 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FStructure_VehicleFactory extends FStructure
-	dependson(FMapInfo);
+class FStructure_VehicleFactory extends FStructure;
 
 // Socket name for positioning the built vehicle in the world
 var() name VehicleSpawnSocket;
@@ -28,16 +27,16 @@ state Active
 		local int i;
 		local Vector VehicleSpawnLocation;
 		local FTeamInfo PlayerTeam;
-		local FVehicleInfo VehicleInfo;
+		local FVehicle VehicleArchetype;
 		local FVehicle SpawnedVehicle;
 
 		Mesh.GetSocketWorldLocationAndRotation(VehicleSpawnSocket, VehicleSpawnLocation);
 		PlayerTeam = FTeamInfo(Builder.PlayerReplicationInfo.Team);
-		VehicleInfo = FMapInfo(WorldInfo.GetMapInfo()).Vehicles[VehicleIndex];
-		if (PlayerTeam != None && PlayerTeam.Resources >= VehicleInfo.Archetype.ResourceCost)
+		VehicleArchetype = FMapInfo(WorldInfo.GetMapInfo()).Vehicles[VehicleIndex];
+		if (PlayerTeam != None && PlayerTeam.Resources >= VehicleArchetype.ResourceCost)
 		{
-			PlayerTeam.Resources -= VehicleInfo.Archetype.ResourceCost;
-			SpawnedVehicle = Spawn(VehicleInfo.Archetype.Class,,, VehicleSpawnLocation,, VehicleInfo.Archetype);
+			PlayerTeam.Resources -= VehicleArchetype.ResourceCost;
+			SpawnedVehicle = Spawn(VehicleArchetype.Class,,, VehicleSpawnLocation,, VehicleArchetype);
 			SpawnedVehicle.SetTeamNum(Team);
 			SpawnedVehicle.Mesh.WakeRigidBody();
 

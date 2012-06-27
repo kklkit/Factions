@@ -121,16 +121,16 @@ reliable server function ServerSpawnVehicle(int ChassisIndex)
  */
 reliable server function ServerBeginStructurePlacement(byte StructureIndex, Vector WorldLocation)
 {
-	local FStructureInfo PlacingStructureInfo;
+	local FStructure PlacingStructureArchetype;
 
-	PlacingStructureInfo = FMapInfo(WorldInfo.GetMapInfo()).Structures[StructureIndex];
+	PlacingStructureArchetype = FMapInfo(WorldInfo.GetMapInfo()).Structures[StructureIndex];
 
 	// Remove the old structure preview if it exists
 	if (PlacingStructure != None)
 		PlacingStructure.Destroy();
 
 	// Spawn a structure preview for the requested structure
-	PlacingStructure = Spawn(PlacingStructureInfo.Archetype.Class, Self,, WorldLocation, rot(0,0,0), PlacingStructureInfo.Archetype, True);
+	PlacingStructure = Spawn(PlacingStructureArchetype.Class, Self,, WorldLocation, rot(0,0,0), PlacingStructureArchetype, True);
 	PlacingStructure.Team = GetTeamNum();
 }
 
