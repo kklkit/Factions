@@ -38,6 +38,7 @@ state Active
 			PlayerTeam.Resources -= VehicleArchetype.ResourceCost;
 			SpawnedVehicle = Spawn(VehicleArchetype.Class,,, VehicleSpawnLocation,, VehicleArchetype);
 			SpawnedVehicle.SetTeamNum(Team);
+			SpawnedVehicle.SetWeapon(0, FMapInfo(WorldInfo.GetMapInfo()).VehicleWeapons[WeaponIndex]);
 			SpawnedVehicle.Mesh.WakeRigidBody();
 
 			for (i = 0; i < SpawnedVehicle.Seats.Length; i++)

@@ -282,13 +282,7 @@ function InitializeSeats()
 		{
 			Seats[i].SeatPawn = Spawn(class'FWeaponPawn');
 			Seats[i].SeatPawn.SetBase(Self);
-			if (Seats[i].GunClass != None)
-			{
-				Seats[i].Gun = FVehicleWeapon(Seats[i].SeatPawn.InvManager.CreateInventory(Seats[i].GunClass));
-				Seats[i].Gun.SetBase(Self);
-			}
 			Seats[i].SeatPawn.EyeHeight = Seats[i].SeatPawn.BaseEyeheight;
-			UDKWeaponPawn(Seats[i].SeatPawn).MyVehicleWeapon = FVehicleWeapon(Seats[i].Gun);
 			UDKWeaponPawn(Seats[i].SeatPawn).MyVehicle = Self;
 			UDKWeaponPawn(Seats[i].SeatPawn).MySeatIndex = i;
 
@@ -307,11 +301,6 @@ function InitializeSeats()
 		else
 		{
 			Seats[i].SeatPawn = Self;
-			if (Seats[i].GunClass != None)
-			{
-				Seats[i].Gun = FVehicleWeapon(InvManager.CreateInventory(Seats[i].GunClass));
-				Seats[i].Gun.SetBase(Self);
-			}
 		}
 
 		Seats[i].SeatPawn.DriverDamageMult = Seats[i].DriverDamageMult;
@@ -483,6 +472,27 @@ function bool PassengerEnter(Pawn P, int SeatIndex)
 function PassengerLeave(int SeatIndex)
 {
 	SetSeatStoragePawn(SeatIndex, None);
+}
+
+/**
+ * Spawns a vehicle weapon for the given seat.
+ */
+function SetWeapon(int SeatIndex, FVehicleWeapon WeaponArchetype)
+{
+	local FVehicleWeapon VehicleWeapon;
+
+	VehicleWeapon = Spawn(WeaponArchetype.Class, InvManager.Owner,,,, WeaponArchetype);
+
+	if (InvManager.AddInventory(VehicleWeapon))
+	{
+		Seats[SeatIndex].Gun = VehicleWeapon;
+		Seats[SeatIndex].Gun.SetBase(Self);
+
+		if (UDKWeaponPawn(Seats[SeatIndex].SeatPawn) != None)
+		{
+			UDKWeaponPawn(Seats[SeatIndex].SeatPawn).MyVehicleWeapon = Seats[SeatIndex].Gun;
+		}
+	}
 }
 
 defaultproperties
