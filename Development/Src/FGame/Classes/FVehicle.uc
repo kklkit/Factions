@@ -485,13 +485,13 @@ function SetWeapon(int SeatIndex, FVehicleWeapon WeaponArchetype)
 
 	if (InvManager.AddInventory(VehicleWeapon))
 	{
-		Seats[SeatIndex].Gun = VehicleWeapon;
-		Seats[SeatIndex].Gun.SetBase(Self);
+		VehicleWeapon.SeatIndex = SeatIndex;
+		VehicleWeapon.MyVehicle = Self;
+		VehicleWeapon.SetBase(Self);
 
+		Seats[SeatIndex].Gun = VehicleWeapon;
 		if (UDKWeaponPawn(Seats[SeatIndex].SeatPawn) != None)
-		{
-			UDKWeaponPawn(Seats[SeatIndex].SeatPawn).MyVehicleWeapon = Seats[SeatIndex].Gun;
-		}
+			UDKWeaponPawn(Seats[SeatIndex].SeatPawn).MyVehicleWeapon = VehicleWeapon;
 	}
 }
 
