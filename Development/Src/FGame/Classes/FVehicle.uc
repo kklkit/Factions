@@ -40,7 +40,7 @@ var repnotify Rotator TurretRotations[2];
 
 replication
 {
-	if (bNetDirty)
+	if (bNetDirty && !bNetOwner)
 		TurretRotations;
 }
 
@@ -185,8 +185,6 @@ simulated function InitializeTurrets()
 
 /**
  * Constrains the rotation of the given turret controller.
- * 
- * TODO: This should be done on the server.
  */
 simulated function ApplyTurretConstraints(TurretControl TC)
 {
@@ -229,7 +227,8 @@ simulated function RotateTurret(int SeatIndex, Rotator RotationAmount)
  */
 unreliable server function ServerSetTurretRotation(int ControlIndex, Rotator TurretRotation)
 {
-	TurretRotations[ControlIndex] = TurretRotation;
+	TurretControls[ControlIndex].RotateController.DesiredBoneRotation = TurretRotation;
+	TurretRotations[ControlIndex] = TurretControls[ControlIndex].RotateController.DesiredBoneRotation;
 }
 
 /**
