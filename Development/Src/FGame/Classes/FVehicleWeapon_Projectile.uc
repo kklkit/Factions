@@ -3,7 +3,7 @@ class FVehicleWeapon_Projectile extends FVehicleWeapon;
 /**
  * @extends
  */
-simulated function Fire()
+protected simulated function Fire()
 {
 	local Vector SpawnLocation;
 	local Rotator SpawnRotation;

@@ -8,7 +8,8 @@ class FVehicleWeapon extends Actor
 
 var int SeatIndex;
 var FVehicle MyVehicle;
-var	localized string ItemName;
+var localized string ItemName;
+var() private float FireInterval;
 
 replication
 {
@@ -48,8 +49,14 @@ private reliable server function ServerStartFire()
  */
 private simulated function BeginFire()
 {
-	Fire();
-	SetTimer(1.0, True, NameOf(Fire));
+	if (!IsTimerActive(NameOf(FireCooldown)))
+	{
+		Fire();
+	}
+	else
+	{
+		SetTimer(GetRemainingTimeForTimer(NameOf(FireCooldown)),, NameOf(Fire));
+	}
 }
 
 /**
@@ -81,7 +88,19 @@ private simulated function EndFire()
 	ClearTimer(NameOf(Fire));
 }
 
-simulated function Fire();
+/**
+ * Fires the weapon.
+ */
+protected simulated function Fire()
+{
+	SetTimer(FireInterval, True, NameOf(Fire));
+	SetTimer(FireInterval,, NameOf(FireCooldown));
+}
+
+/**
+ * Called when the fire cooldown is finished.
+ */
+protected simulated function FireCooldown();
 
 defaultproperties
 {
@@ -94,4 +113,6 @@ defaultproperties
 	bReplicateMovement=False
 	bReplicateInstigator=True
 	bOnlyRelevantToOwner=True
+
+	FireInterval=1.0
 }
