@@ -9,9 +9,10 @@ class FMapInfo extends UDKMapInfo;
 var(Map) Vector MapOrigin;
 var(Map) float MapLength;
 
-var(Units) array<FStructure> Structures;
-var(Units) array<FVehicle> Vehicles;
-var(Units) array<FWeapon> Weapons;
+var(Game) array<FStructure> Structures;
+var(Game) array<FVehicle> Vehicles;
+var(Game) array<FWeapon> Weapons;
+var(Game) array<FVehicleWeapon> VehicleWeapons;
 
 defaultproperties
 {
@@ -33,4 +34,6 @@ defaultproperties
 	Weapons(0)=FWeapon_Firearm'WP_Pistol.Archetypes.WP_Pistol'
 	Weapons(1)=FWeapon_Firearm'WP_Rifle.Archetypes.WP_Rifle'
 	Weapons(2)=FWeapon_Healer'WP_RepairTool.Archetypes.WP_RepairTool'
+
+	VehicleWeapons(0)=FVehicleWeapon_Projectile'VWP_RangedCannon.Archetypes.VWP_RangedCannon'
 }
