@@ -11,7 +11,7 @@ var() name VehicleSpawnSocket;
 /**
  * Builds a vehicle in the vehicle factory.
  */
-function BuildVehicle(int VehicleIndex, Pawn Builder)
+function BuildVehicle(Pawn Builder, int VehicleIndex, int WeaponIndex)
 {
 	`log("Structure not active: Unable to build vehicle with index" @ VehicleIndex @ "for" @ Builder);
 }
@@ -22,7 +22,7 @@ state Active
 	/**
 	 * @extends
 	 */
-	function BuildVehicle(int VehicleIndex, Pawn Builder)
+	function BuildVehicle(Pawn Builder, int VehicleIndex, int WeaponIndex)
 	{
 		local int i;
 		local Vector VehicleSpawnLocation;

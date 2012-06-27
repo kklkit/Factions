@@ -82,9 +82,9 @@ function SelectInfantryEquipment(byte Slot, int EquipmentIndex)
 /**
  * Build a vehicle for the player.
  */
-function BuildVehicle(int ChassisIndex)
+function BuildVehicle(int ChassisIndex, int WeaponIndex)
 {
-	FPlayerController(GetPC()).ServerSpawnVehicle(ChassisIndex);
+	FPlayerController(GetPC()).ServerSpawnVehicle(ChassisIndex, WeaponIndex);
 }
 
 /*********************************************************************************************
@@ -292,6 +292,22 @@ function array<string> VehicleArmorNames()
 	Data.AddItem("Reflective");
 	Data.AddItem("Compound");
 	Data.AddItem("Ablative");
+
+	return Data;
+}
+
+/**
+ * Returns a list of the available vehicle weapons.
+ */
+function array<string> VehicleWeaponNames()
+{
+	local FVehicleWeapon VehicleWeaponArchetype;
+	local array<string> Data;
+
+	foreach FMapInfo(GetPC().WorldInfo.GetMapInfo()).VehicleWeapons(VehicleWeaponArchetype)
+	{
+		Data.AddItem(VehicleWeaponArchetype.ItemName);
+	}
 
 	return Data;
 }
