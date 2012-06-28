@@ -9,4 +9,6 @@ defaultproperties
 {
 	WeaponFireTypes(0)=EWFT_InstantHit
 	WeaponFireTypes(1)=EWFT_InstantHit
+	Spread(0)=0.05
+	Spread(1)=0.05
 }
