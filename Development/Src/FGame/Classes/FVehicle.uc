@@ -37,15 +37,15 @@ var(Factions) bool bIsCommandVehicle;
 var(Seats) array<TurretControl> TurretControls;
 
 var repnotify Rotator TurretRotations[2];
-var FVehicleWeapon VehicleWeapons[8];
+var FVehicleWeapon VehicleWeapons[2];
 
 replication
 {
-	if (bNetDirty && !bNetOwner)
-		TurretRotations;
-
 	if (bNetDirty && bNetOwner)
 		VehicleWeapons;
+
+	if (bNetDirty && !bNetOwner)
+		TurretRotations;
 }
 
 /**
@@ -472,14 +472,14 @@ function SetWeapon(int SeatIndex, FVehicleWeapon WeaponArchetype)
 {
 	local FVehicleWeapon VehicleWeapon;
 
-	VehicleWeapon = Spawn(WeaponArchetype.Class, Self,,,, WeaponArchetype);
+	VehicleWeapon = Spawn(WeaponArchetype.Class, InvManager.Owner,,,, WeaponArchetype);
 
-	if (VehicleWeapon != None)
+	if (InvManager.AddInventory(VehicleWeapon))
 	{
-		VehicleWeapon.Instigator = Self;
 		VehicleWeapon.SeatIndex = SeatIndex;
 		VehicleWeapon.MyVehicle = Self;
 		VehicleWeapon.SetBase(Self);
+		VehicleWeapon.ClientWeaponSet(False);
 
 		VehicleWeapons[0] = VehicleWeapon;
 	}
@@ -493,9 +493,9 @@ simulated function StartFire(byte FireModeNum)
 	if (bNoWeaponFiring)
 		return;
 
-	if (VehicleWeapons[0] != None)
+	if (VehicleWeapons[FireModeNum] != None)
 	{
-		VehicleWeapons[0].StartFire();
+		VehicleWeapons[FireModeNum].StartFire(FireModeNum);
 	}
 }
 
@@ -504,9 +504,9 @@ simulated function StartFire(byte FireModeNum)
  */
 simulated function StopFire(byte FireModeNum)
 {
-	if (VehicleWeapons[0] != None)
+	if (VehicleWeapons[FireModeNum] != None)
 	{
-		VehicleWeapons[0].StopFire();
+		VehicleWeapons[FireModeNum].StopFire(FireModeNum);
 	}
 }
 
@@ -543,6 +543,8 @@ defaultproperties
 		bAcceptsDynamicDecals=False
 		bPerBoneMotionBlur=True
 	End Object
+
+	InventoryManagerClass=class'FInventoryManager'
 
 	TireSoundList(0)=(MaterialType=Dirt, Sound=SoundCue'A_Vehicle_Generic.Vehicle.VehicleSurface_TireDirt01Cue')
 	TireSoundList(1)=(MaterialType=Foliage, Sound=SoundCue'A_Vehicle_Generic.Vehicle.VehicleSurface_TireFoliage01Cue')
