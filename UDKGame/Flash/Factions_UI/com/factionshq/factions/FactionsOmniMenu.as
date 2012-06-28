@@ -56,8 +56,10 @@ public class FactionsOmniMenu extends MovieClip {
 	public var vehicleChassisList:ScrollingList;
 	public var vehicleArmorLabel:Label;
 	public var vehicleArmorList:ScrollingList;
-	public var vehicleWeaponLabel:Label;
-	public var vehicleWeaponList:ScrollingList;
+	public var vehicleWeaponLabel0:Label;
+	public var vehicleWeaponList0:ScrollingList;
+	public var vehicleWeaponLabel1:Label;
+	public var vehicleWeaponList1:ScrollingList;
 	public var vehicleBuildButton:Button;
 	
 	public function FactionsOmniMenu() {
@@ -131,11 +133,13 @@ public class FactionsOmniMenu extends MovieClip {
 		
 		vehicleChassisLabel.text = "Chassis:";
 		vehicleArmorLabel.text = "Armor:";
-		vehicleWeaponLabel.text = "Weapon:";
+		vehicleWeaponLabel0.text = "Weapon 1:";
+		vehicleWeaponLabel1.text = "Weapon 2:";
 		
 		vehicleChassisList.dataProvider = data.vehicleChassis;
 		vehicleArmorList.dataProvider = data.vehicleArmor;
-		vehicleWeaponList.dataProvider = data.vehicleWeapons;
+		vehicleWeaponList0.dataProvider = data.vehicleWeaponNames[0];
+		vehicleWeaponList1.dataProvider = data.vehicleWeaponNames[1];
 		
 		vehicleBuildButton.label = "Build";
 		vehicleBuildButton.addEventListener(ButtonEvent.CLICK, buildVehicle);
@@ -245,7 +249,7 @@ public class FactionsOmniMenu extends MovieClip {
 	}
 	
 	private function buildVehicle(e:ButtonEvent) {
-		ExternalInterface.call("BuildVehicle", vehicleChassisList.selectedIndex, vehicleWeaponList.selectedIndex);
+		ExternalInterface.call("BuildVehicle", vehicleChassisList.selectedIndex, vehicleWeaponList0.selectedIndex, vehicleWeaponList1.selectedIndex);
 		closeMenu();
 	}
 }

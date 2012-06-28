@@ -468,7 +468,7 @@ function PassengerLeave(int SeatIndex)
 /**
  * Spawns a vehicle weapon for the given seat.
  */
-function SetWeapon(int SeatIndex, FVehicleWeapon WeaponArchetype)
+function SetWeapon(int WeaponSlot, FVehicleWeapon WeaponArchetype)
 {
 	local FVehicleWeapon VehicleWeapon;
 
@@ -476,12 +476,12 @@ function SetWeapon(int SeatIndex, FVehicleWeapon WeaponArchetype)
 
 	if (InvManager.AddInventory(VehicleWeapon))
 	{
-		VehicleWeapon.SeatIndex = SeatIndex;
+		VehicleWeapon.SeatIndex = 0;
 		VehicleWeapon.MyVehicle = Self;
 		VehicleWeapon.SetBase(Self);
 		VehicleWeapon.ClientWeaponSet(False);
 
-		VehicleWeapons[0] = VehicleWeapon;
+		VehicleWeapons[WeaponSlot] = VehicleWeapon;
 	}
 }
 

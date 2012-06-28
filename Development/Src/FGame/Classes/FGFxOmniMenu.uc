@@ -82,9 +82,9 @@ function SelectInfantryEquipment(byte Slot, int EquipmentIndex)
 /**
  * Build a vehicle for the player.
  */
-function BuildVehicle(int ChassisIndex, int WeaponIndex)
+function BuildVehicle(int ChassisIndex, int WeaponIndex1, int WeaponIndex2)
 {
-	FPlayerController(GetPC()).ServerSpawnVehicle(ChassisIndex, WeaponIndex);
+	FPlayerController(GetPC()).ServerSpawnVehicle(ChassisIndex, WeaponIndex1, WeaponIndex2);
 }
 
 /*********************************************************************************************
@@ -299,7 +299,7 @@ function array<string> VehicleArmorNames()
 /**
  * Returns a list of the available vehicle weapons.
  */
-function array<string> VehicleWeaponNames()
+function array<string> VehicleWeaponNames(int Slot)
 {
 	local FVehicleWeapon VehicleWeaponArchetype;
 	local array<string> Data;

@@ -15,6 +15,6 @@ public class OmniMenuDataManager {
 	public var infantrySkillNames:Array = [new ExternalDataProvider("InfantrySkillNames", 0), new ExternalDataProvider("InfantrySkillNames", 1), new ExternalDataProvider("InfantrySkillNames", 2), new ExternalDataProvider("InfantrySkillNames", 3)];
 	public var vehicleChassis:ExternalDataProvider = new ExternalDataProvider("VehicleChassisNames");
 	public var vehicleArmor:ExternalDataProvider = new ExternalDataProvider("VehicleArmorNames");
-	public var vehicleWeapons:ExternalDataProvider = new ExternalDataProvider("VehicleWeaponNames");
+	public var vehicleWeaponNames:Array = [new ExternalDataProvider("VehicleWeaponNames", 0), new ExternalDataProvider("VehicleWeaponNames", 1), new ExternalDataProvider("VehicleWeaponNames", 2), new ExternalDataProvider("VehicleWeaponNames", 3)];
 }
 }
