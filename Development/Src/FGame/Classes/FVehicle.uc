@@ -519,23 +519,40 @@ simulated function WeaponFired(Weapon InWeapon, bool bViaReplication, optional V
 
 	if (WorldInfo.NetMode != NM_DedicatedServer && (Role == ROLE_Authority || bViaReplication))
 	{
-		E = WorldInfo.MyEmitterPool.SpawnEmitter(ParticleSystem'VH_Cicada.Effects.P_VH_Cicada_2ndPrim_Beam', GetEffectLocation(0));
+		E = WorldInfo.MyEmitterPool.SpawnEmitter(ParticleSystem'VH_Cicada.Effects.P_VH_Cicada_2ndPrim_Beam', GetWeaponStartTraceLocation(InWeapon));
 		E.SetVectorParameter('ShockBeamEnd', HitLocation);
 	}
 }
 
 /**
- * Returns the weapon fire effect location.
+ * @extends
  */
-simulated function vector GetEffectLocation(int SeatIndex)
+simulated event Vector GetWeaponStartTraceLocation(optional Weapon CurrentWeapon)
 {
-	local vector SocketLocation;
+	local Vector SocketLocation;
 
-	if (Seats[SeatIndex].GunSocket.Length == 0)
-		return Location;
+	if (FVehicleWeapon(CurrentWeapon) != None)
+		GetBarrelLocationAndRotation(FVehicleWeapon(CurrentWeapon).SeatIndex, SocketLocation);
+	else
+		return Super.GetWeaponStartTraceLocation(CurrentWeapon);
 
-	GetBarrelLocationAndRotation(SeatIndex, SocketLocation);
 	return SocketLocation;
+}
+
+/**
+ * @extends
+ */
+simulated function Rotator GetAdjustedAimFor(Weapon W, Vector StartFireLoc)
+{
+	local Vector SocketLocation;
+	local Rotator SocketRotation;
+
+	if (FVehicleWeapon(W) != None)
+		GetBarrelLocationAndRotation(FVehicleWeapon(W).SeatIndex, SocketLocation, SocketRotation);
+	else
+		return Super.GetAdjustedAimFor(W, StartFireLoc);
+
+	return SocketRotation;
 }
 
 defaultproperties
