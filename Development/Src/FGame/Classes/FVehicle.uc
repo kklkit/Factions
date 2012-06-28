@@ -53,6 +53,8 @@ replication
  */
 simulated event ReplicatedEvent(name VarName)
 {
+	Super.ReplicatedEvent(VarName);
+
 	if (VarName == 'Team')
 	{
 		NotifyTeamChanged();
@@ -61,8 +63,6 @@ simulated event ReplicatedEvent(name VarName)
 	{
 		TurretRotationChanged();
 	}
-
-	Super.ReplicatedEvent(VarName);
 }
 
 /**
@@ -508,6 +508,34 @@ simulated function StopFire(byte FireModeNum)
 	{
 		VehicleWeapons[FireModeNum].StopFire(FireModeNum);
 	}
+}
+
+/**
+ * @extends
+ */
+simulated function WeaponFired(Weapon InWeapon, bool bViaReplication, optional Vector HitLocation)
+{
+	local ParticleSystemComponent E;
+
+	if (WorldInfo.NetMode != NM_DedicatedServer && (Role == ROLE_Authority || bViaReplication))
+	{
+		E = WorldInfo.MyEmitterPool.SpawnEmitter(ParticleSystem'VH_Cicada.Effects.P_VH_Cicada_2ndPrim_Beam', GetEffectLocation(0));
+		E.SetVectorParameter('ShockBeamEnd', HitLocation);
+	}
+}
+
+/**
+ * Returns the weapon fire effect location.
+ */
+simulated function vector GetEffectLocation(int SeatIndex)
+{
+	local vector SocketLocation;
+
+	if (Seats[SeatIndex].GunSocket.Length == 0)
+		return Location;
+
+	GetBarrelLocationAndRotation(SeatIndex, SocketLocation);
+	return SocketLocation;
 }
 
 defaultproperties
