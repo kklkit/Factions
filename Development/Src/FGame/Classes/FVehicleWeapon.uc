@@ -59,6 +59,14 @@ simulated function bool StillFiring(byte FireMode)
 /**
  * @extends
  */
+simulated function BeginFire(byte FireModeNum)
+{
+	SetPendingFire(FireModeNum);
+}
+
+/**
+ * @extends
+ */
 simulated function AttachWeaponTo(SkeletalMeshComponent MeshCpnt, optional name SocketName);
 
 /**
@@ -66,7 +74,7 @@ simulated function AttachWeaponTo(SkeletalMeshComponent MeshCpnt, optional name 
  */
 simulated function DetachWeapon();
 
-state Active
+auto state Active
 {
 
 	/**
@@ -93,8 +101,7 @@ state Active
 	{
 		if (!bDeleteMe && Instigator != None)
 		{
-			`LogInv("FireModeNum:" @ FireModeNum);
-			SetPendingFire(FireModeNum);
+			Global.BeginFire(FireModeNum);
 
 			if (VehiclePendingFire(FireModeNum) && HasAmmo(FireModeNum))
 			{

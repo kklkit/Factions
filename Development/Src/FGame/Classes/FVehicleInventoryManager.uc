@@ -16,10 +16,7 @@ var array<WeaponPendingFire> VehicleWeaponPendingFire;
 /**
  * @extends
  */
-simulated function ClientWeaponSet(Weapon NewWeapon, bool bOptionalSet, optional bool bDoNotActivate)
-{
-	NewWeapon.Activate();
-}
+simulated function ClientWeaponSet(Weapon NewWeapon, bool bOptionalSet, optional bool bDoNotActivate);
 
 /**
  * Creates a pending fire struct for the given weapon.

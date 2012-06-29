@@ -27,8 +27,15 @@ struct TurretControl
 {
 	var() int SeatIndex;
 	var() name RotateControl;
+	var() name WeaponSocket;
 	var() array<TurretConstraint> TurretConstraints;
 	var UDKSkelControl_Rotate RotateController;
+};
+
+struct TurretEffect
+{
+	var Vector StartLocation;
+	var Vector EndLocation;
 };
 
 var(Factions) byte InitialTeam;
@@ -37,10 +44,15 @@ var(Factions) bool bIsCommandVehicle;
 var(Seats) array<TurretControl> TurretControls;
 
 var repnotify Rotator TurretRotations[2];
+var repnotify TurretEffect WeaponEffect;
+
 var FVehicleWeapon VehicleWeapons[2];
 
 replication
 {
+	if (bNetDirty)
+		WeaponEffect;
+
 	if (bNetDirty && bNetOwner)
 		VehicleWeapons;
 
@@ -62,6 +74,10 @@ simulated event ReplicatedEvent(name VarName)
 	else if (VarName == 'TurretRotations')
 	{
 		TurretRotationChanged();
+	}
+	else if (Varname == 'WeaponEffect')
+	{
+		WeaponEffectLocationUpdated(True);
 	}
 }
 
@@ -278,7 +294,7 @@ function InitializeSeats()
 
 	if (Seats.Length == 0)
 	{
-		`log("Vehicle (" $ Self $ ") has no seats! Deleting!");
+		`warn("Vehicle (" $ Self $ ") has no seats! Deleting!");
 		Destroy();
 		return;
 	}
@@ -513,16 +529,54 @@ simulated function StopFire(byte FireModeNum)
 /**
  * @extends
  */
-simulated function WeaponFired(Weapon InWeapon, bool bViaReplication, optional Vector HitLocation)
+simulated function SetFlashLocation(Weapon InWeapon, byte InFiringMode, Vector NewLoc)
+{
+	// Ensure effect is replicated
+	if (NewLoc == WeaponEffect.EndLocation || NewLoc == vect(0,0,0))
+	{
+		NewLoc += vect(0,0,1);
+	}
+
+	WeaponEffect.StartLocation = GetWeaponStartTraceLocation(InWeapon);
+	WeaponEffect.EndLocation = NewLoc;
+
+	bForceNetUpdate = True;
+	WeaponEffectLocationUpdated(False);
+}
+
+/**
+ * Called when the weapon effect location has been updated.
+ */
+simulated function WeaponEffectLocationUpdated(bool bViaReplication)
+{
+	if (!IsZero(WeaponEffect.EndLocation))
+	{
+		VehicleWeaponFired(bViaReplication);
+	}
+	else
+	{
+		VehicleWeaponStoppedFiring(bViaReplication);
+	}
+}
+
+/**
+ * Plays weapon firing effects.
+ */
+simulated function VehicleWeaponFired(bool bViaReplication)
 {
 	local ParticleSystemComponent E;
 
 	if (WorldInfo.NetMode != NM_DedicatedServer && (Role == ROLE_Authority || bViaReplication))
 	{
-		E = WorldInfo.MyEmitterPool.SpawnEmitter(ParticleSystem'VH_Cicada.Effects.P_VH_Cicada_2ndPrim_Beam', GetWeaponStartTraceLocation(InWeapon));
-		E.SetVectorParameter('ShockBeamEnd', HitLocation);
+		E = WorldInfo.MyEmitterPool.SpawnEmitter(ParticleSystem'VH_Cicada.Effects.P_VH_Cicada_2ndPrim_Beam', WeaponEffect.StartLocation);
+		E.SetVectorParameter('ShockBeamEnd', WeaponEffect.EndLocation);
 	}
 }
+
+/**
+ * Plays effects when the weapon stops firing.
+ */
+simulated function VehicleWeaponStoppedFiring(bool bViaReplication);
 
 /**
  * @extends
