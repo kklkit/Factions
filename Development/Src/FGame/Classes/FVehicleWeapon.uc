@@ -9,6 +9,13 @@ class FVehicleWeapon extends FWeapon
 var int WeaponIndex;
 var FVehicle MyVehicle;
 
+var() enum EHardpointTypes
+{
+	H_Gun,
+	H_Cannon,
+	H_Missile
+} HardpointType;
+
 replication
 {
 	if (bNetInitial && bNetOwner)

@@ -4,6 +4,7 @@
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FVehicle extends UDKVehicle
+	dependson(FVehicleWeapon)
 	perobjectlocalized
 	notplaceable;
 
@@ -31,6 +32,13 @@ struct TurretControl
 	var UDKSkelControl_Rotate RotateController;
 };
 
+struct VehicleHardpoint
+{
+	var() int SeatIndex;
+	var() name SocketName;
+	var() EHardpointTypes HardpointType;
+};
+
 struct WeaponFireEffect
 {
 	var int WeaponIndex;
@@ -52,7 +60,7 @@ var(Factions) byte InitialTeam;
 var(Factions) int ResourceCost;
 var(Factions) bool bIsCommandVehicle;
 var(Weapons) array<TurretControl> TurretControls;
-var(Weapons) array<name> WeaponSocketNames;
+var(Weapons) array<VehicleHardpoint> VehicleHardpoints;
 
 var repnotify Rotator TurretRotations[2];
 var repnotify WeaponFireEffect WeaponEffect;
@@ -457,6 +465,7 @@ function PassengerLeave(int SeatIndex)
 function SetWeapon(int WeaponSlot, FVehicleWeapon WeaponArchetype)
 {
 	local FVehicleWeapon VehicleWeapon;
+	local VehicleHardpoint Hardpoint;
 
 	VehicleWeapon = Spawn(WeaponArchetype.Class, InvManager.Owner,,,, WeaponArchetype);
 
@@ -468,7 +477,10 @@ function SetWeapon(int WeaponSlot, FVehicleWeapon WeaponArchetype)
 		VehicleWeapon.ClientWeaponSet(False);
 
 		VehicleWeapons[WeaponSlot] = VehicleWeapon;
-		VehicleWeaponAttachments[WeaponSlot].SocketName = WeaponArchetype.WeaponFireTypes[0] == EWFT_Projectile ? WeaponSocketNames[0] : WeaponSocketNames[1];
+
+		foreach VehicleHardpoints(Hardpoint)
+			if (Hardpoint.HardpointType == VehicleWeapon.HardpointType)
+				VehicleWeaponAttachments[WeaponSlot].SocketName = Hardpoint.SocketName;
 	}
 }
 

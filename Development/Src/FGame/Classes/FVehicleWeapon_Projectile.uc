@@ -37,4 +37,5 @@ defaultproperties
 	FireInterval(1)=0.75
 	Spread(0)=0.01
 	Spread(1)=0.01
+	HardpointType=H_Cannon
 }

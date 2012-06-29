@@ -19,4 +19,5 @@ defaultproperties
 	FireInterval(1)=0.1
 	Spread(0)=0.05
 	Spread(1)=0.05
+	HardpointType=H_Gun
 }
