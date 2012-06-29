@@ -2,14 +2,9 @@
 
 This is the development repository for Factions. Everything is stored in the repository except for asset (models and sound) sources (which are stored in Dropbox).
 
-## Installation
+## UDK Configuration
 
-### Installing UDK
-
-1. [Install the latest UDK](http://udk.com/download)
-2. Open each file listed below and make the following replacements
-
-#### UDKGame/Config/DefaultEngine.ini
+#### UDKGame\Config\DefaultEngine.ini
 
 * __[URL]__
   * `Map=TestMap.udk`
@@ -18,14 +13,21 @@ This is the development repository for Factions. Everything is stored in the rep
 * __[UnrealEd.EditorEngine]__
   * Add this at the bottom of the list: `+EditPackages=FGame`
 
-#### UDKGame/Config/DefaultGame.ini
+#### UDKGame\Config\DefaultGame.ini
 
 * __[Engine.GameInfo]__
   * `DefaultGame=FGame.FTeamGame`
   * `DefaultServerGame=FGame.FTeamGame`
   * `PlayerControllerClassName=FGame.FPlayerController`
   * `DefaultGameType=FGame.FTeamGame`
-  
+
+## Installation
+
+### Installing UDK
+
+1. [Install the latest UDK](http://udk.com/download)
+2. Open each file listed in the UDK Configuration section above and make the required changes
+
 ### Creating an SSH Key
 
 SSH keys are used to authorize access to the Git repository. You upload the *public* key to GitLab, and keep the *private* key safe on your own computer.
