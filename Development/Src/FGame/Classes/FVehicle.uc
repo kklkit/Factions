@@ -468,7 +468,7 @@ function SetWeapon(int WeaponSlot, FVehicleWeapon WeaponArchetype)
 		VehicleWeapon.ClientWeaponSet(False);
 
 		VehicleWeapons[WeaponSlot] = VehicleWeapon;
-		VehicleWeaponAttachments[WeaponSlot].SocketName = WeaponSocketNames[WeaponSlot]; //todo this should be a function parameter
+		VehicleWeaponAttachments[WeaponSlot].SocketName = WeaponArchetype.WeaponFireTypes[0] == EWFT_Projectile ? WeaponSocketNames[0] : WeaponSocketNames[1];
 	}
 }
 

@@ -35,4 +35,6 @@ defaultproperties
 	WeaponFireTypes(1)=EWFT_Projectile
 	FireInterval(0)=0.75
 	FireInterval(1)=0.75
+	Spread(0)=0.01
+	Spread(1)=0.01
 }
