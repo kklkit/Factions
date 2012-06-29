@@ -18,7 +18,7 @@ simulated function Projectile ProjectileFire()
 
 	if (Role == ROLE_Authority)
 	{
-		MyVehicle.GetBarrelLocationAndRotation(SeatIndex, SpawnLocation, FireRotation);
+		MyVehicle.GetBarrelLocationAndRotation(WeaponIndex, SpawnLocation, FireRotation);
 
 		SpawnedProjectile = Spawn(class'UTProj_ScorpionGlob',,, SpawnLocation);
 

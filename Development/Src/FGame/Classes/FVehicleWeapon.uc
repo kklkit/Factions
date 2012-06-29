@@ -6,13 +6,13 @@
 class FVehicleWeapon extends FWeapon
 	perobjectlocalized;
 
-var int SeatIndex;
+var int WeaponIndex;
 var FVehicle MyVehicle;
 
 replication
 {
 	if (bNetInitial && bNetOwner)
-		SeatIndex, MyVehicle;
+		WeaponIndex, MyVehicle;
 }
 
 /**

@@ -27,7 +27,6 @@ struct TurretControl
 {
 	var() int SeatIndex;
 	var() name RotateControl;
-	var() name WeaponSocket;
 	var() array<TurretConstraint> TurretConstraints;
 	var UDKSkelControl_Rotate RotateController;
 };
@@ -38,20 +37,33 @@ struct TurretEffect
 	var Vector EndLocation;
 };
 
+struct VehicleWeaponAttachment
+{
+	var name SocketName;
+	var ParticleSystem EffectParticleSystem;
+
+	structdefaultproperties
+	{
+		EffectParticleSystem=ParticleSystem'VH_Cicada.Effects.P_VH_Cicada_2ndPrim_Beam'
+	}
+};
+
 var(Factions) byte InitialTeam;
 var(Factions) int ResourceCost;
 var(Factions) bool bIsCommandVehicle;
-var(Seats) array<TurretControl> TurretControls;
+var(Weapons) array<TurretControl> TurretControls;
+var(Weapons) array<name> WeaponSocketNames;
 
 var repnotify Rotator TurretRotations[2];
 var repnotify TurretEffect WeaponEffect;
 
 var FVehicleWeapon VehicleWeapons[2];
+var VehicleWeaponAttachment VehicleWeaponAttachments[2];
 
 replication
 {
 	if (bNetDirty)
-		WeaponEffect;
+		WeaponEffect, VehicleWeaponAttachments;
 
 	if (bNetDirty && bNetOwner)
 		VehicleWeapons;
@@ -104,7 +116,6 @@ simulated event PostBeginPlay()
 	}
 
 	InitializeTurrets();
-	PreCacheSeatNames();
 
 	AirSpeed = MaxSpeed;
 }
@@ -164,24 +175,6 @@ function SetSeatStoragePawn(int SeatIndex, Pawn PawnToSit)
 		}
 	}
 
-}
-
-/**
- * Returns the seat index for the given seat prefix.
- */
-simulated function int GetSeatIndexFromPrefix(string Prefix)
-{
-	local int i;
-
-	for (i = 0; i < Seats.Length; i++)
-	{
-		if (Seats[i].TurretVarPrefix ~= Prefix)
-		{
-			return i;
-		}
-	}
-
-	return -1;
 }
 
 /**
@@ -272,11 +265,11 @@ simulated function TurretRotationChanged()
 /**
  * Returns the world position of the gun barrel for the given seat.
  */
-simulated function GetBarrelLocationAndRotation(int SeatIndex, out Vector SocketLocation, optional out Rotator SocketRotation)
+simulated function GetBarrelLocationAndRotation(int WeaponIndex, out Vector SocketLocation, optional out Rotator SocketRotation)
 {
-	if (Seats[SeatIndex].GunSocket.Length > 0)
+	if (VehicleWeaponAttachments[WeaponIndex].SocketName != '')
 	{
-		Mesh.GetSocketWorldLocationAndRotation(Seats[SeatIndex].GunSocket[GetBarrelIndex(SeatIndex)], SocketLocation, SocketRotation);
+		Mesh.GetSocketWorldLocationAndRotation(VehicleWeaponAttachments[WeaponIndex].SocketName, SocketLocation, SocketRotation);
 	}
 	else
 	{
@@ -332,21 +325,6 @@ function InitializeSeats()
 }
 
 /**
- * Set seat names.
- */
-simulated function PreCacheSeatNames()
-{
-	local int i;
-	for (i = 0; i < Seats.Length; i++)
-	{
-		Seats[i].WeaponRotationName	= name(Seats[i].TurretVarPrefix $ "WeaponRotation");
-		Seats[i].FlashLocationName = name(Seats[i].TurretVarPrefix $ "FlashLocation");
-		Seats[i].FlashCountName = name(Seats[i].TurretVarPrefix $ "FlashCount");
-		Seats[i].FiringModeName = name(Seats[i].TurretVarPrefix $ "FiringMode");
-	}
-}
-
-/**
  * @extends
  */
 simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out rotator out_CamRot, out float out_FOV)
@@ -376,14 +354,6 @@ function SetTeamNum(byte T)
 	{
 		Team = T;
 	}
-}
-
-/**
- * @extends
- */
-simulated function SetFiringMode(Weapon Weap, byte FiringModeNum)
-{
-	SeatFiringMode(0, FiringModeNum, false);
 }
 
 /**
@@ -492,12 +462,13 @@ function SetWeapon(int WeaponSlot, FVehicleWeapon WeaponArchetype)
 
 	if (InvManager.AddInventory(VehicleWeapon))
 	{
-		VehicleWeapon.SeatIndex = 0;
+		VehicleWeapon.WeaponIndex = WeaponSlot;
 		VehicleWeapon.MyVehicle = Self;
 		VehicleWeapon.SetBase(Self);
 		VehicleWeapon.ClientWeaponSet(False);
 
 		VehicleWeapons[WeaponSlot] = VehicleWeapon;
+		VehicleWeaponAttachments[WeaponSlot].SocketName = WeaponSocketNames[WeaponSlot]; //todo this should be a function parameter
 	}
 }
 
@@ -585,8 +556,8 @@ simulated event Vector GetWeaponStartTraceLocation(optional Weapon CurrentWeapon
 {
 	local Vector SocketLocation;
 
-	if (FVehicleWeapon(CurrentWeapon) != None)
-		GetBarrelLocationAndRotation(FVehicleWeapon(CurrentWeapon).SeatIndex, SocketLocation);
+	if (CurrentWeapon != None && FVehicleWeapon(CurrentWeapon) != None)
+		GetBarrelLocationAndRotation(FVehicleWeapon(CurrentWeapon).WeaponIndex, SocketLocation);
 	else
 		return Super.GetWeaponStartTraceLocation(CurrentWeapon);
 
@@ -602,7 +573,7 @@ simulated function Rotator GetAdjustedAimFor(Weapon W, Vector StartFireLoc)
 	local Rotator SocketRotation;
 
 	if (FVehicleWeapon(W) != None)
-		GetBarrelLocationAndRotation(FVehicleWeapon(W).SeatIndex, SocketLocation, SocketRotation);
+		GetBarrelLocationAndRotation(FVehicleWeapon(W).WeaponIndex, SocketLocation, SocketRotation);
 	else
 		return Super.GetAdjustedAimFor(W, StartFireLoc);
 
