@@ -31,9 +31,9 @@ struct TurretControl
 	var UDKSkelControl_Rotate RotateController;
 };
 
-struct TurretEffect
+struct WeaponFireEffect
 {
-	var Vector StartLocation;
+	var int WeaponIndex;
 	var Vector EndLocation;
 };
 
@@ -55,7 +55,7 @@ var(Weapons) array<TurretControl> TurretControls;
 var(Weapons) array<name> WeaponSocketNames;
 
 var repnotify Rotator TurretRotations[2];
-var repnotify TurretEffect WeaponEffect;
+var repnotify WeaponFireEffect WeaponEffect;
 
 var FVehicleWeapon VehicleWeapons[2];
 var VehicleWeaponAttachment VehicleWeaponAttachments[2];
@@ -508,7 +508,7 @@ simulated function SetFlashLocation(Weapon InWeapon, byte InFiringMode, Vector N
 		NewLoc += vect(0,0,1);
 	}
 
-	WeaponEffect.StartLocation = GetWeaponStartTraceLocation(InWeapon);
+	WeaponEffect.WeaponIndex = FVehicleWeapon(InWeapon).WeaponIndex;
 	WeaponEffect.EndLocation = NewLoc;
 
 	bForceNetUpdate = True;
@@ -535,11 +535,13 @@ simulated function WeaponEffectLocationUpdated(bool bViaReplication)
  */
 simulated function VehicleWeaponFired(bool bViaReplication)
 {
+	local Vector StartLocation;
 	local ParticleSystemComponent E;
 
 	if (WorldInfo.NetMode != NM_DedicatedServer && (Role == ROLE_Authority || bViaReplication))
 	{
-		E = WorldInfo.MyEmitterPool.SpawnEmitter(ParticleSystem'VH_Cicada.Effects.P_VH_Cicada_2ndPrim_Beam', WeaponEffect.StartLocation);
+		GetBarrelLocationAndRotation(WeaponEffect.WeaponIndex, StartLocation);
+		E = WorldInfo.MyEmitterPool.SpawnEmitter(VehicleWeaponAttachments[WeaponEffect.WeaponIndex].EffectParticleSystem, StartLocation);
 		E.SetVectorParameter('ShockBeamEnd', WeaponEffect.EndLocation);
 	}
 }
