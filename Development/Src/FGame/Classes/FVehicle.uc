@@ -589,7 +589,7 @@ defaultproperties
 		bPerBoneMotionBlur=True
 	End Object
 
-	InventoryManagerClass=class'FInventoryManager'
+	InventoryManagerClass=class'FVehicleInventoryManager'
 
 	TireSoundList(0)=(MaterialType=Dirt, Sound=SoundCue'A_Vehicle_Generic.Vehicle.VehicleSurface_TireDirt01Cue')
 	TireSoundList(1)=(MaterialType=Foliage, Sound=SoundCue'A_Vehicle_Generic.Vehicle.VehicleSurface_TireFoliage01Cue')

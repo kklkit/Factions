@@ -22,4 +22,6 @@ simulated function DetachWeapon();
 defaultproperties
 {
 	AmmoCount=1000
+	FiringStatesArray(0)=WeaponFiring
+	FiringStatesArray(1)=WeaponFiring
 }
