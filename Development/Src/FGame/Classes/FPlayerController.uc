@@ -104,14 +104,22 @@ reliable server function ServerChangeTeam(int N)
 /**
  * Spawns a vehicle for the player.
  */
-reliable server function ServerSpawnVehicle(int ChassisIndex, int WeaponIndex1, int WeaponIndex2)
+reliable server function ServerSpawnVehicle(FVehicle VehicleArchetype, array<FVehicleWeapon> VehicleWeaponArchetypes)
+{
+	BuildVehicle(VehicleArchetype, VehicleWeaponArchetypes);
+}
+
+/**
+ * Builds a vehicle at the vehicle factory the player is standing on.
+ */
+function BuildVehicle(FVehicle VehicleArchetype, array<FVehicleWeapon> VehicleWeaponArchetypes)
 {
 	local FStructure_VehicleFactory VF;
 
 	// Get the VF the player is standing on
 	VF = FStructure_VehicleFactory(Pawn.Base);
 	if (VF != None)
-		VF.BuildVehicle(Pawn, ChassisIndex, WeaponIndex1, WeaponIndex2);
+		VF.BuildVehicle(PlayerReplicationInfo, VehicleArchetype, VehicleWeaponArchetypes);
 }
 
 // Structure placement

@@ -3,10 +3,13 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FGFxOmniMenu extends FGFxMoviePlayer;
+class FGFxOmniMenu extends FGFxMoviePlayer
+	dependson(FVehicleWeapon);
 
 // A list of elements that need to be invalidated the next time the movie clip is open.
 var array<string> PendingInvalidates;
+
+var FVehicle SelectedVehicleArchetype;
 
 /**
  * @extends
@@ -80,11 +83,37 @@ function SelectInfantryEquipment(byte Slot, int EquipmentIndex)
 }
 
 /**
+ * Select a vehicle chassis.
+ */
+function SelectVehicleChassis(string ChassisName)
+{
+	local FVehicle VehicleArchetype;
+
+	foreach FMapInfo(GetPC().WorldInfo.GetMapInfo()).Vehicles(VehicleArchetype)
+		if (VehicleArchetype.MenuName == ChassisName)
+			SelectedVehicleArchetype = VehicleArchetype;
+
+	Invalidate("vehicle equipment");
+}
+
+/**
  * Build a vehicle for the player.
  */
-function BuildVehicle(int ChassisIndex, int WeaponIndex1, int WeaponIndex2)
+function BuildVehicle(string ChassisName, array<string> WeaponNames)
 {
-	FPlayerController(GetPC()).ServerSpawnVehicle(ChassisIndex, WeaponIndex1, WeaponIndex2);
+	local FMapInfo MapInfo;
+	local FVehicleWeapon VehicleWeaponArchetype;
+	local array<FVehicleWeapon> VehicleWeaponArchetypes;
+	local string WeaponName;
+
+	MapInfo = FMapInfo(GetPC().WorldInfo.GetMapInfo());
+
+	foreach WeaponNames(WeaponName)
+		foreach MapInfo.VehicleWeapons(VehicleWeaponArchetype)
+			if (VehicleWeaponArchetype.ItemName == WeaponName)
+				VehicleWeaponArchetypes.AddItem(VehicleWeaponArchetype);
+
+	FPlayerController(GetPC()).ServerSpawnVehicle(SelectedVehicleArchetype, VehicleWeaponArchetypes);
 }
 
 /*********************************************************************************************
@@ -299,14 +328,29 @@ function array<string> VehicleArmorNames()
 /**
  * Returns a list of the available vehicle weapons.
  */
-function array<string> VehicleWeaponNames(int Slot)
+function array<string> VehicleWeaponNames(int HardpointIndex)
 {
+	local FMapInfo MapInfo;
 	local FVehicleWeapon VehicleWeaponArchetype;
+	local EHardpointTypes HardpointType;
 	local array<string> Data;
 
-	foreach FMapInfo(GetPC().WorldInfo.GetMapInfo()).VehicleWeapons(VehicleWeaponArchetype)
+	MapInfo =  FMapInfo(GetPC().WorldInfo.GetMapInfo());
+
+	if (HardpointIndex >= 0 && HardpointIndex < SelectedVehicleArchetype.VehicleHardpoints.Length)
 	{
-		Data.AddItem(VehicleWeaponArchetype.ItemName);
+		HardpointType = SelectedVehicleArchetype.VehicleHardpoints[HardpointIndex].HardpointType;
+		foreach MapInfo.VehicleWeapons(VehicleWeaponArchetype)
+		{
+			if (VehicleWeaponArchetype.HardpointType == HardpointType)
+			{
+				Data.AddItem(VehicleWeaponArchetype.ItemName);
+			}
+		}
+	}
+	else
+	{
+		Data.AddItem("None");
 	}
 
 	return Data;

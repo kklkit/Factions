@@ -143,6 +143,12 @@ public class FactionsOmniMenu extends MovieClip {
 		
 		vehicleBuildButton.label = "Build";
 		vehicleBuildButton.addEventListener(ButtonEvent.CLICK, buildVehicle);
+		
+		vehicleChassisList.addEventListener(ListEvent.ITEM_CLICK, function (e:ListEvent):void {
+			data.vehicleChassis.requestItemAt(e.index, function (chassisName:Object):void {
+				ExternalInterface.call("SelectVehicleChassis", chassisName as String);
+			});
+		});
 	}
 	
 	public function frameScript3():void {
@@ -216,6 +222,11 @@ public class FactionsOmniMenu extends MovieClip {
 		} else if (item == "equipment selection") {
 			data.infantryEquipment.invalidate();
 			refreshEquipmentSelection();
+		} else if (item == "vehicle equipment") {
+			data.vehicleWeaponNames[0].invalidate();
+			data.vehicleWeaponNames[1].invalidate();
+			data.vehicleWeaponNames[2].invalidate();
+			data.vehicleWeaponNames[3].invalidate();
 		}
 	}
 	
@@ -249,8 +260,14 @@ public class FactionsOmniMenu extends MovieClip {
 	}
 	
 	private function buildVehicle(e:ButtonEvent) {
-		ExternalInterface.call("BuildVehicle", vehicleChassisList.selectedIndex, vehicleWeaponList0.selectedIndex, vehicleWeaponList1.selectedIndex);
-		closeMenu();
+		data.vehicleChassis.requestItemAt(vehicleChassisList.selectedIndex, function (chassisName:Object):void {
+			data.vehicleWeaponNames[0].requestItemAt(vehicleWeaponList0.selectedIndex, function (weaponName1:Object):void {
+				data.vehicleWeaponNames[1].requestItemAt(vehicleWeaponList1.selectedIndex, function (weaponName2:Object):void {
+					ExternalInterface.call("BuildVehicle", chassisName as String, [weaponName1 as String, weaponName2 as String]);
+					closeMenu();
+				});
+			});
+		});
 	}
 }
 }
