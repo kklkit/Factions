@@ -337,7 +337,7 @@ function array<string> VehicleWeaponNames(int HardpointIndex)
 
 	MapInfo =  FMapInfo(GetPC().WorldInfo.GetMapInfo());
 
-	if (HardpointIndex >= 0 && HardpointIndex < SelectedVehicleArchetype.VehicleHardpoints.Length)
+	if (SelectedVehicleArchetype != None && HardpointIndex >= 0 && HardpointIndex < SelectedVehicleArchetype.VehicleHardpoints.Length)
 	{
 		HardpointType = SelectedVehicleArchetype.VehicleHardpoints[HardpointIndex].HardpointType;
 		foreach MapInfo.VehicleWeapons(VehicleWeaponArchetype)
