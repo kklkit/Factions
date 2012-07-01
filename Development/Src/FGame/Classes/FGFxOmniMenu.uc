@@ -210,6 +210,19 @@ function array<string> InfantryPresetNames()
 	return Data;
 }
 
+function array<string> InfantryClassNames()
+{
+	local array<string> Data;
+
+	Data.AddItem("Commando");
+	Data.AddItem("Assault");
+	Data.AddItem("Soldier");
+	Data.AddItem("Engineer");
+	Data.AddItem("Specialist");
+
+	return Data;
+}
+
 /**
  * Returns a list of the available equipment slot names.
  */
@@ -236,55 +249,6 @@ function array<string> InfantryEquipmentNames(int Slot)
 	foreach FMapInfo(GetPC().WorldInfo.GetMapInfo()).Weapons(WeaponArchetype)
 	{
 		Data.AddItem(WeaponArchetype.ItemName);
-	}
-
-	return Data;
-}
-
-/**
- * Returns a list of the available skill slot names.
- */
-function array<string> InfantrySkillLabels()
-{
-	local array<string> Data;
-
-	Data.AddItem("Armor Skill");
-	Data.AddItem("Weapon Skill");
-	Data.AddItem("HUD Skill");
-	Data.AddItem("Leadership Skill");
-
-	return Data;
-}
-
-/**
- * Returns a list of the skill names for the given skill slot.
- */
-function array<string> InfantrySkillNames(int Slot)
-{
-	local array<string> Data;
-
-	switch (Slot)
-	{
-	case 0:
-		Data.AddItem("Lightweight Materials");
-		Data.AddItem("Auto Repair");
-		Data.AddItem("Buffer Repair");
-		break;
-	case 1:
-		Data.AddItem("Weapon Zoom");
-		Data.AddItem("Efficient Reload");
-		Data.AddItem("Quick Reload");
-		break;
-	case 2:
-		Data.AddItem("Armor Detection");
-		Data.AddItem("Sniper Detection");
-		Data.AddItem("Artillery Feedback");
-		break;
-	case 3:
-		Data.AddItem("Charge");
-		Data.AddItem("Stealth");
-		Data.AddItem("Fight");
-		break;
 	}
 
 	return Data;

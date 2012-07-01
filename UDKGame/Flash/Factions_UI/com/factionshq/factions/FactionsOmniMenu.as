@@ -31,9 +31,8 @@ public class FactionsOmniMenu extends MovieClip {
 	// Infantry
 	public var infantryPresetNameBox:TextInput;
 	public var infantryPresetsList:ScrollingList;
-	public var infantryArmorLabel:Label;
-	public var infantryLightArmorButton:Button;
-	public var infantryHeavyArmorButton:Button;
+	public var infantryClassLabel:Label;
+	public var infantryClassButtonBar:ButtonBar;
 	public var infantryEquipmentLabel0:Label;
 	public var infantryEquipmentLabel1:Label;
 	public var infantryEquipmentLabel2:Label;
@@ -42,14 +41,6 @@ public class FactionsOmniMenu extends MovieClip {
 	public var infantryEquipmentList1:ScrollingList;
 	public var infantryEquipmentList2:ScrollingList;
 	public var infantryEquipmentList3:ScrollingList;
-	public var infantrySkillLabel0:Label;
-	public var infantrySkillLabel1:Label;
-	public var infantrySkillLabel2:Label;
-	public var infantrySkillLabel3:Label;
-	public var infantrySkillList0:ScrollingList;
-	public var infantrySkillList1:ScrollingList;
-	public var infantrySkillList2:ScrollingList;
-	public var infantrySkillList3:ScrollingList;
 	
 	// Vehicle
 	public var vehicleChassisLabel:Label;
@@ -73,7 +64,6 @@ public class FactionsOmniMenu extends MovieClip {
 		closeButton.addEventListener(ButtonEvent.CLICK, closeMenu);
 		
 		data.infantryEquipmentLabels.addEventListener(Event.CHANGE, refreshEquipmentLabels);
-		data.infantrySkillLabels.addEventListener(Event.CHANGE, refreshSkillLabels);
 		
 		addFrameScript(0, frameScript0);
 		addFrameScript(1, frameScript1);
@@ -84,7 +74,7 @@ public class FactionsOmniMenu extends MovieClip {
 		stop();
 	}
 	
-	public function frameScript0():void {
+	private function frameScript0():void {
 		menuButtonBar.selectedIndex = 0;
 		
 		redTeamList.dataProvider = data.teamRed;
@@ -103,32 +93,28 @@ public class FactionsOmniMenu extends MovieClip {
 		refreshTeamButtons();
 	}
 	
-	public function frameScript1():void {
+	private function frameScript1():void {
 		menuButtonBar.selectedIndex = 1;
 		
 		infantryPresetsList.dataProvider = data.infantryPresetNames;
 		infantryPresetsList.addEventListener(ListEvent.ITEM_CLICK, selectInfantryPreset);
 		
-		infantryArmorLabel.text = "Armor:";
-		infantryLightArmorButton.label = "Light Armor";
-		infantryHeavyArmorButton.label = "Heavy Armor";
+		infantryClassLabel.text = "Class:";
+		infantryClassButtonBar.itemRendererName = "AnimatedToggleButton";
+		infantryClassButtonBar.dataProvider = data.infantryClasses;
+		infantryClassButtonBar.buttonWidth = infantryClassButtonBar.width / infantryClassButtonBar.dataProvider.length - 1;
+		infantryClassButtonBar.addEventListener(ButtonBarEvent.BUTTON_SELECT, selectInfantryClass);
 		
 		for (var i:int = 0; i < infantryEquipmentLists.length; ++i) {
 			infantryEquipmentLists[i].dataProvider = data.infantryEquipmentNames[i];
 			infantryEquipmentLists[i].addEventListener(ListEvent.ITEM_CLICK, createInfantryEquipmentSelector(i));
 		}
 		
-		for (var j:int = 0; j < infantrySkillLists.length; ++j) {
-			infantrySkillLists[j].dataProvider = data.infantrySkillNames[j];
-		}
-		
 		refreshEquipmentLabels();
-		refreshSkillLabels();
-		
 		refreshEquipmentSelection();
 	}
 	
-	public function frameScript2():void {
+	private function frameScript2():void {
 		menuButtonBar.selectedIndex = 2;
 		
 		vehicleChassisLabel.text = "Chassis:";
@@ -151,59 +137,47 @@ public class FactionsOmniMenu extends MovieClip {
 		});
 	}
 	
-	public function frameScript3():void {
+	private function frameScript3():void {
 		menuButtonBar.selectedIndex = 3;
 	}
 	
-	public function frameScript4():void {
+	private function frameScript4():void {
 		menuButtonBar.selectedIndex = 4;
 	}
 	
-	public function get infantryEquipmentLabels():Array {
-		return [infantryEquipmentLabel0, infantryEquipmentLabel1, infantryEquipmentLabel2, infantryEquipmentLabel3];
-	}
-	
-	public function get infantryEquipmentLists():Array {
-		return [infantryEquipmentList0, infantryEquipmentList1, infantryEquipmentList2, infantryEquipmentList3];
-	}
-	
-	public function get infantrySkillLabels():Array {
-		return [infantrySkillLabel0, infantrySkillLabel1, infantrySkillLabel2, infantrySkillLabel3];
-	}
-	
-	public function get infantrySkillLists():Array {
-		return [infantrySkillList0, infantrySkillList1, infantrySkillList2, infantrySkillList3];
-	}
-	
-	public function selectPanel(e:ButtonBarEvent):void {
+	private function selectPanel(e:ButtonBarEvent):void {
 		gotoAndStop(panels[e.index]);
 	}
 	
-	public function refreshTeamButtons():void {
+	// Array getters
+	
+	private function get infantryEquipmentLabels():Array {
+		return [infantryEquipmentLabel0, infantryEquipmentLabel1, infantryEquipmentLabel2, infantryEquipmentLabel3];
+	}
+	
+	private function get infantryEquipmentLists():Array {
+		return [infantryEquipmentList0, infantryEquipmentList1, infantryEquipmentList2, infantryEquipmentList3];
+	}
+	
+	// Refresh functions
+	
+	private function refreshTeamButtons():void {
 		var teamName = data.team.requestItemAt(0);
 		joinRedTeamButton.selected = teamName == "Red";
 		joinBlueTeamButton.selected = teamName == "Blue";
 		joinSpectatorButton.selected = teamName == "Spectator";
 	}
 	
-	public function refreshEquipmentSelection():void {
+	private function refreshEquipmentSelection():void {
 		for (var i:int = 0; i < infantryEquipmentLists.length; ++i) {
 			infantryEquipmentLists[i].selectedIndex = data.infantryEquipmentNames[i].indexOf(data.infantryEquipment.requestItemAt(i) as String);
 		}
 	}
 	
-	public function refreshEquipmentLabels():void {
+	private function refreshEquipmentLabels():void {
 		for (var i:int = 0; i < infantryEquipmentLabels.length; ++i) {
 			data.infantryEquipmentLabels.requestItemAt(i, function(item:Object):void {
 					infantryEquipmentLabels[i].text = String(item);
-				});
-		}
-	}
-	
-	public function refreshSkillLabels():void {
-		for (var i:int = 0; i < infantrySkillLabels.length; ++i) {
-			data.infantrySkillLabels.requestItemAt(i, function(item:Object):void {
-					infantrySkillLabels[i].text = String(item);
 				});
 		}
 	}
@@ -232,31 +206,33 @@ public class FactionsOmniMenu extends MovieClip {
 	
 	// Functions calling UnrealScript
 	
-	public function createTeamSelector(teamName:String):Function {
+	private function closeMenu(e:ButtonEvent = null):void {
+		ExternalInterface.call("CloseMenu", this.currentLabel);
+	}
+	
+	private function selectInfantryClass(e:ButtonBarEvent):void {
+		data.infantryClasses.requestItemAt(e.index, function(item:Object) {
+			ExternalInterface.call("SelectInfantryClass", item);
+		});
+	}
+	
+	private function selectInfantryPreset(e:ListEvent) {
+		data.infantryPresetNames.requestItemAt(e.index, function (item:Object):void {
+			ExternalInterface.call("SelectInfantryPreset", item);
+			infantryPresetNameBox.text = String(item);
+		});
+	}
+	
+	private function createTeamSelector(teamName:String):Function {
 		return function(e:ButtonEvent):void {
 			ExternalInterface.call("SelectTeam", teamName);
 		}
 	}
 	
-	public function createInfantryEquipmentSelector(i:int):Function {
+	private function createInfantryEquipmentSelector(i:int):Function {
 		return function(e:ListEvent):void {
 			ExternalInterface.call("SelectInfantryEquipment", i, e.index);
 		};
-	}
-	
-	public function closeMenu(e:ButtonEvent = null):void {
-		ExternalInterface.call("CloseMenu", this.currentLabel);
-	}
-	
-	public function selectArmor(e:ButtonBarEvent):void {
-		ExternalInterface.call("SelectInfantryArmor", e.index);
-	}
-	
-	private function selectInfantryPreset(e:ListEvent) {
-		data.infantryPresetNames.requestItemAt(e.index, function (item:Object):void {
-			ExternalInterface.call("SelectInfantryPreset", String(item));
-			infantryPresetNameBox.text = String(item);
-		});
 	}
 	
 	private function buildVehicle(e:ButtonEvent) {
