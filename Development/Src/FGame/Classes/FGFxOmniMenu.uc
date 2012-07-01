@@ -113,7 +113,7 @@ function BuildVehicle(string ChassisName, array<string> WeaponNames)
 			if (VehicleWeaponArchetype.ItemName == WeaponName)
 				VehicleWeaponArchetypes.AddItem(VehicleWeaponArchetype);
 
-	FPlayerController(GetPC()).ServerSpawnVehicle(SelectedVehicleArchetype, VehicleWeaponArchetypes);
+	FPlayerController(GetPC()).ServerSpawnVehicle(SelectedVehicleArchetype, VehicleWeaponArchetypes[0], VehicleWeaponArchetypes[1]);
 }
 
 /*********************************************************************************************

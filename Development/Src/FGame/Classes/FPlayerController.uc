@@ -104,8 +104,13 @@ reliable server function ServerChangeTeam(int N)
 /**
  * Spawns a vehicle for the player.
  */
-reliable server function ServerSpawnVehicle(FVehicle VehicleArchetype, array<FVehicleWeapon> VehicleWeaponArchetypes)
+reliable server function ServerSpawnVehicle(FVehicle VehicleArchetype, FVehicleWeapon VehicleWeaponArchetype1, FVehicleWeapon VehicleWeaponArchetype2)
 {
+	local array<FVehicleWeapon> VehicleWeaponArchetypes;
+
+	VehicleWeaponArchetypes.AddItem(VehicleWeaponArchetype1);
+	VehicleWeaponArchetypes.AddItem(VehicleWeaponArchetype2);
+
 	BuildVehicle(VehicleArchetype, VehicleWeaponArchetypes);
 }
 
