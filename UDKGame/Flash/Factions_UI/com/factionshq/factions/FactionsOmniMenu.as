@@ -15,6 +15,7 @@ public class FactionsOmniMenu extends MovieClip {
 	// Frame
 	private var panels:Array = ["Team", "Squad", "Infantry", "Vehicle", "Research"];
 	private var menuDataProvider:DataProvider = new DataProvider(panels);
+	public var menuHeader:MovieClip;
 	public var menuButtonBar:ButtonBar;
 	public var closeButton:Button;
 	
@@ -69,6 +70,8 @@ public class FactionsOmniMenu extends MovieClip {
 		addFrameScript(4, researchScript);
 		
 		stop();
+		
+		menuHeader.gotoAndStop("yellow");
 	}
 	
 	// Team
@@ -99,6 +102,15 @@ public class FactionsOmniMenu extends MovieClip {
 	
 	private function updateTeamSelection():void {
 		var teamName = data.teamSelectionName.requestItemAt(0);
+		
+		if (teamName == "Red") {
+			menuHeader.gotoAndStop("red");
+		} else if (teamName == "Blue") {
+			menuHeader.gotoAndStop("blue");
+		} else {
+			menuHeader.gotoAndStop("yellow");
+		}
+		
 		joinRedTeamButton.selected = teamName == "Red";
 		joinBlueTeamButton.selected = teamName == "Blue";
 		joinSpectatorButton.selected = teamName == "Spectator";
