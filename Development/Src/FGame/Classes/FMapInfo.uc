@@ -9,6 +9,7 @@ class FMapInfo extends UDKMapInfo;
 var(Map) Vector MapOrigin;
 var(Map) float MapLength;
 
+var(Game) array<FInfantryClass> InfantryClasses;
 var(Game) array<FStructure> Structures;
 var(Game) array<FVehicle> Vehicles;
 var(Game) array<FWeapon> Weapons;
@@ -20,6 +21,12 @@ defaultproperties
 	MapLength=40000.0
 
 	// Each item below will be spawnable in-game
+
+	InfantryClasses(0)=FInfantryClass'IC_Commando.Archetypes.IC_Commando'
+	InfantryClasses(1)=FInfantryClass'IC_Assault.Archetypes.IC_Assault'
+	InfantryClasses(2)=FInfantryClass'IC_Soldier.Archetypes.IC_Soldier'
+	InfantryClasses(3)=FInfantryClass'IC_Engineer.Archetypes.IC_Engineer'
+	InfantryClasses(4)=FInfantryClass'IC_Specialist.Archetypes.IC_Specialist'
 
 	Structures(0)=FStructure_Barracks'ST_Barracks.Archetypes.ST_Barracks'
 	Structures(1)=FStructure_VehicleFactory'ST_VehicleFactory.Archetypes.ST_VehicleFactory'

@@ -271,6 +271,14 @@ simulated function UpdateWeaponAttachment()
 }
 
 /**
+ * Selects the players class.
+ */
+reliable server function ServerChangeClass(string ClassName)
+{
+
+}
+
+/**
  * Resets the player's equipment loadout.
  */
 exec function ResetEquipment()

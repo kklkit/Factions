@@ -10,6 +10,7 @@ class FGFxOmniMenu extends FGFxMoviePlayer
 var array<string> PendingInvalidates;
 
 var FVehicle SelectedVehicleArchetype;
+var FInfantryClass SelectedInfantryClassArchetype;
 
 /**
  * @extends
@@ -71,6 +72,18 @@ function SelectTeam(string TeamName)
 
 	// Send the team change request to the server.
 	GetPC().ServerChangeTeam(TeamIndex);
+}
+
+/**
+ * Select the player's class.
+ */
+function SelectInfantryClass(string ClassName)
+{
+	local FInfantryClass InfantryClassArchetype;
+
+	foreach FMapInfo(GetPC().WorldInfo.GetMapInfo()).InfantryClasses(InfantryClassArchetype)
+		if (InfantryClassArchetype.MenuName == ClassName)
+			SelectedInfantryClassArchetype = InfantryClassArchetype;
 }
 
 /**
@@ -196,16 +209,21 @@ function array<string> InfantryPresetNames()
 {
 	local array<string> Data;
 
-	Data.AddItem("Preset 1");
-	Data.AddItem("Preset 2");
-	Data.AddItem("Preset 3");
-	Data.AddItem("Preset 4");
-	Data.AddItem("Preset 5");
-	Data.AddItem("Preset 6");
-	Data.AddItem("Preset 7");
-	Data.AddItem("Preset 8");
-	Data.AddItem("Preset 9");
-	Data.AddItem("Preset 10");
+	Data.AddItem("[C] Commando");
+	Data.AddItem("[C] Defender");
+	Data.AddItem("[A] Ranger");
+	Data.AddItem("[A] Grenadier");
+	Data.AddItem("[S] Rifleman");
+	Data.AddItem("[S] Sniper");
+	Data.AddItem("[E] Engineer");
+	Data.AddItem("[E] Medic");
+	Data.AddItem("[E] Sapper");
+	Data.AddItem("[X] Scout");
+	Data.AddItem("[X] Hacker");
+	Data.AddItem("[X] Infiltrator");
+	Data.AddItem("Custom 1");
+	Data.AddItem("Custom 2");
+	Data.AddItem("Custom 3");
 
 	return Data;
 }
@@ -213,12 +231,12 @@ function array<string> InfantryPresetNames()
 function array<string> InfantryClassNames()
 {
 	local array<string> Data;
+	local FInfantryClass InfantryClass;
 
-	Data.AddItem("Commando");
-	Data.AddItem("Assault");
-	Data.AddItem("Soldier");
-	Data.AddItem("Engineer");
-	Data.AddItem("Specialist");
+	foreach FMapInfo(GetPC().WorldInfo.GetMapInfo()).InfantryClasses(InfantryClass)
+	{
+		Data.AddItem(InfantryClass.MenuName);
+	}
 
 	return Data;
 }
