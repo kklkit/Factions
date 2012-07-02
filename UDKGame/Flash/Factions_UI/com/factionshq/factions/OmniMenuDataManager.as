@@ -8,6 +8,7 @@ public class OmniMenuDataManager {
 	public var teamBluePlayerNames:ExternalDataProvider = new ExternalDataProvider("PlayerNames", "blue");
 	public var teamSpectatorPlayerNames:ExternalDataProvider = new ExternalDataProvider("PlayerNames", "spectator");
 	public var infantryPresetNames:ExternalDataProvider = new ExternalDataProvider("InfantryPresetNames");
+	public var infantryClassSelectionName:ExternalDataProvider = new ExternalDataProvider("InfantryClass");
 	public var infantryClassNames:ExternalDataProvider = new ExternalDataProvider("InfantryClassNames");
 	public var infantryEquipmentSelectionNames:ExternalDataProvider = new ExternalDataProvider("InfantryEquipment");
 	public var infantryEquipmentLabels:ExternalDataProvider = new ExternalDataProvider("InfantryEquipmentLabels");

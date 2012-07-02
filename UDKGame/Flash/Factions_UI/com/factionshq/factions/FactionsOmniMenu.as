@@ -129,8 +129,13 @@ public class FactionsOmniMenu extends MovieClip {
 		infantryClassButtonBar.buttonWidth = infantryClassButtonBar.width / infantryClassButtonBar.dataProvider.length - 1;
 		infantryClassButtonBar.addEventListener(ButtonBarEvent.BUTTON_SELECT, selectInfantryClass);
 		
+		updateClassSelection();
 		updateEquipmentLabels();
 		updateEquipmentSelection();
+	}
+	
+	private function updateClassSelection():void {
+		infantryClassButtonBar.selectedIndex = data.infantryClassNames.indexOf(data.infantryClassSelectionName.requestItemAt(0));
 	}
 	
 	private function updateEquipmentLabels():void {

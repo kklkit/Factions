@@ -196,6 +196,25 @@ function array<string> PlayerNames(string TeamName)
 }
 
 /**
+ * Returns the name of the player's class;
+ */
+function array<string> InfantryClass()
+{
+	local array<string> Data;
+
+	if (SelectedInfantryClassArchetype != None)
+	{
+		Data.AddItem(SelectedInfantryClassArchetype.MenuName);
+	}
+	else
+	{
+		Data.AddItem("");
+	}
+
+	return Data;
+}
+
+/**
  * Returns a list of the names of the player's selected infantry equipment.
  */
 function array<string> InfantryEquipment()
