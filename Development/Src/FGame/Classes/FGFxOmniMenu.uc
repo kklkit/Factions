@@ -243,21 +243,21 @@ function array<string> InfantryPresetNames()
 {
 	local array<string> Data;
 
-	Data.AddItem("[C] Commando");
-	Data.AddItem("[C] Defender");
-	Data.AddItem("[A] Ranger");
-	Data.AddItem("[A] Grenadier");
-	Data.AddItem("[S] Rifleman");
-	Data.AddItem("[S] Sniper");
-	Data.AddItem("[E] Engineer");
-	Data.AddItem("[E] Medic");
-	Data.AddItem("[E] Sapper");
-	Data.AddItem("[X] Scout");
-	Data.AddItem("[X] Hacker");
-	Data.AddItem("[X] Infiltrator");
-	Data.AddItem("[?] Custom 1");
-	Data.AddItem("[?] Custom 2");
-	Data.AddItem("[?] Custom 3");
+	Data.AddItem("Commando");
+	Data.AddItem("Defender");
+	Data.AddItem("Ranger");
+	Data.AddItem("Grenadier");
+	Data.AddItem("Rifleman");
+	Data.AddItem("Sniper");
+	Data.AddItem("Engineer");
+	Data.AddItem("Medic");
+	Data.AddItem("Sapper");
+	Data.AddItem("Scout");
+	Data.AddItem("Hacker");
+	Data.AddItem("Infiltrator");
+	Data.AddItem("Custom 1");
+	Data.AddItem("Custom 2");
+	Data.AddItem("Custom 3");
 
 	return Data;
 }
