@@ -224,12 +224,6 @@ public class FactionsOmniMenu extends MovieClip {
 	}
 	
 	private function closeMenu(e:ButtonEvent = null):void {
-		
-		if (this.currentLabel == "Infantry")
-		{
-			selectLoadout();
-		}
-		
 		ExternalInterface.call("CloseMenu", this.currentLabel);
 	}
 	
@@ -251,6 +245,13 @@ public class FactionsOmniMenu extends MovieClip {
 			data.vehicleWeaponNames[1].invalidate();
 			data.vehicleWeaponNames[2].invalidate();
 			data.vehicleWeaponNames[3].invalidate();
+		}
+	}
+	
+	public function onClose():void {
+		if (this.currentLabel == "Infantry")
+		{
+			selectLoadout();
 		}
 	}
 }

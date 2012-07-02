@@ -13,6 +13,16 @@ var FVehicle SelectedVehicleArchetype;
 var FInfantryClass SelectedInfantryClassArchetype;
 
 /**
+ * @extends
+ */
+event OnClose()
+{
+	InternalOnClose();
+
+	Super.OnClose();
+}
+
+/**
  * Updates the interface elements in Flash.
  */
 function TickHUD()
@@ -368,6 +378,12 @@ function GotoPanel(string Panel)
 {
 	if (bMovieIsOpen)
 		ActionScriptVoid("_root.gotoAndStop");
+}
+
+function InternalOnClose()
+{
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.onClose");
 }
 
 defaultproperties
