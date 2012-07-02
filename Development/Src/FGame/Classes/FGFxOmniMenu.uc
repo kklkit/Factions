@@ -13,18 +13,6 @@ var FVehicle SelectedVehicleArchetype;
 var FInfantryClass SelectedInfantryClassArchetype;
 
 /**
- * @extends
- */
-event OnClose()
-{
-	// Set the player's loadout when the menu is closed. The called function is responsible for checking if the player is in a barracks/armory.
-	if (FPawn(GetPC().Pawn) != None)
-		FPawn(GetPC().Pawn).ResetEquipment();
-
-	Super.OnClose();
-}
-
-/**
  * Updates the interface elements in Flash.
  */
 function TickHUD()
@@ -84,15 +72,32 @@ function SelectInfantryClass(string ClassName)
 	foreach FMapInfo(GetPC().WorldInfo.GetMapInfo()).InfantryClasses(InfantryClassArchetype)
 		if (InfantryClassArchetype.MenuName == ClassName)
 			SelectedInfantryClassArchetype = InfantryClassArchetype;
+
+	Invalidate("infantry equipment labels");
+	Invalidate("infantry equipment selection");
 }
 
 /**
- * Select the player's equipment for the given slot.
+ * Select the player's loadout.
  */
-function SelectInfantryEquipment(byte Slot, int EquipmentIndex)
+function SelectInfantryLoadout(array<string> EquipmentNames)
 {
-	if (GetPC().Pawn != None)
-		FInventoryManager(FPawn(GetPC().Pawn).InvManager).SelectEquipment(Slot, EquipmentIndex);
+	local FMapInfo MapInfo;
+	local FWeapon WeaponArchetype;
+	local FWeapon WeaponArchetypes[4];
+	local string WeaponName;
+	local int i;
+
+	MapInfo = FMapInfo(GetPC().WorldInfo.GetMapInfo());
+
+	foreach EquipmentNames(WeaponName, i)
+		foreach MapInfo.Weapons(WeaponArchetype)
+			if (WeaponArchetype.ItemName == WeaponName)
+				WeaponArchetypes[i] = WeaponArchetype;
+
+	FPawn(GetPC().Pawn).ServerChangeLoadout(SelectedInfantryClassArchetype, WeaponArchetypes[0], WeaponArchetypes[1], WeaponArchetypes[2], WeaponArchetypes[3]);
+
+	Invalidate("infantry equipment selection");
 }
 
 /**
@@ -186,16 +191,16 @@ function array<string> PlayerNames(string TeamName)
 function array<string> InfantryEquipment()
 {
 	local array<string> Data;
-	local int EquipmentIndex;
+	local int WeaponIndex;
 	local FInventoryManager PlayerInventory;
 
 	PlayerInventory = FInventoryManager(GetPC().Pawn.InvManager);
 
-	for (EquipmentIndex = 0; EquipmentIndex < class'FInventoryManager'.const.EquipmentSlots; EquipmentIndex++)
+	for (WeaponIndex = 0; WeaponIndex < class'FInventoryManager'.const.MaxLoadoutSize; WeaponIndex++)
 	{
-		if (PlayerInventory.RequestedEquipment[EquipmentIndex] != None)
+		if (PlayerInventory.CurrentWeaponArchetypes[WeaponIndex] != None)
 		{
-			Data.InsertItem(EquipmentIndex, PlayerInventory.RequestedEquipment[EquipmentIndex].ItemName);
+			Data.InsertItem(WeaponIndex, PlayerInventory.CurrentWeaponArchetypes[WeaponIndex].ItemName);
 		}
 	}
 
@@ -221,9 +226,9 @@ function array<string> InfantryPresetNames()
 	Data.AddItem("[X] Scout");
 	Data.AddItem("[X] Hacker");
 	Data.AddItem("[X] Infiltrator");
-	Data.AddItem("Custom 1");
-	Data.AddItem("Custom 2");
-	Data.AddItem("Custom 3");
+	Data.AddItem("[?] Custom 1");
+	Data.AddItem("[?] Custom 2");
+	Data.AddItem("[?] Custom 3");
 
 	return Data;
 }
@@ -247,11 +252,15 @@ function array<string> InfantryClassNames()
 function array<string> InfantryEquipmentLabels()
 {
 	local array<string> Data;
+	local FWeaponClass WeaponClassArchetype;
 
-	Data.AddItem("Large Equipment");
-	Data.AddItem("Medium Equipment");
-	Data.AddItem("Small Equipment");
-	Data.AddItem("Tiny Equipment");
+	if (SelectedInfantryClassArchetype != None)
+	{
+		foreach SelectedInfantryClassArchetype.LoadoutSlots(WeaponClassArchetype)
+		{
+			Data.AddItem(WeaponClassArchetype.MenuName);
+		}
+	}
 
 	return Data;
 }

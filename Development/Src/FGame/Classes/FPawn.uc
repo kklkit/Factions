@@ -273,18 +273,16 @@ simulated function UpdateWeaponAttachment()
 /**
  * Selects the players class.
  */
-reliable server function ServerChangeClass(string ClassName)
+reliable server function ServerChangeLoadout(FInfantryClass InfantryClassArchetype, FWeapon WeaponArchetype1, FWeapon WeaponArchetype2, FWeapon WeaponArchetype3, FWeapon WeaponArchetype4)
 {
+	local array<FWeapon> WeaponArchetypes;
 
-}
+	WeaponArchetypes.AddItem(WeaponArchetype1);
+	WeaponArchetypes.AddItem(WeaponArchetype2);
+	WeaponArchetypes.AddItem(WeaponArchetype3);
+	WeaponArchetypes.AddItem(WeaponArchetype4);
 
-/**
- * Resets the player's equipment loadout.
- */
-exec function ResetEquipment()
-{
-	if (InvManager != None)
-		FInventoryManager(InvManager).ResetEquipment();
+	FInventoryManager(InvManager).ResetLoadout(InfantryClassArchetype, WeaponArchetypes);
 }
 
 defaultproperties

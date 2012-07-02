@@ -5,48 +5,26 @@
  */
 class FInventoryManager extends InventoryManager;
 
-// Total number of equipment slots.
-const EquipmentSlots=4;
+const MaxLoadoutSize=4;
 
-// The requested equipment archetype in each slot.
-var FWeapon RequestedEquipment[EquipmentSlots];
+var FWeapon CurrentWeaponArchetypes[MaxLoadoutSize];
 
 replication
 {
 	if (bNetDirty)
-		RequestedEquipment;
-}
-
-/**
- * Sets the requested equipment for the given equipment slot.
- */
-reliable server function SelectEquipment(byte Slot, int EquipmentIndex)
-{
-	// Ensure equipment slot is not out of bounds.
-	if (Slot >= 0 && Slot < EquipmentSlots)
-	{
-		// Set the requested equipment slot to the weapon info for the given equipment name.
-		RequestedEquipment[Slot] = FMapInfo(WorldInfo.GetMapInfo()).Weapons[EquipmentIndex];
-
-		// Update the omnimenu
-		if (FPlayerController(Instigator.Controller).myHUD != None)
-			FHUD(FPlayerController(Instigator.Controller).myHUD).GFxOmniMenu.Invalidate("equipment selection");
-	}
-	else
-	{
-		`log("Failed to select equipment! Equipment slot" @ Slot @ "is out of bounds!");
-	}
+	CurrentWeaponArchetypes;
 }
 
 /**
  * Clears the player's inventory and populates it with the requested equipment.
  */
-reliable server function ResetEquipment()
+reliable server function ResetLoadout(FInfantryClass InfantryClassArchetype, array<FWeapon> WeaponArchetypes)
 {
-	local FWeapon InfantryEquipment;
+	local FWeapon WeaponArchetype;
+	local FWeapon Weapon;
 	local FMagazine Magazine;
-	local byte EquipmentSlot;
-	local byte MagazineCount;
+	local int MagazineCount;
+	local int i;
 
 	// Need to be standing on a barracks to re-equip.
 	if (FStructure_Barracks(FPawn(Instigator).Base) != None)
@@ -54,30 +32,34 @@ reliable server function ResetEquipment()
 		// Remove old inventory.
 		DiscardInventory();
 
+		for (i = 0; i < MaxLoadoutSize; i++)
+			CurrentWeaponArchetypes[i] = None;
+
 		// Equip each requested equipment.
-		for (EquipmentSlot = 0; EquipmentSlot < EquipmentSlots; EquipmentSlot++)
+		foreach WeaponArchetypes(WeaponArchetype, i)
 		{
 			// If there is a selection in the requested equipment slot.
-			if (RequestedEquipment[EquipmentSlot] != None)
+			if (WeaponArchetype != None)
 			{
 				// Spawn the equipment.
-				InfantryEquipment = Spawn(RequestedEquipment[EquipmentSlot].Class, Owner,,,, RequestedEquipment[EquipmentSlot]);
+				CurrentWeaponArchetypes[i] = WeaponArchetype;
+				Weapon = Spawn(WeaponArchetype.Class, Owner,,,, WeaponArchetype);
 
 				// Add the equipment to the inventory.
-				AddInventory(InfantryEquipment);
+				AddInventory(Weapon);
 
 				// Add default magazines to inventory.
-				if (FWeapon_Firearm(InfantryEquipment) != None)
+				if (FWeapon_Firearm(Weapon) != None)
 				{
 					for (MagazineCount = 0; MagazineCount < 4; MagazineCount++)
 					{
 						Magazine = FMagazine(CreateInventory(class'FMagazine'));
-						Magazine.AmmoFor = InfantryEquipment.Name;
+						Magazine.AmmoFor = Weapon.Name;
 					}
 
 					// Reload the weapon if there's a magazine available.
 					if (Magazine != None)
-						FWeapon_Firearm(InfantryEquipment).ServerReload();
+						FWeapon_Firearm(Weapon).ServerReload();
 				}
 			}
 		}
