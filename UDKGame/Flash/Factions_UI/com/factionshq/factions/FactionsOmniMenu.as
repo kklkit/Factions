@@ -153,7 +153,17 @@ public class FactionsOmniMenu extends MovieClip {
 	private function updateEquipmentLabels():void {
 		for (var i:int = 0; i < infantryEquipmentLabels.length; ++i) {
 			data.infantryEquipmentLabels.requestItemAt(i, function(item:Object):void {
-				infantryEquipmentLabels[i].text = item as String;
+				if (item == null)
+				{
+					infantryEquipmentLabels[i].visible = false;
+					infantryEquipmentLists[i].visible = false;
+				}
+				else
+				{
+					infantryEquipmentLabels[i].visible = true;
+					infantryEquipmentLists[i].visible = true;
+					infantryEquipmentLabels[i].text = item as String;
+				}
 			});
 		}
 	}
