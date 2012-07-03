@@ -171,6 +171,7 @@ public class FactionsOmniMenu extends MovieClip {
 	
 	private function updateEquipmentSelection():void {
 		for (var i:int = 0; i < infantryEquipmentLists.length; ++i) {
+			data.infantryEquipmentNames[i].invalidate();
 			infantryEquipmentLists[i].selectedIndex = data.infantryEquipmentNames[i].indexOf(data.infantryEquipmentSelectionNames.requestItemAt(i) as String);
 		}
 	}
@@ -263,10 +264,8 @@ public class FactionsOmniMenu extends MovieClip {
 			data.teamSpectatorPlayerNames.invalidate();
 			updateTeamSelection();
 		} else if (item == "infantry equipment labels") {
-			data.infantryEquipmentLabels.invalidate();
 			updateEquipmentLabels();
 		} else if (item == "infantry equipment selection") {
-			data.infantryEquipmentNames.invalidate();
 			updateEquipmentSelection();
 		} else if (item == "vehicle equipment") {
 			data.vehicleWeaponNames[0].invalidate();

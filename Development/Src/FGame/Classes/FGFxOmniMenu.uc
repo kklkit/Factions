@@ -302,9 +302,13 @@ function array<string> InfantryEquipmentNames(int Slot)
 	local FWeapon WeaponArchetype;
 	local array<string> Data;
 
-	foreach FMapInfo(GetPC().WorldInfo.GetMapInfo()).Weapons(WeaponArchetype)
+	if (SelectedInfantryClassArchetype != None && Slot < SelectedInfantryClassArchetype.LoadoutSlots.Length)
 	{
-		Data.AddItem(WeaponArchetype.ItemName);
+		foreach FMapInfo(GetPC().WorldInfo.GetMapInfo()).Weapons(WeaponArchetype)
+		{
+			if (WeaponArchetype.WeaponClassArchetype == SelectedInfantryClassArchetype.LoadoutSlots[Slot])
+				Data.AddItem(WeaponArchetype.ItemName);
+		}
 	}
 
 	return Data;
