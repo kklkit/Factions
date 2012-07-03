@@ -157,6 +157,7 @@ public class FactionsOmniMenu extends MovieClip {
 				{
 					infantryEquipmentLabels[i].visible = false;
 					infantryEquipmentLists[i].visible = false;
+					infantryEquipmentLists[i].selectedIndex = -1;
 				}
 				else
 				{
