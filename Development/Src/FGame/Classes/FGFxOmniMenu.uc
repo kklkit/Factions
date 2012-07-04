@@ -243,13 +243,13 @@ function array<string> InfantryPresetNames()
 {
 	local array<string> Data;
 
-	Data.AddItem("Commando");
+	Data.AddItem("Trooper");
 	Data.AddItem("Defender");
 	Data.AddItem("Ranger");
 	Data.AddItem("Grenadier");
 	Data.AddItem("Rifleman");
 	Data.AddItem("Sniper");
-	Data.AddItem("Engineer");
+	Data.AddItem("Technician");
 	Data.AddItem("Medic");
 	Data.AddItem("Sapper");
 	Data.AddItem("Scout");

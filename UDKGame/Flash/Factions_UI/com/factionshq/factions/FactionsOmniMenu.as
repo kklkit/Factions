@@ -28,6 +28,7 @@ public class FactionsOmniMenu extends MovieClip {
 	public var blueTeamList:ScrollingList;
 	
 	// Infantry
+	public var infantryPresetLabel:Label;
 	public var infantryPresetNameBox:TextInput;
 	public var infantryPresetsList:ScrollingList;
 	public var infantryClassLabel:Label;
@@ -125,6 +126,7 @@ public class FactionsOmniMenu extends MovieClip {
 	private function infantryScript():void {
 		menuButtonBar.selectedIndex = 2;
 		
+		infantryPresetLabel.text = "Preset:";
 		infantryClassLabel.text = "Class:";
 		
 		// Presets
