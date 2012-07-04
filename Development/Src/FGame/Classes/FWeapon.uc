@@ -6,9 +6,10 @@
 class FWeapon extends UDKWeapon
 	perobjectlocalized;
 
-var() FWeaponClass WeaponClassArchetype;
-var() FWeaponAttachment AttachmentArchetype;
+var(Archetype) FWeaponClass WeaponClassArchetype;
+var(Archetype) FWeaponAttachment AttachmentArchetype;
 var() Vector DrawOffset;
+var(Sounds)	array<SoundCue>	WeaponFireSound;
 var int MaxAmmoCount;
 
 replication
@@ -153,6 +154,41 @@ simulated function TimeWeaponEquipping()
 	AttachWeaponTo(Instigator.Mesh);
 
 	Super.TimeWeaponEquipping();
+}
+
+/**
+ * Plays a sound on the instigator.
+ */
+simulated function WeaponPlaySound(SoundCue Sound, optional float NoiseLoudness)
+{
+	if (Sound != None && Instigator != None)
+	{
+		Instigator.PlaySound(Sound, False, True);
+	}
+}
+
+/**
+ * Play the weapon's firing sound.
+ */
+simulated function PlayFiringSound()
+{
+	if (CurrentFireMode < WeaponFireSound.Length)
+	{
+		if (WeaponFireSound[CurrentFireMode] != None)
+		{
+			MakeNoise(1.0);
+			WeaponPlaySound(WeaponFireSound[CurrentFireMode]);
+		}
+	}
+}
+
+/**
+ * @extends
+ */
+simulated function FireAmmunition()
+{
+	PlayFiringSound();
+	Super.FireAmmunition();
 }
 
 defaultproperties
