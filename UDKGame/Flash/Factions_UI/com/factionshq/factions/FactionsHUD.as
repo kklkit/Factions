@@ -3,6 +3,7 @@
 import flash.display.*;
 import flash.events.*;
 import flash.external.*;
+import flash.geom.ColorTransform;
 import flash.text.*;
 import scaleform.gfx.*;
 
@@ -95,6 +96,35 @@ public class FactionsHUD extends MovieClip {
 			currentResearch.text = research + " (" + mins + ":" + zeroPad(secs, 2) + ")";
 			currentResearch.textColor = 0x000000;
 		}
+	}
+	
+	public function updateVehicleHealth(health:int, healthMax:int):void {
+		var vehicleBody:DisplayObject = bottomLeftHUD.getChildByName('vehicleBody');
+		var colorInfo:ColorTransform = vehicleBody.transform.colorTransform;
+		var percent:Number = health / healthMax;
+		
+		if (percent > 0.66) {
+			colorInfo.color = 0x00ff00;
+		} else if (percent > 0.33) {
+			colorInfo.color = 0xffff00;
+		} else {
+			colorInfo.color = 0xff0000;
+		}
+		
+		vehicleBody.transform.colorTransform = colorInfo;
+	}
+	
+	public function updateVehicleRotation(rotation:int):void {
+		var vehicleBody:DisplayObject = bottomLeftHUD.getChildByName('vehicleBody');
+		vehicleBody.rotation = rotation;
+	}
+	
+	public function showVehicleHUD(showHUD:Boolean):void {
+		var vehicleBody:DisplayObject = bottomLeftHUD.getChildByName('vehicleBody');
+		var vehicleTurret:DisplayObject = bottomLeftHUD.getChildByName('vehicleTurret');
+		
+		vehicleBody.visible = showHUD;
+		vehicleTurret.visible = showHUD;
 	}
 	
 	public function zeroPad(number:int, width:int):String {

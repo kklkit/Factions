@@ -239,6 +239,7 @@ simulated function RotateTurret(int SeatIndex, Rotator RotationAmount)
 			{
 				TC.RotateController.DesiredBoneRotation += RotationAmount;
 				ApplyTurretConstraints(TC);
+				TurretRotations[i] = TC.RotateController.DesiredBoneRotation;
 
 				if (Role < ROLE_Authority)
 					ServerSetTurretRotation(i, TC.RotateController.DesiredBoneRotation);
@@ -250,9 +251,9 @@ simulated function RotateTurret(int SeatIndex, Rotator RotationAmount)
 /**
  * Sets the weapon rotation on the server.
  */
-unreliable server function ServerSetTurretRotation(int ControlIndex, Rotator TurretRotation)
+unreliable server function ServerSetTurretRotation(int ControlIndex, Rotator NewTurretRotation)
 {
-	TurretControls[ControlIndex].RotateController.DesiredBoneRotation = TurretRotation;
+	TurretControls[ControlIndex].RotateController.DesiredBoneRotation = NewTurretRotation;
 	TurretRotations[ControlIndex] = TurretControls[ControlIndex].RotateController.DesiredBoneRotation;
 }
 

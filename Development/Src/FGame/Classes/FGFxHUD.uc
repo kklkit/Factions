@@ -11,6 +11,7 @@ class FGFxHUD extends FGFxMoviePlayer;
 function TickHud()
 {
 	local FPawn PlayerPawn;
+	local FVehicle PlayerVehicle;
 	local FWeapon PlayerWeapon;
 	local FMagazine Magazine;
 	local FTeamInfo PlayerTeam;
@@ -41,6 +42,18 @@ function TickHud()
 					MagazineCount++;
 
 		UpdateMagazineCount(MagazineCount);
+
+		if (FVehicle(GetPC().Pawn) != None)
+		{
+			ShowVehicleHUD(True);
+			PlayerVehicle = FVehicle(GetPC().Pawn);
+			UpdateVehicleHealth(PlayerVehicle.Health, PlayerVehicle.HealthMax);
+			UpdateVehicleRotation(-(PlayerVehicle.TurretRotations[0].Yaw * UnrRotToDeg));
+		}
+		else
+		{
+			ShowVehicleHUD(False);
+		}
 
 		PlayerTeam = FTeamInfo(PlayerPawn.GetTeam());
 
@@ -135,6 +148,24 @@ function UpdateCurrentResearch(string ResearchName, int SecsLeft)
 {
 	if (bMovieIsOpen)
 		ActionScriptVoid("_root.updateCurrentResearch");
+}
+
+function ShowVehicleHUD(bool ShowHUD)
+{
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.showVehicleHUD");
+}
+
+function UpdateVehicleHealth(int Health, int HealthMax)
+{
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.updateVehicleHealth");
+}
+
+function UpdateVehicleRotation(int Rotation)
+{
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.updateVehicleRotation");
 }
 
 defaultproperties
