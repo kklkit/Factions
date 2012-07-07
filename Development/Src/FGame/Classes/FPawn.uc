@@ -5,6 +5,9 @@
  */
 class FPawn extends UDKPawn;
 
+var DynamicLightEnvironmentComponent LightEnvironment;
+var TeamInfo LastTeam;
+
 // Weapon attachment
 var repnotify FWeaponAttachment WeaponAttachmentArchetype;
 var FWeaponAttachment WeaponAttachment;
@@ -15,11 +18,6 @@ var float Bob;
 var	float AppliedBob;
 var float BobTime;
 var	Vector WalkBob;
-
-// The last team the player was on before joining their current team
-var TeamInfo LastTeam;
-
-var DynamicLightEnvironmentComponent LightEnvironment;
 
 replication
 {
@@ -60,6 +58,16 @@ simulated event PostInitAnimTree(SkeletalMeshComponent SkelComp)
 		RightRecoilNode = GameSkelCtrl_Recoil(Mesh.FindSkelControl('RightRecoilNode'));
 		FlyingDirOffset = AnimNodeAimOffset(Mesh.FindAnimNode('FlyingDirOffset'));
 	}
+}
+
+/**
+ * @extends
+ */
+function AddDefaultInventory()
+{
+	Super.AddDefaultInventory();
+
+	FInventoryManager(InvManager).EquipLoadout();
 }
 
 /**
@@ -268,21 +276,6 @@ simulated function UpdateWeaponAttachment()
 			}
 		}
 	}
-}
-
-/**
- * Selects the players class.
- */
-reliable server function ServerChangeLoadout(FInfantryClass InfantryClassArchetype, FWeapon WeaponArchetype1, FWeapon WeaponArchetype2, FWeapon WeaponArchetype3, FWeapon WeaponArchetype4)
-{
-	local array<FWeapon> WeaponArchetypes;
-
-	WeaponArchetypes.AddItem(WeaponArchetype1);
-	WeaponArchetypes.AddItem(WeaponArchetype2);
-	WeaponArchetypes.AddItem(WeaponArchetype3);
-	WeaponArchetypes.AddItem(WeaponArchetype4);
-
-	FInventoryManager(InvManager).ResetLoadout(InfantryClassArchetype, WeaponArchetypes);
 }
 
 defaultproperties

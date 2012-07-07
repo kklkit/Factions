@@ -105,7 +105,7 @@ function SelectInfantryLoadout(array<string> EquipmentNames)
 			if (WeaponArchetype.ItemName == WeaponName)
 				WeaponArchetypes[i] = WeaponArchetype;
 
-	FPawn(GetPC().Pawn).ServerChangeLoadout(SelectedInfantryClassArchetype, WeaponArchetypes[0], WeaponArchetypes[1], WeaponArchetypes[2], WeaponArchetypes[3]);
+	FPlayerController(GetPC()).ServerChangeLoadout(SelectedInfantryClassArchetype, WeaponArchetypes[0], WeaponArchetypes[1], WeaponArchetypes[2], WeaponArchetypes[3]);
 
 	Invalidate("infantry equipment selection");
 }
@@ -221,15 +221,15 @@ function array<string> InfantryEquipment()
 {
 	local array<string> Data;
 	local int WeaponIndex;
-	local FInventoryManager PlayerInventory;
+	local FPlayerController PlayerController;
 
-	PlayerInventory = FInventoryManager(GetPC().Pawn.InvManager);
+	PlayerController = FPlayerController(GetPC());
 
-	for (WeaponIndex = 0; WeaponIndex < class'FInventoryManager'.const.MaxLoadoutSize; WeaponIndex++)
+	for (WeaponIndex = 0; WeaponIndex < class'FPlayerController'.const.MaxLoadoutSlots; WeaponIndex++)
 	{
-		if (PlayerInventory.CurrentWeaponArchetypes[WeaponIndex] != None)
+		if (PlayerController.CurrentWeaponArchetypes[WeaponIndex] != None)
 		{
-			Data.InsertItem(WeaponIndex, PlayerInventory.CurrentWeaponArchetypes[WeaponIndex].ItemName);
+			Data.InsertItem(WeaponIndex, PlayerController.CurrentWeaponArchetypes[WeaponIndex].ItemName);
 		}
 	}
 

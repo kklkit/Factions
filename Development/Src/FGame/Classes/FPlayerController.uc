@@ -5,6 +5,8 @@
  */
 class FPlayerController extends UDKPlayerController;
 
+const MaxLoadoutSlots=4;
+
 var Vector LastMouseWorldLocation;
 
 var float CommanderCameraSpeed;
@@ -18,10 +20,17 @@ var SceneCapture2DComponent MinimapCaptureComponent;
 var Vector MinimapCaptureLocation;
 var Rotator MinimapCaptureRotation;
 
+// Inventory
+var FInfantryClass CurrentInfantryClassArchetype;
+var FWeapon CurrentWeaponArchetypes[MaxLoadoutSlots];
+
 replication
 {
 	if (bNetDirty)
 		PlacingStructure;
+
+	if (bNetOwner)
+		CurrentInfantryClassArchetype, CurrentWeaponArchetypes;
 }
 
 /**
@@ -125,6 +134,41 @@ function BuildVehicle(FVehicle VehicleArchetype, array<FVehicleWeapon> VehicleWe
 	VF = FStructure_VehicleFactory(Pawn.Base);
 	if (VF != None)
 		VF.BuildVehicle(PlayerReplicationInfo, VehicleArchetype, VehicleWeaponArchetypes);
+}
+
+/**
+ * Packs the weapon arguments and calls SetLoadout.
+ */
+reliable server function ServerChangeLoadout(FInfantryClass InfantryClassArchetype, FWeapon WeaponArchetype1, FWeapon WeaponArchetype2, FWeapon WeaponArchetype3, FWeapon WeaponArchetype4)
+{
+	local FWeapon WeaponArchetypes[4];
+
+	WeaponArchetypes[0] = WeaponArchetype1;
+	WeaponArchetypes[1] = WeaponArchetype2;
+	WeaponArchetypes[2] = WeaponArchetype3;
+	WeaponArchetypes[3] = WeaponArchetype4;
+
+	SetLoadout(InfantryClassArchetype, WeaponArchetypes);
+	if (Pawn != None)
+		Pawn.AddDefaultInventory();
+}
+
+/**
+ * Sets the player's loadout.
+ */
+function SetLoadout(FInfantryClass InfantryClassArchetype, FWeapon WeaponArchetypes[MaxLoadoutSlots])
+{
+	local int i;
+
+	CurrentInfantryClassArchetype = InfantryClassArchetype;
+
+	for (i = 0; i < MaxLoadoutSlots; i++)
+	{
+		if (WeaponArchetypes[i] != None)
+			CurrentWeaponArchetypes[i] = WeaponArchetypes[i];
+		else
+			CurrentWeaponArchetypes[i] = None;
+	}
 }
 
 // Structure placement

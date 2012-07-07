@@ -5,62 +5,44 @@
  */
 class FInventoryManager extends InventoryManager;
 
-const MaxLoadoutSize=4;
-
-var FWeapon CurrentWeaponArchetypes[MaxLoadoutSize];
-
-replication
-{
-	if (bNetDirty)
-	CurrentWeaponArchetypes;
-}
-
 /**
- * Clears the player's inventory and populates it with the requested equipment.
+ * Spawns the loadout items and adds them to the inventory.
  */
-reliable server function ResetLoadout(FInfantryClass InfantryClassArchetype, array<FWeapon> WeaponArchetypes)
+function EquipLoadout()
 {
+	local FPlayerController PlayerController;
+	local FWeapon SpawnedWeapon;
 	local FWeapon WeaponArchetype;
-	local FWeapon Weapon;
 	local FMagazine Magazine;
 	local int MagazineCount;
 	local int i;
 
-	// Need to be standing on a barracks to re-equip.
-	if (FStructure_Barracks(FPawn(Instigator).Base) != None)
+	PlayerController = FPlayerController(Pawn(Owner).Controller);
+
+	// Remove old inventory.
+	DiscardInventory();
+
+	// Equip each requested equipment.
+	for (i = 0; i < class'FPlayerController'.const.MaxLoadoutSlots; i++)
 	{
-		// Remove old inventory.
-		DiscardInventory();
+		WeaponArchetype = PlayerController.CurrentWeaponArchetypes[i];
 
-		for (i = 0; i < MaxLoadoutSize; i++)
-			CurrentWeaponArchetypes[i] = None;
-
-		// Equip each requested equipment.
-		foreach WeaponArchetypes(WeaponArchetype, i)
+		if (WeaponArchetype != None)
 		{
-			// If there is a selection in the requested equipment slot.
-			if (WeaponArchetype != None)
+			SpawnedWeapon = Spawn(WeaponArchetype.Class, Owner,,,, WeaponArchetype);
+			AddInventory(SpawnedWeapon);
+
+			// Add default magazines to inventory.
+			if (FWeapon_Firearm(SpawnedWeapon) != None)
 			{
-				// Spawn the equipment.
-				CurrentWeaponArchetypes[i] = WeaponArchetype;
-				Weapon = Spawn(WeaponArchetype.Class, Owner,,,, WeaponArchetype);
-
-				// Add the equipment to the inventory.
-				AddInventory(Weapon);
-
-				// Add default magazines to inventory.
-				if (FWeapon_Firearm(Weapon) != None)
+				for (MagazineCount = 0; MagazineCount < 4; MagazineCount++)
 				{
-					for (MagazineCount = 0; MagazineCount < 4; MagazineCount++)
-					{
-						Magazine = FMagazine(CreateInventory(class'FMagazine'));
-						Magazine.AmmoFor = Weapon.Name;
-					}
-
-					// Reload the weapon if there's a magazine available.
-					if (Magazine != None)
-						FWeapon_Firearm(Weapon).ServerReload();
+					Magazine = FMagazine(CreateInventory(class'FMagazine'));
+					Magazine.AmmoFor = SpawnedWeapon.Name;
 				}
+
+				if (Magazine != None)
+					FWeapon_Firearm(SpawnedWeapon).ServerReload();
 			}
 		}
 	}
