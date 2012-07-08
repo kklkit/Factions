@@ -125,8 +125,6 @@ simulated event PostBeginPlay()
 	}
 
 	InitializeTurrets();
-
-	AirSpeed = MaxSpeed;
 }
 
 /**
