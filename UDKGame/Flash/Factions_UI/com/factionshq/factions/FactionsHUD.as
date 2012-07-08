@@ -90,10 +90,10 @@ public class FactionsHUD extends MovieClip {
 			currentResearch.text = "No research!";
 			currentResearch.textColor = 0xFF0000;
 		} else {
-			var mins:int = Math.floor(secsLeft / 60);
-			var secs:int = secsLeft % 60;
+			var mins:String = Math.floor(secsLeft / 60).toString();
+			var secs:String = zeroPad(secsLeft % 60, 2);
 			
-			currentResearch.text = research + " (" + mins + ":" + zeroPad(secs, 2) + ")";
+			currentResearch.text = research + " (" + mins + ":" + secs + ")";
 			currentResearch.textColor = 0x000000;
 		}
 	}
@@ -127,10 +127,14 @@ public class FactionsHUD extends MovieClip {
 		vehicleTurret.visible = showHUD;
 	}
 	
-	public function updateRoundTimer(timeString:String) {
+	public function updateRoundTimer(secsElapsed:int) {
 		var roundTimer:TextField = topRightHUD.getChildByName("roundTimer") as TextField;
 		
-		roundTimer.text = timeString;
+		var hrs:String = Math.floor(secsElapsed / 3600).toString();
+		var mins:String = zeroPad(Math.floor(secsElapsed % 3600) / 60, 2);
+		var secs:String = zeroPad(secsElapsed % 60, 2);
+		
+		roundTimer.text = ((hrs == "0") ? "" : hrs + ":") + mins + ":" + secs;
 	}
 	
 	public function zeroPad(number:int, width:int):String {
