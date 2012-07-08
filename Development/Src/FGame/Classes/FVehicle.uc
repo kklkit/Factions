@@ -162,6 +162,20 @@ event OnPropertyChange(name PropName)
 }
 
 /**
+ * @extends
+ */
+function bool TryToDrive(Pawn P)
+{
+
+	if (!bIsDisabled && (Team == FVEHICLE_UNSET_TEAM || !bTeamLocked || !WorldInfo.Game.bTeamGame || WorldInfo.GRI.OnSameTeam(Self, P)))
+	{
+		return Super.TryToDrive(P);
+	}
+
+	return False;
+}
+
+/**
  * Updates the SeatMask.
  */
 function SetSeatStoragePawn(int SeatIndex, Pawn PawnToSit)
@@ -665,4 +679,5 @@ defaultproperties
 	DestroyOnPenetrationThreshold=50.0
 	DestroyOnPenetrationDuration=1.0
 	bAlwaysRelevant=True
+	bTeamLocked=True
 }
