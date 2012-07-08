@@ -21,6 +21,8 @@ function TickHud()
 	if (!bMovieIsOpen)
 		return;
 
+	UpdateRoundTimer(FormatTime(GetPC().WorldInfo.GRI.ElapsedTime));
+
 	// Get the actual player pawn (infantry pawn).
 	PlayerPawn = GetPlayerPawn();
 
@@ -75,6 +77,26 @@ function TickHud()
 		UpdateHealth(0, 1);
 		UpdateAmmo(0, 1);
 	}
+}
+
+/**
+ * Returns a time string for the given seconds.
+ */
+static function string FormatTime(int Seconds)
+{
+	local int Hours, Mins;
+	local string NewTimeString;
+
+	Hours = Seconds / 3600;
+	Seconds -= Hours * 3600;
+	Mins = Seconds / 60;
+	Seconds -= Mins * 60;
+	if (Hours > 0)
+		NewTimeString = (Hours > 9 ? String(Hours) : "0" $ String(Hours)) $ ":";
+	NewTimeString = NewTimeString $ (Mins > 9 ? String(Mins) : "0" $ String(Mins)) $ ":";
+	NewTimeString = NewTimeString $ (Seconds > 9 ? String(Seconds) : "0" $ String(Seconds));
+
+	return NewTimeString;
 }
 
 /*********************************************************************************************
@@ -166,6 +188,12 @@ function UpdateVehicleRotation(int Rotation)
 {
 	if (bMovieIsOpen)
 		ActionScriptVoid("_root.updateVehicleRotation");
+}
+
+function UpdateRoundTimer(string TimeString)
+{
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.updateRoundTimer");
 }
 
 defaultproperties

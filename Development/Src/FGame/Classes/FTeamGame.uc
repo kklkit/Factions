@@ -42,6 +42,16 @@ event PreBeginPlay()
 /**
  * @extends
  */
+function StartMatch()
+{
+	Super.StartMatch();
+
+	GotoState('MatchInProgress');
+}
+
+/**
+ * @extends
+ */
 event PlayerController Login(string Portal, string Options, const UniqueNetID UniqueID, out string ErrorMessage)
 {
 	local PlayerController PC;
@@ -277,6 +287,17 @@ function DriverLeftVehicle(Vehicle Vehicle, Pawn Pawn)
 	foreach WorldInfo.AllControllers(class'FPlayerController', PlayerController)
 		if (PlayerController.ViewTarget == Vehicle)
 			PlayerController.SetViewTarget(Pawn);
+}
+
+state MatchInProgress
+{
+	/**
+	 * @extends
+	 */
+	function bool MatchIsInProgress()
+	{
+		return True;
+	}
 }
 
 defaultproperties

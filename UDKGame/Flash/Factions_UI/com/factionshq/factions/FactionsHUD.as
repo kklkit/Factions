@@ -127,6 +127,12 @@ public class FactionsHUD extends MovieClip {
 		vehicleTurret.visible = showHUD;
 	}
 	
+	public function updateRoundTimer(timeString:String) {
+		var roundTimer:TextField = topRightHUD.getChildByName("roundTimer") as TextField;
+		
+		roundTimer.text = timeString;
+	}
+	
 	public function zeroPad(number:int, width:int):String {
 		var ret:String = "" + number;
 		while (ret.length < width)
