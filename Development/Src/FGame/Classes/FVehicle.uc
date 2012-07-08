@@ -9,6 +9,7 @@ class FVehicle extends UDKVehicle
 	notplaceable;
 
 const FVEHICLE_UNSET_TEAM=255;
+const NumVehicleWeapons=2;
 
 enum ERotationConstraint
 {
@@ -62,11 +63,11 @@ var(Factions) bool bIsCommandVehicle;
 var(Weapons) array<TurretControl> TurretControls;
 var(Weapons) array<VehicleHardpoint> VehicleHardpoints;
 
-var repnotify Rotator TurretRotations[2];
+var repnotify Rotator TurretRotations[NumVehicleWeapons];
 var repnotify WeaponFireEffect WeaponEffect;
 
-var FVehicleWeapon VehicleWeapons[2];
-var VehicleWeaponAttachment VehicleWeaponAttachments[2];
+var FVehicleWeapon VehicleWeapons[NumVehicleWeapons];
+var VehicleWeaponAttachment VehicleWeaponAttachments[NumVehicleWeapons];
 
 replication
 {
@@ -424,6 +425,23 @@ event bool DriverLeave(bool bForceLeave)
 	}
 
 	return bResult;
+}
+
+/**
+ * @extends
+ */
+function DriverLeft()
+{
+	local FVehicleWeapon VehicleWeapon;
+	local int i;
+
+	Super.DriverLeft();
+
+	for (i = 0; i < NumVehicleWeapons; i++)
+	{
+		VehicleWeapon = VehicleWeapons[i];
+		VehicleWeapon.StopFire(VehicleWeapon.CurrentFireMode);
+	}
 }
 
 /**
