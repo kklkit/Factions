@@ -92,6 +92,11 @@ simulated function SetupPreview()
 }
 
 /**
+ * @extends
+ */
+function SetMovementPhysics();
+
+/**
  * Structures must have a CurrentState set.
  * 
  * @extends
