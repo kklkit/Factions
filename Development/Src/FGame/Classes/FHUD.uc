@@ -18,10 +18,6 @@ var Material MinimapMaterial;
 var Vector2D MinimapPadding;
 var Color LineColor;
 
-// Commander mouse dragging
-var bool bDragging;
-var Vector2D DragStart;
-
 /**
  * @extends
  */
@@ -84,7 +80,6 @@ function DrawHud()
 {
 	Super.DrawHud();
 
-	DrawSelectionBox();
 	DrawMinimap();
 }
 
@@ -139,40 +134,6 @@ function DrawMinimap()
 			}
 		}
 	}
-}
-
-/**
- * Draws the drag-selection box when the mouse is held down.
- */
-function DrawSelectionBox()
-{
-	local Vector2D MousePosition;
-
-	if (!bDragging)
-		return;
-
-	MousePosition = GetMousePosition();
-	
-	Canvas.SetDrawColor(0, 255, 0);
-	Canvas.SetPos(Min(DragStart.X, MousePosition.X), Min(DragStart.Y, MousePosition.Y));
-	Canvas.DrawBox(Max(DragStart.X, MousePosition.X) - Min(DragStart.X, MousePosition.X), Max(DragStart.Y, MousePosition.Y) - Min(DragStart.Y, MousePosition.Y));
-}
-
-/**
- * Sets the mouse dragging status to true.
- */
-function BeginDragging()
-{
-	bDragging = True;
-	DragStart = GetMousePosition();
-}
-
-/**
- * Sets the mouse dragging status to false.
- */
-function EndDragging()
-{
-	bDragging = False;
 }
 
 /**

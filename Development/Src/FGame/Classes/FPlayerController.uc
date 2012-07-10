@@ -8,12 +8,14 @@ class FPlayerController extends UDKPlayerController;
 const MaxLoadoutSlots=4;
 
 var Vector LastMouseWorldLocation;
+var bool bIsFiring;
 
 var float CommanderCameraSpeed;
 var name StateBeforeCommanding;
 
 var FStructure PlacingStructure;
 var Vector NextPlacingStructurePreviewLocation; // The location the structure preview should be moved to in the next tick
+var Rotator NextPlacingStructurePreviewRotation;
 
 // Minimap
 var SceneCapture2DComponent MinimapCaptureComponent;
@@ -61,11 +63,23 @@ simulated event PlayerTick(float DeltaTime)
 
 	// Update minimap capture position
 	if (MinimapCaptureComponent != None)
+	{
 		MinimapCaptureComponent.SetView(MinimapCaptureLocation, MinimapCaptureRotation);
+	}
 
 	// Send the structure placement location to the server if it has changed
-	if (PlacingStructure != None && PlacingStructure.Location != NextPlacingStructurePreviewLocation)
-		ServerUpdateStructurePlacement(NextPlacingStructurePreviewLocation);
+	if (PlacingStructure != None)
+	{
+		if (PlacingStructure.Location != NextPlacingStructurePreviewLocation)
+		{
+			ServerUpdateStructureLocation(NextPlacingStructurePreviewLocation);
+		}
+
+		if (PlacingStructure.Rotation != NextPlacingStructurePreviewRotation)
+		{
+			ServerUpdateStructureRotation(NextPlacingStructurePreviewRotation);
+		}
+	}
 }
 
 /**
@@ -194,11 +208,24 @@ reliable server function ServerBeginStructurePlacement(byte StructureIndex, Vect
 /**
  * Updates the location of the current structure preview.
  */
-unreliable server function ServerUpdateStructurePlacement(Vector NewLocation)
+unreliable server function ServerUpdateStructureLocation(Vector NewLocation)
 {
-	// Check to make sure structure preview exists before settings its location
 	if (PlacingStructure != None)
+	{
 		PlacingStructure.SetLocation(NewLocation);
+	}
+}
+
+/**
+ * Updates the rotation of the current structure preview.
+ */
+unreliable server function ServerUpdateStructureRotation(Rotator NewRotation)
+{
+	if (PlacingStructure != None)
+	{
+		NewRotation.Pitch = 0;
+		PlacingStructure.SetRotation(NewRotation);
+	}
 }
 
 /**
@@ -366,7 +393,16 @@ simulated state Commanding
 	{
 		// Update the placing structure location
 		if (PlacingStructure != None)
-			NextPlacingStructurePreviewLocation = LastMouseWorldLocation;
+		{
+			if (!bIsFiring)
+			{
+				NextPlacingStructurePreviewLocation = LastMouseWorldLocation;
+			}
+			else
+			{
+				NextPlacingStructurePreviewRotation = Rotator(LastMouseWorldLocation - PlacingStructure.Location);
+			}
+		}
 
 		Global.PlayerTick(DeltaTime);
 	}
@@ -459,11 +495,7 @@ simulated state Commanding
 	 */
 	exec function StartFire(optional byte FireModeNum)
 	{
-		FHUD(myHUD).BeginDragging();
-
-		// Place the structure if in structure placement mode
-		if (PlacingStructure != None)
-			ServerPlaceStructure();
+		bIsFiring = True;
 	}
 
 	/**
@@ -471,7 +503,11 @@ simulated state Commanding
 	 */
 	exec function StopFire(optional byte FireModeNum)
 	{
-		FHUD(myHUD).EndDragging();
+		bIsFiring = False;
+
+		// Place the structure if in structure placement mode
+		if (PlacingStructure != None)
+			ServerPlaceStructure();
 	}
 
 	/**
