@@ -313,6 +313,14 @@ function ReduceDamage(out int Damage, pawn injured, Controller instigatedBy, vec
 	Super.ReduceDamage(Damage, Injured, InstigatedBy, HitLocation, Momentum, DamageType, DamageCauser);
 }
 
+/**
+ * Sets the friendly fire scale.
+ */
+exec function SetFriendlyFireScale(float Scale)
+{
+	FriendlyFireScale = Scale;
+}
+
 state MatchInProgress
 {
 	/**
