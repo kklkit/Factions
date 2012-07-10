@@ -11,7 +11,7 @@ var() name VehicleSpawnSocket;
 /**
  * Builds a vehicle in the vehicle factory.
  */
-function BuildVehicle(PlayerReplicationInfo Player, FVehicle VehicleArchetype, array<FVehicleWeapon> VehicleWeaponArchetypes)
+function BuildVehicle(PlayerController Player, FVehicle VehicleArchetype, array<FVehicleWeapon> VehicleWeaponArchetypes)
 {
 	`log("Vehicle factory not active! Unable to build vehicle for" @ Player.GetHumanReadableName());
 }
@@ -22,7 +22,7 @@ state Active
 	/**
 	 * @extends
 	 */
-	function BuildVehicle(PlayerReplicationInfo Player, FVehicle VehicleArchetype, array<FVehicleWeapon> VehicleWeaponArchetypes)
+	function BuildVehicle(PlayerController Player, FVehicle VehicleArchetype, array<FVehicleWeapon> VehicleWeaponArchetypes)
 	{
 		local int i;
 		local Vector VehicleSpawnLocation;
@@ -31,7 +31,7 @@ state Active
 		local FVehicleWeapon VehicleWeaponArchetype;
 
 		Mesh.GetSocketWorldLocationAndRotation(VehicleSpawnSocket, VehicleSpawnLocation);
-		PlayerTeam = FTeamInfo(Player.Team);
+		PlayerTeam = FTeamInfo(Player.PlayerReplicationInfo.Team);
 		if (PlayerTeam != None && PlayerTeam.Resources >= VehicleArchetype.ResourceCost)
 		{
 			PlayerTeam.Resources -= VehicleArchetype.ResourceCost;
@@ -41,6 +41,8 @@ state Active
 
 			foreach VehicleWeaponArchetypes(VehicleWeaponArchetype, i)
 				SpawnedVehicle.SetWeapon(i, VehicleWeaponArchetype);
+
+			SpawnedVehicle.TryToDrive(Player.Pawn);
 		}
 	}
 }

@@ -133,7 +133,7 @@ function BuildVehicle(FVehicle VehicleArchetype, array<FVehicleWeapon> VehicleWe
 	// Get the VF the player is standing on
 	VF = FStructure_VehicleFactory(Pawn.Base);
 	if (VF != None)
-		VF.BuildVehicle(PlayerReplicationInfo, VehicleArchetype, VehicleWeaponArchetypes);
+		VF.BuildVehicle(Self, VehicleArchetype, VehicleWeaponArchetypes);
 }
 
 /**
