@@ -18,6 +18,9 @@ enum ETeams
 	TEAM_BLUE
 };
 
+var float FriendlyFireScale;
+var float TeammateBoost;
+
 /**
  * @extends
  */
@@ -287,6 +290,27 @@ function DriverLeftVehicle(Vehicle Vehicle, Pawn Pawn)
 	foreach WorldInfo.AllControllers(class'FPlayerController', PlayerController)
 		if (PlayerController.ViewTarget == Vehicle)
 			PlayerController.SetViewTarget(Pawn);
+}
+
+/**
+ * @extends
+ */
+function ReduceDamage(out int Damage, pawn injured, Controller instigatedBy, vector HitLocation, out vector Momentum, class<DamageType> DamageType, Actor DamageCauser)
+{
+	local int InjuredTeam, InstigatorTeam;
+
+	InjuredTeam = Injured.GetTeamNum();
+	InstigatorTeam = instigatedBy.GetTeamNum();
+
+	// Scale friendly fire damage
+	if (instigatedBy != None && instigatedBy != injured.Controller && (Injured.DrivenVehicle == None || InstigatedBy.Pawn != Injured.DrivenVehicle) &&
+		InjuredTeam != PSEUDO_TEAM_SPECTATOR && InstigatorTeam != PSEUDO_TEAM_SPECTATOR && InjuredTeam == InstigatorTeam)
+	{
+		Momentum *= TeammateBoost;
+		Damage *= FriendlyFireScale;
+	}
+
+	Super.ReduceDamage(Damage, Injured, InstigatedBy, HitLocation, Momentum, DamageType, DamageCauser);
 }
 
 state MatchInProgress
