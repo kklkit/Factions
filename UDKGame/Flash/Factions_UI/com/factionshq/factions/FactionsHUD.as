@@ -5,6 +5,7 @@ import flash.events.*;
 import flash.external.*;
 import flash.geom.ColorTransform;
 import flash.text.*;
+import fl.motion.Color;
 import scaleform.gfx.*;
 
 public class FactionsHUD extends MovieClip {
@@ -76,12 +77,6 @@ public class FactionsHUD extends MovieClip {
 		var commHealthBar:DisplayObject = topLeftHUD.getChildByName('commHealthBar');
 		var colorInfo:ColorTransform = commHealthBar.transform.colorTransform;
 		
-		// Check for divide by zero
-		if (healthMax === 0) {
-			health = 0;
-			healthMax = 1;
-		}
-		
 		if (name == "") {
 			commName.text = "No commander!";
 			commName.textColor = 0xff0000;
@@ -90,14 +85,18 @@ public class FactionsHUD extends MovieClip {
 			commName.textColor = 0x000000;
 		}
 		
+		// Check for divide by zero
+		if (healthMax === 0) {
+			health = 0;
+			healthMax = 1;
+		}
+		
 		var percent:Number = health / healthMax;
 		
-		if (percent > 0.66) {
-			colorInfo.color = 0x00ff00;
-		} else if (percent > 0.33) {
-			colorInfo.color = 0xffff00;
+		if (percent > 0.5) {
+			colorInfo.color = Color.interpolateColor(0xffff00, 0x00ff00, percent * 2);
 		} else {
-			colorInfo.color = 0xff0000;
+			colorInfo.color = Color.interpolateColor(0xff0000, 0xffff00, percent * 2);
 		}
 		
 		commHealthBar.transform.colorTransform = colorInfo;
@@ -149,7 +148,7 @@ public class FactionsHUD extends MovieClip {
 		vehicleTurret.visible = showHUD;
 	}
 	
-	public function updateRoundTimer(secsElapsed:int) {
+	public function updateRoundTimer(secsElapsed:int):void {
 		var roundTimer:TextField = topRightHUD.getChildByName("roundTimer") as TextField;
 		
 		var hrs:String = Math.floor(secsElapsed / 3600).toString();
