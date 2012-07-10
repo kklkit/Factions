@@ -75,11 +75,18 @@ public class FactionsHUD extends MovieClip {
 		
 		if (name == "") {
 			commName.text = "No commander!";
-			commName.textColor = 0xFF0000;
 		} else {
 			commName.text = name;
-			commName.textColor = 0x000000;
-				//todo: colour name according to health
+		}
+		
+		var percent:Number = health / healthMax;
+		
+		if (percent > 0.66) {
+			commName.textColor = 0x00ff00;
+		} else if (percent > 0.33) {
+			commName.textColor = 0xffff00;
+		} else {
+			commName.textColor = 0xff0000;
 		}
 	}
 	
