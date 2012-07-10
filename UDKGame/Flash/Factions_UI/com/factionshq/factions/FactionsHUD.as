@@ -12,6 +12,7 @@ public class FactionsHUD extends MovieClip {
 	public var topRightHUD:MovieClip;
 	public var bottomLeftHUD:MovieClip;
 	public var bottomRightHUD:MovieClip;
+	public var commHealthBarStartPositionX:Number = topLeftHUD.getChildByName('commHealthBar').x;
 	public var healthBarStartPositionX:Number = bottomLeftHUD.getChildByName('healthBar').x;
 	public var ammoBarStartPositionX:Number = bottomRightHUD.getChildByName('ammoBar').x;
 	
@@ -72,22 +73,36 @@ public class FactionsHUD extends MovieClip {
 	
 	public function updateCommStatus(name:String, health:int, healthMax:int):void {
 		var commName:TextField = topLeftHUD.getChildByName('commName') as TextField;
+		var commHealthBar:DisplayObject = topLeftHUD.getChildByName('commHealthBar');
+		var colorInfo:ColorTransform = commHealthBar.transform.colorTransform;
+		
+		// Check for divide by zero
+		if (healthMax === 0) {
+			health = 0;
+			healthMax = 1;
+		}
 		
 		if (name == "") {
 			commName.text = "No commander!";
+			commName.textColor = 0xff0000;
 		} else {
 			commName.text = name;
+			commName.textColor = 0x000000;
 		}
 		
 		var percent:Number = health / healthMax;
 		
 		if (percent > 0.66) {
-			commName.textColor = 0x00ff00;
+			colorInfo.color = 0x00ff00;
 		} else if (percent > 0.33) {
-			commName.textColor = 0xffff00;
+			colorInfo.color = 0xffff00;
 		} else {
-			commName.textColor = 0xff0000;
+			colorInfo.color = 0xff0000;
 		}
+		
+		commHealthBar.transform.colorTransform = colorInfo;
+		
+		commHealthBar.x = -commHealthBar.width + commHealthBarStartPositionX + (percent * commHealthBar.width);
 	}
 	
 	public function updateCurrentResearch(research:String, secsLeft:int):void {
@@ -95,7 +110,7 @@ public class FactionsHUD extends MovieClip {
 		
 		if (research == "") {
 			currentResearch.text = "No research!";
-			currentResearch.textColor = 0xFF0000;
+			currentResearch.textColor = 0xff0000;
 		} else {
 			var mins:String = Math.floor(secsLeft / 60).toString();
 			var secs:String = zeroPad(secsLeft % 60, 2);
