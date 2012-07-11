@@ -126,13 +126,13 @@ public class FactionsHUD extends MovieClip {
 		var colorInfo:ColorTransform = vehicleBody.transform.colorTransform;
 		var percent:Number = health / healthMax;
 		
-		if (percent > 0.66) {
-			colorInfo.color = 0x00ff00;
-		} else if (percent > 0.33) {
-			colorInfo.color = 0xffff00;
-		} else {
-			colorInfo.color = 0xff0000;
-		}
+		if (percent > 0.5) {
+            var px = (percent - 0.5) / 0.5;                        
+            colorInfo.color = Color.interpolateColor(0xffff00, 0x00ff00, px);
+        } else {
+            var px = percent / 0.5;
+            colorInfo.color = Color.interpolateColor(0xff0000, 0xffff00, px);
+        }
 		
 		vehicleBody.transform.colorTransform = colorInfo;
 	}
