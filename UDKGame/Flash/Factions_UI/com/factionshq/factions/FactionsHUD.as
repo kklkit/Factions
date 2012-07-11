@@ -94,11 +94,13 @@ public class FactionsHUD extends MovieClip {
 		var percent:Number = health / healthMax;
 		
 		if (percent > 0.5) {
-			colorInfo.color = Color.interpolateColor(0xffff00, 0x00ff00, percent * 2);
-		} else {
-			colorInfo.color = Color.interpolateColor(0xff0000, 0xffff00, percent * 2);
-		}
-		
+            var px = (percent - 0.5) / 0.5;                        
+            colorInfo.color = Color.interpolateColor(0xffff00, 0x00ff00, px);
+        } else {
+            var px = percent / 0.5;
+            colorInfo.color = Color.interpolateColor(0xff0000, 0xffff00, px);
+        }
+
 		commHealthBar.transform.colorTransform = colorInfo;
 		
 		commHealthBar.x = -commHealthBar.width + commHealthBarStartPositionX + (percent * commHealthBar.width);
