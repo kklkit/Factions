@@ -93,12 +93,10 @@ public class FactionsHUD extends MovieClip {
 		
 		var percent:Number = health / healthMax;
 		
-		if (percent > 0.5) {
-            var px = (percent - 0.5) / 0.5;                        
-            colorInfo.color = Color.interpolateColor(0xffff00, 0x00ff00, px);
+		if (percent > 0.5) {        
+            colorInfo.color = Color.interpolateColor(0xffff00, 0x00ff00, (percent - 0.5) / 0.5);
         } else {
-            var px = percent / 0.5;
-            colorInfo.color = Color.interpolateColor(0xff0000, 0xffff00, px);
+            colorInfo.color = Color.interpolateColor(0xff0000, 0xffff00, percent / 0.5);
         }
 
 		commHealthBar.transform.colorTransform = colorInfo;
@@ -126,12 +124,10 @@ public class FactionsHUD extends MovieClip {
 		var colorInfo:ColorTransform = vehicleBody.transform.colorTransform;
 		var percent:Number = health / healthMax;
 		
-		if (percent > 0.5) {
-            var px = (percent - 0.5) / 0.5;                        
-            colorInfo.color = Color.interpolateColor(0xffff00, 0x00ff00, px);
+		if (percent > 0.5) {                      
+            colorInfo.color = Color.interpolateColor(0xffff00, 0x00ff00, (percent - 0.5) / 0.5);
         } else {
-            var px = percent / 0.5;
-            colorInfo.color = Color.interpolateColor(0xff0000, 0xffff00, px);
+            colorInfo.color = Color.interpolateColor(0xff0000, 0xffff00, percent / 0.5);
         }
 		
 		vehicleBody.transform.colorTransform = colorInfo;
