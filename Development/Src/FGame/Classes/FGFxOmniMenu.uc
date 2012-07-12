@@ -89,7 +89,7 @@ function SelectInfantryPreset(string PresetName)
 	local int i;
 	local InfantryPreset Preset;
 
-	i = InfantryPresets.Find('Name', PresetName);
+	i = PresetName == "" ? 0 : InfantryPresets.Find('Name', PresetName);
 
 	if (i != INDEX_NONE)
 	{

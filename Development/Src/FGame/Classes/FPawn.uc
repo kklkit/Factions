@@ -65,9 +65,20 @@ simulated event PostInitAnimTree(SkeletalMeshComponent SkelComp)
  */
 function AddDefaultInventory()
 {
+	local FPlayerController PC;
+
 	Super.AddDefaultInventory();
 
-	FInventoryManager(InvManager).EquipLoadout();
+	PC = FPlayerController(Controller);
+
+	if (PC != None && PC.CurrentInfantryClassArchetype == None)
+	{
+		FHUD(PC.myHUD).GFxOmniMenu.SelectInfantryPreset("");
+	}
+	else
+	{
+		FInventoryManager(InvManager).EquipLoadout();
+	}
 }
 
 /**
