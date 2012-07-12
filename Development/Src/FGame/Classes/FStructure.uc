@@ -150,7 +150,7 @@ simulated state Preview
 	 */
 	event bool HealDamage(int Amount, Controller Healer, class<DamageType> DamageType)
 	{
-		if (Team == 255)
+		if (Team == class'FTeamGame'.const.TEAM_NONE)
 			Team = Healer.GetTeamNum();
 
 		Health = Min(HealthMax, Health + Amount);
@@ -212,7 +212,7 @@ defaultproperties
 	bCollideWorld=False
 	bAlwaysRelevant=True
 
-	Team=255 // TODO use a constant for the no team variable
+	Team=255 // class'FTeamGame'.const.TEAM_NONE
 	Health=1
 	HealthMax=1000
 }

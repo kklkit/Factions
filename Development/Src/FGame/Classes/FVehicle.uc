@@ -8,7 +8,6 @@ class FVehicle extends UDKVehicle
 	perobjectlocalized
 	notplaceable;
 
-const FVEHICLE_UNSET_TEAM=255;
 const NumVehicleWeapons=2;
 
 enum ERotationConstraint
@@ -113,7 +112,7 @@ simulated event PostBeginPlay()
 	{
 		InitializeSeats();
 
-		if (InitialTeam != FVEHICLE_UNSET_TEAM)
+		if (InitialTeam != class'FTeamGame'.const.TEAM_NONE)
 		{
 			Team = InitialTeam;
 			NotifyTeamChanged();
@@ -165,7 +164,7 @@ event OnPropertyChange(name PropName)
 function bool TryToDrive(Pawn P)
 {
 
-	if (!bIsDisabled && (Team == FVEHICLE_UNSET_TEAM || !bTeamLocked || !WorldInfo.Game.bTeamGame || WorldInfo.GRI.OnSameTeam(Self, P)))
+	if (!bIsDisabled && (Team == class'FTeamGame'.const.TEAM_NONE || !bTeamLocked || !WorldInfo.Game.bTeamGame || WorldInfo.GRI.OnSameTeam(Self, P)))
 	{
 		return Super.TryToDrive(P);
 	}
@@ -673,7 +672,7 @@ defaultproperties
 
 	Seats(0)={()}
 
-	InitialTeam=FVEHICLE_UNSET_TEAM
+	InitialTeam=255 // class'FTeamGame'.const.TEAM_NONE
 	DestroyOnPenetrationThreshold=50.0
 	DestroyOnPenetrationDuration=1.0
 	bAlwaysRelevant=True

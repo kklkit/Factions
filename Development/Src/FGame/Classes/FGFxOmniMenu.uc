@@ -66,7 +66,7 @@ function SelectTeam(string TeamName)
 	else if (TeamName ~= "blue")
 		TeamIndex = TEAM_BLUE;
 	else if (TeamName ~= "spectator")
-		TeamIndex = class'FTeamGame'.const.PSEUDO_TEAM_SPECTATOR;
+		TeamIndex = class'FTeamGame'.const.TEAM_NONE;
 
 	// Send the team change request to the server.
 	GetPC().ServerChangeTeam(TeamIndex);

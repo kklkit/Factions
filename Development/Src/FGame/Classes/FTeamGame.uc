@@ -5,11 +5,7 @@
  */
 class FTeamGame extends UDKGame;
 
-/*
- * The change team code needs to be given a team index when changing teams.
- * Since spectator does not have a team index, this value is used instead.
- */
-const PSEUDO_TEAM_SPECTATOR=255;
+const TEAM_NONE=255;
 
 // Enumeration of all the available teams
 enum ETeams
@@ -123,7 +119,7 @@ function bool ChangeTeam(Controller Other, int N, bool bNewTeam)
 	}
 
 	// Handle joining spectator
-	if (N == PSEUDO_TEAM_SPECTATOR)
+	if (N == TEAM_NONE)
 	{
 		SetTeam(Other, None, bNewTeam);
 		return True;
@@ -304,7 +300,7 @@ function ReduceDamage(out int Damage, pawn injured, Controller instigatedBy, vec
 
 	// Scale friendly fire damage
 	if (instigatedBy != None && instigatedBy != injured.Controller && (Injured.DrivenVehicle == None || InstigatedBy.Pawn != Injured.DrivenVehicle) &&
-		InjuredTeam != PSEUDO_TEAM_SPECTATOR && InstigatorTeam != PSEUDO_TEAM_SPECTATOR && InjuredTeam == InstigatorTeam)
+		InjuredTeam != TEAM_NONE && InstigatorTeam != TEAM_NONE && InjuredTeam == InstigatorTeam)
 	{
 		Momentum *= TeammateBoost;
 		Damage *= FriendlyFireScale;
