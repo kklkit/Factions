@@ -28,10 +28,10 @@ public class FactionsOmniMenu extends MovieClip {
 	public var blueTeamList:ScrollingList;
 	
 	// Infantry
-	public var infantryPresetLabel:Label;
 	public var infantryPresetNameBox:TextInput;
+	public var infantryPresetAddButton:Button;
+	public var infantryPresetRemoveButton:Button;
 	public var infantryPresetsList:ScrollingList;
-	public var infantryClassLabel:Label;
 	public var infantryClassButtonBar:ButtonBar;
 	public var infantryEquipmentLabel0:Label;
 	public var infantryEquipmentLabel1:Label;
@@ -126,11 +126,12 @@ public class FactionsOmniMenu extends MovieClip {
 	private function infantryScript():void {
 		menuButtonBar.selectedIndex = 2;
 		
-		infantryPresetLabel.text = "Preset:";
-		infantryClassLabel.text = "Class:";
-		
 		// Presets
+		infantryPresetAddButton.textField.text = "+";
+		infantryPresetRemoveButton.textField.text = "-";
+		
 		infantryPresetsList.dataProvider = data.infantryPresetNames;
+		infantryPresetsList.addEventListener(ListEvent.ITEM_CLICK, selectInfantryPreset);
 		
 		// Equipment list
 		for (var i:int = 0; i < infantryEquipmentLists.length; ++i) {
@@ -189,6 +190,13 @@ public class FactionsOmniMenu extends MovieClip {
 	private function selectInfantryClass(e:ButtonBarEvent):void {
 		data.infantryClassNames.requestItemAt(e.index, function(item:Object) {
 			ExternalInterface.call("SelectInfantryClass", item);
+		});
+	}
+	
+	private function selectInfantryPreset(e:ListEvent):void {
+		data.infantryPresetNames.requestItemAt(e.index, function(item:Object) {
+			ExternalInterface.call("SelectInfantryPreset", item);
+			infantryPresetNameBox.text = item as String;
 		});
 	}
 	
@@ -265,6 +273,8 @@ public class FactionsOmniMenu extends MovieClip {
 			data.teamBluePlayerNames.invalidate();
 			data.teamSpectatorPlayerNames.invalidate();
 			updateTeamSelection();
+		} else if (item == "infantry class selection") {
+			updateClassSelection();
 		} else if (item == "infantry equipment labels") {
 			updateEquipmentLabels();
 		} else if (item == "infantry equipment selection") {

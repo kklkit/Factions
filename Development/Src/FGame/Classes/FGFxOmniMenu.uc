@@ -4,7 +4,16 @@
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FGFxOmniMenu extends FGFxMoviePlayer
-	dependson(FVehicleWeapon);
+	dependson(FVehicleWeapon)
+	config(Presets);
+
+struct InfantryPreset {
+	var string Name;
+	var string InfantryClass;
+	var array<string> Weapons;
+};
+
+var config array<InfantryPreset> InfantryPresets;
 
 // A list of elements that need to be invalidated the next time the movie clip is open.
 var array<string> PendingInvalidates;
@@ -73,6 +82,24 @@ function SelectTeam(string TeamName)
 }
 
 /**
+ * Select the player's infantry preset.
+ */
+function SelectInfantryPreset(string PresetName)
+{
+	local int i;
+	local InfantryPreset Preset;
+
+	i = InfantryPresets.Find('Name', PresetName);
+
+	if (i != INDEX_NONE)
+	{
+		Preset = InfantryPresets[i];
+		SelectInfantryClass(Preset.InfantryClass);
+		SelectInfantryLoadout(Preset.Weapons);
+	}
+}
+
+/**
  * Select the player's class.
  */
 function SelectInfantryClass(string ClassName)
@@ -83,6 +110,7 @@ function SelectInfantryClass(string ClassName)
 		if (InfantryClassArchetype.MenuName == ClassName)
 			SelectedInfantryClassArchetype = InfantryClassArchetype;
 
+	Invalidate("infantry class selection");
 	Invalidate("infantry equipment labels");
 	Invalidate("infantry equipment selection");
 }
@@ -245,22 +273,12 @@ function array<string> InfantryEquipment()
 function array<string> InfantryPresetNames()
 {
 	local array<string> Data;
+	local InfantryPreset Preset;
 
-	Data.AddItem("Trooper");
-	Data.AddItem("Defender");
-	Data.AddItem("Ranger");
-	Data.AddItem("Grenadier");
-	Data.AddItem("Rifleman");
-	Data.AddItem("Sniper");
-	Data.AddItem("Technician");
-	Data.AddItem("Medic");
-	Data.AddItem("Sapper");
-	Data.AddItem("Scout");
-	Data.AddItem("Hacker");
-	Data.AddItem("Infiltrator");
-	Data.AddItem("Custom 1");
-	Data.AddItem("Custom 2");
-	Data.AddItem("Custom 3");
+	foreach InfantryPresets(Preset)
+	{
+		Data.AddItem(Preset.Name);
+	}
 
 	return Data;
 }
