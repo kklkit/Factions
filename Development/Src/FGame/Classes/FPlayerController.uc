@@ -7,15 +7,18 @@ class FPlayerController extends UDKPlayerController;
 
 const MaxLoadoutSlots=4;
 
+// Input
 var Vector LastMouseWorldLocation;
 var bool bIsFiring;
 
+// Commander
 var float CommanderCameraSpeed;
 var name StateBeforeCommanding;
 
+// Structure placement
 var FStructure PlacingStructure;
-var Vector NextPlacingStructurePreviewLocation; // The location the structure preview should be moved to in the next tick
-var Rotator NextPlacingStructurePreviewRotation;
+var Vector NextPlacingStructureLocation;
+var Rotator NextPlacingStructureRotation;
 
 // Minimap
 var SceneCapture2DComponent MinimapCaptureComponent;
@@ -70,14 +73,14 @@ simulated event PlayerTick(float DeltaTime)
 	// Send the structure placement location to the server if it has changed
 	if (PlacingStructure != None)
 	{
-		if (PlacingStructure.Location != NextPlacingStructurePreviewLocation)
+		if (PlacingStructure.Location != NextPlacingStructureLocation)
 		{
-			ServerUpdateStructureLocation(NextPlacingStructurePreviewLocation);
+			ServerUpdateStructureLocation(NextPlacingStructureLocation);
 		}
 
-		if (PlacingStructure.Rotation != NextPlacingStructurePreviewRotation)
+		if (PlacingStructure.Rotation != NextPlacingStructureRotation)
 		{
-			ServerUpdateStructureRotation(NextPlacingStructurePreviewRotation);
+			ServerUpdateStructureRotation(NextPlacingStructureRotation);
 		}
 	}
 }
@@ -396,11 +399,11 @@ simulated state Commanding
 		{
 			if (!bIsFiring)
 			{
-				NextPlacingStructurePreviewLocation = LastMouseWorldLocation;
+				NextPlacingStructureLocation = LastMouseWorldLocation;
 			}
 			else
 			{
-				NextPlacingStructurePreviewRotation = Rotator(LastMouseWorldLocation - PlacingStructure.Location);
+				NextPlacingStructureRotation = Rotator(LastMouseWorldLocation - PlacingStructure.Location);
 			}
 		}
 
