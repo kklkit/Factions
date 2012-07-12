@@ -40,7 +40,8 @@ state Active
 			SpawnedVehicle.Mesh.WakeRigidBody();
 
 			foreach VehicleWeaponArchetypes(VehicleWeaponArchetype, i)
-				SpawnedVehicle.SetWeapon(i, VehicleWeaponArchetype);
+				if (VehicleWeaponArchetype != None)
+					SpawnedVehicle.SetWeapon(i, VehicleWeaponArchetype);
 
 			SpawnedVehicle.TryToDrive(Player.Pawn);
 		}

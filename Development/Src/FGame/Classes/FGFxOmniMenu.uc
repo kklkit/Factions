@@ -131,15 +131,16 @@ function BuildVehicle(string ChassisName, array<string> WeaponNames)
 {
 	local FMapInfo MapInfo;
 	local FVehicleWeapon VehicleWeaponArchetype;
-	local array<FVehicleWeapon> VehicleWeaponArchetypes;
+	local FVehicleWeapon VehicleWeaponArchetypes[2]; // class'FVehicle'.const.NumVehicleWeapons
 	local string WeaponName;
+	local int i;
 
 	MapInfo = FMapInfo(GetPC().WorldInfo.GetMapInfo());
 
-	foreach WeaponNames(WeaponName)
+	foreach WeaponNames(WeaponName, i)
 		foreach MapInfo.VehicleWeapons(VehicleWeaponArchetype)
 			if (VehicleWeaponArchetype.ItemName == WeaponName)
-				VehicleWeaponArchetypes.AddItem(VehicleWeaponArchetype);
+				VehicleWeaponArchetypes[i] = VehicleWeaponArchetype;
 
 	FPlayerController(GetPC()).ServerSpawnVehicle(SelectedVehicleArchetype, VehicleWeaponArchetypes[0], VehicleWeaponArchetypes[1]);
 }

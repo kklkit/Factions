@@ -8,6 +8,7 @@ class FVehicle extends UDKVehicle
 	perobjectlocalized
 	notplaceable;
 
+// Number of active vehicle weapons
 const NumVehicleWeapons=2;
 
 enum ERotationConstraint
@@ -65,6 +66,7 @@ var(Weapons) array<VehicleHardpoint> VehicleHardpoints;
 var repnotify Rotator TurretRotations[NumVehicleWeapons];
 var repnotify WeaponFireEffect WeaponEffect;
 
+// Active vehicle weapons
 var FVehicleWeapon VehicleWeapons[NumVehicleWeapons];
 var VehicleWeaponAttachment VehicleWeaponAttachments[NumVehicleWeapons];
 
@@ -451,7 +453,8 @@ function DriverLeft()
 	for (i = 0; i < NumVehicleWeapons; i++)
 	{
 		VehicleWeapon = VehicleWeapons[i];
-		VehicleWeapon.StopFire(VehicleWeapon.CurrentFireMode);
+		if (VehicleWeapon != None)
+			VehicleWeapon.StopFire(VehicleWeapon.CurrentFireMode);
 	}
 }
 
@@ -501,6 +504,9 @@ function SetWeapon(int WeaponSlot, FVehicleWeapon WeaponArchetype)
 
 	if (InvManager.AddInventory(VehicleWeapon))
 	{
+		// Remove old weapon
+		InvManager.RemoveFromInventory(VehicleWeapons[WeaponSlot]);
+
 		VehicleWeapon.WeaponIndex = WeaponSlot;
 		VehicleWeapon.MyVehicle = Self;
 		VehicleWeapon.SetBase(Self);
