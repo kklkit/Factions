@@ -101,11 +101,12 @@ function SelectInfantryLoadout(array<string> EquipmentNames)
 	MapInfo = FMapInfo(GetPC().WorldInfo.GetMapInfo());
 
 	foreach EquipmentNames(WeaponName, i)
-		foreach MapInfo.Weapons(WeaponArchetype)
-			if (WeaponArchetype.ItemName == WeaponName)
-				WeaponArchetypes[i] = WeaponArchetype;
+		if (WeaponName != "")
+			foreach MapInfo.Weapons(WeaponArchetype)
+				if (WeaponArchetype.ItemName == WeaponName)
+					WeaponArchetypes[i] = WeaponArchetype;
 
-	FPlayerController(GetPC()).ServerChangeLoadout(SelectedInfantryClassArchetype, WeaponArchetypes[0], WeaponArchetypes[1], WeaponArchetypes[2], WeaponArchetypes[3]);
+	FPlayerController(GetPC()).ServerSetLoadout(SelectedInfantryClassArchetype, WeaponArchetypes[0], WeaponArchetypes[1], WeaponArchetypes[2], WeaponArchetypes[3]);
 
 	Invalidate("infantry equipment selection");
 }
@@ -226,6 +227,7 @@ function array<string> InfantryEquipment()
 
 	PlayerController = FPlayerController(GetPC());
 
+	Data.Length = class'FPlayerController'.const.MaxLoadoutSlots;
 	for (WeaponIndex = 0; WeaponIndex < class'FPlayerController'.const.MaxLoadoutSlots; WeaponIndex++)
 	{
 		if (PlayerController.CurrentWeaponArchetypes[WeaponIndex] != None)

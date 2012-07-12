@@ -202,7 +202,7 @@ public class FactionsOmniMenu extends MovieClip {
 			
 			if (equipmentIndex >= 0)
 			{
-				equipmentNames.push(data.infantryEquipmentNames[i].requestItemAt(equipmentIndex));
+				equipmentNames[i] = data.infantryEquipmentNames[i].requestItemAt(equipmentIndex);
 			}
 		}
 		

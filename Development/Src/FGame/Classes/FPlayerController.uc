@@ -156,7 +156,7 @@ function BuildVehicle(FVehicle VehicleArchetype, array<FVehicleWeapon> VehicleWe
 /**
  * Packs the weapon arguments and calls SetLoadout.
  */
-reliable server function ServerChangeLoadout(FInfantryClass InfantryClassArchetype, FWeapon WeaponArchetype1, FWeapon WeaponArchetype2, FWeapon WeaponArchetype3, FWeapon WeaponArchetype4)
+reliable server function ServerSetLoadout(FInfantryClass InfantryClassArchetype, FWeapon WeaponArchetype1, FWeapon WeaponArchetype2, FWeapon WeaponArchetype3, FWeapon WeaponArchetype4)
 {
 	local FWeapon WeaponArchetypes[4];
 
@@ -166,8 +166,6 @@ reliable server function ServerChangeLoadout(FInfantryClass InfantryClassArchety
 	WeaponArchetypes[3] = WeaponArchetype4;
 
 	SetLoadout(InfantryClassArchetype, WeaponArchetypes);
-	if (Pawn != None)
-		Pawn.AddDefaultInventory();
 }
 
 /**
@@ -181,11 +179,18 @@ function SetLoadout(FInfantryClass InfantryClassArchetype, FWeapon WeaponArchety
 
 	for (i = 0; i < MaxLoadoutSlots; i++)
 	{
-		if (WeaponArchetypes[i] != None)
+		if (WeaponArchetypes[i] != None && WeaponArchetypes[i].WeaponClassArchetype == CurrentInfantryClassArchetype.LoadoutSlots[i])
+		{
 			CurrentWeaponArchetypes[i] = WeaponArchetypes[i];
+		}
 		else
+		{
 			CurrentWeaponArchetypes[i] = None;
+		}
 	}
+
+	if (Pawn != None)
+		Pawn.AddDefaultInventory();
 }
 
 // Structure placement
