@@ -73,12 +73,20 @@ function AddDefaultInventory()
 
 	if (PC != None && PC.CurrentInfantryClassArchetype == None)
 	{
-		FHUD(PC.myHUD).GFxOmniMenu.SelectInfantryPreset("");
+		ClientSelectDefaultInfantryPreset();
 	}
 	else
 	{
 		FInventoryManager(InvManager).EquipLoadout();
 	}
+}
+
+/**
+ * Selects an infantry preset.
+ */
+reliable client function ClientSelectDefaultInfantryPreset()
+{
+	FHUD(PlayerController(Controller).myHUD).GFxOmniMenu.SelectInfantryPreset("");
 }
 
 /**
