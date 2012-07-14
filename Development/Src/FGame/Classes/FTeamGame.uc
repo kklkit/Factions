@@ -289,6 +289,14 @@ function DriverLeftVehicle(Vehicle Vehicle, Pawn Pawn)
 }
 
 /**
+ * Called when a command vehicle is destroyed.
+ */
+function CommandVehicleDestroyed(Controller Killer)
+{
+	EndGame(Killer.PlayerReplicationInfo, "CommandVehicleDestroyed");
+}
+
+/**
  * @extends
  */
 function ReduceDamage(out int Damage, pawn injured, Controller instigatedBy, vector HitLocation, out vector Momentum, class<DamageType> DamageType, Actor DamageCauser)
@@ -339,4 +347,7 @@ defaultproperties
 	bTeamGame=True
 	bDelayedStart=False
 	bRestartLevel=False
+
+	FriendlyFireScale=1.0
+	TeammateBoost=1.0
 }

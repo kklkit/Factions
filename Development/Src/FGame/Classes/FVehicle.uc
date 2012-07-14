@@ -131,6 +131,19 @@ simulated event PostBeginPlay()
 /**
  * @extends
  */
+function bool Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
+{
+	if (bIsCommandVehicle && Role == ROLE_Authority)
+	{
+		FTeamGame(WorldInfo.Game).CommandVehicleDestroyed(Killer);
+	}
+
+	return Super.Died(Killer, DamageType, HitLocation);
+}
+
+/**
+ * @extends
+ */
 simulated event NotifyTeamChanged()
 {
 	Super.NotifyTeamChanged();
