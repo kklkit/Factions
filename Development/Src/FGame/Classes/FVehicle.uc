@@ -18,6 +18,12 @@ enum ERotationConstraint
 	RC_Roll
 };
 
+enum ESeatCamera
+{
+	SC_Fixed,
+	SC_Free
+};
+
 struct TurretConstraint
 {
 	var() ERotationConstraint RotationConstraint;
@@ -62,6 +68,7 @@ var(Factions) int ResourceCost;
 var(Factions) bool bIsCommandVehicle;
 var(Weapons) array<TurretControl> TurretControls;
 var(Weapons) array<VehicleHardpoint> VehicleHardpoints;
+var(Seats) array<ESeatCamera> SeatCameras;
 
 var repnotify Rotator TurretRotations[NumVehicleWeapons];
 var repnotify WeaponFireEffect WeaponEffect;
@@ -372,6 +379,11 @@ simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out 
 	if (Seats[SeatIndex].CameraTag != '')
 	{
 		Mesh.GetSocketWorldLocationAndRotation(Seats[0].CameraTag, out_CamLoc, out_CamRot);
+		if (SeatIndex < SeatCameras.Length && SeatCameras[SeatIndex] == SC_Free)
+		{
+			out_CamRot.Pitch = GetViewRotation().Pitch;
+			out_CamRot.Yaw = GetViewRotation().Yaw;
+		}
 	}
 	else
 	{
