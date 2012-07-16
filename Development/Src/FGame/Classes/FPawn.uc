@@ -202,22 +202,26 @@ simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
 /**
  * @extends
  */
-simulated function bool CalcCamera( float fDeltaTime, out Vector out_CamLoc, out Rotator out_CamRot, out float out_FOV )
+simulated function bool CalcCamera(float fDeltaTime, out Vector out_CamLoc, out Rotator out_CamRot, out float out_FOV)
 {
-	local bool bUseCamera;
+	local Vector Pos, HitLocation, HitNormal;
 
-	// Set the camera to view from the actor's eyes if in first person
-	if (IsFirstPerson())
+	GetActorEyesViewPoint(out_CamLoc, out_CamRot);
+
+	if (!IsFirstPerson())
 	{
-		GetActorEyesViewPoint(out_CamLoc, out_CamRot);
-		bUseCamera = True;
-	}
-	else
-	{
-		bUseCamera = False;
+		Pos = out_CamLoc - Vector(out_CamRot) * 512.0;
+		if (Trace(HitLocation, HitNormal, Pos, out_CamLoc, False, Vect(0,0,0)) != None)
+		{
+			out_CamLoc = HitLocation + HitNormal * 2;
+		}
+		else
+		{
+			out_CamLoc = Pos;
+		}
 	}
 
-	return bUseCamera;
+	return True;
 }
 
 /**
