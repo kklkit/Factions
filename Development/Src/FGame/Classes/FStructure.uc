@@ -8,7 +8,7 @@ class FStructure extends Vehicle
 	notplaceable;
 
 var() repnotify name CurrentState;
-var() byte Team; // Team index
+var() repnotify byte Team; // Team index
 var() int ResourceCost;
 var array<MaterialInterface> OriginalMaterials;
 
@@ -112,6 +112,23 @@ function bool CheckForErrors()
 	return Super.CheckForErrors();
 }
 
+/**
+ *  Hide all placing mesh for non-commander players
+ */
+simulated function HidePlacingStructurePreview()
+{
+	if (GetALocalPlayerController().GetStateName()!='Commanding' && Team!=class'FTeamGame'.const.TEAM_NONE)
+		Mesh.SetHidden(true);
+}
+
+/**
+ *
+ */
+simulated function UnhideFriendlyStructurePreview(int TeamIndex)
+{
+	if(Mesh.HiddenGame && Team == TeamIndex) Mesh.SetHidden(false);
+}
+
 // Structure is being placed
 auto simulated state Placing
 {
@@ -126,6 +143,13 @@ auto simulated state Placing
 			SetupPreview();
 
 		SetCollisionType(COLLIDE_NoCollision);
+	}
+
+	simulated event ReplicatedEvent(name VarName)
+	{
+		if (VarName == 'Team')
+			HidePlacingStructurePreview();
+			Super.ReplicatedEvent(VarName);
 	}
 }
 
@@ -143,6 +167,9 @@ simulated state Preview
 			SetupPreview();
 
 		SetCollisionType(COLLIDE_TouchWeapons);
+
+		// Unhide friendly preview hidden mesh after being placed
+		UnhideFriendlyStructurePreview(GetALocalPlayerController().GetTeamNum());
 	}
 
 	/**
@@ -185,6 +212,9 @@ simulated state Active
 		if (Worldinfo.NetMode != NM_DedicatedServer)
 			for (i = 0; i < OriginalMaterials.Length; i++)
 				Mesh.SetMaterial(i, OriginalMaterials[i]);
+
+		if (Mesh.HiddenGame) Mesh.SetHidden(false); 
+		// Unhide the mesh if it is hidden because of being an enemy team's preview mesh
 	}
 }
 
