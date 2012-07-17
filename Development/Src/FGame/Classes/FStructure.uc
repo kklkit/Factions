@@ -113,12 +113,22 @@ function bool CheckForErrors()
 }
 
 /**
- *  Hide all placing mesh for non-commander players
+ *  Hide all placing mesh for non-commander players and enemy players
  */
 simulated function HidePlacingStructurePreview()
 {
-	if (GetALocalPlayerController().GetStateName()!='Commanding' && Team!=class'FTeamGame'.const.TEAM_NONE)
+	if (GetALocalPlayerController().GetStateName()!='Commanding'|| (Team!=GetALocalPlayerController().GetTeamNum() && Team!=class'FTeamGame'.const.TEAM_NONE))
 		Mesh.SetHidden(true);
+}
+
+/**
+ * Hide all enemy preview mesh
+ */
+simulated function HideEnemyStructurePreview(int TeamIndex)
+{
+	if (Team!=TeamIndex && Team!=class'FTeamGame'.const.TEAM_NONE)
+		Mesh.SetHidden(true);
+	//DEBUG `log(Team $ " " $ GetALocalPlayerController().GetTeamNum());
 }
 
 /**
@@ -128,6 +138,11 @@ simulated function UnhideFriendlyStructurePreview(int TeamIndex)
 {
 	if(Mesh.HiddenGame && Team == TeamIndex) Mesh.SetHidden(false);
 }
+
+/**
+ * Handle building hiding/unhiding when local player changes team
+ */
+simulated function localPlayerTeamChanged(int TeamIndex);
 
 // Structure is being placed
 auto simulated state Placing
@@ -187,6 +202,15 @@ simulated state Preview
 	
 		return True;
 	}
+
+	/**
+	 * Hide/unhide suitable structure previews when changing team
+	 */
+	simulated function localPlayerTeamChanged(int TeamIndex)
+	{
+		HideEnemyStructurePreview(TeamIndex);
+		UnhideFriendlyStructurePreview(TeamIndex);	
+	}
 }
 
 // Structure has been built
@@ -213,8 +237,8 @@ simulated state Active
 			for (i = 0; i < OriginalMaterials.Length; i++)
 				Mesh.SetMaterial(i, OriginalMaterials[i]);
 
-		if (Mesh.HiddenGame) Mesh.SetHidden(false); 
-		// Unhide the mesh if it is hidden because of being an enemy team's preview mesh
+		// All hidden structure mesh should be visible when built
+		if (Mesh.HiddenGame) Mesh.SetHidden(false); 		
 	}
 }
 
