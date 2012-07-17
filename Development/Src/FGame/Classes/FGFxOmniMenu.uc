@@ -78,7 +78,8 @@ function SelectTeam(string TeamName)
 		TeamIndex = class'FTeamGame'.const.TEAM_NONE;
 
 	// Send the team change request to the server.
-	GetPC().ServerChangeTeam(TeamIndex);
+	if (TeamIndex != GetPC().GetTeamNum())
+		GetPC().ServerChangeTeam(TeamIndex);
 }
 
 /**
