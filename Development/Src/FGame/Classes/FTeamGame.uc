@@ -382,6 +382,7 @@ defaultproperties
 	bTeamGame=True
 	bDelayedStart=False
 	bRestartLevel=False
+	bPauseable=False
 
 	FriendlyFireScale=1.0
 	TeammateBoost=1.0
