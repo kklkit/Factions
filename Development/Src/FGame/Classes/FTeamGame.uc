@@ -335,15 +335,18 @@ function ReduceDamage(out int Damage, pawn injured, Controller instigatedBy, vec
 {
 	local int InjuredTeam, InstigatorTeam;
 
-	InjuredTeam = Injured.GetTeamNum();
-	InstigatorTeam = instigatedBy.GetTeamNum();
-
-	// Scale friendly fire damage
-	if (instigatedBy != None && instigatedBy != injured.Controller && (Injured.DrivenVehicle == None || InstigatedBy.Pawn != Injured.DrivenVehicle) &&
-		InjuredTeam != TEAM_NONE && InstigatorTeam != TEAM_NONE && InjuredTeam == InstigatorTeam)
+	if (instigatedBy != None)
 	{
-		Momentum *= TeammateBoost;
-		Damage *= FriendlyFireScale;
+		InjuredTeam = Injured.GetTeamNum();
+		InstigatorTeam = instigatedBy.GetTeamNum();
+
+		// Scale friendly fire damage
+		if (instigatedBy != injured.Controller && (Injured.DrivenVehicle == None || InstigatedBy.Pawn != Injured.DrivenVehicle) &&
+			InjuredTeam != TEAM_NONE && InstigatorTeam != TEAM_NONE && InjuredTeam == InstigatorTeam)
+		{
+			Momentum *= TeammateBoost;
+			Damage *= FriendlyFireScale;
+		}
 	}
 
 	Super.ReduceDamage(Damage, Injured, InstigatedBy, HitLocation, Momentum, DamageType, DamageCauser);
