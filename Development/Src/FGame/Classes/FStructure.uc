@@ -152,11 +152,12 @@ simulated state Preview
 	{
 		if (Team == class'FTeamGame'.const.TEAM_NONE)
 			Team = Healer.GetTeamNum();
-
-		Health = Min(HealthMax, Health + Amount);
-
-		GotoState('Active');
-
+		else if (Team == Healer.GetTeamNum())  // To build/heal the structure, healer must be the owner team of the structure
+		{
+			Health = Min(HealthMax, Health + Amount);
+			GotoState('Active');
+		}
+	
 		return True;
 	}
 }
