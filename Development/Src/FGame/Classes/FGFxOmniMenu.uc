@@ -68,7 +68,6 @@ function CloseMenu(string FrameLabelOnClose)
 function SelectTeam(string TeamName)
 {
 	local int TeamIndex;
-	local FStructure s;
 
 	// Get the team index for the given team name.
 	if (TeamName ~= "red")
@@ -80,10 +79,6 @@ function SelectTeam(string TeamName)
 
 	// Send the team change request to the server.
 	GetPC().ServerChangeTeam(TeamIndex);
-
-	// Notify local FStructure the team changes for proper structure preview hiding
-	foreach GetPC().AllActors(class'FStructure',s)
-		s.localPlayerTeamChanged(TeamIndex);
 }
 
 /**

@@ -113,36 +113,38 @@ function bool CheckForErrors()
 }
 
 /**
- *  Hide all placing mesh for non-commander players and enemy players
+ *  Hide the structure mesh from non-commander players and enemy players.
  */
 simulated function HidePlacingStructurePreview()
 {
-	if (GetALocalPlayerController().GetStateName()!='Commanding'|| (Team!=GetALocalPlayerController().GetTeamNum() && Team!=class'FTeamGame'.const.TEAM_NONE))
-		Mesh.SetHidden(true);
+	if (WorldInfo.NetMode != NM_DedicatedServer && (!GetALocalPlayerController().IsInState('Commanding') ||
+		(!WorldInfo.GRI.OnSameTeam(Self, GetALocalPlayerController()) && Team != class'FTeamGame'.const.TEAM_NONE)))
+	{
+		Mesh.SetHidden(True);
+	}
 }
 
 /**
- * Hide all enemy preview mesh
+ * Hide the structure mesh if being viewed by opposing team.
  */
-simulated function HideEnemyStructurePreview(int TeamIndex)
+simulated function HideEnemyStructurePreview()
 {
-	if (Team!=TeamIndex && Team!=class'FTeamGame'.const.TEAM_NONE)
-		Mesh.SetHidden(true);
-	//DEBUG `log(Team $ " " $ GetALocalPlayerController().GetTeamNum());
+	if (WorldInfo.NetMode != NM_DedicatedServer && !WorldInfo.GRI.OnSameTeam(Self, GetALocalPlayerController()) && Team != class'FTeamGame'.const.TEAM_NONE)
+	{
+		Mesh.SetHidden(True);
+	}
 }
 
 /**
- *
+ * Show the structure mesh if being viewed by same team.
  */
-simulated function UnhideFriendlyStructurePreview(int TeamIndex)
+simulated function UnhideFriendlyStructurePreview()
 {
-	if(Mesh.HiddenGame && Team == TeamIndex) Mesh.SetHidden(false);
+	if (WorldInfo.NetMode != NM_DedicatedServer && Mesh.HiddenGame && WorldInfo.GRI.OnSameTeam(Self, GetALocalPlayerController()))
+	{
+		Mesh.SetHidden(False);
+	}
 }
-
-/**
- * Handle building hiding/unhiding when local player changes team
- */
-simulated function localPlayerTeamChanged(int TeamIndex);
 
 // Structure is being placed
 auto simulated state Placing
@@ -160,11 +162,15 @@ auto simulated state Placing
 		SetCollisionType(COLLIDE_NoCollision);
 	}
 
+	/**
+	 * @extends
+	 */
 	simulated event ReplicatedEvent(name VarName)
 	{
 		if (VarName == 'Team')
 			HidePlacingStructurePreview();
-			Super.ReplicatedEvent(VarName);
+
+		Super.ReplicatedEvent(VarName);
 	}
 }
 
@@ -184,7 +190,7 @@ simulated state Preview
 		SetCollisionType(COLLIDE_TouchWeapons);
 
 		// Unhide friendly preview hidden mesh after being placed
-		UnhideFriendlyStructurePreview(GetALocalPlayerController().GetTeamNum());
+		UnhideFriendlyStructurePreview();
 	}
 
 	/**
@@ -192,9 +198,14 @@ simulated state Preview
 	 */
 	event bool HealDamage(int Amount, Controller Healer, class<DamageType> DamageType)
 	{
+		// Set structure team to the builder
 		if (Team == class'FTeamGame'.const.TEAM_NONE)
+		{
 			Team = Healer.GetTeamNum();
-		else if (Team == Healer.GetTeamNum())  // To build/heal the structure, healer must be the owner team of the structure
+		}
+
+		// To build/heal the structure, healer must be the owner team of the structure
+		if (WorldInfo.GRI.OnSameTeam(Self, Healer))
 		{
 			Health = Min(HealthMax, Health + Amount);
 			GotoState('Active');
@@ -204,12 +215,14 @@ simulated state Preview
 	}
 
 	/**
-	 * Hide/unhide suitable structure previews when changing team
+	 * @extends
 	 */
-	simulated function localPlayerTeamChanged(int TeamIndex)
+	simulated function NotifyLocalPlayerTeamReceived()
 	{
-		HideEnemyStructurePreview(TeamIndex);
-		UnhideFriendlyStructurePreview(TeamIndex);	
+		Super.NotifyLocalPlayerTeamReceived();
+
+		HideEnemyStructurePreview();
+		UnhideFriendlyStructurePreview();
 	}
 }
 
@@ -238,7 +251,8 @@ simulated state Active
 				Mesh.SetMaterial(i, OriginalMaterials[i]);
 
 		// All hidden structure mesh should be visible when built
-		if (Mesh.HiddenGame) Mesh.SetHidden(false); 		
+		if (Mesh.HiddenGame)
+			Mesh.SetHidden(False); 		
 	}
 }
 
