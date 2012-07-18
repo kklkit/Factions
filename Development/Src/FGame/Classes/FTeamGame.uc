@@ -115,6 +115,8 @@ event PostLogin(PlayerController NewPlayer)
 		// Move the client to spectator state
 		NewPlayer.ClientGotoState('Spectating');
 	}
+
+	NotifyTeamCountChanged();
 }
 
 /**
@@ -134,6 +136,8 @@ function Logout(Controller Exiting)
 			NumPlayers++;
 		}
 	}
+
+	NotifyTeamCountChanged();
 
 	Super.Logout(Exiting);
 }
@@ -233,6 +237,8 @@ function SetTeam(Controller Other, TeamInfo NewTeam, bool bNewTeam)
 	if ((PlayerController(Other) != None) && (LocalPlayer(PlayerController(Other).Player) != None))
 		foreach AllActors(class'Actor', A)
 			A.NotifyLocalPlayerTeamReceived();
+
+	NotifyTeamCountChanged();
 }
 
 /**
@@ -288,6 +294,17 @@ function CreateTeam(int TeamIndex)
 	Team.TeamIndex = TeamIndex;
 
 	GameReplicationInfo.SetTeam(TeamIndex, Team);
+}
+
+/**
+ * Notifies all players that the team count has changed.
+ */
+function NotifyTeamCountChanged()
+{
+	local FPlayerController PC;
+
+	foreach WorldInfo.AllControllers(class'FPlayerController', PC)
+		PC.ClientNotifyTeamCountChanged();
 }
 
 /**

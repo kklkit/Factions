@@ -57,9 +57,6 @@ simulated function NotifyLocalPlayerTeamReceived()
 {
 	Super.NotifyLocalPlayerTeamReceived();
 
-	// Signal that the team information has changed.
-	GFxOmniMenu.Invalidate("team");
-
 	// Close the movie clips that display mouse cursors. This is a work-around for the mouse cursor disappearing after changing teams.
 	GFxOmniMenu.Close(False);
 	GFxCommanderHUD.Close(False);

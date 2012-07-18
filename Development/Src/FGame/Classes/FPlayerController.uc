@@ -193,6 +193,15 @@ function SetLoadout(FInfantryClass InfantryClassArchetype, FWeapon WeaponArchety
 		Pawn.AddDefaultInventory();
 }
 
+/**
+ * Called when team player count changes (used to update GUI).
+ */
+reliable client function ClientNotifyTeamCountChanged()
+{
+	if (myHUD != None)
+		FHUD(myHUD).GFxOmniMenu.Invalidate("team");
+}
+
 // Structure placement
 
 /**
