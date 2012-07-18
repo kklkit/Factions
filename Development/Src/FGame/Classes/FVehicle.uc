@@ -21,7 +21,8 @@ enum ERotationConstraint
 enum ESeatCamera
 {
 	SC_Fixed,
-	SC_Free
+	SC_Free,
+	SC_Follow_Mesh_Free
 };
 
 struct TurretConstraint
@@ -379,11 +380,21 @@ simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out 
 	if (Seats[SeatIndex].CameraTag != '')
 	{
 		Mesh.GetSocketWorldLocationAndRotation(Seats[0].CameraTag, out_CamLoc, out_CamRot);
-		if (SeatIndex < SeatCameras.Length && SeatCameras[SeatIndex] == SC_Free)
+		if (SeatIndex < SeatCameras.Length)
 		{
-			out_CamRot.Pitch = GetViewRotation().Pitch;
-			out_CamRot.Yaw = GetViewRotation().Yaw;
+			if(SeatCameras[SeatIndex] == SC_Free)
+			{
+				out_CamRot.Pitch = GetViewRotation().Pitch;
+				out_CamRot.Yaw = GetViewRotation().Yaw;
+			}
+			else if(SeatCameras[SeatIndex] == SC_Follow_Mesh_Free)
+			{
+				out_CamRot.Pitch = Mesh.GetRotation().Pitch + GetViewRotation().Pitch;
+				out_CamRot.Yaw = Mesh.GetRotation().Yaw + GetViewRotation().Yaw;
+			}
 		}
+		
+		
 	}
 	else
 	{
