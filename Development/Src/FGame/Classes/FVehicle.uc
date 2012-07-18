@@ -382,19 +382,17 @@ simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out 
 		Mesh.GetSocketWorldLocationAndRotation(Seats[0].CameraTag, out_CamLoc, out_CamRot);
 		if (SeatIndex < SeatCameras.Length)
 		{
-			if(SeatCameras[SeatIndex] == SC_Free)
+			if (SeatCameras[SeatIndex] == SC_Free)
 			{
 				out_CamRot.Pitch = GetViewRotation().Pitch;
 				out_CamRot.Yaw = GetViewRotation().Yaw;
 			}
-			else if(SeatCameras[SeatIndex] == SC_Follow_Mesh_Free)
+			else if (SeatCameras[SeatIndex] == SC_Follow_Mesh_Free)
 			{
 				out_CamRot.Pitch = Mesh.GetRotation().Pitch + GetViewRotation().Pitch;
 				out_CamRot.Yaw = Mesh.GetRotation().Yaw + GetViewRotation().Yaw;
 			}
 		}
-		
-		
 	}
 	else
 	{
