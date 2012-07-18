@@ -141,12 +141,65 @@ simulated event PostBeginPlay()
  */
 function bool Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
-	if (bIsCommandVehicle && Role == ROLE_Authority)
+	local int i;
+
+	if (Super.Died(Killer, DamageType, HitLocation))
 	{
-		FTeamGame(WorldInfo.Game).CommandVehicleDestroyed(Killer);
+		if (bIsCommandVehicle && Role == ROLE_Authority)
+		{
+			FTeamGame(WorldInfo.Game).CommandVehicleDestroyed(Killer);
+		}
+
+		KillerController = Killer;
+		HitDamageType = DamageType;
+		TakeHitLocation = HitLocation;
+
+		BlowupVehicle();
+
+		HandleDeadVehicleDriver();
+
+		for (i = 1; i < Seats.Length; i++)
+		{
+			if (Seats[i].SeatPawn != None)
+			{
+				Seats[i].SeatPawn.Died(Killer, DamageType, HitLocation);
+			}
+		}
+
+		return True;
 	}
 
-	return Super.Died(Killer, DamageType, HitLocation);
+	return False;
+}
+
+/**
+ * Explodes the vehicle.
+ */
+simulated function BlowupVehicle()
+{
+	local int i;
+
+	bCanBeBaseForPawns = False;
+	GotoState('DyingVehicle');
+	AddVelocity(TearOffMomentum, TakeHitLocation, HitDamageType);
+	bDeadVehicle = True;
+	bStayUpright = False;
+
+	if (StayUprightConstraintInstance != None)
+		StayUprightConstraintInstance.TermConstraint();
+
+	// Iterate over wheels, turning off those we want
+	for (i = 0; i < Wheels.length; i++)
+	{
+		if (UDKVehicleWheel(Wheels[i]) != None && UDKVehicleWheel(Wheels[i]).bDisableWheelOnDeath)
+		{
+			SetWheelCollision(i, False);
+		}
+	}
+
+	CustomGravityScaling = 1.0;
+	if (UDKVehicleSimHover(SimObj) != None)
+		UDKVehicleSimHover(SimObj).bDisableWheelsWhenOff = True;
 }
 
 /**
@@ -186,7 +239,6 @@ event OnPropertyChange(name PropName)
  */
 function bool TryToDrive(Pawn P)
 {
-
 	if (!bIsDisabled && (Team == class'FTeamGame'.const.TEAM_NONE || !bTeamLocked || !WorldInfo.Game.bTeamGame || WorldInfo.GRI.OnSameTeam(Self, P)))
 	{
 		return Super.TryToDrive(P);
@@ -662,6 +714,64 @@ simulated function Rotator GetAdjustedAimFor(Weapon W, Vector StartFireLoc)
 		return Super.GetAdjustedAimFor(W, StartFireLoc);
 
 	return SocketRotation;
+}
+
+simulated state DyingVehicle
+{
+	ignores Bump, HitWall, HeadVolumeChange, PhysicsVolumeChange, Falling, BreathTimer, FellOutOfWorld;
+
+	simulated function PlayWeaponSwitch(Weapon OldWeapon, Weapon NewWeapon);
+	simulated function PlayNextAnimation();
+	singular event BaseChange();
+	event Landed(vector HitNormal, Actor FloorActor);
+	function bool Died(Controller Killer, class<DamageType> damageType, vector HitLocation);
+	simulated event PostRenderFor(PlayerController PC, Canvas Canvas, vector CameraPosition, vector CameraDir);
+	simulated function BlowupVehicle();
+
+	/**
+	 * @extends
+	 */
+	simulated function BeginState(name PreviousStateName)
+	{
+		local int i;
+
+		// Fully destroy all morph targets
+		for (i = 0; i < DamageMorphTargets.length; i++)
+		{
+			DamageMorphTargets[i].Health = 0;
+			if (DamageMorphTargets[i].MorphNode != None)
+			{
+				DamageMorphTargets[i].MorphNode.SetNodeWeight(1.0);
+			}
+		}
+
+		UpdateDamageMaterial();
+
+		for (i = 0; i < DamageSkelControls.length; i++)
+		{
+			DamageSkelControls[i].HealthPerc = 0.0;
+		}
+
+		if (Controller != None)
+		{
+			if (Controller.bIsPlayer)
+			{
+				DetachFromController();
+			}
+			else
+			{
+				Controller.Destroy();
+			}
+		}
+
+		for (i = 0; i < Attached.length; i++)
+		{
+			if (Attached[i] != None)
+			{
+				Attached[i].PawnBaseDied();
+			}
+		}
+	}
 }
 
 defaultproperties
