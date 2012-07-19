@@ -182,17 +182,14 @@ public class FactionsHUD extends MovieClip {
 		return ret;
 	}
 	
-	public function enableChatInputBox():void {
+	public function focusChatInputBox():void {
 		var myChatInputBox:TextInput = bottomLeftHUD.getChildByName("chatInputBox") as TextInput;
 		myChatInputBox.focused = 1;
-		myChatInputBox.visible = true;
 	}
 	
-	public function disableChatInputBox():void {
+	public function focusChatLogBox():void {
 		var myChatLogBox:TextArea = bottomLeftHUD.getChildByName("chatLogBox") as TextArea;
-		var myChatInputBox:TextInput = bottomLeftHUD.getChildByName("chatInputBox") as TextInput;
 		myChatLogBox.focused = 1;
-		myChatInputBox.visible = false;
 	}
 	
 	public function getChatInputBoxText():String {
