@@ -6,6 +6,15 @@
 class FGFxHUD extends FGFxMoviePlayer;
 
 /**
+ * Add Enter key to ignore list to avoid being captured as a chat input
+ */
+function Init(optional LocalPlayer player)
+{
+	Super.Init(player);
+	AddFocusIgnoreKey('Enter');
+}
+
+/**
  * Updates the interface elements in Flash.
  */
 function TickHud()
@@ -95,6 +104,12 @@ function ResizeHUD()
 	UpdateResolution(x0, y0, x1, y1);
 }
 
+function EndChatting()
+{
+	StopUsingChatInputBox();
+	bCaptureInput = false;
+}
+
 /*********************************************************************************************
  Functions calling ActionScript
  
@@ -174,6 +189,53 @@ function UpdateRoundTimer(int SecsElapsed)
 {
 	if (bMovieIsOpen)
 		ActionScriptVoid("_root.updateRoundTimer");
+}
+
+function StartUsingChatInputBox()
+{
+	if (bMovieIsOpen)
+	{
+		bCaptureInput = true;		
+		ActionScriptVoid("_root.focusChatInputBox");
+	}	
+}
+
+function StopUsingChatInputBox()
+{
+	bCaptureInput = false;		
+	FocusChatLogBox();
+}
+
+function String GetChatInputBoxText()
+{
+	if (bMovieIsOpen)
+		return ActionScriptString("_root.getChatInputBoxText");
+	else
+		return "ERROR: GFxMoviePlayer is not initialized";
+
+}
+
+function SetChatLogBoxText(String setText)
+{
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.setChatInputBoxText");
+}
+
+function FocusChatLogBox()
+{
+	if (bMovieIsOpen)
+	{
+		ActionScriptVoid("_root.focusChatLogBox");
+	}
+
+}
+
+function ChatLogBoxAddNewChatLine(String chatLine, int preferedColor)
+{
+	if (bMovieIsOpen)
+	{
+		ActionScriptVoid("_root.addNewChatLine");
+	}
 }
 
 defaultproperties
