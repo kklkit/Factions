@@ -334,30 +334,26 @@ exec function ToggleCommandView()
 }
 
 /**
- * Toggles chat box
- * This function overrides PlayerController's Talk()
+ * @extends
  */
 exec function Talk()
 {
-	SetupChat(False);	
-	`log("Pressed: " $ bIsChatting);
+	SetupChat(False);
 }
 
 /**
- * Toggle team chat box
- * This function overrides PlayerController's TeamTalk()
+ * @extends
  */
 exec function TeamTalk()
 {
-	SetupChat(True);	
+	SetupChat(True);
 }
 
 function SetupChat(bool bIsTeamChat)
 {
-	`log("bIsChatting: " $ bIsChatting);
 	if (!bIsChatting)
 	{
-		FHUD(myHUD).StartUsingChatInputBox();
+		FHUD(myHUD).GFxHUD.StartUsingChatInputBox();
 		bTeamChat = bIsTeamChat;
 		bIsChatting = True;
 	}
@@ -366,45 +362,27 @@ function SetupChat(bool bIsTeamChat)
 exec function SendChat()
 {
 	local String msg;
-	local name Type;
 
-	if(bIsChatting)
+	if (bIsChatting)
 	{
-		FHUD(myHUD).StopUsingChatInputBox();
-		msg = FHUD(myHUD).GetChatInputBoxText();
-		FHUD(myHUD).SetChatInputBoxText("");
+		FHUD(myHUD).GFxHUD.StopUsingChatInputBox();
+		msg = FHUD(myHUD).GFxHUD.GetChatInputBoxText();
+		FHUD(myHUD).GFxHUD.SetChatLogBoxText("");
 		
 		if (msg != "")
 		{
 			if (bTeamChat)
-				Type = 'Say';
+				TeamSay(msg);
 			else
-				Type = 'Team Say';
-			
-			ServerReceiveText(self,msg,Type);
+				Say(msg);
 		}		
 	}
 
 	bIsChatting = false;
-	`log("bIsChatting: " $ bIsChatting);
-}
-
-reliable server function ServerReceiveText(FPlayerController PC, String ReceivedText, name Type)
-{   
-	WorldInfo.Game.Broadcast(PC, ReceivedText, Type);
-}
-
-reliable client function ReceiveBroadcast(String PlayerName, String Type, String ReceivedText, int colorCode)
-{
-	local String tempString;
-	
-	tempString = PlayerName $ " " $ Type $ ": " $ ReceivedText;
-	FHUD(myHUD).ChatLogBoxAddNewChatLine(tempString, colorCode);	
 }
 
 state PlayerDriving
 {
-
 	/**
 	 * @extends
 	 */
@@ -622,6 +600,6 @@ defaultproperties
 	VehicleCheckRadiusScaling=1.0
 	PulseTimer=5.0
 	MinRespawnDelay=1.5
-	bIsChatting = False
-	bTeamChat = False
+	bIsChatting=False
+	bTeamChat=False
 }

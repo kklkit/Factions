@@ -388,56 +388,6 @@ state MatchInProgress
 	}
 }
 
-/**
- * Broadcast function for the server to broadcast received message to all Player Controllers
- * This function overrides GameInfo's Broadcast function
- */
-event Broadcast(Actor Sender, coerce string Msg, optional name Type)
-{
-	local FPlayerController PC;
-	local FPlayerReplicationInfo PRI;
-	local int colorCode;
-		//definedColor[0] is red (red team)
-		//definedColor[1] is blue (Blue team)
-		//definedColor[2] is grey (Spectator)
-		//definedColor[3] is light red (Red team commander)
-		//definedColor[4] is light blue (Blue team commander)
-	
-	if (FPlayerController(Sender) != None)
-	{
-		PRI = FPlayerReplicationInfo(FPlayerController(Sender).PlayerReplicationInfo);
-	}
-
-	switch (PRI.GetTeamNum())
-	{
-	case 0:
-		colorCode = 0;
-		if (PlayerReplicationInfo(Sender) == FTeamInfo(WorldInfo.Game.GameReplicationInfo.Teams[0]).Commander.PlayerReplicationInfo)
-			colorCode = 3;
-		break;
-	case 1:
-		colorCode = 1;
-		if (PlayerReplicationInfo(Sender) == FTeamInfo(WorldInfo.Game.GameReplicationInfo.Teams[1]).Commander.PlayerReplicationInfo)
-			colorCode = 4;
-		break;
-	default:
-		colorCode = 2;
-		break;
-
-
-	} 
- 
-	// This is where we broadcast the received message to all players (PlayerControllers)
-	if (WorldInfo != None)
-	{
-	    ForEach WorldInfo.AllControllers(class'FPlayerController',PC)
-		{
-			PC.ReceiveBroadcast(PRI.PlayerName, "Say", Msg, colorCode);
-		}
-	}
-
-}
-
 defaultproperties
 {
 	PlayerControllerClass=class'FPlayerController'

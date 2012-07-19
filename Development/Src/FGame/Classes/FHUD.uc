@@ -73,6 +73,67 @@ simulated function NotifyLocalPlayerTeamReceived()
 /**
  * @extends
  */
+function Message(PlayerReplicationInfo PRI, coerce string Msg, name MsgType, optional float LifeTime)
+{
+	local string ThePlayerName;
+
+	if (bMessageBeep)
+	{
+		PlayerOwner.PlayBeepSound();
+	}
+
+	if ((MsgType == 'Say') || (MsgType == 'TeamSay'))
+	{
+		ThePlayerName = PRI != None ? PRI.PlayerName : "";
+		Msg = ThePlayerName $ ": " $ Msg;
+
+		if (MsgType == 'TeamSay')
+		{
+			Msg = "(TEAM)" @ Msg;
+		}
+	}
+
+	AddConsoleMessage(Msg, class'LocalMessage', PRI, LifeTime);
+}
+
+/**
+ * @extends
+ */
+function AddConsoleMessage(string M, class<LocalMessage> InMessageClass, PlayerReplicationInfo PRI, optional float LifeTime)
+{
+	local int ColorCode;
+
+	Super.AddConsoleMessage(M, InMessageClass, PRI, LifeTime);
+
+	switch (PRI.GetTeamNum())
+	{
+	case 0:
+		ColorCode = 0;
+		if (PRI == FTeamInfo(WorldInfo.Game.GameReplicationInfo.Teams[0]).Commander.PlayerReplicationInfo)
+			ColorCode = 3;
+		break;
+	case 1:
+		ColorCode = 1;
+		if (PRI == FTeamInfo(WorldInfo.Game.GameReplicationInfo.Teams[1]).Commander.PlayerReplicationInfo)
+			ColorCode = 4;
+		break;
+	default:
+		ColorCode = 2;
+		break;
+	}
+
+	if (GFxHUD != None)
+		GFxHUD.ChatLogBoxAddNewChatLine(M, ColorCode);
+}
+
+/**
+ * @extends
+ */
+function DisplayConsoleMessages();
+
+/**
+ * @extends
+ */
 function DrawHud()
 {
 	Super.DrawHud();
@@ -142,49 +203,6 @@ function Vector2D GetMousePosition()
 }
 
 /**
- * Toggle chat box functions
- */
-function StartUsingChatInputBox()
-{
-	if (GFxHUD != None)
-	{
-		GFxHUD.StartUsingChatInputBox();	
-	}
-
-}
-
-function StopUsingChatInputBox()
-{
-	if (GFxHUD != None)
-	{
-		GFxHUD.StopUsingChatInputBox();			
-	}
-
-}
-
-function String GetChatInputBoxText()
-{
-	if (GFxHUD != None)
-		return GFxHUD.GetChatInputBoxText();
-	else
-		return "ERROR: GFxHUD is not initialized";
-}
-
-function SetChatInputBoxText(String setText)
-{
-	if (GFxHUD != None)
-		GFxHUD.SetChatLogBoxText(setText);
-}
-
-function ChatLogBoxAddNewChatLine(String chatLine, int preferedColor)
-{
-	if (GFxHUD != None)
-		GFxHUD.ChatLogBoxAddNewChatLine(chatLine, preferedColor);
-
-}
-
-
-/**
  * Toggles the display of the omnimenu.
  */
 exec function ToggleOmniMenu()
@@ -214,5 +232,4 @@ defaultproperties
 {
 	MinimapMaterial=Material'Factions_Assets.minimap_render'
 	MinimapPadding=(X=10,Y=50)
-	
 }
