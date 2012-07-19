@@ -351,6 +351,7 @@ exec function TeamTalk()
 
 function SetupChat(bool bIsTeamChat)
 {
+	PlayerInput.ResetInput();
 	if (!bIsChatting)
 	{
 		FHUD(myHUD).GFxHUD.StartUsingChatInputBox();
