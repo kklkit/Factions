@@ -29,6 +29,10 @@ var Rotator MinimapCaptureRotation;
 var FInfantryClass CurrentInfantryClassArchetype;
 var FWeapon CurrentWeaponArchetypes[MaxLoadoutSlots];
 
+// ChatInput
+var bool bIsChatting;
+var bool bTeamChat;
+
 replication
 {
 	if (bNetDirty)
@@ -329,6 +333,75 @@ exec function ToggleCommandView()
 	ServerToggleCommandView();
 }
 
+/**
+ * Toggles chat box
+ * This function overrides PlayerController's Talk()
+ */
+exec function Talk()
+{
+	SetupChat(False);	
+	`log("Pressed: " $ bIsChatting);
+}
+
+/**
+ * Toggle team chat box
+ * This function overrides PlayerController's TeamTalk()
+ */
+exec function TeamTalk()
+{
+	SetupChat(True);	
+}
+
+function SetupChat(bool bIsTeamChat)
+{
+	`log("bIsChatting: " $ bIsChatting);
+	if (!bIsChatting)
+	{
+		FHUD(myHUD).StartUsingChatInputBox();
+		bTeamChat = bIsTeamChat;
+		bIsChatting = True;
+	}
+}
+
+exec function SendChat()
+{
+	local String msg;
+	local name Type;
+
+	if(bIsChatting)
+	{
+		FHUD(myHUD).StopUsingChatInputBox();
+		msg = FHUD(myHUD).GetChatInputBoxText();
+		FHUD(myHUD).SetChatInputBoxText("");
+		
+		if (msg != "")
+		{
+			if (bTeamChat)
+				Type = 'Say';
+			else
+				Type = 'Team Say';
+			
+			ServerReceiveText(self,msg,Type);
+		}		
+	}
+
+	bIsChatting = false;
+	`log("bIsChatting: " $ bIsChatting);
+}
+
+reliable server function ServerReceiveText(FPlayerController PC, String ReceivedText, name Type)
+{   
+	WorldInfo.Game.Broadcast(PC, ReceivedText, Type);
+}
+
+reliable client function ReceiveBroadcast(String PlayerName, String Type, String ReceivedText, int colorCode)
+{
+	local String tempString;
+	
+	tempString = PlayerName $ " " $ Type $ ": " $ ReceivedText;
+	FHUD(myHUD).ChatLogBoxAddNewChatLine(tempString, colorCode);	
+}
+
 state PlayerDriving
 {
 
@@ -549,4 +622,6 @@ defaultproperties
 	VehicleCheckRadiusScaling=1.0
 	PulseTimer=5.0
 	MinRespawnDelay=1.5
+	bIsChatting = False
+	bTeamChat = False
 }

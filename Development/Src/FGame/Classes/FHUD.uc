@@ -142,6 +142,49 @@ function Vector2D GetMousePosition()
 }
 
 /**
+ * Toggle chat box functions
+ */
+function StartUsingChatInputBox()
+{
+	if (GFxHUD != None)
+	{
+		GFxHUD.StartUsingChatInputBox();	
+	}
+
+}
+
+function StopUsingChatInputBox()
+{
+	if (GFxHUD != None)
+	{
+		GFxHUD.StopUsingChatInputBox();			
+	}
+
+}
+
+function String GetChatInputBoxText()
+{
+	if (GFxHUD != None)
+		return GFxHUD.GetChatInputBoxText();
+	else
+		return "ERROR: GFxHUD is not initialized";
+}
+
+function SetChatInputBoxText(String setText)
+{
+	if (GFxHUD != None)
+		GFxHUD.SetChatLogBoxText(setText);
+}
+
+function ChatLogBoxAddNewChatLine(String chatLine, int preferedColor)
+{
+	if (GFxHUD != None)
+		GFxHUD.ChatLogBoxAddNewChatLine(chatLine, preferedColor);
+
+}
+
+
+/**
  * Toggles the display of the omnimenu.
  */
 exec function ToggleOmniMenu()
@@ -171,4 +214,5 @@ defaultproperties
 {
 	MinimapMaterial=Material'Factions_Assets.minimap_render'
 	MinimapPadding=(X=10,Y=50)
+	
 }
