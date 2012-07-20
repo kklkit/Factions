@@ -6,17 +6,6 @@
 class FGFxHUD extends FGFxMoviePlayer;
 
 /**
- * @extends
- */
-function Init(optional LocalPlayer LocPlay)
-{
-	Super.Init(LocPlay);
-
-	// Add Enter key to ignore list to avoid being captured as a chat input
-	AddFocusIgnoreKey('Enter');
-}
-
-/**
  * Updates the interface elements in Flash.
  */
 function TickHud()
@@ -185,47 +174,6 @@ function UpdateRoundTimer(int SecsElapsed)
 {
 	if (bMovieIsOpen)
 		ActionScriptVoid("_root.updateRoundTimer");
-}
-
-function StartUsingChatInputBox()
-{
-	if (bMovieIsOpen)
-	{
-		bCaptureInput = True;		
-		ActionScriptVoid("_root.focusChatInputBox");
-	}	
-}
-
-function StopUsingChatInputBox()
-{
-	bCaptureInput = False;		
-	FocusChatLogBox();
-}
-
-function string GetChatInputBoxText()
-{
-	if (bMovieIsOpen)
-		return ActionScriptString("_root.getChatInputBoxText");
-	else
-		return "ERROR: GFxMoviePlayer is not initialized";
-}
-
-function SetChatLogBoxText(string setText)
-{
-	if (bMovieIsOpen)
-		ActionScriptVoid("_root.setChatInputBoxText");
-}
-
-function FocusChatLogBox()
-{
-	if (bMovieIsOpen)
-		ActionScriptVoid("_root.focusChatLogBox");
-}
-
-function ChatLogBoxAddNewChatLine(string chatLine, int preferedColor)
-{
-	if (bMovieIsOpen)
-		ActionScriptVoid("_root.addNewChatLine");
 }
 
 defaultproperties

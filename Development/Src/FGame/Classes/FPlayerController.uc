@@ -354,9 +354,36 @@ function SetupChat(bool bIsTeamChat)
 	PlayerInput.ResetInput();
 	if (!bIsChatting)
 	{
-		FHUD(myHUD).GFxHUD.StartUsingChatInputBox();
+		ToggleChatMoviePriority();
+		
+		FHUD(myHUD).GFxChat.StartUsingChatInputBox();
 		bTeamChat = bIsTeamChat;
 		bIsChatting = True;
+	}
+}
+
+function ToggleChatMoviePriority()
+{
+	local int p;
+	p = 1;
+	if (bIsChatting)
+	{
+		FHUD(myHUD).GFxChat.SetPriority(p++);
+		if (!isSpectating())
+			FHUD(myHUD).GFxHUD.SetPriority(p++);		
+		if (FHUD(myHUD).GFxOmniMenu.bMovieIsOpen)
+		{
+			FHUD(myHUD).GFxOmniMenu.SetPriority(p++);
+			FHUD(myHUD).GFxOmniMenu.Start();
+		}
+	}
+	else
+	{
+		if (!isSpectating())
+			FHUD(myHUD).GFxHUD.SetPriority(p++);
+		if (FHUD(myHUD).GFxOmniMenu.bMovieIsOpen)
+			FHUD(myHUD).GFxOmniMenu.SetPriority(p++);
+		FHUD(myHUD).GFxChat.SetPriority(p++);
 	}
 }
 
@@ -366,10 +393,12 @@ exec function SendChat()
 
 	if (bIsChatting)
 	{
-		FHUD(myHUD).GFxHUD.StopUsingChatInputBox();
-		msg = FHUD(myHUD).GFxHUD.GetChatInputBoxText();
-		FHUD(myHUD).GFxHUD.SetChatLogBoxText("");
+		FHUD(myHUD).GFxChat.StopUsingChatInputBox();
+		msg = FHUD(myHUD).GFxChat.GetChatInputBoxText();
+		FHUD(myHUD).GFxChat.SetChatLogBoxText("");
 		
+		ToggleChatMoviePriority();
+
 		if (msg != "")
 		{
 			if (bTeamChat)
@@ -541,6 +570,34 @@ simulated state Commanding
 			PlayerCamera.bShouldSendClientSideCameraUpdate = True;
 	}
 
+	function ToggleChatMoviePriority()
+	{
+		local int p;
+		p = 1;
+
+		if (bIsChatting)
+		{
+			FHUD(myHUD).GFxChat.SetPriority(p++);
+			FHUD(myHUD).GFxHUD.SetPriority(p++);			
+			FHUD(myHUD).GFxCommanderHUD.SetPriority(p++);
+			if (FHUD(myHUD).GFxOmniMenu.bMovieIsOpen)
+			{
+				FHUD(myHUD).GFxOmniMenu.SetPriority(p++);
+				FHUD(myHUD).GFxOmniMenu.Start();
+			}
+			else
+				FHUD(myHUD).GFxCommanderHUD.Start();
+		}
+		else
+		{
+			FHUD(myHUD).GFxHUD.SetPriority(p++);
+			FHUD(myHUD).GFxCommanderHUD.SetPriority(p++);
+			if (FHUD(myHUD).GFxOmniMenu.bMovieIsOpen)
+				FHUD(myHUD).GFxOmniMenu.SetPriority(p++);
+			FHUD(myHUD).GFxChat.SetPriority(p++);
+		}
+	}
+
 	/**
 	 * Sets the location of the player controller.
 	 * 
@@ -585,7 +642,7 @@ simulated state Commanding
 	exec function SelectStructure(byte StructureIndex)
 	{
 		ServerBeginStructurePlacement(StructureIndex, LastMouseWorldLocation);
-	}
+	}	
 }
 
 defaultproperties

@@ -2,16 +2,13 @@
 
 import flash.display.*;
 import flash.events.*;
-import flash.ui.Keyboard;
 import flash.external.*;
 import flash.geom.ColorTransform;
 import flash.text.*;
-import flash.utils.Timer;
 import fl.motion.Color;
 import scaleform.gfx.*;
-import scaleform.clik.controls.TextInput;
-import scaleform.clik.controls.TextArea;
-import scaleform.clik.controls.ScrollBar;
+
+
 
 public class FactionsHUD extends MovieClip {
 	public var topLeftHUD:MovieClip;
@@ -22,24 +19,11 @@ public class FactionsHUD extends MovieClip {
 	public var healthBarStartPositionX:Number = bottomLeftHUD.getChildByName('healthBar').x;
 	public var ammoBarStartPositionX:Number = bottomRightHUD.getChildByName('ammoBar').x;
 		
-	public var chatLogBoxChatHistoryHTML:String = "";
-	public var definedColor:Array = new Array("#FF2500", "#2500FF", "#CCCCCC", "#E08ECD","#25FFFF");
-		//definedColor[0] is red (red team)
-		//definedColor[1] is blue (Blue team)
-		//definedColor[2] is grey (Spectator)
-		//definedColor[3] is light red (Red team commander)
-		//definedColor[4] is light blue (Blue team commander)
-		
-	public var htmlLineBreak:String = "<br />";
 	
 	public function FactionsHUD() {
 		super();
 		
-		Extensions.enabled = true;
-		
-		// Temproarily disable the scroll bar until chat history is implemented
-		var myScrollbar:ScrollBar = bottomLeftHUD.getChildByName("chatLogBoxScrollBar") as ScrollBar
-		myScrollbar.visible = false;			
+		Extensions.enabled = true;		
 		
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.align = StageAlign.TOP_LEFT;
@@ -180,110 +164,7 @@ public class FactionsHUD extends MovieClip {
 		while (ret.length < width)
 			ret = "0" + ret;
 		return ret;
-	}
-	
-	public function focusChatInputBox():void {
-		var myChatInputBox:TextInput = bottomLeftHUD.getChildByName("chatInputBox") as TextInput;
-		myChatInputBox.focused = 1;
-	}
-	
-	public function focusChatLogBox():void {
-		var myChatLogBox:TextArea = bottomLeftHUD.getChildByName("chatLogBox") as TextArea;
-		myChatLogBox.focused = 1;
-	}
-	
-	public function getChatInputBoxText():String {
-		var myChatInputBox:TextInput = bottomLeftHUD.getChildByName("chatInputBox") as TextInput;		
-		return myChatInputBox.text;		
-	}
-	
-	public function setChatInputBoxText(setText:String):void{
-		var myChatInputBox:TextInput = bottomLeftHUD.getChildByName("chatInputBox") as TextInput;		
-		myChatInputBox.text = setText;			
-	}
-	
-	function convertTextToHTML(srcText:String):String{
-		var index:int;
-		
-		index = srcText.indexOf("<");		
-		
-		var firstHalf:String;
-		var secondHalf:String;
-		
-		while (index != -1)
-		{
-			firstHalf = "";
-			secondHalf = "";
-			if (index > 0)
-				firstHalf = srcText.substring(0,index-1);
-			if (srcText.length > index + 1)
-				secondHalf = srcText.substring(index+1,srcText.length);
-			
-			srcText = firstHalf + "&lt;" + secondHalf;					
-			index = srcText.indexOf("<");						
-		}
-		
-		index = srcText.indexOf(">");
-		while (index != -1)
-		{
-			firstHalf = "";
-			secondHalf = "";
-			
-			if (index > 0)
-				firstHalf = srcText.substring(0,index);
-			if (srcText.length > index + 1)
-				secondHalf = srcText.substring(index+1,srcText.length);
-			
-			srcText = firstHalf + "&gt;" + secondHalf;					
-			index = srcText.indexOf(">");						
-		}
-		return srcText;
-	}
-	
-	public function addNewChatLine(chatLine:String, preferedColor:int):void {
-		var myChatLogBox:TextArea = bottomLeftHUD.getChildByName("chatLogBox") as TextArea;
-		
-		var tempString:String = "";
-		
-		chatLine = convertTextToHTML(chatLine);
-		if (preferedColor >= 0 && preferedColor <= 4)
-			tempString = "<font color='" + definedColor[preferedColor] + "'>" + chatLine + "</font>"
-							+ htmlLineBreak;
-		myChatLogBox.htmlText += tempString;
-		chatLogBoxChatHistoryHTML += tempString;
-		
-		var chatLogDecayTimer:Timer = new Timer(6000, 1);
-		chatLogDecayTimer.start();
-		chatLogDecayTimer.addEventListener(TimerEvent.TIMER, onChatLogDecay);
-	
-		
-	}
-	
-	function onChatLogDecay(e:TimerEvent):void {
-		var tempString:String = "";
-		var myChatLogBox:TextArea = bottomLeftHUD.getChildByName("chatLogBox") as TextArea;
-		var firstLineBreakBeginPosition:int;
-		
-		firstLineBreakBeginPosition = myChatLogBox.htmlText.indexOf(htmlLineBreak);
-		
-		if (firstLineBreakBeginPosition)
-		{
-			if(myChatLogBox.htmlText.length > (firstLineBreakBeginPosition + htmlLineBreak.length))
-			{
-				tempString = myChatLogBox.htmlText.substring(firstLineBreakBeginPosition + htmlLineBreak.length, myChatLogBox.htmlText.length);
-				myChatLogBox.htmlText = tempString;
-			}
-			else
-				myChatLogBox.htmlText = "";	
-			
-		}
-					
-		
-		
-		
-		
-		
-	}
+	}	
 	
 	
 }

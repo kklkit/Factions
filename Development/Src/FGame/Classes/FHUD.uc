@@ -9,6 +9,7 @@ class FHUD extends UDKHUD;
 var FGFxHUD GFxHUD;
 var FGFxOmniMenu GFxOmniMenu;
 var FGFxCommanderHUD GFxCommanderHUD;
+var FGFxChat GFxChat;
 
 // Minimap
 const MinimapSize=256;
@@ -32,6 +33,9 @@ simulated event PostBeginPlay()
 	GFxOmniMenu.Init();
 	GFxCommanderHUD = new class'FGFxCommanderHUD';
 	GFxCommanderHUD.Init();
+	GFxChat = new class'FGFxChat';
+	GFxChat.Init();
+	GFxChat.Start();
 
 	// Get the map size.
 	MapSize = FMapInfo(WorldInfo.GetMapInfo()).MapLength;
@@ -122,8 +126,8 @@ function AddConsoleMessage(string M, class<LocalMessage> InMessageClass, PlayerR
 		break;
 	}
 
-	if (GFxHUD != None)
-		GFxHUD.ChatLogBoxAddNewChatLine(M, ColorCode);
+	if (GFxChat != None)
+		GFxChat.ChatLogBoxAddNewChatLine(M, ColorCode);
 }
 
 /**
