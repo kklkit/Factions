@@ -16,7 +16,7 @@ function Init(optional LocalPlayer LocPlay)
 	AddFocusIgnoreKey('Enter');
 }
 
-function StartUsingChatInputBox()
+function StartUsingChatInputBox(bool bTeamChat)
 {
 	if (bMovieIsOpen)
 	{

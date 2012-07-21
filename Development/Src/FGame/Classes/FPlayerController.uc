@@ -356,7 +356,7 @@ function SetupChat(bool bIsTeamChat)
 	{
 		ToggleChatMoviePriority();
 		
-		FHUD(myHUD).GFxChat.StartUsingChatInputBox();
+		FHUD(myHUD).GFxChat.StartUsingChatInputBox(bIsTeamChat);
 		bTeamChat = bIsTeamChat;
 		bIsChatting = True;
 	}

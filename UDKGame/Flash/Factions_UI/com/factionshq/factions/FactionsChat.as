@@ -35,18 +35,27 @@ public class FactionsChat extends MovieClip {
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.align = StageAlign.TOP_LEFT;
 				
-		// Temproarily disable the scroll bar until chat history is implemented
 		var myScrollbar:ScrollBar = ChatContainer.getChildByName("chatLogBoxScrollBar") as ScrollBar;
 		myScrollbar.visible = false;
 		
-		var myChatInputBox:TextInput = ChatContainer.getChildByName("chatInputBox") as TextInput;
+		var myChatInputBox:TextInput = ChatContainer.getChildByName("chatInputBox") as TextInput;		
 		myChatInputBox.visible = false;
+	
+		var myChatState:MovieClip = ChatContainer.getChildByName("chatState") as MovieClip;
+		myChatState.visible = false;
 	}
 	
-	public function enableChatInputBox():void {
+	public function enableChatInputBox(bTeamChat:Boolean):void {
 		var myChatInputBox:TextInput = ChatContainer.getChildByName("chatInputBox") as TextInput;
 		myChatInputBox.visible = true;
 		myChatInputBox.focused = 1;
+		
+		var myChatState:MovieClip = ChatContainer.getChildByName("chatState") as MovieClip;
+		myChatState.visible = true;
+		if (bTeamChat)
+			myChatState.gotoAndStop(2);
+		else
+			myChatState.gotoAndStop(1);
 	}
 	
 	public function disableChatInputBox():void {
@@ -55,6 +64,9 @@ public class FactionsChat extends MovieClip {
 		
 		var myChatInputBox:TextInput = ChatContainer.getChildByName("chatInputBox") as TextInput;
 		myChatInputBox.visible = false;
+		
+		var myChatState:MovieClip = ChatContainer.getChildByName("chatState") as MovieClip;
+		myChatState.visible = false;
 	}
 	
 	public function getChatInputBoxText():String {
