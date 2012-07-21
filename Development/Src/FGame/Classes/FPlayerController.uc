@@ -359,6 +359,7 @@ function SetupChat(bool bIsTeamChat)
 		FHUD(myHUD).GFxChat.StartUsingChatInputBox(bIsTeamChat);
 		bTeamChat = bIsTeamChat;
 		bIsChatting = True;
+		FHUD(myHUD).GFxChat.Start();
 	}
 }
 
@@ -387,7 +388,7 @@ function ToggleChatMoviePriority()
 	}
 }
 
-exec function SendChat()
+function SendChat()
 {
 	local String msg;
 

@@ -15,19 +15,21 @@ import scaleform.clik.controls.TextInput;
 
 public class FactionsChat extends MovieClip {
 	public var ChatContainer:MovieClip;	
-	public var htmlLineBreak:String = "<br />";
-	public var chatLogBoxChatHistoryHTML:String = "";	
-	public var definedColor:Array = new Array("#FF2500", "#2500FF", "#CCCCCC", "#E08ECD","#25FFFF");
+	public var htmlLineBreak:String = "<br />";			
 	public var msgAliveDuration:int = 10000;   // How long the chat message stays before disappearing
+	
+	public var chatLogBoxChatHistoryHTML:String = "";
+	public var chatLogBoxChatCurrentHTML:String = "";
+	public var bHistoryMode = false;
+	
+	public var definedColor:Array = new Array("#FF2500", "#2500FF", "#CCCCCC", "#E08ECD","#25FFFF");
 	
 		//definedColor[0] is red (Red team)
 		//definedColor[1] is blue (Blue team)
 		//definedColor[2] is grey (Spectator)
 		//definedColor[3] is light red (Red team commander)
 		//definedColor[4] is light blue (Blue team commander)
-		
-	
-	
+			
 	public function FactionsChat() {
 		super();		
 		Extensions.enabled = true;
@@ -35,38 +37,56 @@ public class FactionsChat extends MovieClip {
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.align = StageAlign.TOP_LEFT;
 				
-		var myScrollbar:ScrollBar = ChatContainer.getChildByName("chatLogBoxScrollBar") as ScrollBar;
-		myScrollbar.visible = false;
+		var historyChatLogContainer:MovieClip = ChatContainer.getChildByName("historyChatLog") as MovieClip;
+		historyChatLogContainer.visible = false;
 		
-		var myChatInputBox:TextInput = ChatContainer.getChildByName("chatInputBox") as TextInput;		
+		var myChatInputBox:TextInput = ChatContainer.getChildByName("chatInputBox") as TextInput;
 		myChatInputBox.visible = false;
 	
 		var myChatState:MovieClip = ChatContainer.getChildByName("chatState") as MovieClip;
 		myChatState.visible = false;
+		
+		myChatInputBox.addEventListener(KeyboardEvent.KEY_DOWN,onInputBoxKeyDown);
+	}
+	
+	public function onInputBoxKeyDown(e:KeyboardEvent):void {
+		if (e.keyCode == Keyboard.ENTER)
+			ExternalInterface.call("SendChat");				
 	}
 	
 	public function enableChatInputBox(bTeamChat:Boolean):void {
-		var myChatInputBox:TextInput = ChatContainer.getChildByName("chatInputBox") as TextInput;
-		myChatInputBox.visible = true;
-		myChatInputBox.focused = 1;
+		var chatInputBox:TextInput = ChatContainer.getChildByName("chatInputBox") as TextInput;
+		chatInputBox.visible = true;
+		chatInputBox.focused = 1;
 		
-		var myChatState:MovieClip = ChatContainer.getChildByName("chatState") as MovieClip;
-		myChatState.visible = true;
+		var chatState:MovieClip = ChatContainer.getChildByName("chatState") as MovieClip;
+		chatState.visible = true;
 		if (bTeamChat)
-			myChatState.gotoAndStop(2);
+			chatState.gotoAndStop(2);
 		else
-			myChatState.gotoAndStop(1);
+			chatState.gotoAndStop(1);
+			
+		var currentChatLogTextArea:TextArea = ChatContainer.getChildByName("currentChatLogTextArea") as TextArea;
+		currentChatLogTextArea.visible = false;
+		var historyChatLogContainer:MovieClip = ChatContainer.getChildByName("historyChatLog") as MovieClip;
+		historyChatLogContainer.visible = true;		
+		var historyChatLogTextAreaScrollBar:ScrollBar = historyChatLogContainer.getChildByName("historyChatLogTextAreaScrollBar") as ScrollBar;
+		historyChatLogTextAreaScrollBar.position =  historyChatLogTextAreaScrollBar.availableHeight;
 	}
 	
 	public function disableChatInputBox():void {
-		var myChatLogBox:TextArea = ChatContainer.getChildByName("chatLogBox") as TextArea;
-		myChatLogBox.focused = 1;
+		var currentChatLogTextArea:TextArea = ChatContainer.getChildByName("currentChatLogTextArea") as TextArea;
+		currentChatLogTextArea.focused = 1;
+			
+		var chatInputBox:TextInput = ChatContainer.getChildByName("chatInputBox") as TextInput;
+		chatInputBox.visible = false;		
 		
-		var myChatInputBox:TextInput = ChatContainer.getChildByName("chatInputBox") as TextInput;
-		myChatInputBox.visible = false;
+		var chatState:MovieClip = ChatContainer.getChildByName("chatState") as MovieClip;
+		chatState.visible = false;
 		
-		var myChatState:MovieClip = ChatContainer.getChildByName("chatState") as MovieClip;
-		myChatState.visible = false;
+		var historyChatLogContainer:MovieClip = ChatContainer.getChildByName("historyChatLog") as MovieClip;
+		historyChatLogContainer.visible = false;
+		currentChatLogTextArea.visible = true;
 	}
 	
 	public function getChatInputBoxText():String {
@@ -118,42 +138,45 @@ public class FactionsChat extends MovieClip {
 	}
 	
 	public function addNewChatLine(chatLine:String, preferedColor:int):void {
-		var myChatLogBox:TextArea = ChatContainer.getChildByName("chatLogBox") as TextArea;		
 		var tempString:String = "";
 		
 		chatLine = convertTextToHTML(chatLine);
 		if (preferedColor >= 0 && preferedColor <= 4)
 			tempString = "<font color='" + definedColor[preferedColor] + "'>" + chatLine + "</font>"
 							+ htmlLineBreak;
-		myChatLogBox.htmlText += tempString;
-		chatLogBoxChatHistoryHTML += tempString;
+		
+		var currentChatLogTextArea:TextArea = ChatContainer.getChildByName("currentChatLogTextArea") as TextArea;
+		currentChatLogTextArea.htmlText += tempString;
+		
+		var historyChatLogContainer:MovieClip = ChatContainer.getChildByName("historyChatLog") as MovieClip;
+		var historyChatLogTextArea:TextArea = historyChatLogContainer.getChildByName("historyChatLogTextArea") as TextArea;
+		historyChatLogTextArea.htmlText += tempString;
 		
 		var chatLogDecayTimer:Timer = new Timer(msgAliveDuration, 1);
 		chatLogDecayTimer.start();
-		chatLogDecayTimer.addEventListener(TimerEvent.TIMER, onChatLogDecay);
-	
-		
+		chatLogDecayTimer.addEventListener(TimerEvent.TIMER, onChatLogDecay);	
 	}
 	
 	function onChatLogDecay(e:TimerEvent):void {
 		var tempString:String = "";
-		var myChatLogBox:TextArea = ChatContainer.getChildByName("chatLogBox") as TextArea;
+		var currentChatLogTextArea:TextArea = ChatContainer.getChildByName("currentChatLogTextArea") as TextArea;
 		var firstLineBreakBeginPosition:int;
 		
-		firstLineBreakBeginPosition = myChatLogBox.htmlText.indexOf(htmlLineBreak);
+		firstLineBreakBeginPosition = currentChatLogTextArea.htmlText.indexOf(htmlLineBreak);
 		
 		if (firstLineBreakBeginPosition)
 		{
-			if(myChatLogBox.htmlText.length > (firstLineBreakBeginPosition + htmlLineBreak.length))
+			if(currentChatLogTextArea.htmlText.length > (firstLineBreakBeginPosition + htmlLineBreak.length))
 			{
-				tempString = myChatLogBox.htmlText.substring(firstLineBreakBeginPosition + htmlLineBreak.length, myChatLogBox.htmlText.length);
-				myChatLogBox.htmlText = tempString;
+				tempString = currentChatLogTextArea.htmlText.substring(firstLineBreakBeginPosition + htmlLineBreak.length, currentChatLogTextArea.htmlText.length);
+				currentChatLogTextArea.htmlText = tempString;
 			}
 			else
-				myChatLogBox.htmlText = "";	
-			
+				currentChatLogTextArea.htmlText = "";			
 		}		
 	}
+	
+	
 	
 	
 	

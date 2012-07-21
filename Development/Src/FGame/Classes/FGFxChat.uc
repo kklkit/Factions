@@ -13,8 +13,31 @@ function Init(optional LocalPlayer LocPlay)
 	Super.Init(LocPlay);
 
 	// Add Enter key to ignore list to avoid being captured as a chat input
-	AddFocusIgnoreKey('Enter');
+	//AddFocusIgnoreKey('Enter');
 }
+
+
+/*********************************************************************************************
+ Functions called from ActionScript
+**********************************************************************************************/
+
+/**
+ * Called when the player press enter when using the chatInputBox
+ */
+function SendChat()
+{
+	FPlayerController(GetPC()).SendChat();	
+}
+
+
+/*********************************************************************************************
+ Functions calling ActionScript
+ 
+ These functions simply forwards the call with its parameters to Flash.
+ 
+ Always check to make sure the movie is open before calling Flash. The game will crash if a
+ function is called while the movie is closed.
+**********************************************************************************************/
 
 function StartUsingChatInputBox(bool bTeamChat)
 {
@@ -22,6 +45,8 @@ function StartUsingChatInputBox(bool bTeamChat)
 	{
 		bCaptureInput = True;		
 		ActionScriptVoid("_root.enableChatInputBox");
+		bCaptureMouseInput = True;
+		bDisplayMouseCursor = True;
 	}	
 }
 
@@ -29,6 +54,8 @@ function StopUsingChatInputBox()
 {
 	bCaptureInput = False;		
 	DisableChatInputBox();
+	bCaptureMouseInput = False;
+	bDisplayMouseCursor = False;
 }
 
 function DisableChatInputBox()
