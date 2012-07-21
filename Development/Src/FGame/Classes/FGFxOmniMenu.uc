@@ -445,5 +445,5 @@ defaultproperties
 {
 	MovieInfo=SwfMovie'Factions_UI.factions_omnimenu'
 	bCaptureMouseInput=True
-	bDisplayMouseCursor=True
+	bDisplayMouseCursorOnStart=True
 }

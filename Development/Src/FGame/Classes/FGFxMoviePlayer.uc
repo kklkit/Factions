@@ -6,7 +6,7 @@
 class FGFxMoviePlayer extends GFxMoviePlayer;
 
 // If true, display the mouse cursor when this movie is open.
-var bool bDisplayMouseCursor;
+var bool bDisplayMouseCursorOnStart;
 
 // If true, this movie is the one that displayed the mouse cursor. Other movie players should not attempt to display the mouse cursor again.
 var private bool bDisplayedMouseCursor;
@@ -18,7 +18,7 @@ event bool Start(optional bool StartPaused = False)
 {
 	Super.Start(StartPaused);
 
-	if (bDisplayMouseCursor)
+	if (bDisplayMouseCursorOnStart)
 		SetHardwareMouseCursorVisibility(True);
 
 	return True;
@@ -132,6 +132,6 @@ function FPawn GetPlayerPawn()
 
 defaultproperties
 {
-	bDisplayMouseCursor=False
+	bDisplayMouseCursorOnStart=False
 	bDisplayedMouseCursor=False
 }

@@ -50,5 +50,5 @@ defaultproperties
 {
 	MovieInfo=SwfMovie'Factions_UI.factions_commander_hud'
 	bDisplayWithHudOff=False
-	bDisplayMouseCursor=True
+	bDisplayMouseCursorOnStart=True
 }
