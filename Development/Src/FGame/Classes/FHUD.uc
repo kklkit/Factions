@@ -19,6 +19,10 @@ var Material MinimapMaterial;
 var Vector2D MinimapPadding;
 var Color LineColor;
 
+// Mouse cursor
+var bool bIsDisplayingMouseCursor;
+var bool bUpdateMouseCursorOnNextTick;
+
 /**
  * @extends
  */
@@ -52,6 +56,12 @@ event PostRender()
 	GFxHUD.TickHud();
 	GFxCommanderHUD.TickHUD();
 	GFxOmniMenu.TickHUD();
+
+	if (bUpdateMouseCursorOnNextTick)
+	{
+		bUpdateMouseCursorOnNextTick = False;
+		UpdateHardwareMouseCursorVisibility();
+	}
 }
 
 /**
@@ -223,6 +233,17 @@ function UpdateMoviePriorities(bool bIsChatting)
 	{
 		GFxChat.SetPriority(1);
 	}
+}
+
+/**
+ * Shows or hides the hardware mouse depending on HUD status.
+ */
+function UpdateHardwareMouseCursorVisibility()
+{
+	if (bIsDisplayingMouseCursor)
+		LocalPlayer(PlayerOwner.Player).ViewportClient.SetHardwareMouseCursorVisibility(True);
+	else
+		LocalPlayer(PlayerOwner.Player).ViewportClient.SetHardwareMouseCursorVisibility(False);
 }
 
 /**

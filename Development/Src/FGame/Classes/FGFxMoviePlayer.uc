@@ -18,22 +18,8 @@ event bool Start(optional bool StartPaused = False)
 {
 	Super.Start(StartPaused);
 
-	// If this movie player should display the mouse cursor.
 	if (bDisplayMouseCursor)
-	{
-		// If the mouse cursor is already displayed.
-		if (GetGameViewportClient().bDisplayHardwareMouseCursor)
-		{
-			// Set that this movie player didn't set the mouse cursor.
-			bDisplayedMouseCursor = False;
-		}
-		else
-		{
-			// Display the mouse cursor.
-			GetGameViewportClient().SetHardwareMouseCursorVisibility(True);
-			bDisplayedMouseCursor = True;
-		}
-	}
+		SetHardwareMouseCursorVisibility(True);
 
 	return True;
 }
@@ -43,14 +29,61 @@ event bool Start(optional bool StartPaused = False)
  */
 event OnClose()
 {
-	// Hide the mouse cursor if this movie clip displayed it.
-	if (bDisplayedMouseCursor)
-	{
-		bDisplayedMouseCursor = False;
-		GetGameViewportClient().SetHardwareMouseCursorVisibility(False);
-	}
+	SetHardwareMouseCursorVisibility(False);
 
 	Super.OnClose();
+}
+
+/**
+ * @extends
+ */
+function SetPriority(byte NewPriority)
+{
+	Super.SetPriority(NewPriority);
+
+	if (FHUD(GetPC().myHUD) != None)
+		FHUD(GetPC().myHUD).UpdateHardwareMouseCursorVisibility();
+}
+
+/**
+ * Shows or hides the mouse cursor.
+ */
+function SetHardwareMouseCursorVisibility(bool bIsVisible)
+{
+	local FHUD myHUD;
+
+	myHUD = FHUD(GetPC().myHUD);
+
+	if (myHUD == None)
+		return;
+
+	if (bIsVisible)
+	{
+		// If the mouse cursor is already displayed.
+		if (myHUD.bIsDisplayingMouseCursor)
+		{
+			// Set that this movie player didn't set the mouse cursor.
+			bDisplayedMouseCursor = False;
+		}
+		else
+		{
+			// Display the mouse cursor.
+			myHUD.bIsDisplayingMouseCursor = True;
+			bDisplayedMouseCursor = True;
+		}
+
+		myHUD.UpdateHardwareMouseCursorVisibility();
+	}
+	else
+	{
+		if (bDisplayedMouseCursor)
+		{
+			bDisplayedMouseCursor = False;
+			myHUD.bIsDisplayingMouseCursor = False;
+		}
+
+		myHUD.bUpdateMouseCursorOnNextTick = True;
+	}
 }
 
 /**

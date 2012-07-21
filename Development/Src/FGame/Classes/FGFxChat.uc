@@ -46,7 +46,7 @@ function StartUsingChatInputBox(bool bTeamChat)
 		bCaptureInput = True;		
 		ActionScriptVoid("_root.enableChatInputBox");
 		bCaptureMouseInput = True;
-		bDisplayMouseCursor = True;
+		SetHardwareMouseCursorVisibility(True);
 	}	
 }
 
@@ -55,7 +55,7 @@ function StopUsingChatInputBox()
 	bCaptureInput = False;		
 	DisableChatInputBox();
 	bCaptureMouseInput = False;
-	bDisplayMouseCursor = False;
+	SetHardwareMouseCursorVisibility(False);
 }
 
 function DisableChatInputBox()

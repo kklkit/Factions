@@ -363,9 +363,10 @@ function BeginChat(bool bIsTeamChat)
 	}
 }
 
-function SendChat()
+/**
  * Send the current chat message to the server.
  */
+function SendChat()
 {
 	local String msg;
 
