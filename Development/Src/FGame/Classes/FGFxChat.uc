@@ -72,20 +72,19 @@ function string GetChatInputBoxText()
 		return "ERROR: GFxMoviePlayer is not initialized";
 }
 
-function SetChatLogBoxText(string setText)
+function SetChatLogBoxText(string SetText)
 {
 	if (bMovieIsOpen)
 		ActionScriptVoid("_root.setChatInputBoxText");
 }
 
-
-function ChatLogBoxAddNewChatLine(string chatLine, int preferedColor)
+function ChatLogBoxAddNewChatLine(string ChatLine, int PreferredColor)
 {
 	if (bMovieIsOpen)
 		ActionScriptVoid("_root.addNewChatLine");
 }
 
-DefaultProperties
+defaultproperties
 {
 	MovieInfo=SwfMovie'Factions_UI.factions_chat'
 	bDisplayWithHudOff=False

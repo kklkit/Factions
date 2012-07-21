@@ -26,6 +26,9 @@ simulated event PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
+	// Get the map size.
+	MapSize = FMapInfo(WorldInfo.GetMapInfo()).MapLength;
+
 	// Initialize all the Scaleform HUDs.
 	GFxHUD = new class'FGFxHUD';
 	GFxHUD.Init();
@@ -36,9 +39,6 @@ simulated event PostBeginPlay()
 	GFxChat = new class'FGFxChat';
 	GFxChat.Init();
 	GFxChat.Start();
-
-	// Get the map size.
-	MapSize = FMapInfo(WorldInfo.GetMapInfo()).MapLength;
 }
 
 /**
@@ -132,6 +132,8 @@ function AddConsoleMessage(string M, class<LocalMessage> InMessageClass, PlayerR
 
 /**
  * @extends
+ * 
+ * Override to prevent messages from being displayed on canvas.
  */
 function DisplayConsoleMessages();
 

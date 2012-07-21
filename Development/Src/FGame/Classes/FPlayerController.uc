@@ -366,12 +366,16 @@ function SetupChat(bool bIsTeamChat)
 function ToggleChatMoviePriority()
 {
 	local int p;
+
 	p = 1;
+
 	if (bIsChatting)
 	{
 		FHUD(myHUD).GFxChat.SetPriority(p++);
+
 		if (!isSpectating())
-			FHUD(myHUD).GFxHUD.SetPriority(p++);		
+			FHUD(myHUD).GFxHUD.SetPriority(p++);
+
 		if (FHUD(myHUD).GFxOmniMenu.bMovieIsOpen)
 		{
 			FHUD(myHUD).GFxOmniMenu.SetPriority(p++);
@@ -382,13 +386,17 @@ function ToggleChatMoviePriority()
 	{
 		if (!isSpectating())
 			FHUD(myHUD).GFxHUD.SetPriority(p++);
+
 		if (FHUD(myHUD).GFxOmniMenu.bMovieIsOpen)
 			FHUD(myHUD).GFxOmniMenu.SetPriority(p++);
+
 		FHUD(myHUD).GFxChat.SetPriority(p++);
 	}
 }
 
 function SendChat()
+ * Send the current chat message to the server.
+ */
 {
 	local String msg;
 
@@ -571,6 +579,9 @@ simulated state Commanding
 			PlayerCamera.bShouldSendClientSideCameraUpdate = True;
 	}
 
+	/**
+	 * @extends
+	 */
 	function ToggleChatMoviePriority()
 	{
 		local int p;
