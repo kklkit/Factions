@@ -6,16 +6,15 @@
 class FGFxChat extends FGFxMoviePlayer;
 
 /**
- * @extends
+ * Displays the chat box.
  */
-function Init(optional LocalPlayer LocPlay)
+function OpenChat(optional bool bIsTeamChat = False)
 {
-	Super.Init(LocPlay);
+	GetPC().PlayerInput.ResetInput();
 
-	// Add Enter key to ignore list to avoid being captured as a chat input
-	//AddFocusIgnoreKey('Enter');
+	FHUD(GetPC().myHUD).UpdateMoviePriorities(True);
+	StartUsingChatInputBox(bIsTeamChat);
 }
-
 
 /*********************************************************************************************
  Functions called from ActionScript
@@ -24,11 +23,19 @@ function Init(optional LocalPlayer LocPlay)
 /**
  * Called when the player press enter when using the chatInputBox
  */
-function SendChat()
+function SendChat(string ChatMessage, bool bTeamMessage)
 {
-	FPlayerController(GetPC()).SendChat();	
-}
+	if (ChatMessage != "")
+	{
+		if (bTeamMessage)
+			GetPC().TeamSay(ChatMessage);
+		else
+			GetPC().Say(ChatMessage);
+	}
 
+	FHUD(GetPC().myHUD).UpdateMoviePriorities(False);
+	StopUsingChatInputBox();
+}
 
 /*********************************************************************************************
  Functions calling ActionScript

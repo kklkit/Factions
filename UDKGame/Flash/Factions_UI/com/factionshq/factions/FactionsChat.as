@@ -11,8 +11,6 @@ import scaleform.clik.controls.TextArea;
 import scaleform.clik.controls.ScrollBar;
 import scaleform.clik.controls.TextInput;
 
-
-
 public class FactionsChat extends MovieClip {
 	public var ChatContainer:MovieClip;	
 	public var htmlLineBreak:String = "<br />";			
@@ -21,6 +19,7 @@ public class FactionsChat extends MovieClip {
 	public var chatLogBoxChatHistoryHTML:String = "";
 	public var chatLogBoxChatCurrentHTML:String = "";
 	public var bHistoryMode = false;
+	public var bTeamChat = false;
 	
 	public var definedColor:Array = new Array("#FF2500", "#2500FF", "#CCCCCC", "#E08ECD","#25FFFF");
 	
@@ -31,12 +30,13 @@ public class FactionsChat extends MovieClip {
 		//definedColor[4] is light blue (Blue team commander)
 			
 	public function FactionsChat() {
-		super();		
+		super();
+		
 		Extensions.enabled = true;
-					
+		
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.align = StageAlign.TOP_LEFT;
-				
+		
 		var historyChatLogContainer:MovieClip = ChatContainer.getChildByName("historyChatLog") as MovieClip;
 		historyChatLogContainer.visible = false;
 		
@@ -51,17 +51,22 @@ public class FactionsChat extends MovieClip {
 	
 	public function onInputBoxKeyDown(e:KeyboardEvent):void {
 		if (e.keyCode == Keyboard.ENTER)
-			ExternalInterface.call("SendChat");				
+		{
+			ExternalInterface.call("SendChat", getChatInputBoxText(), this.bTeamChat);
+			setChatInputBoxText("");
+		}
 	}
 	
 	public function enableChatInputBox(bTeamChat:Boolean):void {
+		this.bTeamChat = bTeamChat;
+		
 		var chatInputBox:TextInput = ChatContainer.getChildByName("chatInputBox") as TextInput;
 		chatInputBox.visible = true;
 		chatInputBox.focused = 1;
 		
 		var chatState:MovieClip = ChatContainer.getChildByName("chatState") as MovieClip;
 		chatState.visible = true;
-		if (bTeamChat)
+		if (this.bTeamChat)
 			chatState.gotoAndStop(2);
 		else
 			chatState.gotoAndStop(1);
@@ -172,13 +177,10 @@ public class FactionsChat extends MovieClip {
 				currentChatLogTextArea.htmlText = tempString;
 			}
 			else
-				currentChatLogTextArea.htmlText = "";			
+			{
+				currentChatLogTextArea.htmlText = "";
+			}
 		}		
 	}
-	
-	
-	
-	
-	
 }
 }

@@ -29,10 +29,6 @@ var Rotator MinimapCaptureRotation;
 var FInfantryClass CurrentInfantryClassArchetype;
 var FWeapon CurrentWeaponArchetypes[MaxLoadoutSlots];
 
-// ChatInput
-var bool bIsChatting;
-var bool bTeamChat;
-
 replication
 {
 	if (bNetDirty)
@@ -338,7 +334,7 @@ exec function ToggleCommandView()
  */
 exec function Talk()
 {
-	BeginChat(False);
+	FHUD(myHUD).GFxChat.OpenChat();
 }
 
 /**
@@ -346,48 +342,7 @@ exec function Talk()
  */
 exec function TeamTalk()
 {
-	BeginChat(True);
-}
-
-function BeginChat(bool bIsTeamChat)
-{
-	PlayerInput.ResetInput();
-	if (!bIsChatting)
-	{
-		FHUD(myHUD).UpdateMoviePriorities(True);
-		
-		FHUD(myHUD).GFxChat.StartUsingChatInputBox(bIsTeamChat);
-		bTeamChat = bIsTeamChat;
-		bIsChatting = True;
-		FHUD(myHUD).GFxChat.Start();
-	}
-}
-
-/**
- * Send the current chat message to the server.
- */
-function SendChat()
-{
-	local String msg;
-
-	if (bIsChatting)
-	{
-		FHUD(myHUD).GFxChat.StopUsingChatInputBox();
-		msg = FHUD(myHUD).GFxChat.GetChatInputBoxText();
-		FHUD(myHUD).GFxChat.SetChatLogBoxText("");
-		
-		FHUD(myHUD).UpdateMoviePriorities(False);
-
-		if (msg != "")
-		{
-			if (bTeamChat)
-				TeamSay(msg);
-			else
-				Say(msg);
-		}		
-	}
-
-	bIsChatting = false;
+	FHUD(myHUD).GFxChat.OpenChat(True);
 }
 
 state PlayerDriving
@@ -605,6 +560,4 @@ defaultproperties
 	VehicleCheckRadiusScaling=1.0
 	PulseTimer=5.0
 	MinRespawnDelay=1.5
-	bIsChatting=False
-	bTeamChat=False
 }
