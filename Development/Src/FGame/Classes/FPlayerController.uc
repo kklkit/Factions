@@ -334,7 +334,7 @@ exec function ToggleCommandView()
  */
 exec function Talk()
 {
-	FHUD(myHUD).GFxChat.OpenChat();
+	FHUD(myHUD).GFxChat.OpenChat('all');
 }
 
 /**
@@ -342,7 +342,7 @@ exec function Talk()
  */
 exec function TeamTalk()
 {
-	FHUD(myHUD).GFxChat.OpenChat(True);
+	FHUD(myHUD).GFxChat.OpenChat('team');
 }
 
 state PlayerDriving

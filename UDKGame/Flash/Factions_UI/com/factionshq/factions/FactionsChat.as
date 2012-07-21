@@ -57,8 +57,11 @@ public class FactionsChat extends MovieClip {
 		}
 	}
 	
-	public function enableChatInputBox(bTeamChat:Boolean):void {
-		this.bTeamChat = bTeamChat;
+	public function enableChatInputBox(chatChannel:String):void {
+		if (chatChannel.toLowerCase() == 'team')
+			bTeamChat = true;
+		else
+			bTeamChat = false;
 		
 		var chatInputBox:TextInput = ChatContainer.getChildByName("chatInputBox") as TextInput;
 		chatInputBox.visible = true;
@@ -66,7 +69,7 @@ public class FactionsChat extends MovieClip {
 		
 		var chatState:MovieClip = ChatContainer.getChildByName("chatState") as MovieClip;
 		chatState.visible = true;
-		if (this.bTeamChat)
+		if (bTeamChat)
 			chatState.gotoAndStop(2);
 		else
 			chatState.gotoAndStop(1);

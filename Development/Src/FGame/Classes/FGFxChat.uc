@@ -8,12 +8,12 @@ class FGFxChat extends FGFxMoviePlayer;
 /**
  * Displays the chat box.
  */
-function OpenChat(optional bool bIsTeamChat = False)
+function OpenChat(name ChatChannel)
 {
 	GetPC().PlayerInput.ResetInput();
 
 	FHUD(GetPC().myHUD).UpdateMoviePriorities(True);
-	StartUsingChatInputBox(bIsTeamChat);
+	StartUsingChatInputBox(string(ChatChannel));
 }
 
 /*********************************************************************************************
@@ -46,7 +46,7 @@ function SendChat(string ChatMessage, bool bTeamMessage)
  function is called while the movie is closed.
 **********************************************************************************************/
 
-function StartUsingChatInputBox(bool bTeamChat)
+function StartUsingChatInputBox(string ChatChannel)
 {
 	if (bMovieIsOpen)
 	{
