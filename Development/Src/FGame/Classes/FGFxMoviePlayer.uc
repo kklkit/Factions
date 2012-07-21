@@ -35,7 +35,7 @@ event bool Start(optional bool StartPaused = False)
 		}
 	}
 
-	return true;
+	return True;
 }
 
 /**

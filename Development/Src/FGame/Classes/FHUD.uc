@@ -86,11 +86,13 @@ function Message(PlayerReplicationInfo PRI, coerce string Msg, name MsgType, opt
 		PlayerOwner.PlayBeepSound();
 	}
 
+	// Format the message
 	if ((MsgType == 'Say') || (MsgType == 'TeamSay'))
 	{
 		ThePlayerName = PRI != None ? PRI.PlayerName : "";
 		Msg = ThePlayerName $ ": " $ Msg;
 
+		// Prepend (TEAM) for team messages
 		if (MsgType == 'TeamSay')
 		{
 			Msg = "(TEAM)" @ Msg;
@@ -206,6 +208,21 @@ function DrawMinimap()
 function Vector2D GetMousePosition()
 {
 	return LocalPlayer(PlayerOwner.Player).ViewportClient.GetMousePosition();
+}
+
+/**
+ * Updates the movieclip priorities depending on if the player is using chat.
+ */
+function UpdateMoviePriorities(bool bIsChatting)
+{
+	if (bIsChatting)
+	{
+		GFxChat.SetPriority(100);
+	}
+	else
+	{
+		GFxChat.SetPriority(1);
+	}
 }
 
 /**

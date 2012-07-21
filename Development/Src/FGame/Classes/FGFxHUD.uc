@@ -6,6 +6,16 @@
 class FGFxHUD extends FGFxMoviePlayer;
 
 /**
+ * @extends
+ */
+function Init(optional LocalPlayer LocPlay)
+{
+	Super.Init(LocPlay);
+
+	SetPriority(30);
+}
+
+/**
  * Updates the interface elements in Flash.
  */
 function TickHud()
@@ -180,4 +190,6 @@ defaultproperties
 {
 	MovieInfo=SwfMovie'Factions_UI.factions_hud'
 	bDisplayWithHudOff=False
+	bAllowFocus=False
+	bAllowInput=False
 }

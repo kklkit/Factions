@@ -24,6 +24,16 @@ var FInfantryClass SelectedInfantryClassArchetype;
 /**
  * @extends
  */
+function Init(optional LocalPlayer LocPlay)
+{
+	Super.Init(LocPlay);
+
+	SetPriority(50);
+}
+
+/**
+ * @extends
+ */
 event OnClose()
 {
 	InternalOnClose();

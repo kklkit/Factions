@@ -338,7 +338,7 @@ exec function ToggleCommandView()
  */
 exec function Talk()
 {
-	SetupChat(False);
+	BeginChat(False);
 }
 
 /**
@@ -346,51 +346,20 @@ exec function Talk()
  */
 exec function TeamTalk()
 {
-	SetupChat(True);
+	BeginChat(True);
 }
 
-function SetupChat(bool bIsTeamChat)
+function BeginChat(bool bIsTeamChat)
 {
 	PlayerInput.ResetInput();
 	if (!bIsChatting)
 	{
-		ToggleChatMoviePriority();
+		FHUD(myHUD).UpdateMoviePriorities(True);
 		
 		FHUD(myHUD).GFxChat.StartUsingChatInputBox(bIsTeamChat);
 		bTeamChat = bIsTeamChat;
 		bIsChatting = True;
 		FHUD(myHUD).GFxChat.Start();
-	}
-}
-
-function ToggleChatMoviePriority()
-{
-	local int p;
-
-	p = 1;
-
-	if (bIsChatting)
-	{
-		FHUD(myHUD).GFxChat.SetPriority(p++);
-
-		if (!isSpectating())
-			FHUD(myHUD).GFxHUD.SetPriority(p++);
-
-		if (FHUD(myHUD).GFxOmniMenu.bMovieIsOpen)
-		{
-			FHUD(myHUD).GFxOmniMenu.SetPriority(p++);
-			FHUD(myHUD).GFxOmniMenu.Start();
-		}
-	}
-	else
-	{
-		if (!isSpectating())
-			FHUD(myHUD).GFxHUD.SetPriority(p++);
-
-		if (FHUD(myHUD).GFxOmniMenu.bMovieIsOpen)
-			FHUD(myHUD).GFxOmniMenu.SetPriority(p++);
-
-		FHUD(myHUD).GFxChat.SetPriority(p++);
 	}
 }
 
@@ -406,7 +375,7 @@ function SendChat()
 		msg = FHUD(myHUD).GFxChat.GetChatInputBoxText();
 		FHUD(myHUD).GFxChat.SetChatLogBoxText("");
 		
-		ToggleChatMoviePriority();
+		FHUD(myHUD).UpdateMoviePriorities(False);
 
 		if (msg != "")
 		{
@@ -502,13 +471,9 @@ simulated state Commanding
 		if (PlacingStructure != None)
 		{
 			if (!bIsFiring)
-			{
 				NextPlacingStructureLocation = LastMouseWorldLocation;
-			}
 			else
-			{
 				NextPlacingStructureRotation = Rotator(LastMouseWorldLocation - PlacingStructure.Location);
-			}
 		}
 
 		Global.PlayerTick(DeltaTime);
@@ -577,37 +542,6 @@ simulated state Commanding
 
 		if (PlayerCamera != None && PlayerCamera.bUseClientSideCameraUpdates)
 			PlayerCamera.bShouldSendClientSideCameraUpdate = True;
-	}
-
-	/**
-	 * @extends
-	 */
-	function ToggleChatMoviePriority()
-	{
-		local int p;
-		p = 1;
-
-		if (bIsChatting)
-		{
-			FHUD(myHUD).GFxChat.SetPriority(p++);
-			FHUD(myHUD).GFxHUD.SetPriority(p++);			
-			FHUD(myHUD).GFxCommanderHUD.SetPriority(p++);
-			if (FHUD(myHUD).GFxOmniMenu.bMovieIsOpen)
-			{
-				FHUD(myHUD).GFxOmniMenu.SetPriority(p++);
-				FHUD(myHUD).GFxOmniMenu.Start();
-			}
-			else
-				FHUD(myHUD).GFxCommanderHUD.Start();
-		}
-		else
-		{
-			FHUD(myHUD).GFxHUD.SetPriority(p++);
-			FHUD(myHUD).GFxCommanderHUD.SetPriority(p++);
-			if (FHUD(myHUD).GFxOmniMenu.bMovieIsOpen)
-				FHUD(myHUD).GFxOmniMenu.SetPriority(p++);
-			FHUD(myHUD).GFxChat.SetPriority(p++);
-		}
 	}
 
 	/**

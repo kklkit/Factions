@@ -9,6 +9,16 @@ class FGFxCommanderHUD extends FGFxMoviePlayer;
 var GFxObject StatusText;
 
 /**
+ * @extends
+ */
+function Init(optional LocalPlayer LocPlay)
+{
+	Super.Init(LocPlay);
+
+	SetPriority(40);
+}
+
+/**
  * Updates the interface elements in Flash.
  */
 function TickHUD()
