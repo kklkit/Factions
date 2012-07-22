@@ -77,9 +77,9 @@ public class FactionsChat extends MovieClip {
 		var currentChatLogTextArea:TextArea = ChatContainer.getChildByName("currentChatLogTextArea") as TextArea;
 		currentChatLogTextArea.visible = false;
 		var historyChatLogContainer:MovieClip = ChatContainer.getChildByName("historyChatLog") as MovieClip;
-		historyChatLogContainer.visible = true;		
-		var historyChatLogTextAreaScrollBar:ScrollBar = historyChatLogContainer.getChildByName("historyChatLogTextAreaScrollBar") as ScrollBar;
-		historyChatLogTextAreaScrollBar.position =  historyChatLogTextAreaScrollBar.availableHeight;
+		historyChatLogContainer.visible = true;	
+		var historyChatLogTextArea:TextArea = historyChatLogContainer.getChildByName("historyChatLogTextArea") as TextArea;
+		historyChatLogTextArea.position = 10000;  //Scroll to bottom
 	}
 	
 	public function disableChatInputBox():void {
@@ -155,14 +155,18 @@ public class FactionsChat extends MovieClip {
 		
 		var currentChatLogTextArea:TextArea = ChatContainer.getChildByName("currentChatLogTextArea") as TextArea;
 		currentChatLogTextArea.htmlText += tempString;
+		currentChatLogTextArea.position = 10000; // Scroll to the bottom
 		
 		var historyChatLogContainer:MovieClip = ChatContainer.getChildByName("historyChatLog") as MovieClip;
 		var historyChatLogTextArea:TextArea = historyChatLogContainer.getChildByName("historyChatLogTextArea") as TextArea;
 		historyChatLogTextArea.htmlText += tempString;
 		
+		historyChatLogTextArea.position =  10000; // Scroll to the bottom
+		
 		var chatLogDecayTimer:Timer = new Timer(msgAliveDuration, 1);
 		chatLogDecayTimer.start();
 		chatLogDecayTimer.addEventListener(TimerEvent.TIMER, onChatLogDecay);	
+		
 	}
 	
 	function onChatLogDecay(e:TimerEvent):void {
