@@ -173,6 +173,16 @@ function bool Died(Controller Killer, class<DamageType> DamageType, vector HitLo
 }
 
 /**
+ * @extends
+ */
+function DriverDied(class<DamageType> DamageType)
+{
+	Super.DriverDied(DamageType);
+
+	Driver = None;
+}
+
+/**
  * Explodes the vehicle.
  */
 simulated function BlowupVehicle()
