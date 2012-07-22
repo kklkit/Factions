@@ -179,7 +179,12 @@ function DriverDied(class<DamageType> DamageType)
 {
 	Super.DriverDied(DamageType);
 
-	Driver = None;
+	// Handle switching to spectator
+	if (Controller == None)
+	{
+		WorldInfo.Game.DriverLeftVehicle(Self, Driver);
+		DriverLeft();
+	}
 }
 
 /**
