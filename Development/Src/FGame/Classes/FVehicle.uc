@@ -78,6 +78,18 @@ var repnotify WeaponFireEffect WeaponEffect;
 var FVehicleWeapon VehicleWeapons[NumVehicleWeapons];
 var VehicleWeaponAttachment VehicleWeaponAttachments[NumVehicleWeapons];
 
+// Explosion effects
+var ParticleSystem ExplosionTemplate;
+var array<DistanceBasedParticleTemplate> BigExplosionTemplates;
+
+var Emitter DeathExplosion;
+var ParticleSystem SecondaryExplosion;
+var name BigExplosionSocket;
+var class<UDKExplosionLight> ExplosionLightClass;
+
+var float ExplosionDamage, ExplosionRadius, ExplosionMomentum;
+var float ExplosionInAirAngVel;
+
 replication
 {
 	if (bNetDirty)
@@ -762,6 +774,8 @@ simulated state DyingVehicle
 
 		UpdateDamageMaterial();
 
+		DoVehicleExplosion();
+
 		for (i = 0; i < DamageSkelControls.length; i++)
 		{
 			DamageSkelControls[i].HealthPerc = 0.0;
@@ -784,6 +798,58 @@ simulated state DyingVehicle
 			if (Attached[i] != None)
 			{
 				Attached[i].PawnBaseDied();
+			}
+		}
+	}
+
+	/**
+	 * Plays vehicle destruction effects.
+	 */
+	simulated function DoVehicleExplosion(optional bool bDoingSecondaryExplosion = False)
+	{
+		if (WorldInfo.NetMode != NM_DedicatedServer)
+		{
+			if (!bDoingSecondaryExplosion)
+			{
+				PlayVehicleExplosionEffect(BigExplosionTemplates[0].Template);
+			}
+			else
+			{
+				PlayVehicleExplosionEffect(SecondaryExplosion, !bDoingSecondaryExplosion);
+			}
+		}
+
+		HurtRadius(ExplosionDamage, ExplosionRadius, class'UTDmgType_VehicleExplosion', ExplosionMomentum, Location,, GetCollisionDamageInstigator());
+		AddVelocity((ExplosionMomentum / Mass) * Vect(0,0,1), Location, class'UTDmgType_VehicleExplosion');
+
+		// If in air, add some anglar spin.
+		if (Role == ROLE_Authority && !bVehicleOnGround)
+		{
+			Mesh.SetRBAngularVelocity(VRand() * ExplosionInAirAngVel, True);
+		}
+	}
+
+	/**
+	 * Spawns the explosion particle system.
+	 */
+	simulated function PlayVehicleExplosionEffect(ParticleSystem TheExplosionTemplate, optional bool bSpawnLight = True)
+	{
+		local UDKExplosionLight L;
+
+		if (TheExplosionTemplate != None)
+		{
+			DeathExplosion = Spawn(class'UTEmitter', Self);
+			if (BigExplosionSocket != 'None')
+			{
+				DeathExplosion.SetBase(Self,, Mesh, BigExplosionSocket);
+			}
+			DeathExplosion.SetTemplate(TheExplosionTemplate, True);
+			DeathExplosion.ParticleSystemComponent.SetFloatParameter('Velocity', VSize(Velocity) / GroundSpeed);
+
+			if (bSpawnLight && ExplosionLightClass != None && !WorldInfo.bDropDetail)
+			{
+				L = new(DeathExplosion) ExplosionLightClass;
+				DeathExplosion.AttachComponent(L);
 			}
 		}
 	}
@@ -825,6 +891,17 @@ defaultproperties
 
 	InventoryManagerClass=class'FVehicleInventoryManager'
 
+	// Explosions
+	ExplosionDamage=100.0
+	ExplosionRadius=300.0
+	ExplosionMomentum=60000.0
+	ExplosionInAirAngVel=1.5
+	ExplosionLightClass=class'UTGame.UTRocketExplosionLight'
+	ExplosionTemplate=ParticleSystem'FX_VehicleExplosions.Effects.P_FX_GeneralExplosion'
+	BigExplosionTemplates[0]=(Template=ParticleSystem'FX_VehicleExplosions.Effects.P_FX_VehicleDeathExplosion')
+	SecondaryExplosion=ParticleSystem'Envy_Effects.VH_Deaths.P_VH_Death_Dust_Secondary'
+
+	// Tire sounds
 	TireSoundList(0)=(MaterialType=Dirt, Sound=SoundCue'A_Vehicle_Generic.Vehicle.VehicleSurface_TireDirt01Cue')
 	TireSoundList(1)=(MaterialType=Foliage, Sound=SoundCue'A_Vehicle_Generic.Vehicle.VehicleSurface_TireFoliage01Cue')
 	TireSoundList(2)=(MaterialType=Grass, Sound=SoundCue'A_Vehicle_Generic.Vehicle.VehicleSurface_TireGrass01Cue')
@@ -835,6 +912,7 @@ defaultproperties
 	TireSoundList(7)=(MaterialType=Wood, Sound=SoundCue'A_Vehicle_Generic.Vehicle.VehicleSurface_TireWood01Cue')
 	TireSoundList(8)=(MaterialType=Water, Sound=SoundCue'A_Vehicle_Generic.Vehicle.VehicleSurface_TireWater01Cue')
 
+	// Seats
 	Seats(0)={()}
 
 	InitialTeam=255 // class'FTeamGame'.const.TEAM_NONE
