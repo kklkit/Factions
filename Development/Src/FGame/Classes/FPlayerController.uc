@@ -14,6 +14,7 @@ var bool bIsFiring;
 // Commander
 var float CommanderCameraSpeed;
 var name StateBeforeCommanding;
+var int DefaultZoom, MinZoom, MaxZoom;
 
 // Structure placement
 var FStructure PlacingStructure;
@@ -374,6 +375,7 @@ simulated state Commanding
 	simulated event BeginState(name PreviousStateName)
 	{
 		local Vector ViewLocation;
+		local Rotator ViewRotation;
 
 		StateBeforeCommanding = PreviousStateName;
 
@@ -390,11 +392,13 @@ simulated state Commanding
 		}
 
 		// Set commander view location and rotation
-		ViewLocation.X = Pawn.Location.X - 2048;
+		ViewLocation.X = Pawn.Location.X;
 		ViewLocation.Y = Pawn.Location.Y;
-		ViewLocation.Z = Pawn.Location.Z + 2048;
+		ViewLocation.Z = Pawn.Location.Z;
+		ViewRotation.Pitch = -8000;
+
 		SetLocation(ViewLocation);
-		SetRotation(Rotator(Pawn.Location - ViewLocation));
+		SetRotation(ViewRotation);
 
 		if (WorldInfo.NetMode == NM_DedicatedServer)
 			ClientGotoState(GetStateName());
@@ -456,8 +460,27 @@ simulated state Commanding
 	 */
 	simulated event GetPlayerViewPoint(out Vector out_Location, out Rotator out_Rotation)
 	{
-		// Set view point to controller location and rotation
-		out_Location = Location;
+		local vector CamDir, HitLocation, CamStart, HitNormal, CamRotX, CamRotY, CamRotZ;
+		local actor HitActor;
+		
+		Global.GetPlayerViewPoint(out_Location,out_Rotation);
+		CamStart = Location;
+
+		DefaultZoom = Max(MinZoom,DefaultZoom);
+		DefaultZoom = Min(MaxZoom,DefaultZoom);
+
+				
+		GetAxes(out_Rotation, CamRotX, CamRotY, CamRotZ);
+		CamDir = CamRotX * -DefaultZoom;
+		out_Location = CamDir+CamStart;		
+
+		// Trace to see if the camera is going through the terrain
+		HitActor = Trace(HitLocation, HitNormal, out_Location, CamStart, false, vect(12, 12, 12));
+		
+		if ( HitActor != None && HitActor.IsA('Landscape'))
+			out_Location = HitLocation;
+		
+
 		out_Rotation = Rotation;
 	}
 
@@ -466,8 +489,11 @@ simulated state Commanding
 	 */
 	function PlayerMove(float DeltaTime)
 	{
+		local vector CamRotX, CamRotY, CamRotZ;
+		GetAxes(Rotation,CamRotX, CamRotY, CamRotZ);
+
 		// Get the player inputs
-		Velocity = Normal(PlayerInput.aForward * vect(1,0,0) + PlayerInput.aStrafe * vect(0,1,0) + PlayerInput.aUp * vect(0,0,1));
+		Velocity = Normal(PlayerInput.aForward * (CamRotX + CamRotZ) + PlayerInput.aStrafe * CamRotY + PlayerInput.aUp * CamRotZ);
 
 		if (Role < ROLE_Authority)
 			// Simulate the movement on clients
@@ -545,6 +571,54 @@ simulated state Commanding
 	{
 		ServerBeginStructurePlacement(StructureIndex, LastMouseWorldLocation);
 	}	
+
+	/**
+	 * Toggle commander view rotation
+	 */
+	exec function ToggleCommandViewRotation(bool bNowOn)
+	{
+		if (bNowOn)
+		{
+			FHUD(myHUD).GFxCommanderHUD.bCaptureMouseInput = False;
+			FHUD(myHUD).GFxCommanderHUD.SetHardwareMouseCursorVisibility(False);
+			PushState('RotatingCommandView');
+		}
+	}
+
+	exec function CommandViewZoomIn()
+	{
+		DefaultZoom -= 100;
+	}
+
+	exec function CommandViewZoomOut()
+	{
+		DefaultZoom += 100;
+	}
+}
+
+simulated state RotatingCommandView extends Commanding
+{
+
+	function PlayerMove( float DeltaTime )
+	{
+		// update 'looking' rotation
+		UpdateRotation(DeltaTime);
+
+		bPressedJump = false;
+	}
+
+	/**
+	 * Toggle commander view rotation
+	 */
+	exec function ToggleCommandViewRotation(bool bNowOn)
+	{
+		if (!bNowOn)
+		{
+			FHUD(myHUD).GFxCommanderHUD.bCaptureMouseInput = True;
+			FHUD(myHUD).GFxCommanderHUD.SetHardwareMouseCursorVisibility(True);
+			PopState();
+		}
+	}
 }
 
 defaultproperties
@@ -560,4 +634,9 @@ defaultproperties
 	VehicleCheckRadiusScaling=1.0
 	PulseTimer=5.0
 	MinRespawnDelay=1.5
+
+	DefaultZoom = 2048;
+	MinZoom = 1500;
+	MaxZoom = 10000;
+
 }
