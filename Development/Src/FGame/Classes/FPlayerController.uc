@@ -490,10 +490,15 @@ simulated state Commanding
 	function PlayerMove(float DeltaTime)
 	{
 		local vector CamRotX, CamRotY, CamRotZ;
+		local vector ForwardVector;
 		GetAxes(Rotation,CamRotX, CamRotY, CamRotZ);
 
+		ForwardVector.X = CamRotY.Y;
+		ForwardVector.Y = -CamRotY.X;
+		ForwardVector.Z = CamRotY.Z;
+
 		// Get the player inputs
-		Velocity = Normal(PlayerInput.aForward * (CamRotX + CamRotZ) + PlayerInput.aStrafe * CamRotY + PlayerInput.aUp * CamRotZ);
+		Velocity = Normal(PlayerInput.aForward * ForwardVector + PlayerInput.aStrafe * CamRotY + PlayerInput.aUp * vect(0,0,1));
 
 		if (Role < ROLE_Authority)
 			// Simulate the movement on clients
