@@ -585,6 +585,7 @@ simulated state Commanding
 		if (bNowOn)
 		{
 			FHUD(myHUD).GFxCommanderHUD.bCaptureMouseInput = False;
+			FHUD(myHUD).GFxCommanderHUD.bCaptureInput = False;
 			FHUD(myHUD).GFxCommanderHUD.SetHardwareMouseCursorVisibility(False);
 			PushState('RotatingCommandView');
 		}
@@ -619,7 +620,7 @@ simulated state RotatingCommandView extends Commanding
 	{
 		if (!bNowOn)
 		{
-			FHUD(myHUD).GFxCommanderHUD.bCaptureMouseInput = True;
+			// FHUD(myHUD).GFxCommanderHUD.bCaptureMouseInput = True;
 			FHUD(myHUD).GFxCommanderHUD.SetHardwareMouseCursorVisibility(True);
 			PopState();
 		}
