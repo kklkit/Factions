@@ -641,7 +641,7 @@ simulated state RotatingCommandView extends Commanding
 defaultproperties
 {
 	InputClass=class'FGame.FPlayerInput'
-	CommanderCameraSpeed=30.0
+	CommanderCameraSpeed=75.0
 	SpectatorCameraSpeed=5000.0
 	MinimapCaptureRotation=(Pitch=-16384,Yaw=-16384,Roll=0)
 	DesiredFOV=90.0
@@ -655,5 +655,4 @@ defaultproperties
 	DefaultZoom = 2048;
 	MinZoom = 1500;
 	MaxZoom = 10000;
-
 }
