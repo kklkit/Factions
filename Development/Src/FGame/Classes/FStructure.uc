@@ -172,24 +172,27 @@ auto simulated state Placing
 	{
 		local float MeshX, MeshY, LongerSide;
 		local int SampleDensity, HeightRange, i, j, collisionCount;
-		local vector StartPoint, CurrentPointStart, CurrentPointEnd, HitLocation, HitNormal;
+		local vector StartPoint, CurrentPointStart, CurrentPointEnd, HitLocation, HitNormal, RotX,RotY,RotZ;
 		local actor HitActor, collidedActor;
 		local bool bWasPlaceable, bNowPlaceable;
 
+		
+		GetAxes(Rotation,RotX,RotY,RotZ);
 		SampleDensity = 10;
 		HeightRange = 10;
 		MeshX = Mesh.Bounds.BoxExtent.X/SampleDensity;
 		MeshY = Mesh.Bounds.BoxExtent.Y/SampleDensity;
 
-		StartPoint.X = Location.X - (Mesh.Bounds.BoxExtent.X/2);
-		StartPoint.Y = Location.Y - (Mesh.Bounds.BoxExtent.Y/2);
-		StartPoint.Z = Location.Z;
-		CurrentPointStart.Z = Location.Z + HeightRange;
+		StartPoint = Location - RotX*(Mesh.Bounds.BoxExtent.X/2);
+		StartPoint = Location - RotY*(Mesh.Bounds.BoxExtent.Y/2);
+				
 		CurrentPointEnd.Z = Location.Z - HeightRange;
-		
+
 		bWasPlaceable = bPlaceable;
 		bNowPlaceable = True;
-						
+
+		
+		
 
 		i = 0;
 		do
@@ -197,8 +200,9 @@ auto simulated state Placing
 			j = 0;
 			do
 			{
-				CurrentPointStart.X = StartPoint.X + MeshX * i;
-				CurrentPointStart.Y = StartPoint.Y + MeshY * j;
+				CurrentPointStart = StartPoint + RotX * (MeshX * i);
+				CurrentPointStart = StartPoint + RotY * (MeshY * j);
+				CurrentPointStart.Z = Location.Z + HeightRange;
 				CurrentPointEnd.X = CurrentPointStart.X;
 				CurrentPointEnd.Y = CurrentPointStart.Y;
 
@@ -208,9 +212,11 @@ auto simulated state Placing
 					bNowPlaceable = False;
 
 				j++;
-			} until (j >= 10 || !bPlaceable);
+			} until (j >= SampleDensity || !bNowPlaceable);
 			i++;
-		} until (i >= 10 || !bPlaceable);
+		} until (i >= SampleDensity || !bNowPlaceable);
+
+		WorldInfo.Game.Broadcast(self,bNowPlaceable);
 
 		if (Mesh.Bounds.BoxExtent.X > Mesh.Bounds.BoxExtent.Y)
 			LongerSide = Mesh.Bounds.BoxExtent.X * 2;
@@ -223,6 +229,7 @@ auto simulated state Placing
 				collisionCount++;
 		}		
 
+		
 		if (collisionCount > 0)
 			bNowPlaceable = False;		
 		
