@@ -171,9 +171,9 @@ auto simulated state Placing
 	simulated function bool checkPlaceable()
 	{
 		local float MeshX, MeshY, LongerSide;
-		local int SampleDensity, HeightRange, i, j, collisionCount;
+		local int SampleDensity, HeightRange, i, j, overlappingCount;
 		local vector StartPoint, CurrentPointStart, CurrentPointEnd, HitLocation, HitNormal, RotX,RotY,RotZ;
-		local actor HitActor, collidedActor;
+		local actor HitActor, overlappedActor;
 		local bool bWasPlaceable, bNowPlaceable;
 
 		
@@ -214,18 +214,18 @@ auto simulated state Placing
 		} until (i >= SampleDensity || !bNowPlaceable);
 
 		if (Mesh.Bounds.BoxExtent.X > Mesh.Bounds.BoxExtent.Y)
-			LongerSide = Mesh.Bounds.BoxExtent.X * 2;
+			LongerSide = Mesh.Bounds.BoxExtent.X;
 		else
-			LongerSide = Mesh.Bounds.BoxExtent.Y * 2;
+			LongerSide = Mesh.Bounds.BoxExtent.Y;
 
-		foreach CollidingActors(class'Actor', collidedActor, LongerSide)
+		foreach OverlappingActors(class'Actor', overlappedActor, LongerSide,,True)
 		{
-			if (collidedActor.IsA('Pawn') || collidedActor.IsA('StaticMeshActor'))
-				collisionCount++;
+			WorldInfo.Game.Broadcast(self, overlappedActor.Name);
+			if (overlappedActor.IsA('Pawn') || overlappedActor.IsA('StaticMeshActor'))
+				overlappingCount++;
 		}		
-
-		
-		if (collisionCount > 0)
+						
+		if (overlappingCount > 0)
 			bNowPlaceable = False;		
 		
 
