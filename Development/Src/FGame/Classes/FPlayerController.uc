@@ -12,9 +12,9 @@ var Vector LastMouseWorldLocation;
 var bool bIsFiring;
 
 // Commander
-var float CommanderCameraSpeed;
 var name StateBeforeCommanding;
-var int DefaultZoom, MinZoom, MaxZoom;
+var float CommanderCameraSpeed;
+var int CommanderCameraZoom, CommanderCameraMinZoom, CommanderCameraMaxZoom;
 
 // Structure placement
 var FStructure PlacingStructure;
@@ -46,12 +46,12 @@ simulated event PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
-	// Create the minimap capture component on clients
+	// Create the minimap capture component on clients only
 	if (WorldInfo.NetMode != NM_DedicatedServer)
 	{
 		MinimapCaptureComponent = new(Self) class'SceneCapture2DComponent';
 		MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'Factions_Assets.minimap_render_texture', 1,, 0);
-		MinimapCaptureComponent.bUpdateMatrices = False;
+		MinimapCaptureComponent.bUpdateMatrices = False; // Minimap camera is controlled by game code
 		AttachComponent(MinimapCaptureComponent);
 	}
 }
@@ -71,7 +71,7 @@ simulated event PlayerTick(float DeltaTime)
 		MinimapCaptureComponent.SetView(MinimapCaptureLocation, MinimapCaptureRotation);
 	}
 
-	// Send the structure placement location to the server if it has changed
+	// Send the structure placement location to the server only if it has changed
 	if (PlacingStructure != None)
 	{
 		if (PlacingStructure.Location != NextPlacingStructureLocation)
@@ -117,6 +117,7 @@ reliable server function ServerChangeTeam(int N)
 	// Only signal player changed team if not changing from spectator
 	if (WorldInfo.Game.bTeamGame && OldTeam != None && PlayerReplicationInfo.Team != OldTeam)
 	{
+		// If switching to spectator, the pawn will not exist
 		if (Pawn != None)
 		{
 			Pawn.PlayerChangedTeam();
@@ -148,14 +149,14 @@ function BuildVehicle(FVehicle VehicleArchetype, array<FVehicleWeapon> VehicleWe
 {
 	local FStructure_VehicleFactory VF;
 
-	// Get the VF the player is standing on
+	// Get the vehicle factory the player is standing on
 	VF = FStructure_VehicleFactory(Pawn.Base);
 	if (VF != None)
 		VF.BuildVehicle(Self, VehicleArchetype, VehicleWeaponArchetypes);
 }
 
 /**
- * Packs the weapon arguments and calls SetLoadout.
+ * Packs the weapon arguments into an array and calls SetLoadout.
  */
 reliable server function ServerSetLoadout(FInfantryClass InfantryClassArchetype, FWeapon WeaponArchetype1, FWeapon WeaponArchetype2, FWeapon WeaponArchetype3, FWeapon WeaponArchetype4)
 {
@@ -170,26 +171,29 @@ reliable server function ServerSetLoadout(FInfantryClass InfantryClassArchetype,
 }
 
 /**
- * Sets the player's loadout.
+ * Sets and equips the player's loadout.
  */
 function SetLoadout(FInfantryClass InfantryClassArchetype, FWeapon WeaponArchetypes[MaxLoadoutSlots])
 {
 	local int i;
 
+	// Set the current class
 	CurrentInfantryClassArchetype = InfantryClassArchetype;
 
+	// Set the current weapons
 	for (i = 0; i < MaxLoadoutSlots; i++)
 	{
 		if (WeaponArchetypes[i] != None && WeaponArchetypes[i].WeaponClassArchetype == CurrentInfantryClassArchetype.LoadoutSlots[i])
 		{
 			CurrentWeaponArchetypes[i] = WeaponArchetypes[i];
 		}
-		else
+		else // No equipment in the slot
 		{
 			CurrentWeaponArchetypes[i] = None;
 		}
 	}
 
+	// Equip loadout
 	if (Pawn != None)
 		Pawn.AddDefaultInventory();
 }
@@ -241,7 +245,7 @@ unreliable server function ServerUpdateStructureRotation(Rotator NewRotation)
 {
 	if (PlacingStructure != None)
 	{
-		NewRotation.Pitch = 0;
+		NewRotation.Pitch = 0; // Structure should always be flat to ground
 		PlacingStructure.SetRotation(NewRotation);
 	}
 }
@@ -477,12 +481,12 @@ simulated state Commanding
 		Global.GetPlayerViewPoint(out_Location,out_Rotation);
 		CamStart = Location;
 
-		DefaultZoom = Max(MinZoom,DefaultZoom);
-		DefaultZoom = Min(MaxZoom,DefaultZoom);
+		CommanderCameraZoom = Max(CommanderCameraMinZoom, CommanderCameraZoom);
+		CommanderCameraZoom = Min(CommanderCameraMaxZoom, CommanderCameraZoom);
 
 				
 		GetAxes(out_Rotation, CamRotX, CamRotY, CamRotZ);
-		CamDir = CamRotX * -DefaultZoom;
+		CamDir = CamRotX * -CommanderCameraZoom;
 		out_Location = CamDir+CamStart;		
 
 		// Trace to see if the camera is going through the terrain
@@ -604,18 +608,17 @@ simulated state Commanding
 
 	exec function CommandViewZoomIn()
 	{
-		DefaultZoom -= 100;
+		CommanderCameraZoom -= 100;
 	}
 
 	exec function CommandViewZoomOut()
 	{
-		DefaultZoom += 100;
+		CommanderCameraZoom += 100;
 	}
 }
 
 simulated state RotatingCommandView extends Commanding
 {
-
 	function PlayerMove( float DeltaTime )
 	{
 		// update 'looking' rotation
@@ -641,9 +644,7 @@ simulated state RotatingCommandView extends Commanding
 defaultproperties
 {
 	InputClass=class'FGame.FPlayerInput'
-	CommanderCameraSpeed=75.0
-	SpectatorCameraSpeed=5000.0
-	MinimapCaptureRotation=(Pitch=-16384,Yaw=-16384,Roll=0)
+
 	DesiredFOV=90.0
 	DefaultFOV=90.0
 	FOVAngle=90.0
@@ -652,7 +653,12 @@ defaultproperties
 	PulseTimer=5.0
 	MinRespawnDelay=1.5
 
-	DefaultZoom = 2048;
-	MinZoom = 1500;
-	MaxZoom = 10000;
+	MinimapCaptureRotation=(Pitch=-16384,Yaw=-16384,Roll=0)
+
+	CommanderCameraSpeed=75.0
+	SpectatorCameraSpeed=5000.0
+
+	CommanderCameraZoom=2048
+	CommanderCameraMinZoom=1500
+	CommanderCameraMaxZoom=10000
 }
