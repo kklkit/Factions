@@ -11,6 +11,7 @@ var() repnotify name CurrentState;
 var() repnotify byte Team; // Team index
 var() int ResourceCost;
 var array<MaterialInterface> OriginalMaterials;
+var protected bool bPlaceable;
 
 replication
 {
@@ -146,6 +147,11 @@ simulated function UnhideFriendlyStructurePreview()
 	}
 }
 
+simulated function bool checkPlaceable()
+{
+	return True;
+}
+
 // Structure is being placed
 auto simulated state Placing
 {
@@ -160,6 +166,86 @@ auto simulated state Placing
 			SetupPreview();
 
 		SetCollisionType(COLLIDE_NoCollision);
+	}
+
+	simulated function bool checkPlaceable()
+	{
+		local float MeshX, MeshY, LongerSide;
+		local int SampleDensity, HeightRange, i, j, collisionCount;
+		local vector StartPoint, CurrentPointStart, CurrentPointEnd, HitLocation, HitNormal;
+		local actor HitActor, collidedActor;
+		local bool bWasPlaceable, bNowPlaceable;
+
+		SampleDensity = 10;
+		HeightRange = 10;
+		MeshX = Mesh.Bounds.BoxExtent.X/SampleDensity;
+		MeshY = Mesh.Bounds.BoxExtent.Y/SampleDensity;
+
+		StartPoint.X = Location.X - (Mesh.Bounds.BoxExtent.X/2);
+		StartPoint.Y = Location.Y - (Mesh.Bounds.BoxExtent.Y/2);
+		StartPoint.Z = Location.Z;
+		CurrentPointStart.Z = Location.Z + HeightRange;
+		CurrentPointEnd.Z = Location.Z - HeightRange;
+		
+		bWasPlaceable = bPlaceable;
+		bNowPlaceable = True;
+						
+
+		i = 0;
+		do
+		{
+			j = 0;
+			do
+			{
+				CurrentPointStart.X = StartPoint.X + MeshX * i;
+				CurrentPointStart.Y = StartPoint.Y + MeshY * j;
+				CurrentPointEnd.X = CurrentPointStart.X;
+				CurrentPointEnd.Y = CurrentPointStart.Y;
+
+				HitActor = Trace(HitLocation,HitNormal,CurrentPointEnd,CurrentPointStart,False,vect(2,2,2));
+
+				if (HitActor == None || !HitActor.IsA('Landscape'))
+					bNowPlaceable = False;
+
+				j++;
+			} until (j >= 10 || !bPlaceable);
+			i++;
+		} until (i >= 10 || !bPlaceable);
+
+		if (Mesh.Bounds.BoxExtent.X > Mesh.Bounds.BoxExtent.Y)
+			LongerSide = Mesh.Bounds.BoxExtent.X * 2;
+		else
+			LongerSide = Mesh.Bounds.BoxExtent.Y * 2;
+
+		foreach CollidingActors(class'Actor', collidedActor, LongerSide)
+		{
+			if (collidedActor.IsA('Pawn') || collidedActor.IsA('StaticMeshActor'))
+				collisionCount++;
+		}		
+
+		if (collisionCount > 0)
+			bNowPlaceable = False;		
+		
+
+		if (bNowPlaceable)
+		{
+			if (!bWasPlaceable)
+			{
+				for (i = 0; i < Mesh.GetNumElements(); i++)
+					Mesh.SetMaterial(i, Material'Factions_Assets.Materials.StructurePreviewMaterial');
+			}
+		}
+		else
+		{
+			if (bWasPlaceable)
+			{
+				for (i = 0; i < Mesh.GetNumElements(); i++)
+					Mesh.SetMaterial(i, Material'Factions_Assets.Materials.StructurePreviewMaterialNotPlaceable');
+			}			
+		}		
+
+		bPlaceable = bNowPlaceable;
+		return bPlaceable;
 	}
 
 	/**
@@ -280,6 +366,7 @@ defaultproperties
 	bBlockActors=True
 	bCollideWorld=False
 	bAlwaysRelevant=True
+	bPlaceable=True
 
 	Team=255 // class'FTeamGame'.const.TEAM_NONE
 	Health=1

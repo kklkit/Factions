@@ -253,14 +253,17 @@ reliable server function ServerPlaceStructure()
 {
 	if (FTeamInfo(PlayerReplicationInfo.Team).Resources >= PlacingStructure.ResourceCost)
 	{
-		FTeamInfo(PlayerReplicationInfo.Team).Resources -= PlacingStructure.ResourceCost;
-		PlacingStructure.GotoState('Preview');
-		EndStructurePlacement();
+		if (PlacingStructure.checkPlaceable())
+		{
+			FTeamInfo(PlayerReplicationInfo.Team).Resources -= PlacingStructure.ResourceCost;
+			PlacingStructure.GotoState('Preview');
+			EndStructurePlacement();
+		}
+		else
+			`log("Unable to place structure at required location" @ PlacingStructure);
 	}
 	else
-	{
 		`log("Not enough resources to place" @ PlacingStructure);
-	}
 }
 
 /**
@@ -427,16 +430,24 @@ simulated state Commanding
 	 */
 	simulated event PlayerTick(float DeltaTime)
 	{
+		local bool bNeedPlaceableCheck;
+		bNeedPlaceableCheck = False;
+
 		// Update the placing structure location
 		if (PlacingStructure != None)
 		{
+			bNeedPlaceableCheck = (NextPlacingStructureLocation == LastMouseWorldLocation);
+
 			if (!bIsFiring)
 				NextPlacingStructureLocation = LastMouseWorldLocation;
 			else
-				NextPlacingStructureRotation = Rotator(LastMouseWorldLocation - PlacingStructure.Location);
+				NextPlacingStructureRotation = Rotator(LastMouseWorldLocation - PlacingStructure.Location);			
 		}
 
 		Global.PlayerTick(DeltaTime);
+
+		if (bNeedPlaceableCheck)
+			PlacingStructure.checkPlaceable();
 	}
 
 	/**
