@@ -189,10 +189,7 @@ auto simulated state Placing
 		CurrentPointEnd.Z = Location.Z - HeightRange;
 
 		bWasPlaceable = bPlaceable;
-		bNowPlaceable = True;
-
-		
-		
+		bNowPlaceable = True;		
 
 		i = 0;
 		do
@@ -215,8 +212,6 @@ auto simulated state Placing
 			} until (j >= SampleDensity || !bNowPlaceable);
 			i++;
 		} until (i >= SampleDensity || !bNowPlaceable);
-
-		WorldInfo.Game.Broadcast(self,bNowPlaceable);
 
 		if (Mesh.Bounds.BoxExtent.X > Mesh.Bounds.BoxExtent.Y)
 			LongerSide = Mesh.Bounds.BoxExtent.X * 2;
