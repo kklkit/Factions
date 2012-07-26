@@ -220,8 +220,7 @@ auto simulated state Placing
 
 		foreach OverlappingActors(class'Actor', overlappedActor, LongerSide,,True)
 		{
-			WorldInfo.Game.Broadcast(self, overlappedActor.Name);
-			if (overlappedActor.IsA('Pawn') || overlappedActor.IsA('StaticMeshActor'))
+			if (overlappedActor.IsA('Pawn')) //|| overlappedActor.IsA('StaticMeshActor'))
 				overlappingCount++;
 		}		
 						
