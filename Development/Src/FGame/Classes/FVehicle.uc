@@ -781,6 +781,8 @@ simulated state DyingVehicle
 			DamageSkelControls[i].HealthPerc = 0.0;
 		}
 
+		SetDestroyedMaterial();
+
 		if (Controller != None)
 		{
 			if (Controller.bIsPlayer)
@@ -799,6 +801,17 @@ simulated state DyingVehicle
 			{
 				Attached[i].PawnBaseDied();
 			}
+		}
+	}
+
+	/**
+	 * Applies the destroyed material to the vehicle.
+	 */
+	simulated function SetDestroyedMaterial()
+	{
+		if (WorldInfo.NetMode != NM_DedicatedServer)
+		{
+			Mesh.SetMaterial(0, Material'Factions_Assets.Materials.UnitDestroyedMaterial');
 		}
 	}
 
