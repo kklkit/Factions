@@ -54,6 +54,20 @@ simulated event BeginState(name PreviousStateName)
 /**
  * @extends
  */
+function bool Died(Controller Killer, class<DamageType> DamageType, Vector HitLocation)
+{
+	if (Super.Died(Killer, DamageType, HitLocation))
+	{
+		GotoState('DyingStructure');
+		return True;
+	}
+
+	return False;
+}
+
+/**
+ * @extends
+ */
 simulated event byte ScriptGetTeamNum()
 {
 	return Team;
@@ -155,6 +169,8 @@ simulated function bool checkPlaceable()
 // Structure is being placed
 auto simulated state Placing
 {
+	ignores TakeDamage;
+
 	/**
 	 * @extends
 	 */
@@ -264,6 +280,8 @@ auto simulated state Placing
 // Structure is placed and is waiting to be built
 simulated state Preview
 {
+	ignores TakeDamage;
+
 	/**
 	 * @extends
 	 */
@@ -340,6 +358,33 @@ simulated state Active
 		// All hidden structure mesh should be visible when built
 		if (Mesh.HiddenGame)
 			Mesh.SetHidden(False); 		
+	}
+}
+
+// Structure has been destroyed
+simulated state DyingStructure
+{
+	ignores Bump, HitWall, HeadVolumeChange, PhysicsVolumeChange, Falling, BreathTimer, FellOutOfWorld;
+
+	simulated function PlayWeaponSwitch(Weapon OldWeapon, Weapon NewWeapon);
+	simulated function PlayNextAnimation();
+	singular event BaseChange();
+	event Landed(vector HitNormal, Actor FloorActor);
+	function bool Died(Controller Killer, class<DamageType> damageType, vector HitLocation);
+	simulated event PostRenderFor(PlayerController PC, Canvas Canvas, vector CameraPosition, vector CameraDir);
+	simulated function BlowupVehicle();
+
+	/**
+	 * @extends
+	 */
+	simulated event BeginState(name PreviousStateName)
+	{
+		Global.BeginState(PreviousStateName);
+
+		if (WorldInfo.NetMode != NM_DedicatedServer)
+		{
+			Mesh.SetMaterial(0, Material'Factions_Assets.Materials.UnitDestroyedMaterial');
+		}
 	}
 }
 
