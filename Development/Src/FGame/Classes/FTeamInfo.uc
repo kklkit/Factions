@@ -18,6 +18,16 @@ replication
 /**
  * @extends
  */
+event PostBeginPlay()
+{
+	Super.PostBeginPlay();
+
+	Resources = FMapInfo(WorldInfo.GetMapInfo()).StartingResources;
+}
+
+/**
+ * @extends
+ */
 simulated function string GetHumanReadableName()
 {
 	// Return the localized team name
@@ -32,5 +42,4 @@ simulated function string GetHumanReadableName()
 
 defaultproperties
 {
-	Resources=400
 }

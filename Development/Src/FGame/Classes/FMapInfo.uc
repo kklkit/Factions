@@ -9,6 +9,8 @@ class FMapInfo extends UDKMapInfo;
 var(Map) Vector MapOrigin;
 var(Map) float MapLength;
 
+var() int StartingResources;
+
 var(Game) array<FInfantryClass> InfantryClasses;
 var(Game) array<FStructure> Structures;
 var(Game) array<FVehicle> Vehicles;
@@ -19,6 +21,8 @@ defaultproperties
 {
 	MapOrigin=(X=0,Y=0,Z=1900000)
 	MapLength=40000.0
+
+	StartingResources=400
 
 	// Each item below will be spawnable in-game
 
