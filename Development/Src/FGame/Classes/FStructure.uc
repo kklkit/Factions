@@ -11,7 +11,8 @@ var() repnotify name CurrentState;
 var() repnotify byte Team; // Team index
 var() int ResourceCost;
 var array<MaterialInterface> OriginalMaterials;
-var protected bool bPlaceable;
+
+var protected bool bPlaceable; // Internal variable to show if this FStructure can be placed on its world location during last player's tick
 
 replication
 {
@@ -161,6 +162,12 @@ simulated function UnhideFriendlyStructurePreview()
 	}
 }
 
+/**
+* Check to see if the FStructure is:
+* 1. On a relatively flat ground 
+* 2. Obstructed by other Pawn(s)
+* And swap the structure's material to reflect if it is currently placeable
+*/
 simulated function bool checkPlaceable()
 {
 	return True;
@@ -185,10 +192,7 @@ auto simulated state Placing
 	}
 
 	/**
-	 * Check to see if the FStructure is:
-	 * 1. On a relatively flat ground 
-	 * 2. Obstructed by other Pawn(s)
-	 * And swap the structure's material to reflect if it is currently placeable
+	 * @extends
 	 */
 	simulated function bool checkPlaceable()
 	{

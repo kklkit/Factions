@@ -440,7 +440,7 @@ simulated state Commanding
 		// Update the placing structure location
 		if (PlacingStructure != None)
 		{
-			bNeedPlaceableCheck = (NextPlacingStructureLocation == LastMouseWorldLocation);
+			bNeedPlaceableCheck = (NextPlacingStructureLocation != LastMouseWorldLocation);
 
 			if (!bIsFiring)
 				NextPlacingStructureLocation = LastMouseWorldLocation;
@@ -621,10 +621,11 @@ simulated state RotatingCommandView extends Commanding
 {
 	function PlayerMove( float DeltaTime )
 	{
+		Super.PlayerMove(DeltaTime);
+
 		// update 'looking' rotation
 		UpdateRotation(DeltaTime);
-
-		bPressedJump = false;
+		bPressedJump = false;		
 	}
 
 	/**
