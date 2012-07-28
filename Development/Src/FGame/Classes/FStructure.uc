@@ -184,43 +184,76 @@ auto simulated state Placing
 		SetCollisionType(COLLIDE_NoCollision);
 	}
 
+	/**
+	 * Check to see if the FStructure is:
+	 * 1. On a relatively flat ground 
+	 * 2. Obstructed by other Pawn(s)
+	 * And swap the structure's material to reflect if it is currently placeable
+	 */
 	simulated function bool checkPlaceable()
 	{
-		local float MeshX, MeshY, LongerSide;
-		local int SampleDensity, HeightRange, i, j, overlappingCount;
-		local vector StartPoint, CurrentPointStart, CurrentPointEnd, HitLocation, HitNormal, RotX,RotY,RotZ;
-		local actor HitActor, overlappedActor;
+		local float SampleDistanceX, SampleDistanceY, LongerSide;
+		local int SampleDensity, PermittedHeightRange, i, j, OverlappingCount;
+		local vector SamplingStartPoint, CurrentTraceLineStart, CurrentTraceLineEnd, HitLocation, HitNormal, RotX,RotY,RotZ;
+		local actor HitActor, OverlappedActor;
 		local bool bWasPlaceable, bNowPlaceable;
 
-		
+		// Rotation of the structure should be taken into consideration when checking the structure's placement		
 		GetAxes(Rotation,RotX,RotY,RotZ);
+
+		// Sample trace line density used for flat ground sampling
+		// e.g. SampleDensity = 10;   10*10 trace lines will be used
+		// In general, the higher the density, the more accurate the result but the worse the performance is
 		SampleDensity = 10;
-		HeightRange = 10;
-		MeshX = Mesh.Bounds.BoxExtent.X/SampleDensity;
-		MeshY = Mesh.Bounds.BoxExtent.Y/SampleDensity;
+		
+		// The larger the PermittedHeightRange, the less strict the flat ground checking is
+		PermittedHeightRange = 10;
 
-		StartPoint = Location - RotX*(Mesh.Bounds.BoxExtent.X/2);
-		StartPoint = Location - RotY*(Mesh.Bounds.BoxExtent.Y/2);
+		// Distance between each trace line on XY plane
+		// Calculated based on the SampleDensity
+		// Note that Mesh's bounding box's size will be used to determine where the sampling trace lines should lie on
+		SampleDistanceX = Mesh.Bounds.BoxExtent.X/SampleDensity;
+		SampleDistanceY = Mesh.Bounds.BoxExtent.Y/SampleDensity;
+
+		// The Location variable is the position of the center of the mesh in the world
+		// We want to start sampling from the top left hand corner (XY Plane), all the way down to the bottom right hand corner
+		SamplingStartPoint = Location - RotX*(Mesh.Bounds.BoxExtent.X/2);
+		SamplingStartPoint = Location - RotY*(Mesh.Bounds.BoxExtent.Y/2);
 				
-		CurrentPointEnd.Z = Location.Z - HeightRange;
-
+		
+		// DO NOT use FStructure Class's bPlaceable to store intermediate values
+		// It is to make this function thread safe
 		bWasPlaceable = bPlaceable;
 		bNowPlaceable = True;		
 
+
+		// This is the double loop for flat ground check sampling. 
+		// 
+		// Take SampleDensity = 10; as an example,
+		// 10*10 sampling trace line are distributed on the XY Plane
+		//
+		// Loop through each of the 10*10 trace lines, see if the trace line hit the terrain within the PermittedHeightRange
 		i = 0;
 		do
 		{
 			j = 0;
 			do
 			{
-				CurrentPointStart = StartPoint + RotX * (MeshX * i);
-				CurrentPointStart = StartPoint + RotY * (MeshY * j);
-				CurrentPointStart.Z = Location.Z + HeightRange;
-				CurrentPointEnd.X = CurrentPointStart.X;
-				CurrentPointEnd.Y = CurrentPointStart.Y;
+				// Set the current sampling trace line's start point
+				CurrentTraceLineStart = SamplingStartPoint + RotX * (SampleDistanceX * i);
+				CurrentTraceLineStart = SamplingStartPoint + RotY * (SampleDistanceY * j);
+				CurrentTraceLineStart.Z = Location.Z + PermittedHeightRange;
 
-				HitActor = Trace(HitLocation,HitNormal,CurrentPointEnd,CurrentPointStart,False,vect(2,2,2));
+				// Set the current sampling trace line's end point
+				CurrentTraceLineEnd.X = CurrentTraceLineStart.X;
+				CurrentTraceLineEnd.Y = CurrentTraceLineStart.Y;
+				CurrentTraceLineEnd.Z = Location.Z - PermittedHeightRange;
 
+				// Start tracing
+				HitActor = Trace(HitLocation,HitNormal,CurrentTraceLineEnd,CurrentTraceLineStart,False,vect(2,2,2));
+
+				// If we cannot find the terrain within the PermittedHeightRange,
+				// we should not allow this FStructure to be placed
 				if (HitActor == None || !HitActor.IsA('Landscape'))
 					bNowPlaceable = False;
 
@@ -229,21 +262,34 @@ auto simulated state Placing
 			i++;
 		} until (i >= SampleDensity || !bNowPlaceable);
 
+
+
+
+
+
+		// Use the longest extent of the bounding box as the radius
+		// To check if this FStructure overlapps with other non-terrain Actor(s)
 		if (Mesh.Bounds.BoxExtent.X > Mesh.Bounds.BoxExtent.Y)
 			LongerSide = Mesh.Bounds.BoxExtent.X;
 		else
 			LongerSide = Mesh.Bounds.BoxExtent.Y;
 
-		foreach OverlappingActors(class'Actor', overlappedActor, LongerSide,,True)
+		foreach OverlappingActors(class'Actor', OverlappedActor, LongerSide,,True)
 		{
-			if (overlappedActor.IsA('Pawn')) //|| overlappedActor.IsA('StaticMeshActor'))
-				overlappingCount++;
+			if (OverlappedActor.IsA('Pawn')) //|| OverlappedActor.IsA('StaticMeshActor'))
+				OverlappingCount++;
 		}		
 						
-		if (overlappingCount > 0)
+		// If overlapping occurs,
+		// we should not allow this FStructure to be placed
+		if (OverlappingCount > 0)
 			bNowPlaceable = False;		
 		
 
+
+
+		// Switch between different materials to show if this FStructure is currently placeable
+		// i.e. The structure should be green in color if it is placeable, red in color if it is not placeable
 		if (bNowPlaceable)
 		{
 			if (!bWasPlaceable)
