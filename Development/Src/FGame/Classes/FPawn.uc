@@ -312,9 +312,9 @@ simulated function bool GetTargetStatus(out int TargetHealth, out int TargetHeal
 
 	GetActorEyesViewPoint(EyeLoc, EyeRot);
 
-	HitPawn = Pawn(Trace(HitLocation, HitNormal, EyeLoc + Vector(EyeRot) * 65536.0, EyeLoc, True, Vect(0,0,0)));
+	HitPawn = Pawn(Trace(HitLocation, HitNormal, EyeLoc + Vector(EyeRot) * 65536.0, EyeLoc, True));
 
-	if (HitPawn != None)
+	if (HitPawn != None && HitPawn.IsAliveAndWell())
 	{
 		TargetHealth = HitPawn.Health;
 		TargetHealthMax = HitPawn.HealthMax;
