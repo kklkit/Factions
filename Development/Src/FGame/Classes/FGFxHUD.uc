@@ -26,6 +26,7 @@ function TickHud()
 	local FMagazine Magazine;
 	local FTeamInfo PlayerTeam;
 	local int MagazineCount;
+	local int TargetHealth, TargetHealthMax;
 
 	// Calling functions in Flash while the movie is closed can cause a crash.
 	if (!bMovieIsOpen)
@@ -39,6 +40,16 @@ function TickHud()
 	// Update each HUD element.
 	if (PlayerPawn != None)
 	{
+		if (PlayerPawn.GetTargetStatus(TargetHealth, TargetHealthMax))
+		{
+			UpdateTargetHealth(TargetHealth, TargetHealthMax);
+			ShowTargetHealth(True);
+		}
+		else
+		{
+			ShowTargetHealth(False);
+		}
+
 		UpdateHealth(PlayerPawn.Health, PlayerPawn.HealthMax);
 
 		PlayerWeapon = FWeapon(PlayerPawn.Weapon);
@@ -118,6 +129,18 @@ function UpdateResolution(float x0, float y0, float x1, float y1)
 {
 	if (bMovieIsOpen)
 		ActionScriptVoid("_root.updateResolution");
+}
+
+function UpdateTargetHealth(int Health, int HealthMax)
+{
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.updateTargetHealth");
+}
+
+function ShowTargetHealth(bool Show)
+{
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.showTargetHealth");
 }
 
 function UpdateHealth(int Health, int HealthMax)

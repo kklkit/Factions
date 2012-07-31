@@ -11,6 +11,7 @@ import scaleform.gfx.*;
 
 
 public class FactionsHUD extends MovieClip {
+	public var centerHUD:MovieClip;
 	public var topLeftHUD:MovieClip;
 	public var topRightHUD:MovieClip;
 	public var bottomLeftHUD:MovieClip;
@@ -18,7 +19,7 @@ public class FactionsHUD extends MovieClip {
 	public var commHealthBarStartPositionX:Number = topLeftHUD.getChildByName('commHealthBar').x;
 	public var healthBarStartPositionX:Number = bottomLeftHUD.getChildByName('healthBar').x;
 	public var ammoBarStartPositionX:Number = bottomRightHUD.getChildByName('ammoBar').x;
-		
+	public var targetHealthBarStartWidth:Number = centerHUD.getChildByName('targetHealthBar').width;
 	
 	public function FactionsHUD() {
 		super();
@@ -31,14 +32,29 @@ public class FactionsHUD extends MovieClip {
 				ExternalInterface.call("ResizeHUD");
 			});
 		
-		ExternalInterface.call("ResizeHUD");		
+		ExternalInterface.call("ResizeHUD");
 	}
 	
 	public function updateResolution(x0:Number, y0:Number, x1:Number, y1:Number) {
+		centerHUD.x = x1 / 2;
+		centerHUD.y = y1 / 2;
 		bottomLeftHUD.y = y1;
 		bottomRightHUD.y = y1;
 		topRightHUD.x = x1;
 		bottomRightHUD.x = x1;
+	}
+	
+	public function updateTargetHealth(health:int, healthMax:int) {
+		var healthBar:DisplayObject = centerHUD.getChildByName('targetHealthBar');
+		
+		healthBar.width = health / healthMax * targetHealthBarStartWidth;
+	}
+	
+	public function showTargetHealth(show:Boolean) {
+		var healthBar:DisplayObject = centerHUD.getChildByName('targetHealthBar');
+		var healthBarBox:DisplayObject = centerHUD.getChildByName('targetHealthBarBox');
+		
+		healthBar.visible = healthBarBox.visible = show;
 	}
 	
 	public function updateHealth(health:int, healthMax:int):void {
