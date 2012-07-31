@@ -393,6 +393,12 @@ simulated state Active
 
 		Global.BeginState(PreviousStateName);
 
+		// Set mapper placed-structures to full health
+		if (PreviousStateName == '')
+		{
+			Health = HealthMax;
+		}
+
 		Mesh.SetBlockRigidBody(True);
 		Mesh.SetActorCollision(True, True);
 		Mesh.SetTraceBlocking(True, True);
