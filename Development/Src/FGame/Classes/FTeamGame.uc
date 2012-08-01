@@ -177,12 +177,13 @@ function SetTeam(Controller Other, TeamInfo NewTeam, bool bNewTeam)
 
 	Game = WorldInfo.Game;
 
+	// Remove old spawn location
+	if (!ShouldSpawnAtStartSpot(Other))
+		Other.StartSpot = None;
+
 	// Remove player from their old team
 	if (Other.PlayerReplicationInfo.Team != None)
 	{
-		if (!ShouldSpawnAtStartSpot(Other))
-			Other.StartSpot = None;
-
 		Other.PlayerReplicationInfo.Team.RemoveFromTeam(Other);
 		Other.PlayerReplicationInfo.Team = None;
 	}
