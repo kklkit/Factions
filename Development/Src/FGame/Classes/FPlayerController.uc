@@ -104,6 +104,15 @@ function CheckJumpOrDuck()
 /**
  * @extends
  */
+function HandleWalking()
+{
+	if (Pawn != None)
+		Pawn.SetWalking(bRun == 0);
+}
+
+/**
+ * @extends
+ */
 reliable server function ServerChangeTeam(int N)
 {
 	local TeamInfo OldTeam;

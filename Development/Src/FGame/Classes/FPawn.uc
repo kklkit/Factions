@@ -367,7 +367,7 @@ defaultproperties
 	FallImpactSound=SoundCue'A_Character_BodyImpacts.BodyImpacts.A_Character_BodyImpact_BodyFall_Cue'
 
 	BaseTranslationOffset=6.0
-	WalkingPct=0.4
+	WalkingPct=0.7
 	CrouchedPct=0.4
 	BaseEyeHeight=38.0
 	EyeHeight=38.0
