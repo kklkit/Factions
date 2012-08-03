@@ -52,6 +52,8 @@ function TickHud()
 
 		UpdateHealth(PlayerPawn.Health, PlayerPawn.HealthMax);
 
+		UpdateStamina(PlayerPawn.Stamina, PlayerPawn.StaminaMax);
+
 		PlayerWeapon = FWeapon(PlayerPawn.Weapon);
 
 		if (PlayerWeapon != None)
@@ -147,6 +149,12 @@ function UpdateHealth(int Health, int HealthMax)
 {
 	if (bMovieIsOpen)
 		ActionScriptVoid("_root.updateHealth");
+}
+
+function UpdateStamina(int Stamina, int StaminaMax)
+{
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.updateStamina");
 }
 
 function UpdateAmmo(int Ammo, int AmmoMax)

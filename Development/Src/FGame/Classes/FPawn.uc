@@ -8,6 +8,9 @@ class FPawn extends UDKPawn;
 var DynamicLightEnvironmentComponent LightEnvironment;
 var TeamInfo LastTeam;
 
+var() int Stamina;
+var() int StaminaMax;
+
 // Weapon attachment
 var repnotify FWeaponAttachment WeaponAttachmentArchetype;
 var FWeaponAttachment WeaponAttachment;
@@ -22,7 +25,7 @@ var	Vector WalkBob;
 replication
 {
 	if (bNetDirty)
-		WeaponAttachmentArchetype;
+		Stamina, StaminaMax, WeaponAttachmentArchetype;
 }
 
 /**
@@ -103,6 +106,37 @@ simulated event Destroyed()
 	}
 
 	Super.Destroyed();
+}
+
+/**
+ * @extends
+ */
+event Tick(float DeltaTime)
+{
+	Super.Tick(DeltaTime);
+
+	if (Role == ROLE_Authority)
+	{
+		if (bIsWalking)
+		{
+			if (Stamina < StaminaMax)
+			{
+				Stamina++;
+			}
+		}
+		else // Player is sprinting
+		{
+			if (Stamina > 0)
+			{
+				Stamina--;
+			}
+		}
+
+		if (Stamina <= 0)
+		{
+			SetWalking(True);
+		}
+	}
 }
 
 /**
@@ -365,6 +399,9 @@ defaultproperties
 
 	InventoryManagerClass=class'FInventoryManager'
 	FallImpactSound=SoundCue'A_Character_BodyImpacts.BodyImpacts.A_Character_BodyImpact_BodyFall_Cue'
+
+	Stamina=100
+	StaminaMax=100
 
 	BaseTranslationOffset=6.0
 	WalkingPct=0.7

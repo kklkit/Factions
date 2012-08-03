@@ -18,6 +18,7 @@ public class FactionsHUD extends MovieClip {
 	public var bottomRightHUD:MovieClip;
 	public var commHealthBarStartPositionX:Number = topLeftHUD.getChildByName('commHealthBar').x;
 	public var healthBarStartPositionX:Number = bottomLeftHUD.getChildByName('healthBar').x;
+	public var staminaBarStartPositionX:Number = bottomLeftHUD.getChildByName('staminaBar').x;
 	public var ammoBarStartPositionX:Number = bottomRightHUD.getChildByName('ammoBar').x;
 	public var targetHealthBarStartWidth:Number = centerHUD.getChildByName('targetHealthBar').width;
 	
@@ -67,6 +68,18 @@ public class FactionsHUD extends MovieClip {
 		}
 		
 		healthBar.x = -healthBar.width + healthBarStartPositionX + (health / healthMax * healthBar.width);
+	}
+	
+	public function updateStamina(stamina:int, staminaMax:int):void {
+		var staminaBar:DisplayObject = bottomLeftHUD.getChildByName('staminaBar');
+		
+		// Check for divide by zero
+		if (staminaMax === 0) {
+			stamina = 0;
+			staminaMax = 1;
+		}
+		
+		staminaBar.x = -staminaBar.width + staminaBarStartPositionX + (stamina / staminaMax * staminaBar.width);
 	}
 	
 	public function updateAmmo(ammo:int, ammoMax:int):void {
