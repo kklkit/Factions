@@ -275,15 +275,37 @@ simulated function DrawWeaponCrosshair(HUD H)
 {
 	local float X, Y, SpreadPixels;
 	local Color CrosshairColor;
+	local Vector HitLocation, HitNormal, StartTrace, EndTrace;
+	local Actor HitActor;
 
 	X = H.Canvas.ClipX / 2;
 	Y = H.Canvas.ClipY / 2;
 	SpreadPixels = Spread[0] * 10 * 16;
 
-	CrosshairColor.R = 255;
-	CrosshairColor.G = 0;
-	CrosshairColor.B = 0;
-	CrosshairColor.A = 255;
+	// Set crosshair color
+	StartTrace = Instigator.GetWeaponStartTraceLocation();
+	EndTrace = StartTrace + Vector(GetAdjustedAim(StartTrace)) * GetTraceRange();
+	HitActor = GetTraceOwner().Trace(HitLocation, HitNormal, EndTrace, StartTrace, True,,, TRACEFLAG_Bullet);
+
+	if (Pawn(HitActor) == None)
+	{
+		HitActor = (HitActor == None) ? None : Pawn(HitActor.Base);
+	}
+
+	if ((Pawn(HitActor) == None) || !Worldinfo.GRI.OnSameTeam(HitActor, Instigator))
+	{
+		CrosshairColor.R = 255;
+		CrosshairColor.G = 0;
+		CrosshairColor.B = 0;
+		CrosshairColor.A = 255;
+	}
+	else
+	{
+		CrosshairColor.R = 0;
+		CrosshairColor.G = 255;
+		CrosshairColor.B = 0;
+		CrosshairColor.A = 255;
+	}
 
 	H.Canvas.Draw2DLine(X, Y - 16 - SpreadPixels, X, Y - 2 - SpreadPixels, CrosshairColor);
 	H.Canvas.Draw2DLine(X, Y + 2 + SpreadPixels, X, Y + 16 + SpreadPixels, CrosshairColor);
