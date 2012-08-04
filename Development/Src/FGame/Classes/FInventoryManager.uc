@@ -49,7 +49,7 @@ function EquipLoadout()
 			// Add default magazines to inventory.
 			if (FWeapon_Firearm(SpawnedWeapon) != None)
 			{
-				for (MagazineCount = 0; MagazineCount < 4; MagazineCount++)
+				for (MagazineCount = 0; MagazineCount < 9; MagazineCount++)
 				{
 					Magazine = FMagazine(CreateInventory(class'FMagazine'));
 					Magazine.AmmoFor = SpawnedWeapon.Name;
