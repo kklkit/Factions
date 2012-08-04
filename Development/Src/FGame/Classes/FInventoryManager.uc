@@ -6,6 +6,20 @@
 class FInventoryManager extends InventoryManager;
 
 /**
+ * @extends
+ */
+simulated function DrawHud(HUD H)
+{
+	Super.DrawHud(H);
+
+	// Draw overlays for active weapon
+	if (FWeapon(Instigator.Weapon) != None)
+	{
+		FWeapon(Instigator.Weapon).ActiveRenderOverlays(H);
+	}
+}
+
+/**
  * Spawns the loadout items and adds them to the inventory.
  */
 function EquipLoadout()

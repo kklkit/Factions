@@ -218,6 +218,36 @@ simulated function Vector GetEffectLocation()
 	return SocketLocation;
 }
 
+/**
+ * Draws HUD elements when weapon is active.
+ */
+simulated function ActiveRenderOverlays(HUD H)
+{
+	DrawWeaponCrosshair(H);
+}
+
+/**
+ * Draws the weapon crosshair.
+ */
+simulated function DrawWeaponCrosshair(HUD H)
+{
+	local float X, Y;
+	local Color CrosshairColor;
+
+	X = H.Canvas.ClipX / 2;
+	Y = H.Canvas.ClipY / 2;
+
+	CrosshairColor.R = 255;
+	CrosshairColor.G = 0;
+	CrosshairColor.B = 0;
+	CrosshairColor.A = 255;
+
+	H.Canvas.Draw2DLine(X, Y - 16, X, Y - 2, CrosshairColor);
+	H.Canvas.Draw2DLine(X, Y + 2, X, Y + 16, CrosshairColor);
+	H.Canvas.Draw2DLine(X - 16, Y, X - 2, Y, CrosshairColor);
+	H.Canvas.Draw2DLine(X + 2, Y, X + 16, Y, CrosshairColor);
+}
+
 defaultproperties
 {
 	Begin Object Class=UDKSkeletalMeshComponent Name=FirstPersonMesh
