@@ -49,6 +49,19 @@ simulated function FirstPersonFireEffects(Weapon PawnWeapon, Vector HitLocation)
 	}
 }
 
+/**
+ * @extends
+ */
+simulated function ThirdPersonFireEffects(Vector HitLocation)
+{
+	Super.ThirdPersonFireEffects(HitLocation);
+
+	if (Instigator.FiringMode == 0)
+	{
+		SpawnBeam(GetEffectLocation(), HitLocation, False);
+	}
+}
+
 defaultproperties
 {
 	BeamTemplate=ParticleSystem'VH_Cicada.Effects.P_VH_Cicada_2ndPrim_Beam'

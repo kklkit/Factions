@@ -11,6 +11,10 @@ var() SkeletalMeshComponent Mesh;
 // Name of the socket used to attach muzzle effects
 var() name MuzzleSocketName;
 
+// Name of firing animations
+var name FireAnim, AltFireAnim;
+var float MaxFireEffectDistance;
+
 /**
  * Attaches this weapon attachment to the given pawn.
  */
@@ -60,26 +64,47 @@ simulated function StopFirstPersonFireEffects(Weapon PawnWeapon)
  */
 simulated function ThirdPersonFireEffects(Vector HitLocation)
 {
-	PlayRecoil();
+	local FPawn P;
+
+	if (EffectIsRelevant(Location, False, MaxFireEffectDistance))
+	{
+		CauseMuzzleFlash();
+	}
+
+	// Have pawn play firing animations
+	P = FPawn(Instigator);
+	if (P != None && P.GunRecoilNode != None)
+	{
+		P.GunRecoilNode.bPlayRecoil = True;
+	}
+
+	if (Instigator.FiringMode == 1 && AltFireAnim != 'None')
+	{
+		Mesh.PlayAnim(AltFireAnim,,, False);
+	}
+	else if (FireAnim != 'None')
+	{
+		Mesh.PlayAnim(FireAnim,,, False);
+	}
 }
 
 /**
  * Stop playing the third-person firing effects.
  */
-simulated function StopThirdPersonFireEffects();
+simulated function StopThirdPersonFireEffects()
+{
+	StopMuzzleFlash();
+}
 
 /**
- * Play the recoil effect on the weapon attachment.
+ * Plays the muzzle flash effect.
  */
-simulated function PlayRecoil()
-{
-	local FPawn InstigatorPawn;
+simulated function CauseMuzzleFlash();
 
-	InstigatorPawn = FPawn(Instigator);
-
-	if (InstigatorPawn != None && InstigatorPawn.GunRecoilNode != None)
-		InstigatorPawn.GunRecoilNode.bPlayRecoil = True;
-}
+/**
+ * Stops playing muzzle flash effects.
+ */
+simulated function StopMuzzleFlash();
 
 /**
  * Sets the visibility of the weapon attachment.
@@ -120,4 +145,5 @@ defaultproperties
 	NetUpdateFrequency=10.0
 	TickGroup=TG_DuringAsyncWork
 	RemoteRole=ROLE_None
+	MaxFireEffectDistance=5000.0
 }
