@@ -232,13 +232,13 @@ defaultproperties
 
 	FiringStatesArray(0)=WeaponFiring
 	WeaponFireTypes(0)=EWFT_InstantHit
-	InstantHitDamage(0)=0.0
+	InstantHitDamage(0)=10.0
 	InstantHitMomentum(0)=0.0
 	InstantHitDamageTypes(0)=class'DamageType'
 	ShouldFireOnRelease(0)=0
 	EquipTime=0.0
 	PutDownTime=0.0
 	FireInterval(0)=0.1
-	Spread(0)=0.0
+	Spread(0)=0.05
 	EffectSockets(0)=Muzzle
 }
