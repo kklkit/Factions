@@ -13,7 +13,10 @@ var(Sounds)	array<SoundCue>	WeaponFireSound;
 var() array<name> EffectSockets;
 var int MaxAmmoCount;
 
-const MovementSpread=0.1;
+var() float MovementSpread;
+var() float FiringSpread;
+
+var float CurrentFiringSpread;
 
 replication
 {
@@ -40,6 +43,20 @@ function UpdateSpread()
 
 	NewSpread = default.Spread[0];
 	NewSpread += VSize2D(Instigator.Velocity) / Instigator.GroundSpeed * MovementSpread;
+
+	if (Instigator.IsFiring())
+	{
+		if (CurrentFiringSpread < FiringSpread)
+		{
+			CurrentFiringSpread += 0.0025;
+		}
+	}
+	else if (CurrentFiringSpread > 0)
+	{
+		CurrentFiringSpread -= 0.025;
+	}
+
+	NewSpread += CurrentFiringSpread;
 
 	Spread[0] = NewSpread;
 }
@@ -297,4 +314,7 @@ defaultproperties
 	FireInterval(0)=0.1
 	Spread(0)=0.01
 	EffectSockets(0)=Muzzle
+
+	MovementSpread=0.1
+	FiringSpread=0.1
 }
