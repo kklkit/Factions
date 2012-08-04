@@ -13,10 +13,35 @@ var(Sounds)	array<SoundCue>	WeaponFireSound;
 var() array<name> EffectSockets;
 var int MaxAmmoCount;
 
+const MovementSpread=0.1;
+
 replication
 {
 	if (bNetDirty)
 		MaxAmmoCount;
+}
+
+/**
+ * @extends
+ */
+function Tick(float DeltaTime)
+{
+	Super.Tick(DeltaTime);
+
+	UpdateSpread();
+}
+
+/**
+ * Updates the weapon's current spread.
+ */
+function UpdateSpread()
+{
+	local float NewSpread;
+
+	NewSpread = default.Spread[0];
+	NewSpread += VSize2D(Instigator.Velocity) / Instigator.GroundSpeed * MovementSpread;
+
+	Spread[0] = NewSpread;
 }
 
 /**
@@ -231,21 +256,22 @@ simulated function ActiveRenderOverlays(HUD H)
  */
 simulated function DrawWeaponCrosshair(HUD H)
 {
-	local float X, Y;
+	local float X, Y, SpreadPixels;
 	local Color CrosshairColor;
 
 	X = H.Canvas.ClipX / 2;
 	Y = H.Canvas.ClipY / 2;
+	SpreadPixels = Spread[0] * 10 * 16;
 
 	CrosshairColor.R = 255;
 	CrosshairColor.G = 0;
 	CrosshairColor.B = 0;
 	CrosshairColor.A = 255;
 
-	H.Canvas.Draw2DLine(X, Y - 16, X, Y - 2, CrosshairColor);
-	H.Canvas.Draw2DLine(X, Y + 2, X, Y + 16, CrosshairColor);
-	H.Canvas.Draw2DLine(X - 16, Y, X - 2, Y, CrosshairColor);
-	H.Canvas.Draw2DLine(X + 2, Y, X + 16, Y, CrosshairColor);
+	H.Canvas.Draw2DLine(X, Y - 16 - SpreadPixels, X, Y - 2 - SpreadPixels, CrosshairColor);
+	H.Canvas.Draw2DLine(X, Y + 2 + SpreadPixels, X, Y + 16 + SpreadPixels, CrosshairColor);
+	H.Canvas.Draw2DLine(X - 16 - SpreadPixels, Y, X - 2 - SpreadPixels, Y, CrosshairColor);
+	H.Canvas.Draw2DLine(X + 2 + SpreadPixels, Y, X + 16 + SpreadPixels, Y, CrosshairColor);
 }
 
 defaultproperties
@@ -269,6 +295,6 @@ defaultproperties
 	EquipTime=0.0
 	PutDownTime=0.0
 	FireInterval(0)=0.1
-	Spread(0)=0.05
+	Spread(0)=0.01
 	EffectSockets(0)=Muzzle
 }
