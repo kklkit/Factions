@@ -10,6 +10,7 @@ var(Archetype) FWeaponClass WeaponClassArchetype;
 var(Archetype) FWeaponAttachment AttachmentArchetype;
 var() Vector DrawOffset;
 var(Sounds)	array<SoundCue>	WeaponFireSound;
+var() array<name> EffectSockets;
 var int MaxAmmoCount;
 
 replication
@@ -191,6 +192,32 @@ simulated function FireAmmunition()
 	Super.FireAmmunition();
 }
 
+/**
+ * Returns the location for weapon effects.
+ */
+simulated function Vector GetEffectLocation()
+{
+	local Vector SocketLocation;
+
+	if (SkeletalMeshComponent(Mesh) != None && EffectSockets[CurrentFireMode] != '')
+	{
+		if (!SkeletalMeshComponent(Mesh).GetSocketWorldLocationAndrotation(EffectSockets[CurrentFireMode], SocketLocation))
+		{
+			SocketLocation = Location;
+		}
+	}
+	else if (Mesh != None)
+	{
+		SocketLocation = Mesh.Bounds.Origin + (Vect(45,0,0) >> Rotation);
+	}
+	else
+	{
+		SocketLocation = Location;
+	}
+
+	return SocketLocation;
+}
+
 defaultproperties
 {
 	Begin Object Class=UDKSkeletalMeshComponent Name=FirstPersonMesh
@@ -213,4 +240,5 @@ defaultproperties
 	PutDownTime=0.0
 	FireInterval(0)=0.1
 	Spread(0)=0.0
+	EffectSockets(0)=Muzzle
 }
