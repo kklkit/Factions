@@ -17,7 +17,7 @@ simulated function ProcessInstantHit(byte FiringMode, ImpactInfo Impact, optiona
 defaultproperties
 {
 	InstantHitDamage(0)=10.0
-	WeaponRange=100.0
+	WeaponRange=200.0
 	AmmoCount=100
 	MaxAmmoCount=100
 }

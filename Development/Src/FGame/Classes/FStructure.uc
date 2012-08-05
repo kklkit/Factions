@@ -363,7 +363,11 @@ simulated state Preview
 		if (WorldInfo.GRI.OnSameTeam(Self, Healer))
 		{
 			Health = Min(HealthMax, Health + Amount);
-			GotoState('Active');
+
+			if (Health > HealthMax / 4)
+			{
+				GotoState('Active');
+			}
 		}
 	
 		return True;
