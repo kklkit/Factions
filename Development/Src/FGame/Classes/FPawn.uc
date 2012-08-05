@@ -117,7 +117,7 @@ event Tick(float DeltaTime)
 
 	if (Role == ROLE_Authority)
 	{
-		if (bIsWalking)
+		if (bIsWalking || VSize2D(Acceleration) == 0)
 		{
 			if (Stamina < StaminaMax)
 			{
