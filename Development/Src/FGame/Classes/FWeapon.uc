@@ -6,6 +6,14 @@
 class FWeapon extends UDKWeapon
 	perobjectlocalized;
 
+enum EFireAction
+{
+	FA_Semi_Automatic,
+	FA_Automatic
+};
+
+var() array<EFireAction> FireAction;
+
 var(Archetype) FWeaponClass WeaponClassArchetype;
 var(Archetype) FWeaponAttachment AttachmentArchetype;
 var() Vector DrawOffset;
@@ -86,6 +94,32 @@ function ConsumeAmmo(byte FireModeNum)
 simulated function bool HasAnyAmmo()
 {
 	return AmmoCount > 0;
+}
+
+/**
+ * @extends
+ */
+simulated function bool StillFiring(byte FireMode)
+{
+	if (FireAction[FireMode] == FA_Semi_Automatic)
+	{
+		return False;
+	}
+
+	return Super.StillFiring(FireMode);
+}
+
+/**
+ * @extends
+ */
+simulated function HandleFinishedFiring()
+{
+	if (FireAction[CurrentFireMode] == FA_Semi_Automatic)
+	{
+		StopFire(CurrentFireMode);
+	}
+
+	Super.HandleFinishedFiring();
 }
 
 /**
@@ -231,6 +265,7 @@ simulated function PlayFiringSound()
 simulated function FireAmmunition()
 {
 	PlayFiringSound();
+
 	Super.FireAmmunition();
 }
 
@@ -337,6 +372,7 @@ defaultproperties
 	Spread(0)=0.01
 	EffectSockets(0)=Muzzle
 
+	FireAction(0)=FA_Automatic
 	MovementSpread=0.1
 	FiringSpread=0.1
 }
