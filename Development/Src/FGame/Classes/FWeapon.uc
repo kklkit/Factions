@@ -35,7 +35,7 @@ replication
 /**
  * @extends
  */
-function Tick(float DeltaTime)
+simulated function Tick(float DeltaTime)
 {
 	Super.Tick(DeltaTime);
 
@@ -45,7 +45,7 @@ function Tick(float DeltaTime)
 /**
  * Updates the weapon's current spread.
  */
-function UpdateSpread()
+simulated function UpdateSpread()
 {
 	local float NewSpread;
 
