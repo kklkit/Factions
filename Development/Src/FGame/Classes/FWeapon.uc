@@ -12,17 +12,17 @@ enum EFireAction
 	FA_Automatic
 };
 
-var() array<EFireAction> FireAction;
+var(Weapon) array<EFireAction> FireAction;
 
-var(Archetype) FWeaponClass WeaponClassArchetype;
-var(Archetype) FWeaponAttachment AttachmentArchetype;
-var() Vector DrawOffset;
+var(Weapon) FWeaponClass WeaponClassArchetype;
+var(Weapon) FWeaponAttachment AttachmentArchetype;
+var(Weapon) Vector DrawOffset;
 var(Sounds)	array<SoundCue>	WeaponFireSound;
-var() array<name> EffectSockets;
+var(Weapon) array<name> EffectSockets;
 var int MaxAmmoCount;
 
-var() float MovementSpread;
-var() float FiringSpread;
+var(Weapon) float MovementSpread;
+var(Weapon) float FiringSpread;
 
 var float CurrentFiringSpread;
 
