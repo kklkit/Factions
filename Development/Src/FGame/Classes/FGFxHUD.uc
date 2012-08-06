@@ -63,7 +63,7 @@ function TickHud()
 
 		if (PlayerPawn.InvManager != None)
 			foreach PlayerPawn.InvManager.InventoryActors(class'FMagazine', Magazine)
-				if (Magazine.AmmoFor == PlayerWeapon.Name)
+				if (Magazine.AmmoFor == PlayerWeapon.WeaponArchetype)
 					MagazineCount++;
 
 		UpdateMagazineCount(MagazineCount);

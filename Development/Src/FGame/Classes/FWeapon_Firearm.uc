@@ -49,7 +49,7 @@ function AddDefaultMagazines()
 	for (MagazineCount = 0; MagazineCount < DefaultMagazineCount; MagazineCount++)
 	{
 		Mag = Spawn(MagazineArchetype.Class, Owner,,,, MagazineArchetype);
-		Mag.AmmoFor = Name;
+		Mag.AmmoFor = WeaponArchetype;
 		InvManager.AddInventory(Mag);
 	}
 }
@@ -63,7 +63,7 @@ reliable server function ServerReload()
 
 	// Get the next magazine of the equipment's type
 	foreach InvManager.InventoryActors(class'FMagazine', NextMagazine)
-		if (NextMagazine.AmmoFor == Name)
+		if (NextMagazine.AmmoFor == WeaponArchetype)
 			break;
 
 	// Abort reloading if no magazine was found

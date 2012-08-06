@@ -26,10 +26,12 @@ var(Weapon) float FiringSpread;
 
 var float CurrentFiringSpread;
 
+var FWeapon WeaponArchetype;
+
 replication
 {
 	if (bNetDirty)
-		MaxAmmoCount;
+		MaxAmmoCount, WeaponArchetype;
 }
 
 /**
