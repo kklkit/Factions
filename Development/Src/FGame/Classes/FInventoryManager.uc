@@ -42,7 +42,6 @@ function EquipLoadout()
 		if (WeaponArchetype != None)
 		{
 			SpawnedWeapon = Spawn(WeaponArchetype.Class, Owner,,,, WeaponArchetype);
-			SpawnedWeapon.WeaponArchetype = WeaponArchetype;
 			AddInventory(SpawnedWeapon);
 		}
 	}

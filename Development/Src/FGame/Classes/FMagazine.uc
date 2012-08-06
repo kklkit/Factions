@@ -5,8 +5,8 @@
  */
 class FMagazine extends Inventory;
 
-// Archetype of the weapon this magazine provides ammo for
-var FWeapon AmmoFor;
+// Name of the weapon this magazine provides ammo for
+var string AmmoFor;
 
 var int AmmoCount;
 var(Magazine) int MaxAmmoCount;
