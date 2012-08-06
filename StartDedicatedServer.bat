@@ -1,1 +1,1 @@
-start Binaries\Win32\UDK.exe server
+start Binaries\Win32\UDK.exe server TestMap -log
