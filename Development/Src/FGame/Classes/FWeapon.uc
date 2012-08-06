@@ -116,7 +116,7 @@ simulated function HandleFinishedFiring()
 {
 	if (FireAction[CurrentFireMode] == FA_Semi_Automatic)
 	{
-		StopFire(CurrentFireMode);
+		EndFire(CurrentFireMode);
 	}
 
 	Super.HandleFinishedFiring();
