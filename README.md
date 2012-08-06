@@ -7,8 +7,8 @@ This is the development repository for Factions. Everything is stored in the rep
 #### UDKGame\Config\DefaultEngine.ini
 
 * __[URL]__
-  * `Map=TestMap.udk`
-  * `LocalMap=TestMap.udk`
+  * `Map=FactionsFrontEndMap.udk`
+  * `LocalMap=FactionsFrontEndMap.udk`
 
 * __[UnrealEd.EditorEngine]__
   * Add this at the bottom of the list: `+EditPackages=FGame`
