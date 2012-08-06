@@ -6,15 +6,25 @@
 class FMagazine extends Inventory;
 
 // Name of the weapon this magazine provides ammo for.
-var() name AmmoFor;
+var name AmmoFor;
 
-var() int AmmoCount;
-var() int MaxAmmoCount;
+var int AmmoCount;
+var(Magazine) int MaxAmmoCount;
 
 replication
 {
 	if (bNetDirty)
 		AmmoFor, AmmoCount, MaxAmmoCount;
+}
+
+/**
+ * @extends
+ */
+event PostBeginPlay()
+{
+	Super.PostBeginPlay();
+
+	AmmoCount = MaxAmmoCount;
 }
 
 /**

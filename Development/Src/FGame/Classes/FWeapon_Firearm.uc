@@ -5,6 +5,9 @@
  */
 class FWeapon_Firearm extends FWeapon;
 
+var(Weapon) FMagazine MagazineArchetype;
+var(Weapon) byte DefaultMagazineCount;
+
 // Loaded magazine
 var private FMagazine Magazine;
 
@@ -17,10 +20,38 @@ replication
 /**
  * @extends
  */
+function GivenTo(Pawn thisPawn, optional bool bDoNotActivate)
+{
+	Super.GivenTo(thisPawn, bDoNotActivate);
+
+	AddDefaultMagazines();
+
+	ServerReload();
+}
+
+/**
+ * @extends
+ */
 function int AddAmmo(int Amount)
 {
 	AmmoCount = Magazine.AddAmmo(Amount);
 	return AmmoCount;
+}
+
+/**
+ * Adds starting magazines to the owner.
+ */
+function AddDefaultMagazines()
+{
+	local FMagazine Mag;
+	local int MagazineCount;
+
+	for (MagazineCount = 0; MagazineCount < DefaultMagazineCount; MagazineCount++)
+	{
+		Mag = Spawn(MagazineArchetype.Class, Owner,,,, MagazineArchetype);
+		Mag.AmmoFor = Name;
+		InvManager.AddInventory(Mag);
+	}
 }
 
 /**

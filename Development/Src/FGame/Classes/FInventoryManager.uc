@@ -27,8 +27,6 @@ function EquipLoadout()
 	local FPlayerController PlayerController;
 	local FWeapon SpawnedWeapon;
 	local FWeapon WeaponArchetype;
-	local FMagazine Magazine;
-	local int MagazineCount;
 	local int i;
 
 	PlayerController = FPlayerController(Pawn(Owner).Controller);
@@ -45,19 +43,6 @@ function EquipLoadout()
 		{
 			SpawnedWeapon = Spawn(WeaponArchetype.Class, Owner,,,, WeaponArchetype);
 			AddInventory(SpawnedWeapon);
-
-			// Add default magazines to inventory.
-			if (FWeapon_Firearm(SpawnedWeapon) != None)
-			{
-				for (MagazineCount = 0; MagazineCount < 9; MagazineCount++)
-				{
-					Magazine = FMagazine(CreateInventory(class'FMagazine'));
-					Magazine.AmmoFor = SpawnedWeapon.Name;
-				}
-
-				if (Magazine != None)
-					FWeapon_Firearm(SpawnedWeapon).ServerReload();
-			}
 		}
 	}
 }
