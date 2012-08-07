@@ -46,9 +46,9 @@ simulated event PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
-	// Create the minimap capture component on clients only
 	if (WorldInfo.NetMode != NM_DedicatedServer)
 	{
+		// Create the minimap capture component
 		MinimapCaptureComponent = new(Self) class'SceneCapture2DComponent';
 		MinimapCaptureComponent.SetCaptureParameters(TextureRenderTarget2D'Factions_Assets.minimap_render_texture', 1,, 0);
 		MinimapCaptureComponent.bUpdateMatrices = False; // Minimap camera is controlled by game code

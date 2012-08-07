@@ -36,10 +36,13 @@ simulated event PostBeginPlay()
 	// Initialize all the Scaleform HUDs.
 	GFxHUD = new class'FGFxHUD';
 	GFxHUD.Init();
+
 	GFxOmniMenu = new class'FGFxOmniMenu';
 	GFxOmniMenu.Init();
+
 	GFxCommanderHUD = new class'FGFxCommanderHUD';
 	GFxCommanderHUD.Init();
+
 	GFxChat = new class'FGFxChat';
 	GFxChat.Init();
 	GFxChat.Start();
