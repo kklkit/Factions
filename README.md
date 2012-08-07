@@ -88,3 +88,7 @@ Click the Commit button to open the commit dialog. Press the blue double down ar
 UDK needs to be installed with this command-line argument as SP3 is not available for Windows XP 64-bit.
 
 `D:\UDKInstall-2011-09-BETA.exe -progressonly`
+
+### nFringe
+
+Open the project properties and set **Load map at startup:** to `TestMap`. This will load the test map instead of the main menu when debugging.
