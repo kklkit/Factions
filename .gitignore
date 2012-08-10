@@ -38,6 +38,7 @@ UDKGame/Config/DefaultL*
 UDKGame/Config/DefaultU*
 UDKGame/Config/DefaultWeapon.ini
 UDKGame/Config/DefaultWeaponDefaults.ini
+UDKGame/Config/DefaultSystemSettings.ini
 UDKGame/Config/UDK*
 UDKGame/CookedMac/
 UDKGame/Localization/INT/Castle*
@@ -50,6 +51,7 @@ UDKGame/Logs/
 UDKGame/Movies/
 UDKGame/Script/
 UDKGame/Splash/
+UDKGame/ProjectTemplates/
 UDKGame/*.txt
 UDKGame/Content/Maps/Examples/
 UDKGame/Content/Maps/Mobile/
