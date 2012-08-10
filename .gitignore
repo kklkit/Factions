@@ -79,3 +79,4 @@ UDKGame/CookedPC/*
 *.swf
 *.html
 *.exe
+UDKGame/Cloud/CloudStorage.ini

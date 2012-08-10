@@ -5,6 +5,19 @@
  */
 class FVehicle_Tank extends FVehicle;
 
+/**
+ * @extends
+ */
+simulated function Tick(float DeltaTime)
+{
+	Super.Tick(DeltaTime);
+
+	if (EngineSound != None)
+	{
+		EngineSound.SetFloatParameter('EnginePitchParam', VSize(Velocity));
+	}
+}
+
 defaultproperties
 {
 	Begin Object Class=SVehicleSimTank Name=SimObject
