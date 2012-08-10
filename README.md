@@ -3,7 +3,7 @@
 ### Getting the Factions development files
 
 1. Install and configure Git if you haven't already (instructions below)
-2. Install [July 2012 UDK Beta](http://www.unrealengine.com/en/udk/downloads/)
+2. Install [July 2012 UDK Beta](http://www.unrealengine.com/en/udk/downloads/), do not install Perforce or run UDK if prompted
 3. In the UDK installation directory, open each file listed below and replace the specified configuration lines:
 
 #### UDKGame\Config\DefaultEngine.ini
