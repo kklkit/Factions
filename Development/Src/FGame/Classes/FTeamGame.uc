@@ -347,6 +347,51 @@ function CommandVehicleDestroyed(Controller Killer)
 }
 
 /**
+ * Called when a spawn point is destroyed or a player dies.
+ */
+function PlayerStatusChanged()
+{
+	local FStructure_Barracks Barracks;
+	local FPawn P;
+	local bool bRedTeamHasStartLocation, bBlueTeamHasStartLocation, bRedTeamHasAlivePlayer, bBlueTeamHasAlivePlayer;
+
+	foreach AllActors(class'FStructure_Barracks', Barracks)
+	{
+		if (Barracks.Health > 0)
+		{
+			if (Barracks.GetTeamNum() == TEAM_RED)
+			{
+				bRedTeamHasStartLocation = True;
+			}
+			else if (Barracks.GetTeamNum() == TEAM_BLUE)
+			{
+				bBlueTeamHasStartLocation = True;
+			}
+		}
+	}
+
+	foreach AllActors(class'FPawn', P)
+	{
+		if (P.IsAliveAndWell())
+		{
+			if (P.GetTeamNum() == TEAM_RED)
+			{
+				bRedTeamHasAlivePlayer = True;
+			}
+			else if (P.GetTeamNum() == TEAM_BLUE)
+			{
+				bBlueTeamHasAlivePlayer = True;
+			}
+		}
+	}
+
+	if ((!bRedTeamHasStartLocation && !bRedTeamHasAlivePlayer) || (!bBlueTeamHasStartLocation && bBlueTeamHasAlivePlayer))
+	{
+		EndGame(None, "NoAlivePlayers");
+	}
+}
+
+/**
  * @extends
  */
 function ReduceDamage(out int Damage, pawn injured, Controller instigatedBy, vector HitLocation, out vector Momentum, class<DamageType> DamageType, Actor DamageCauser)

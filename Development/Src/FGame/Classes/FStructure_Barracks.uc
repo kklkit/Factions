@@ -51,6 +51,8 @@ state Active
 		{
 			PlayerStart.Destroy();
 		}
+
+		FTeamGame(WorldInfo.Game).PlayerStatusChanged();
 	}
 }
 
