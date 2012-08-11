@@ -8,9 +8,11 @@ class FPawn extends UDKPawn;
 var DynamicLightEnvironmentComponent LightEnvironment;
 var TeamInfo LastTeam;
 
-var() int Stamina;
-var() int StaminaMax;
-var() int StaminaJumpCost;
+var() float Stamina;
+var() float StaminaMax;
+var() float StaminaJumpCost;
+var() float StaminaIncreaseRate;
+var() float StaminaDecreaseRate;
 
 // Weapon attachment
 var repnotify FWeaponAttachment WeaponAttachmentArchetype;
@@ -122,14 +124,15 @@ event Tick(float DeltaTime)
 		{
 			if (Stamina < StaminaMax)
 			{
-				Stamina++;
+				Stamina += StaminaIncreaseRate;
+				
 			}
 		}
 		else // Player is sprinting
 		{
 			if (Stamina > 0)
 			{
-				Stamina--;
+				Stamina -= StaminaDecreaseRate;
 			}
 		}
 
@@ -430,9 +433,11 @@ defaultproperties
 	InventoryManagerClass=class'FInventoryManager'
 	FallImpactSound=SoundCue'A_Character_BodyImpacts.BodyImpacts.A_Character_BodyImpact_BodyFall_Cue'
 
-	Stamina=100
-	StaminaMax=100
-	StaminaJumpCost=33
+	Stamina=100.0
+	StaminaMax=100.0
+	StaminaJumpCost=25.0
+	StaminaIncreaseRate=0.25
+	StaminaDecreaseRate=0.2
 
 	BaseTranslationOffset=6.0
 	WalkingPct=0.7
