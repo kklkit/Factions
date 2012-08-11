@@ -10,6 +10,7 @@ var TeamInfo LastTeam;
 
 var() int Stamina;
 var() int StaminaMax;
+var() int StaminaJumpCost;
 
 // Weapon attachment
 var repnotify FWeaponAttachment WeaponAttachmentArchetype;
@@ -182,6 +183,25 @@ event UpdateEyeHeight(float DeltaTime)
 	WalkBob.Z = AppliedBob;
 	if (Speed2D > 10.0)
 		WalkBob.Z = WalkBob.Z + 0.75 * Bob * Speed2D * sin(16 * BobTime);
+}
+
+/**
+ * @extends
+ */
+function bool DoJump(bool bUpdating)
+{
+	local bool bJumped;
+
+	if (Stamina >= StaminaJumpCost)
+	{
+		bJumped = Super.DoJump(bUpdating);
+		if (bJumped)
+		{
+			Stamina -= StaminaJumpCost;
+		}
+	}
+
+	return bJumped;
 }
 
 /**
@@ -412,6 +432,7 @@ defaultproperties
 
 	Stamina=100
 	StaminaMax=100
+	StaminaJumpCost=33
 
 	BaseTranslationOffset=6.0
 	WalkingPct=0.7
