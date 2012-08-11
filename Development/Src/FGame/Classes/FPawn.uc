@@ -201,9 +201,9 @@ simulated function Vector WeaponBob(float BobDamping)
  */
 function bool Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
-	Super.Died(Killer, DamageType, HitLocation);
-
 	FTeamGame(WorldInfo.Game).PlayerStatusChanged();
+
+	return Super.Died(Killer, DamageType, HitLocation);
 }
 
 /**
