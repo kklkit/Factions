@@ -420,7 +420,10 @@ simulated state Commanding
 			ClientGotoState(GetStateName());
 
 		if (myHUD != None)
+		{
 			FHUD(myHUD).GFxCommanderHUD.Start();
+			FHUD(myHUD).GFxHUD.Close(False);
+		}
 	}
 
 	/**
@@ -435,7 +438,10 @@ simulated state Commanding
 			ClientGotoState(GetStateName());
 
 		if (myHUD != None)
+		{
 			FHUD(myHUD).GFxCommanderHUD.Close(False);
+			FHUD(myHUD).GFxHUD.Start();
+		}
 	}
 
 	/**
