@@ -24,15 +24,12 @@ function TickHud()
 	local FVehicle PlayerVehicle;
 	local FWeapon PlayerWeapon;
 	local FMagazine Magazine;
-	local FTeamInfo PlayerTeam;
 	local int MagazineCount;
 	local int TargetHealth, TargetHealthMax;
 
 	// Calling functions in Flash while the movie is closed can cause a crash.
 	if (!bMovieIsOpen)
 		return;
-
-	UpdateRoundTimer(GetPC().WorldInfo.GRI.ElapsedTime);
 
 	// Get the actual player pawn (infantry pawn).
 	PlayerPawn = GetPlayerPawn();
@@ -78,21 +75,6 @@ function TickHud()
 		else
 		{
 			ShowVehicleHUD(False);
-		}
-
-		PlayerTeam = FTeamInfo(PlayerPawn.GetTeam());
-
-		if (PlayerTeam != None)
-		{
-			UpdateResources(PlayerTeam.Resources);
-
-			if (PlayerTeam.Commander != None)
-			{
-				if (PlayerTeam.Commander.PlayerReplicationInfo != None)
-					UpdateCommStatus(PlayerTeam.Commander.PlayerReplicationInfo.GetHumanReadableName(), PlayerTeam.Commander.Health, PlayerTeam.Commander.HealthMax);
-				else
-					UpdateCommStatus("", PlayerTeam.Commander.Health, PlayerTeam.Commander.HealthMax);
-			}
 		}
 	}
 	else
@@ -169,28 +151,10 @@ function UpdateMagazineCount(int MagazineCount)
 		ActionScriptVoid("_root.updateMagazineCount");
 }
 
-function UpdateResources(int Resources)
-{
-	if (bMovieIsOpen)
-		ActionScriptVoid("_root.updateResources");
-}
-
 function UpdateIsAlive(bool IsAlive)
 {
 	if (bMovieIsOpen)
 		ActionScriptVoid("_root.updateIsAlive");
-}
-
-function UpdateCommStatus(string CommName, int Health, int HealthMax)
-{
-	if (bMovieIsOpen)
-		ActionScriptVoid("_root.updateCommStatus");
-}
-
-function UpdateCurrentResearch(string ResearchName, int SecsLeft)
-{
-	if (bMovieIsOpen)
-		ActionScriptVoid("_root.updateCurrentResearch");
 }
 
 function ShowVehicleHUD(bool ShowHUD)
@@ -209,12 +173,6 @@ function UpdateVehicleRotation(int Rotation)
 {
 	if (bMovieIsOpen)
 		ActionScriptVoid("_root.updateVehicleRotation");
-}
-
-function UpdateRoundTimer(int SecsElapsed)
-{
-	if (bMovieIsOpen)
-		ActionScriptVoid("_root.updateRoundTimer");
 }
 
 defaultproperties

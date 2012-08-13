@@ -1,11 +1,12 @@
 /**
- * Initializes the Flash HUD and updates the canvas HUD.
+ * Handles updating the infantry/vehicle HUD.
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FHUD extends UDKHUD;
 
 // Scaleform classes
+var FGFxMainHud GFxMainHUD;
 var FGFxHUD GFxHUD;
 var FGFxOmniMenu GFxOmniMenu;
 var FGFxCommanderHUD GFxCommanderHUD;
@@ -34,6 +35,9 @@ simulated event PostBeginPlay()
 	MapSize = FMapInfo(WorldInfo.GetMapInfo()).MapLength;
 
 	// Initialize all the Scaleform HUDs.
+	GFxMainHUD = new class'FGFxMainHUD';
+	GFxMainHUD.Init();
+
 	GFxHUD = new class'FGFxHUD';
 	GFxHUD.Init();
 
@@ -56,6 +60,7 @@ event PostRender()
 	Super.PostRender();
 
 	// Update the interface elements in each HUD.
+	GFxMainHUD.TickHud();
 	GFxHUD.TickHud();
 	GFxCommanderHUD.TickHUD();
 	GFxOmniMenu.TickHUD();
@@ -80,11 +85,17 @@ simulated function NotifyLocalPlayerTeamReceived()
 
 	// Show the player HUD if joining a team.
 	if (PlayerOwner.PlayerReplicationInfo.Team != None && !GFxHUD.bMovieIsOpen)
+	{
 		GFxHUD.Start();
+		GFxMainHUD.Start();
+	}
 
 	// Hide the player HUD if joining spectator.
 	else if (PlayerOwner.PlayerReplicationInfo.Team == None && GFxHUD.bMovieIsOpen)
+	{
 		GFxHUD.Close(False);
+		GFxMainHUD.Close(False);
+	}
 }
 
 /**
