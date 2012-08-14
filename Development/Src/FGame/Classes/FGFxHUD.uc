@@ -31,22 +31,22 @@ function TickHud()
 	if (!bMovieIsOpen)
 		return;
 
+	// Update each HUD element.
+	if (FPlayerController(GetPC()).GetTargetStatus(TargetHealth, TargetHealthMax))
+	{
+		UpdateTargetHealth(TargetHealth, TargetHealthMax);
+		ShowTargetHealth(True);
+	}
+	else
+	{
+		ShowTargetHealth(False);
+	}
+
 	// Get the actual player pawn (infantry pawn).
 	PlayerPawn = GetPlayerPawn();
 
-	// Update each HUD element.
 	if (PlayerPawn != None)
 	{
-		if (PlayerPawn.GetTargetStatus(TargetHealth, TargetHealthMax))
-		{
-			UpdateTargetHealth(TargetHealth, TargetHealthMax);
-			ShowTargetHealth(True);
-		}
-		else
-		{
-			ShowTargetHealth(False);
-		}
-
 		UpdateHealth(PlayerPawn.Health, PlayerPawn.HealthMax);
 
 		UpdateStamina(PlayerPawn.Stamina, PlayerPawn.StaminaMax);

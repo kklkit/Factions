@@ -216,6 +216,28 @@ reliable client function ClientNotifyTeamCountChanged()
 		FHUD(myHUD).GFxOmniMenu.Invalidate("team");
 }
 
+/**
+ * Returns the status of the actor the player is looking at.
+ */
+simulated function bool GetTargetStatus(out int TargetHealth, out int TargetHealthMax)
+{
+	local Vector EyeLoc, HitLocation, HitNormal;
+	local Rotator EyeRot;
+	local Pawn HitPawn;
+
+	GetPlayerViewPoint(EyeLoc, EyeRot);
+
+	HitPawn = Pawn(Trace(HitLocation, HitNormal, EyeLoc + Vector(EyeRot) * 65536.0, EyeLoc, True));
+
+	if (HitPawn != None && HitPawn.IsAliveAndWell())
+	{
+		TargetHealth = HitPawn.Health;
+		TargetHealthMax = HitPawn.HealthMax;
+		return True;
+	}
+	return False;
+}
+
 // Structure placement
 
 /**

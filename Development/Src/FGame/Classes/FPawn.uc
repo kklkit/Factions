@@ -368,28 +368,6 @@ simulated function UpdateWeaponAttachment()
 	}
 }
 
-/**
- * Returns the status of the actor the pawn is looking at.
- */
-simulated function bool GetTargetStatus(out int TargetHealth, out int TargetHealthMax)
-{
-	local Vector EyeLoc, HitLocation, HitNormal;
-	local Rotator EyeRot;
-	local Pawn HitPawn;
-
-	GetActorEyesViewPoint(EyeLoc, EyeRot);
-
-	HitPawn = Pawn(Trace(HitLocation, HitNormal, EyeLoc + Vector(EyeRot) * 65536.0, EyeLoc, True));
-
-	if (HitPawn != None && HitPawn.IsAliveAndWell())
-	{
-		TargetHealth = HitPawn.Health;
-		TargetHealthMax = HitPawn.HealthMax;
-		return True;
-	}
-	return False;
-}
-
 defaultproperties
 {
 	Components.Remove(Sprite)
