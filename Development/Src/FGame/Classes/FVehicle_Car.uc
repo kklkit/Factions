@@ -13,7 +13,7 @@ defaultproperties
 		WheelSuspensionBias=0.1
 		ChassisTorqueScale=0.0
 		MaxBrakeTorque=5.0
-		StopThreshold=100
+		StopThreshold=100.0
 
 		MaxSteerAngleCurve=(Points=((InVal=0,OutVal=45),(InVal=600.0,OutVal=15.0),(InVal=1100.0,OutVal=10.0),(InVal=1300.0,OutVal=6.0),(InVal=1600.0,OutVal=1.0)))
 		SteerSpeed=110

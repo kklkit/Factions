@@ -28,7 +28,7 @@ defaultproperties
 		RollDamping=0.1
 		MaxRandForce=30.0
 		RandForceInterval=0.5
-		StopThreshold=100
+		StopThreshold=100.0
 		bShouldCutThrustMaxOnImpact=True
 	End Object
 	SimObj=SimObject
