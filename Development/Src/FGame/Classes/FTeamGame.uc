@@ -1,9 +1,12 @@
 /**
- * Manages the gameplay.
+ * Manages the gameplay for team-based games.
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FTeamGame extends UDKGame;
+class FTeamGame extends FGame;
+
+var float FriendlyFireScale;
+var float TeammateBoost;
 
 const TEAM_NONE=255;
 
@@ -14,9 +17,6 @@ enum ETeams
 	TEAM_BLUE
 };
 
-var float FriendlyFireScale;
-var float TeammateBoost;
-
 /**
  * @extends
  */
@@ -26,26 +26,9 @@ event PreBeginPlay()
 
 	Super.PreBeginPlay();
 
-	// Set the map info if none exists
-	if (WorldInfo.GetMapInfo() == None)
-	{
-		`log("Factions: MapInfo not set!");
-		WorldInfo.SetMapInfo(new class'FMapInfo');
-	}
-
 	// Create all the teams
 	for (TeamIndex = 0; TeamIndex < ETeams.EnumCount; TeamIndex++)
 		CreateTeam(TeamIndex);
-}
-
-/**
- * @extends
- */
-function StartMatch()
-{
-	Super.StartMatch();
-
-	GotoState('MatchInProgress');
 }
 
 /**
@@ -285,6 +268,30 @@ function RestartPlayer(Controller NewPlayer)
 }
 
 /**
+ * @extends
+ */
+function ReduceDamage(out int Damage, pawn injured, Controller instigatedBy, vector HitLocation, out vector Momentum, class<DamageType> DamageType, Actor DamageCauser)
+{
+	local int InjuredTeam, InstigatorTeam;
+
+	if (instigatedBy != None)
+	{
+		InjuredTeam = Injured.GetTeamNum();
+		InstigatorTeam = instigatedBy.GetTeamNum();
+
+		// Scale friendly fire damage
+		if (instigatedBy != injured.Controller && (Injured.DrivenVehicle == None || InstigatedBy.Pawn != Injured.DrivenVehicle) &&
+			InjuredTeam != TEAM_NONE && InstigatorTeam != TEAM_NONE && InjuredTeam == InstigatorTeam)
+		{
+			Momentum *= TeammateBoost;
+			Damage *= FriendlyFireScale;
+		}
+	}
+
+	Super.ReduceDamage(Damage, Injured, InstigatedBy, HitLocation, Momentum, DamageType, DamageCauser);
+}
+
+/**
  * Creates the team info for the given team index.
  */
 function CreateTeam(int TeamIndex)
@@ -306,44 +313,6 @@ function NotifyTeamCountChanged()
 
 	foreach WorldInfo.AllControllers(class'FPlayerController', PC)
 		PC.ClientNotifyTeamCountChanged();
-}
-
-/**
- * @extends
- */
-function DriverEnteredVehicle(Vehicle Vehicle, Pawn Pawn)
-{
-	local FPlayerController PlayerController;
-
-	Super.DriverEnteredVehicle(Vehicle, Pawn);
-
-	// Update the view target for spectators
-	foreach WorldInfo.AllControllers(class'FPlayerController', PlayerController)
-		if (PlayerController.ViewTarget == Pawn)
-			PlayerController.SetViewTarget(Vehicle);
-}
-
-/**
- * @extends
- */
-function DriverLeftVehicle(Vehicle Vehicle, Pawn Pawn)
-{
-	local FPlayerController PlayerController;
-
-	Super.DriverLeftVehicle(Vehicle, Pawn);
-
-	// Update the view target for spectators
-	foreach WorldInfo.AllControllers(class'FPlayerController', PlayerController)
-		if (PlayerController.ViewTarget == Vehicle)
-			PlayerController.SetViewTarget(Pawn);
-}
-
-/**
- * Called when a command vehicle is destroyed.
- */
-function CommandVehicleDestroyed(Controller Killer)
-{
-	EndGame(Killer.PlayerReplicationInfo, "CommandVehicleDestroyed");
 }
 
 /**
@@ -392,30 +361,6 @@ function PlayerStatusChanged()
 }
 
 /**
- * @extends
- */
-function ReduceDamage(out int Damage, pawn injured, Controller instigatedBy, vector HitLocation, out vector Momentum, class<DamageType> DamageType, Actor DamageCauser)
-{
-	local int InjuredTeam, InstigatorTeam;
-
-	if (instigatedBy != None)
-	{
-		InjuredTeam = Injured.GetTeamNum();
-		InstigatorTeam = instigatedBy.GetTeamNum();
-
-		// Scale friendly fire damage
-		if (instigatedBy != injured.Controller && (Injured.DrivenVehicle == None || InstigatedBy.Pawn != Injured.DrivenVehicle) &&
-			InjuredTeam != TEAM_NONE && InstigatorTeam != TEAM_NONE && InjuredTeam == InstigatorTeam)
-		{
-			Momentum *= TeammateBoost;
-			Damage *= FriendlyFireScale;
-		}
-	}
-
-	Super.ReduceDamage(Damage, Injured, InstigatedBy, HitLocation, Momentum, DamageType, DamageCauser);
-}
-
-/**
  * Sets the friendly fire scale.
  */
 exec function SetFriendlyFireScale(float Scale)
@@ -423,29 +368,9 @@ exec function SetFriendlyFireScale(float Scale)
 	FriendlyFireScale = Scale;
 }
 
-state MatchInProgress
-{
-	/**
-	 * @extends
-	 */
-	function bool MatchIsInProgress()
-	{
-		return True;
-	}
-}
-
 defaultproperties
 {
-	PlayerControllerClass=class'FPlayerController'
-	DefaultPawnClass=class'FPawn'
-	HUDType=class'FHUD'
-	GameReplicationInfoClass=class'FGameReplicationInfo'
-	PlayerReplicationInfoClass=class'FPlayerReplicationInfo'
-
 	bTeamGame=True
-	bDelayedStart=False
-	bRestartLevel=False
-	bPauseable=False
 
 	FriendlyFireScale=1.0
 	TeammateBoost=1.0
