@@ -681,7 +681,8 @@ simulated state RotatingCommandView extends Commanding
 
 defaultproperties
 {
-	InputClass=class'FGame.FPlayerInput'
+	InputClass=class'FPlayerInput'
+	CheatClass=class'FCheatManager'
 
 	DesiredFOV=90.0
 	DefaultFOV=90.0
