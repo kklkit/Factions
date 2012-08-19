@@ -210,7 +210,7 @@ function DrawMinimap()
 			LineColor.B = 255;
 		}
 
-		if (Pawn(LevelActor) != None || Projectile(LevelActor) != None)
+		if ((Pawn(LevelActor) != None && Pawn(LevelActor).DrivenVehicle == None) || Projectile(LevelActor) != None)
 		{
 			UnitPosition.X = LevelActor.Location.X / MapSize * MinimapSize + Canvas.ClipX - MinimapPadding.X - (MinimapSize / 2);
 			UnitPosition.Y = LevelActor.Location.Y / MapSize * MinimapSize + MinimapPadding.Y + (MinimapSize / 2);
