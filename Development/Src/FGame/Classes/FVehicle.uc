@@ -157,11 +157,6 @@ function bool Died(Controller Killer, class<DamageType> DamageType, vector HitLo
 
 	if (Super.Died(Killer, DamageType, HitLocation))
 	{
-		if (Role == ROLE_Authority && bIsCommandVehicle && FCommanderGame(WorldInfo.Game) != None)
-		{
-			FCommanderGame(WorldInfo.Game).CommandVehicleDestroyed(Killer);
-		}
-
 		KillerController = Killer;
 		HitDamageType = DamageType;
 		TakeHitLocation = HitLocation;
@@ -176,6 +171,11 @@ function bool Died(Controller Killer, class<DamageType> DamageType, vector HitLo
 			{
 				Seats[i].SeatPawn.Died(Killer, DamageType, HitLocation);
 			}
+		}
+
+		if (Role == ROLE_Authority && bIsCommandVehicle && FCommanderGame(WorldInfo.Game) != None)
+		{
+			FCommanderGame(WorldInfo.Game).CommandVehicleDestroyed(Killer, Self);
 		}
 
 		return True;
