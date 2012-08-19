@@ -28,9 +28,12 @@ function SetEndGameFocus(PlayerReplicationInfo Winner)
 /**
  * Called when a command vehicle is destroyed.
  */
-function CommandVehicleDestroyed(Controller Killer, FVehicle Vehicle)
+function CommandVehicleDestroyed(FVehicle CommandVehicle, Controller Killer)
 {
-	EndGame(Killer.PlayerReplicationInfo, "CommandVehicleDestroyed");
+	if (CommandVehicle.bIsCommandVehicle)
+	{
+		EndGame(Killer.PlayerReplicationInfo, "CommandVehicleDestroyed");
+	}
 }
 
 defaultproperties

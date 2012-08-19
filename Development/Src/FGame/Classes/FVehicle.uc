@@ -175,7 +175,7 @@ function bool Died(Controller Killer, class<DamageType> DamageType, vector HitLo
 
 		if (Role == ROLE_Authority && bIsCommandVehicle && FCommanderGame(WorldInfo.Game) != None)
 		{
-			FCommanderGame(WorldInfo.Game).CommandVehicleDestroyed(Killer, Self);
+			FCommanderGame(WorldInfo.Game).CommandVehicleDestroyed(Self, Killer);
 		}
 
 		return True;
