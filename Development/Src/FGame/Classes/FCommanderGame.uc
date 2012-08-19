@@ -8,18 +8,6 @@ class FCommanderGame extends FTeamGame;
 /**
  * @extends
  */
-function bool CheckEndGame(PlayerReplicationInfo Winner, string Reason)
-{
-	if (CheckModifiedEndGame(Winner, Reason))
-		return False;
-
-	SetEndGameFocus(Winner);
-	return True;
-}
-
-/**
- * Calls GameHasEnded on all controllers with the end game focus.
- */
 function SetEndGameFocus(PlayerReplicationInfo Winner)
 {
 	local Controller P;

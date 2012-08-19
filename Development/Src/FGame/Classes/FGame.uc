@@ -5,6 +5,10 @@
  */
 class FGame extends UDKGame;
 
+var float EndTimeDelay;
+var float EndTime;
+var int RestartWait;
+
 /**
  * @extends
  */
@@ -28,6 +32,55 @@ function StartMatch()
 	Super.StartMatch();
 
 	GotoState('MatchInProgress');
+}
+
+/**
+ * @extends
+ */
+function EndGame(PlayerReplicationInfo Winner, string Reason)
+{
+	Super.EndGame(Winner, Reason);
+
+	if (bGameEnded)
+	{
+		GotoState('MatchOver');
+	}
+}
+
+/**
+ * @extends
+ */
+function bool CheckEndGame(PlayerReplicationInfo Winner, string Reason)
+{
+	if (CheckModifiedEndGame(Winner, Reason))
+		return False;
+
+	EndTime = WorldInfo.TimeSeconds + EndTimeDelay;
+	GameReplicationInfo.Winner = Winner;
+
+	SetEndGameFocus(Winner);
+	return True;
+}
+
+/**
+ * Calls GameHasEnded on all controllers with the end game focus.
+ */
+function SetEndGameFocus(PlayerReplicationInfo Winner)
+{
+	local Controller P;
+
+	foreach WorldInfo.AllControllers(class'Controller', P)
+	{
+		P.GameHasEnded();
+	}
+}
+
+/**
+ * @extends
+ */
+function string GetNextMap()
+{
+	return "TestMap";
 }
 
 /**
@@ -71,6 +124,35 @@ state MatchInProgress
 	}
 }
 
+state MatchOver
+{
+	function RestartPlayer(Controller aPlayer);
+	function ScoreKill(Controller Killer, Controller Other);
+
+	/**
+	 * @extends
+	 */
+	function BeginState(Name PreviousStateName)
+	{
+		Global.BeginState(PreviousStateName);
+
+		GameReplicationInfo.bStopCountDown = true;
+	}
+
+	/**
+	 * @extends
+	 */
+	function Timer()
+	{
+		Global.Timer();
+
+		if (!bGameRestarted && (WorldInfo.TimeSeconds > EndTime + RestartWait))
+		{
+			RestartGame();
+		}
+	}
+}
+
 defaultproperties
 {
 	PlayerControllerClass=class'FPlayerController'
@@ -82,4 +164,7 @@ defaultproperties
 	bDelayedStart=False
 	bRestartLevel=False
 	bPauseable=False
+
+	EndTimeDelay=4.0
+	RestartWait=5
 }
