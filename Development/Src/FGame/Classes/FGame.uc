@@ -3,11 +3,12 @@
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FGame extends UDKGame;
+class FGame extends UDKGame
+	config(Server);
 
-var float EndTimeDelay;
 var float EndTime;
-var int RestartWait;
+var globalconfig float EndTimeDelay;
+var globalconfig int RestartWait;
 
 /**
  * @extends
@@ -164,7 +165,4 @@ defaultproperties
 	bDelayedStart=False
 	bRestartLevel=False
 	bPauseable=False
-
-	EndTimeDelay=4.0
-	RestartWait=5
 }
