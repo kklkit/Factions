@@ -157,9 +157,9 @@ function bool Died(Controller Killer, class<DamageType> DamageType, vector HitLo
 
 	if (Super.Died(Killer, DamageType, HitLocation))
 	{
-		if (bIsCommandVehicle && Role == ROLE_Authority)
+		if (Role == ROLE_Authority && bIsCommandVehicle && FCommanderGame(WorldInfo.Game) != None)
 		{
-			FTeamGame(WorldInfo.Game).CommandVehicleDestroyed(Killer);
+			FCommanderGame(WorldInfo.Game).CommandVehicleDestroyed(Killer);
 		}
 
 		KillerController = Killer;

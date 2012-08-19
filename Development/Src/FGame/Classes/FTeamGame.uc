@@ -34,38 +34,6 @@ event PreBeginPlay()
 /**
  * @extends
  */
-function bool CheckEndGame(PlayerReplicationInfo Winner, string Reason)
-{
-	if (CheckModifiedEndGame(Winner, Reason))
-		return False;
-
-	SetEndGameFocus(Winner);
-	return True;
-}
-
-/**
- * Calls GameHasEnded on all controllers with the end game focus.
- */
-function SetEndGameFocus(PlayerReplicationInfo Winner)
-{
-	local Controller P;
-	local Actor EndGameFocus;
-
-	if (Winner != None)
-		EndGameFocus = Controller(Winner.Owner).Pawn;
-
-	if (EndGameFocus != None)
-		EndGameFocus.bAlwaysRelevant = True;
-
-	foreach WorldInfo.AllControllers(class'Controller', P)
-	{
-		P.GameHasEnded(EndGameFocus, (P.PlayerReplicationInfo != None) && (P.PlayerReplicationInfo.Team == GameReplicationInfo.Winner));
-	}
-}
-
-/**
- * @extends
- */
 event PlayerController Login(string Portal, string Options, const UniqueNetID UniqueID, out string ErrorMessage)
 {
 	local PlayerController PC;
@@ -371,7 +339,6 @@ exec function SetFriendlyFireScale(float Scale)
 defaultproperties
 {
 	bTeamGame=True
-
 	FriendlyFireScale=1.0
 	TeammateBoost=1.0
 }

@@ -18,10 +18,10 @@
 #### UDKGame\Config\DefaultGame.ini
 
 * __[Engine.GameInfo]__
-  * `DefaultGame=FGame.FTeamGame`
-  * `DefaultServerGame=FGame.FTeamGame`
+  * `DefaultGame=FGame.FCommanderGame`
+  * `DefaultServerGame=FGame.FCommanderGame`
   * `PlayerControllerClassName=FGame.FPlayerController`
-  * `DefaultGameType=FGame.FTeamGame`
+  * `DefaultGameType=FGame.FCommanderGame`
 
 Your private SSH key needs to be loaded before you can pull or push from Git.
 

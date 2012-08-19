@@ -60,14 +60,6 @@ function DriverLeftVehicle(Vehicle Vehicle, Pawn Pawn)
 			PlayerController.SetViewTarget(Pawn);
 }
 
-/**
- * Called when a command vehicle is destroyed.
- */
-function CommandVehicleDestroyed(Controller Killer)
-{
-	EndGame(Killer.PlayerReplicationInfo, "CommandVehicleDestroyed");
-}
-
 state MatchInProgress
 {
 	/**
