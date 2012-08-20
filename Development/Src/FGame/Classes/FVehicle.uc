@@ -8,21 +8,21 @@ class FVehicle extends UDKVehicle
 	perobjectlocalized
 	notplaceable;
 
-// Number of active vehicle weapons
+// Maximum active vehicle weapons
 const NumVehicleWeapons=2;
-
-enum ERotationConstraint
-{
-	RC_Pitch,
-	RC_Yaw,
-	RC_Roll
-};
 
 enum ESeatCamera
 {
 	SC_Fixed,
 	SC_Free,
 	SC_Follow_Mesh_Free
+};
+
+enum ERotationConstraint
+{
+	RC_Pitch,
+	RC_Yaw,
+	RC_Roll
 };
 
 struct TurretConstraint
