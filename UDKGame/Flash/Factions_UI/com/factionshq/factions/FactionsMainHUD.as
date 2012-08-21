@@ -73,7 +73,7 @@
 				currentResearch.textColor = 0xff0000;
 			} else {
 				var mins:String = Math.floor(secsLeft / 60).toString();
-				var secs:String = zeroPad(secsLeft % 60, 2);
+				var secs:String = Misc.zeroPad(secsLeft % 60, 2);
 				
 				currentResearch.text = research + " (" + mins + ":" + secs + ")";
 				currentResearch.textColor = 0x000000;
@@ -84,17 +84,10 @@
 			var roundTimer:TextField = topRightHUD.getChildByName("roundTimer") as TextField;
 			
 			var hrs:String = Math.floor(secsElapsed / 3600).toString();
-			var mins:String = zeroPad(Math.floor(secsElapsed % 3600) / 60, 2);
-			var secs:String = zeroPad(secsElapsed % 60, 2);
+			var mins:String = Misc.zeroPad(Math.floor(secsElapsed % 3600) / 60, 2);
+			var secs:String = Misc.zeroPad(secsElapsed % 60, 2);
 			
 			roundTimer.text = ((hrs == "0") ? "" : hrs + ":") + mins + ":" + secs;
-		}
-		
-		public function zeroPad(number:int, width:int):String {
-			var ret:String = "" + number;
-			while (ret.length < width)
-				ret = "0" + ret;
-			return ret;
 		}
 	}
 }
