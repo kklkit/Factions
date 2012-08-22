@@ -612,6 +612,7 @@ function SetWeapon(int WeaponSlot, FVehicleWeapon WeaponArchetype)
 {
 	local FVehicleWeapon VehicleWeapon;
 	local VehicleHardpoint Hardpoint;
+	local int Index;
 
 	VehicleWeapon = Spawn(WeaponArchetype.Class, InvManager.Owner,,,, WeaponArchetype);
 
@@ -627,9 +628,8 @@ function SetWeapon(int WeaponSlot, FVehicleWeapon WeaponArchetype)
 
 		VehicleWeapons[WeaponSlot] = VehicleWeapon;
 
-		foreach VehicleHardpoints(Hardpoint)
-			if (Hardpoint.HardpointType == VehicleWeapon.HardpointType)
-				VehicleWeaponAttachments[WeaponSlot].SocketName = Hardpoint.SocketName;
+		foreach VehicleHardpoints(Hardpoint, Index)
+			VehicleWeaponAttachments[Index].SocketName = Hardpoint.SocketName;
 	}
 }
 
