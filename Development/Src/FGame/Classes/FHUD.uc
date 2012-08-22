@@ -96,6 +96,9 @@ simulated function NotifyLocalPlayerTeamReceived()
 		GFxHUD.Close(False);
 		GFxMainHUD.Close(False);
 	}
+
+	// Player team has changed
+	GFxOmniMenu.Invalidate("team");
 }
 
 /**
