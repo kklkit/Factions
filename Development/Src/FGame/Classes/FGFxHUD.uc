@@ -53,6 +53,33 @@ function TickHud()
 
 		PlayerWeapon = FWeapon(PlayerPawn.Weapon);
 
+		if (FVehicle(GetPC().Pawn) != None)
+		{
+			PlayerVehicle = FVehicle(GetPC().Pawn);
+		}
+
+		if (PlayerVehicle != None)
+		{
+			if (PlayerVehicle.VehicleWeapons[0] != None)
+				UpdateWeaponName(0, PlayerVehicle.VehicleWeapons[0].ItemName);
+			else
+				UpdateWeaponName(0, "");
+
+			if (PlayerVehicle.VehicleWeapons[1] != None)
+				UpdateWeaponName(1, PlayerVehicle.VehicleWeapons[1].ItemName);
+			else
+				UpdateWeaponName(1, "");
+		}
+		else
+		{
+			UpdateWeaponName(0, "");
+
+			if (PlayerWeapon != None)
+				UpdateWeaponName(1, PlayerWeapon.ItemName);
+			else
+				UpdateWeaponName(1, "");
+		}
+
 		if (PlayerWeapon != None)
 			UpdateAmmo(PlayerWeapon.AmmoCount, PlayerWeapon.MaxAmmoCount);
 		else
@@ -65,10 +92,9 @@ function TickHud()
 
 		UpdateMagazineCount(MagazineCount);
 
-		if (FVehicle(GetPC().Pawn) != None)
+		if (PlayerVehicle != None)
 		{
 			ShowVehicleHUD(True);
-			PlayerVehicle = FVehicle(GetPC().Pawn);
 			UpdateVehicleHealth(PlayerVehicle.Health, PlayerVehicle.HealthMax);
 			UpdateVehicleRotation(-(PlayerVehicle.TurretRotations[0].Yaw * UnrRotToDeg));
 		}
@@ -138,6 +164,13 @@ function UpdateStamina(int Stamina, int StaminaMax)
 	if (bMovieIsOpen)
 		ActionScriptVoid("_root.updateStamina");
 }
+
+function UpdateWeaponName(int Slot, string WeaponName)
+{
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.updateWeaponName");
+}
+
 
 function UpdateAmmo(int Ammo, int AmmoMax)
 {
