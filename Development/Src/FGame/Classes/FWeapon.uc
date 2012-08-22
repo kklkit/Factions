@@ -372,6 +372,7 @@ defaultproperties
 	EffectSockets(0)=Muzzle
 
 	FireAction(0)=FA_Automatic
+	FireAction(1)=FA_Automatic
 	MovementSpread=0.1
 	FiringSpread=0.1
 }
