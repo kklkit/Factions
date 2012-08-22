@@ -77,7 +77,7 @@ function TickHud()
 			if (PlayerWeapon != None)
 				UpdateWeaponName(1, PlayerWeapon.ItemName);
 			else
-				UpdateWeaponName(1, "");
+				UpdateWeaponName(1, "None");
 		}
 
 		if (PlayerWeapon != None)
