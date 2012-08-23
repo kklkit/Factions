@@ -56,28 +56,11 @@ function TickHud()
 		if (FVehicle(GetPC().Pawn) != None)
 		{
 			PlayerVehicle = FVehicle(GetPC().Pawn);
-		}
-
-		if (PlayerVehicle != None)
-		{
-			if (PlayerVehicle.VehicleWeapons[0] != None)
-				UpdateWeaponName(0, PlayerVehicle.VehicleWeapons[0].ItemName);
-			else
-				UpdateWeaponName(0, "");
-
-			if (PlayerVehicle.VehicleWeapons[1] != None)
-				UpdateWeaponName(1, PlayerVehicle.VehicleWeapons[1].ItemName);
-			else
-				UpdateWeaponName(1, "");
+			UpdateVehicleWeaponNames(PlayerVehicle);
 		}
 		else
 		{
-			UpdateWeaponName(0, "");
-
-			if (PlayerWeapon != None)
-				UpdateWeaponName(1, PlayerWeapon.ItemName);
-			else
-				UpdateWeaponName(1, "None");
+			UpdateInfantryWeaponNames(PlayerPawn);
 		}
 
 		if (PlayerWeapon != None)
@@ -107,6 +90,45 @@ function TickHud()
 	{
 		UpdateHealth(0, 1);
 		UpdateAmmo(0, 1);
+	}
+}
+
+function UpdateVehicleWeaponNames(FVehicle PlayerVehicle)
+{
+	if (PlayerVehicle.VehicleWeapons[0] != None)
+		UpdateWeaponName(0, PlayerVehicle.VehicleWeapons[0].ItemName, True);
+	else
+		UpdateWeaponName(0, "");
+
+	if (PlayerVehicle.VehicleWeapons[1] != None)
+		UpdateWeaponName(1, PlayerVehicle.VehicleWeapons[1].ItemName, True);
+	else
+		UpdateWeaponName(1, "");
+
+	UpdateWeaponName(2, "");
+	UpdateWeaponName(3, "");
+}
+
+function UpdateInfantryWeaponNames(Pawn PlayerPawn)
+{
+	local int i;
+	local FPlayerController PC;
+	local FWeapon WeaponArchetype;
+
+	PC = FPlayerController(GetPC());
+
+	for (i = 0; i < class'FPlayerController'.const.MaxLoadoutSlots; i++)
+	{
+		WeaponArchetype = PC.CurrentWeaponArchetypes[i];
+
+		if (WeaponArchetype != None)
+		{
+			UpdateWeaponName(i, WeaponArchetype.ItemName, WeaponArchetype.ItemName == PlayerPawn.Weapon.ItemName);
+		}
+		else
+		{
+			UpdateWeaponName(i, "");
+		}
 	}
 }
 
@@ -165,7 +187,7 @@ function UpdateStamina(int Stamina, int StaminaMax)
 		ActionScriptVoid("_root.updateStamina");
 }
 
-function UpdateWeaponName(int Slot, string WeaponName)
+function UpdateWeaponName(int Slot, string WeaponName, bool bActive = false)
 {
 	if (bMovieIsOpen)
 		ActionScriptVoid("_root.updateWeaponName");

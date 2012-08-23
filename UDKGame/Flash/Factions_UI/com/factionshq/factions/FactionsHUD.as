@@ -84,10 +84,17 @@
 			staminaBar.x = -staminaBar.width + staminaBarStartPositionX + (stamina / staminaMax * staminaBar.width);
 		}
 		
-		public function updateWeaponName(slot:int, name:String):void {
-			var weaponDisplay:TextField = slot == 0 ? bottomRightHUD.getChildByName('weapon1') as TextField : bottomRightHUD.getChildByName('weapon2') as TextField;
+		public function updateWeaponName(index:int, weaponName:String, active:Boolean = false):void {
+			var slot = index + 1;
+			var weaponDisplay:TextField = bottomRightHUD.getChildByName('weapon' + slot) as TextField;
 			
-			weaponDisplay.text = name;
+			weaponDisplay.text = weaponName;
+			
+			if (active) {
+				weaponDisplay.textColor = 0xff0000;
+			} else {
+				weaponDisplay.textColor = 0x0000ff;
+			}
 		}
 		
 		public function updateAmmo(ammo:int, ammoMax:int):void {
