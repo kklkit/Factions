@@ -351,8 +351,8 @@ exec function ReloadWeapon()
 		PlayerWeapon = FWeapon(Pawn.Weapon);
 
 		// Only reload if the weapon's ammo is not already full (prevents wasted magazines)
-		if (PlayerWeapon != None && FWeapon_Firearm(PlayerWeapon) != None && PlayerWeapon.AmmoCount != PlayerWeapon.MaxAmmoCount)
-			FWeapon_Firearm(PlayerWeapon).ServerReload();
+		if (PlayerWeapon != None && PlayerWeapon.AmmoCount != PlayerWeapon.MaxAmmoCount)
+			PlayerWeapon.ServerReload();
 	}
 	else
 	{
