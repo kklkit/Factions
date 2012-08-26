@@ -19,6 +19,7 @@ var(Weapon) FWeaponAttachment AttachmentArchetype;
 var(Weapon) Vector DrawOffset;
 var(Sounds)	array<SoundCue>	WeaponFireSound;
 var(Weapon) array<name> EffectSockets;
+var(Weapon) int AmmoPool;
 var int MaxAmmoCount;
 
 var(Weapon) float MovementSpread;
@@ -27,8 +28,8 @@ var float CurrentFiringSpread;
 
 replication
 {
-	if (bNetDirty)
-		MaxAmmoCount;
+	if (bNetOwner)
+		AmmoPool;
 }
 
 /**
@@ -93,6 +94,16 @@ function ConsumeAmmo(byte FireModeNum)
 simulated function bool HasAnyAmmo()
 {
 	return AmmoCount > 0;
+}
+
+/**
+ * @extends
+ */
+function int AddAmmo(int Amount)
+{
+	AmmoCount = Clamp(AmmoCount + Amount, 0, MaxAmmoCount);
+
+	return AmmoCount;
 }
 
 /**
@@ -173,6 +184,18 @@ simulated function DetachWeapon()
 	SetBase(None);
 	SetHidden(True);
 	Mesh.SetLightEnvironment(None);
+}
+
+/**
+ * Executes reloading the weapon.
+ */
+reliable server function ServerReload()
+{
+	local int AmountToGive;
+
+	AmountToGive = Clamp(MaxAmmoCount - AmmoCount, 0, AmmoPool);
+	AmmoPool -= AmountToGive;
+	AddAmmo(AmountToGive);
 }
 
 /**
@@ -375,4 +398,7 @@ defaultproperties
 	FireAction(1)=FA_Automatic
 	MovementSpread=0.1
 	FiringSpread=0.1
+	AmmoCount=30
+	MaxAmmoCount=30
+	AmmoPool=120
 }

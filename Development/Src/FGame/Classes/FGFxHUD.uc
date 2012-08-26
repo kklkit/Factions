@@ -23,8 +23,6 @@ function TickHud()
 	local FPawn PlayerPawn;
 	local FVehicle PlayerVehicle;
 	local FWeapon PlayerWeapon;
-	local FMagazine Magazine;
-	local int MagazineCount;
 	local int TargetHealth, TargetHealthMax;
 
 	// Calling functions in Flash while the movie is closed can cause a crash.
@@ -64,16 +62,15 @@ function TickHud()
 		}
 
 		if (PlayerWeapon != None)
+		{
 			UpdateAmmo(PlayerWeapon.AmmoCount, PlayerWeapon.MaxAmmoCount);
+			UpdateMagazineCount(PlayerWeapon.AmmoPool);
+		}
 		else
+		{
 			UpdateAmmo(0, 1);
-
-		if (PlayerPawn.InvManager != None)
-			foreach PlayerPawn.InvManager.InventoryActors(class'FMagazine', Magazine)
-				if (Magazine.AmmoFor == PlayerWeapon.GetHumanReadableName())
-					MagazineCount++;
-
-		UpdateMagazineCount(MagazineCount);
+			UpdateMagazineCount(-1);
+		}
 
 		if (PlayerVehicle != None)
 		{
