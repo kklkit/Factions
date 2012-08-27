@@ -32,7 +32,8 @@ simulated function FireAmmunition()
 reliable server function ServerReload()
 {
 	Super.ServerReload();
-	AttachRocket();
+	if (AmmoCount > 0)
+		AttachRocket();
 }
 
 /**
