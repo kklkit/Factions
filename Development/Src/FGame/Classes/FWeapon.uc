@@ -20,7 +20,7 @@ var(Weapon) Vector DrawOffset;
 var(Sounds)	array<SoundCue>	WeaponFireSound;
 var(Weapon) array<name> EffectSockets;
 var(Weapon) int AmmoPool;
-var int MaxAmmoCount;
+var(Weapon) int MaxAmmoCount;
 
 var(Weapon) float MovementSpread;
 var(Weapon) float FiringSpread;
