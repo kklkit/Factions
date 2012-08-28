@@ -46,7 +46,7 @@ defaultproperties
 	Weapons(0)=FWeapon_Firearm'WP_Pistol.Archetypes.WP_Pistol'
 	Weapons(1)=FWeapon_Firearm'WP_Rifle.Archetypes.WP_Rifle'
 	Weapons(2)=FWeapon_Healer'WP_RepairTool.Archetypes.WP_RepairTool'
-	Weapons(3)=FWeapon_Launcher'WP_RPG.Archetypes.WP_RPG'
+	Weapons(3)=FWeapon_RocketLauncher'WP_RPG.Archetypes.WP_RPG'
 
 	VehicleWeapons(0)=FVehicleWeapon_Projectile'VWP_RangedCannon.Archetypes.VWP_RangedCannon'
 	VehicleWeapons(1)=FVehicleWeapon_Instant'VWP_MG.Archetypes.VWP_MG'

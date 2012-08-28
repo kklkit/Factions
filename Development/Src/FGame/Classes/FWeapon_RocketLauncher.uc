@@ -1,9 +1,9 @@
 /**
- * Base class for launcher-type infantry weapons.
+ * Base class for rocket-launcher-type infantry weapons.
  * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
-class FWeapon_Launcher extends FWeapon;
+class FWeapon_RocketLauncher extends FWeapon;
 
 var SkeletalMeshComponent RocketSkeletalMesh;
 
@@ -21,7 +21,7 @@ simulated function PostBeginPlay()
  * @extends
  */
 simulated function FireAmmunition()
-{
+{	
 	Super.FireAmmunition();
 	DetachRocket();	
 }
