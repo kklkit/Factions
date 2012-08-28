@@ -24,7 +24,7 @@ defaultproperties
 		EngineBrakeFactor=0.025
 		ThrottleSpeed=0.2
 		WheelInertia=0.2
-		NumWheelsForFullSteering=8
+		NumWheelsForFullSteering=2
 		SteeringReductionFactor=0.0
 		SteeringReductionMinSpeed=1100.0
 		SteeringReductionSpeed=1400.0
