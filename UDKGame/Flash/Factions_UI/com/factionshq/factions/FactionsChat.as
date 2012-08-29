@@ -76,7 +76,7 @@
 			historyChatLogContainer.visible = false;
 			
 			var myChatInputBox:FactionsTextInput = ChatContainer.getChildByName("chatInputBox") as FactionsTextInput;
-			myChatInputBox.visible = true;
+			myChatInputBox.visible = false;
 		
 			var myChatState:MovieClip = ChatContainer.getChildByName("chatState") as MovieClip;
 			myChatState.visible = false;
