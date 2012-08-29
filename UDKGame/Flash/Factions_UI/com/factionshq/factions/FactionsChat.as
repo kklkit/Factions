@@ -9,6 +9,7 @@
 	import scaleform.clik.controls.TextArea;
 	import scaleform.clik.controls.ScrollBar;
 	import scaleform.clik.controls.TextInput;
+	import com.factionshq.factions.FactionsTextInput;
 	
 	public class FactionsChat extends MovieClip {
 		
@@ -74,8 +75,8 @@
 			var historyChatLogContainer:MovieClip = ChatContainer.getChildByName("historyChatLog") as MovieClip;
 			historyChatLogContainer.visible = false;
 			
-			var myChatInputBox:TextInput = ChatContainer.getChildByName("chatInputBox") as TextInput;
-			myChatInputBox.visible = false;
+			var myChatInputBox:FactionsTextInput = ChatContainer.getChildByName("chatInputBox") as FactionsTextInput;
+			myChatInputBox.visible = true;
 		
 			var myChatState:MovieClip = ChatContainer.getChildByName("chatState") as MovieClip;
 			myChatState.visible = false;
@@ -101,7 +102,7 @@
 				bTeamChat = false;
 			
 			// Make chat input box visible
-			var chatInputBox:TextInput = ChatContainer.getChildByName("chatInputBox") as TextInput;
+			var chatInputBox:FactionsTextInput = ChatContainer.getChildByName("chatInputBox") as FactionsTextInput;
 			chatInputBox.visible = true;
 			chatInputBox.focused = 1;
 			
@@ -129,7 +130,7 @@
 			currentChatLogTextArea.focused = 1;
 				
 			// Make chat input box invisible
-			var chatInputBox:TextInput = ChatContainer.getChildByName("chatInputBox") as TextInput;
+			var chatInputBox:FactionsTextInput = ChatContainer.getChildByName("chatInputBox") as FactionsTextInput;
 			chatInputBox.visible = false;		
 			
 			// Make chat state invisible
@@ -143,12 +144,12 @@
 		}
 		
 		public function getChatInputBoxText():String {
-			var myChatInputBox:TextInput = ChatContainer.getChildByName("chatInputBox") as TextInput;		
+			var myChatInputBox:FactionsTextInput = ChatContainer.getChildByName("chatInputBox") as FactionsTextInput;		
 			return myChatInputBox.text;		
 		}
 		
 		public function setChatInputBoxText(setText:String):void{
-			var myChatInputBox:TextInput = ChatContainer.getChildByName("chatInputBox") as TextInput;		
+			var myChatInputBox:FactionsTextInput = ChatContainer.getChildByName("chatInputBox") as FactionsTextInput;		
 			myChatInputBox.text = setText;			
 		}
 		
