@@ -1,0 +1,4 @@
+[Archetypes.WP_RPG FWeapon_RocketLauncher]
+ItemName="Rocket Launcher"
+PickupMessage="Snagged an item."
+
