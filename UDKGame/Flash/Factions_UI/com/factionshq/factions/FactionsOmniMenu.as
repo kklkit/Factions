@@ -238,6 +238,11 @@
 					ExternalInterface.call("SelectVehicleChassis", chassisName as String);
 				});
 			});
+			
+			vehicleChassisList.selectedIndex = 0;
+			vehicleWeaponList0.selectedIndex = 0;
+			vehicleWeaponList1.selectedIndex = 0;
+			vehicleArmorList.selectedIndex = 0;
 		}
 		
 		private function buildVehicle(e:ButtonEvent) {
