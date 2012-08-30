@@ -30,6 +30,12 @@ state Active
 		local FVehicle SpawnedVehicle;
 		local FVehicleWeapon VehicleWeaponArchetype;
 
+		if (!WorldInfo.GRI.OnSameTeam(Self, Player))
+		{
+			`log(Self @ "aborting vehicle creation:" @ Player.GetHumanReadableName() @ "on other team.");
+			return;
+		}
+
 		Mesh.GetSocketWorldLocationAndRotation(VehicleSpawnSocket, VehicleSpawnLocation);
 		PlayerTeam = FTeamInfo(Player.PlayerReplicationInfo.Team);
 		if (PlayerTeam != None && PlayerTeam.Resources >= VehicleArchetype.ResourceCost)
