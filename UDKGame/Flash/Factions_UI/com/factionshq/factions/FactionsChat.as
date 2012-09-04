@@ -10,6 +10,7 @@
 	import scaleform.clik.controls.ScrollBar;
 	import scaleform.clik.controls.TextInput;
 	import com.factionshq.factions.FactionsTextInput;
+	import flash.system.*;
 	
 	public class FactionsChat extends MovieClip {
 		
@@ -77,7 +78,7 @@
 			
 			var myChatInputBox:FactionsTextInput = ChatContainer.getChildByName("chatInputBox") as FactionsTextInput;
 			myChatInputBox.visible = false;
-		
+											
 			var myChatState:MovieClip = ChatContainer.getChildByName("chatState") as MovieClip;
 			myChatState.visible = false;
 			

@@ -5,11 +5,15 @@
  */
 class FGFxMoviePlayer extends GFxMoviePlayer;
 
+// DLL bind class for accessing system's clipboard
+var FSystemClipboard SystemClipboard;
+
 // If true, display the mouse cursor when this movie is open.
 var bool bDisplayMouseCursorOnStart;
 
 // If true, this movie is the one that displayed the mouse cursor. Other movie players should not attempt to display the mouse cursor again.
 var private bool bDisplayedMouseCursor;
+
 
 /**
  * @extends
@@ -130,8 +134,41 @@ function FPawn GetPlayerPawn()
 	return FPawn(PlayerPawn);
 }
 
+/*********************************************************************************************
+ Functions called from ActionScript
+**********************************************************************************************/
+
+/**
+ * Called when the GFx needs to get text from system clipboard
+ */
+function GFxObject RetriveSystemClipboardText()
+{
+	local GFxObject Result;
+	local string RetrivedText;
+	local ASValue asval;
+
+	RetrivedText = SystemClipboard.GetText();
+	Result = CreateObject("Object");
+
+	asval.Type = AS_String;
+	asval.s = RetrivedText;
+	
+	Result.Set("retrivedText",asval);
+
+	return Result;	
+}
+
+function SetSystemClipboardText(string Text)
+{
+	SystemClipboard.SetText(Text);
+}
+
 defaultproperties
 {
+	Begin Object Class=FSystemClipboard Name=SCB		
+	End Object
+	SystemClipboard=SCB
+
 	bDisplayMouseCursorOnStart=False
 	bDisplayedMouseCursor=False
 }

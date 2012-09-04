@@ -1,9 +1,13 @@
 ﻿package com.factionshq.factions {
 	import flash.text.*;
+	import flash.system.*;
 	import flash.ui.Keyboard;
+	import flash.events.KeyboardEvent;
+	import flash.external.ExternalInterface;
+	
 	import scaleform.gfx.*;
 	import scaleform.clik.controls.TextInput;
-	import flash.events.KeyboardEvent;
+	
 	
 	
 	public class FactionsTextInput extends TextInput {
@@ -20,6 +24,7 @@
 		
 		private var bCtrlDown:Boolean;
 		private var clipboard:String;
+		private var textBuffer:String;
 		
 		public function FactionsTextInput() {
 			super();
@@ -48,7 +53,7 @@
 					
 				case Keyboard.V:
 				if (bCtrlDown)	// Ctrl+V (Paste)
-					textField.replaceSelectedText(clipboard);
+					pasteTextFromClipboard();
 				break;
 					
 				case Keyboard.X:
@@ -68,8 +73,16 @@
 		}
 		
 		private function copySelectedToClipboard() {
-			clipboard = textField.text.slice(textField.selectionBeginIndex,textField.selectionEndIndex);
+			textBuffer = textField.text.slice(textField.selectionBeginIndex,textField.selectionEndIndex);
+			ExternalInterface.call("SetSystemClipboardText",textBuffer);
 		}			
+		
+		private function pasteTextFromClipboard() {
+			var retVal:Object = {};
+			retVal = ExternalInterface.call("RetriveSystemClipboardText");
+						
+			textField.replaceSelectedText(retVal.retrivedText);
+		}
 		
 		
 	}
