@@ -40,6 +40,7 @@ function TickHud()
 		if (PlayerTeam != None)
 		{
 			UpdateResources(PlayerTeam.Resources);
+			UpdateReinforcements(PlayerTeam.TeamIndex, PlayerTeam.Reinforcements);
 
 			if (PlayerTeam.Commander != None)
 			{
@@ -105,6 +106,12 @@ function UpdateRoundTimer(int SecsElapsed)
 {
 	if (bMovieIsOpen)
 		ActionScriptVoid("_root.updateRoundTimer");
+}
+
+function UpdateReinforcements(int TeamIndex, int Amount)
+{
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.updateReinforcements");
 }
 
 defaultproperties

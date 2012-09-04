@@ -89,5 +89,17 @@
 			
 			roundTimer.text = ((hrs == "0") ? "" : hrs + ":") + mins + ":" + secs;
 		}
+		
+		public function updateReinforcements(teamIndex:int, amount:int):void {
+			var ticketCounter:TextField;
+			
+			if (teamIndex == 0) {
+				ticketCounter = topRightHUD.getChildByName("redTeamTickets") as TextField;
+			} else if (teamIndex == 1) {
+				ticketCounter = topRightHUD.getChildByName("blueTeamTickets") as TextField;
+			}
+			
+			ticketCounter.text = amount.toString();
+		}
 	}
 }

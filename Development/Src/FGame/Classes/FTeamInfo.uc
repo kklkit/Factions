@@ -6,13 +6,14 @@
 class FTeamInfo extends TeamInfo;
 
 var int Resources;
+var int Reinforcements;
 var localized string TeamNames[ETeams];
 var Pawn Commander; // Command vehicle
 
 replication
 {
 	if (bNetDirty)
-		Resources, Commander;
+		Resources, Reinforcements, Commander;
 }
 
 /**
@@ -42,4 +43,5 @@ simulated function string GetHumanReadableName()
 
 defaultproperties
 {
+	Reinforcements=100
 }
