@@ -41,6 +41,11 @@ simulated function string GetHumanReadableName()
 	return TeamName;
 }
 
+function DeductReinforcements(int Amount = 1)
+{
+	Reinforcements -= Amount;
+}
+
 defaultproperties
 {
 	Reinforcements=100

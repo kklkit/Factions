@@ -226,11 +226,6 @@ function bool Died(Controller Killer, class<DamageType> DamageType, vector HitLo
 {
 	FTeamGame(WorldInfo.Game).PlayerStatusChanged();
 
-	if (FTeamInfo(GetTeam()) != None)
-	{
-		FTeamInfo(GetTeam()).Reinforcements--;
-	}
-
 	return Super.Died(Killer, DamageType, HitLocation);
 }
 

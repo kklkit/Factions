@@ -232,7 +232,14 @@ function float RatePlayerStart(PlayerStart P, byte Team, Controller Player)
 function RestartPlayer(Controller NewPlayer)
 {
 	if (!NewPlayer.PlayerReplicationInfo.bIsSpectator)
+	{
 		Super.RestartPlayer(NewPlayer);
+
+		if (NewPlayer.Pawn != None)
+		{
+			FTeamInfo(NewPlayer.Pawn.GetTeam()).DeductReinforcements();
+		}
+	}
 }
 
 /**
