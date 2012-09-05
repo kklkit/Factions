@@ -10,6 +10,7 @@ var(Map) Vector MapOrigin;
 var(Map) float MapLength;
 
 var() int StartingResources;
+var() int StartingReinforcements;
 
 var(Game) array<FInfantryClass> InfantryClasses;
 var(Game) array<FStructure> Structures;
@@ -23,6 +24,7 @@ defaultproperties
 	MapLength=40000.0
 
 	StartingResources=400
+	StartingReinforcements=100
 
 	// Each item below will be spawnable in-game
 

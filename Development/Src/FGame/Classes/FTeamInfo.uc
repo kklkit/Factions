@@ -21,9 +21,14 @@ replication
  */
 event PostBeginPlay()
 {
+	local FMapInfo MI;
+
 	Super.PostBeginPlay();
 
-	Resources = FMapInfo(WorldInfo.GetMapInfo()).StartingResources;
+	MI = FMapInfo(WorldInfo.GetMapInfo());
+
+	Resources = MI.StartingResources;
+	Reinforcements = MI.StartingReinforcements;
 }
 
 /**
@@ -48,5 +53,4 @@ function DeductReinforcements(int Amount = 1)
 
 defaultproperties
 {
-	Reinforcements=100
 }
