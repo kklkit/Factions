@@ -37,6 +37,7 @@ state Active
 		}
 
 		Mesh.GetSocketWorldLocationAndRotation(VehicleSpawnSocket, VehicleSpawnLocation);
+		VehicleSpawnLocation.Z -= VehicleArchetype.COMOffset.Z;
 		PlayerTeam = FTeamInfo(Player.PlayerReplicationInfo.Team);
 		if (PlayerTeam != None && PlayerTeam.Resources >= VehicleArchetype.ResourceCost)
 		{
