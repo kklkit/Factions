@@ -1,7 +1,7 @@
 set build_zip=UDKInstall-Factions.zip
 set build_dir=..\build
 
-REM Delete old build files
+rem Delete old build files
 
 if exist %build_zip% (
 del %build_zip% /q
@@ -11,31 +11,31 @@ if exist %build_dir% (
 rmdir %build_dir% /s /q
 )
 
-REM Get latest game code
+rem Get latest game code
 
-git clean -d -f -n
+call git clean -d -f -n
 if errorlevel 1 exit /b %errorlevel%
 
-git pull
+call git pull
 if errorlevel 1 exit /b %errorlevel%
 
-REM Compile source code and cook packages
+rem Compile source code and cook packages
 
-Binaries\Win32\UDK.com make -full -unattended -stripsource
+call Binaries\Win32\UDK.com make -full -unattended -stripsource -nullrhi
 if errorlevel 1 exit /b %errorlevel%
 
-Binaries\Win32\UDK.com CookPackages -platform=PC -full -cookallmaps
+call Binaries\Win32\UDK.com CookPackages -platform=PC -full -cookallmaps -nullrhi
 if errorlevel 1 exit /b %errorlevel%
 
-REM Copy game files into a zip
+rem Copy game files into a zip
 
-Binaries\UnSetup.exe -GameCreateManifest
+call Binaries\UnSetup.exe -GameCreateManifest
 if errorlevel 1 exit /b %errorlevel%
 
-Binaries\UnSetup.exe -BuildGameInstaller
+call Binaries\UnSetup.exe -BuildGameInstaller
 if errorlevel 1 exit /b %errorlevel%
 
-REM Extract zip into build directory
+rem Extract zip into build directory
 
-7z x %build_zip% -o%build_dir%
+call 7z x %build_zip% -o%build_dir%
 if errorlevel 1 exit /b %errorlevel%
