@@ -1,4 +1,4 @@
-set build_bat=build.bat
+set build_bat=%0
 set build_zip=UDKInstall-Factions.zip
 set build_dir=..\build
 set build_progress=buildprogress.txt
