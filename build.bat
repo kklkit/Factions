@@ -1,11 +1,16 @@
+set build_bat=build.bat
 set build_zip=UDKInstall-Factions.zip
 set build_dir=..\build
 set build_progress=buildprogress.txt
+set build_queue=buildqueue.txt
 
-rem Abort build if already in progress
+rem Queue build if already in progress
 
 if exist %build_progress% (
-exit /b 2
+echo Build queued at: >> %build_queue%
+call date /t >> %build_queue%
+call time /t >> %build_queue%
+exit /b
 )
 
 rem Set build in progress
@@ -53,11 +58,22 @@ rem Extract zip into build directory
 call 7z x %build_zip% -o%build_dir%
 if errorlevel 1 goto error
 
+rem Build complete
+
 :end
 
 del %build_progress% /q
 
+rem Execute next build if queued
+
+if exist %build_queue% (
+del %build_queue% /q
+call %build_bat%
+)
+
 exit /b
+
+rem Build error
 
 :error
 
