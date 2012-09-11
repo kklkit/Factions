@@ -7,6 +7,7 @@ class FStructure extends Vehicle
 	perobjectlocalized
 	notplaceable;
 
+var() bool bPermanent; // If the structure goes back to preview state when dead
 var() repnotify name CurrentState;
 var() repnotify byte Team; // Team index
 var() int ResourceCost;
@@ -59,7 +60,16 @@ function bool Died(Controller Killer, class<DamageType> DamageType, Vector HitLo
 {
 	if (Super.Died(Killer, DamageType, HitLocation))
 	{
-		GotoState('DyingStructure');
+		if (bPermanent)
+		{
+			Team = class'FTeamGame'.const.TEAM_NONE;
+			GotoState('Preview');
+		}
+		else
+		{
+			GotoState('DyingStructure');
+		}
+
 		return True;
 	}
 

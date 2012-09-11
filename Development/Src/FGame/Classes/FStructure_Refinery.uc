@@ -66,6 +66,7 @@ state Active
 
 defaultproperties
 {
+	bPermanent=True
 	TransferRate=1.0
 	TransferAmount=1
 	Resources=5000
