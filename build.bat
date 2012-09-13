@@ -39,10 +39,10 @@ if errorlevel 1 goto error
 
 rem Compile source code and cook packages
 
-call Binaries\Win32\UDK.com make -full -unattended -stripsource -nullrhi
+call Binaries\Win32\UDK.com make -unattended -stripsource -nullrhi
 if errorlevel 1 goto error
 
-call Binaries\Win32\UDK.com CookPackages -platform=PC -full -cookallmaps -nullrhi
+call Binaries\Win32\UDK.com CookPackages -platform=PC -cookallmaps -nullrhi
 if errorlevel 1 goto error
 
 rem Copy game files into a zip
