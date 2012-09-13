@@ -1,6 +1,6 @@
 set build_bat=%0
 set build_zip=UDKInstall-Factions.zip
-set build_dir=..\build
+set build_dir="D:\Servers\Misc\Apache 2.2\subdomains\factions"
 set build_progress=buildprogress.txt
 set build_queue=buildqueue.txt
 
@@ -56,6 +56,11 @@ if errorlevel 1 goto error
 rem Extract zip into build directory
 
 call 7z x %build_zip% -o%build_dir%
+if errorlevel 1 goto error
+
+rem Generate manifest
+
+call ..\tools\generate.bat
 if errorlevel 1 goto error
 
 rem Build complete
