@@ -109,23 +109,13 @@ function UpdateVehicleWeaponNames(FVehicle PlayerVehicle)
 function UpdateInfantryWeaponNames(Pawn PlayerPawn)
 {
 	local int i;
-	local FPlayerController PC;
-	local FWeapon WeaponArchetype;
+	local FWeapon InventoryWeapon;
 
-	PC = FPlayerController(GetPC());
+	i = 0;
 
-	for (i = 0; i < class'FPlayerController'.const.MaxLoadoutSlots; i++)
+	foreach PlayerPawn.InvManager.InventoryActors(class'FWeapon', InventoryWeapon)
 	{
-		WeaponArchetype = PC.CurrentWeaponArchetypes[i];
-
-		if (WeaponArchetype != None)
-		{
-			UpdateWeaponName(i, WeaponArchetype.ItemName, WeaponArchetype.ItemName == PlayerPawn.Weapon.ItemName);
-		}
-		else
-		{
-			UpdateWeaponName(i, "");
-		}
+		UpdateWeaponName(i++, InventoryWeapon.ItemName, InventoryWeapon.ItemName == PlayerPawn.Weapon.ItemName);
 	}
 }
 
