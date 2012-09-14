@@ -58,6 +58,9 @@ rem Extract zip into build directory
 call 7z x %build_zip% -o%build_dir%
 if errorlevel 1 goto error
 
+copy Binaries\Win32\UserCode\clipboard.dll %build_dir%\Binaries\Win32\UserCode\clipboard.dll
+if errorlevel 1 goto error
+
 rem Generate manifest
 
 call ..\tools\generate.bat
