@@ -478,13 +478,14 @@ defaultproperties
 	Components.Add(StructureMesh)
 
 	TickGroup=TG_PostAsyncWork
+	Physics=PHYS_RigidBody
 	CollisionType=COLLIDE_BlockAll
 	bCollideActors=True
 	bBlockActors=True
 	bCollideWorld=False
 	bAlwaysRelevant=True
 	bPlaceable=True
-
+	
 	Team=255 // class'FTeamGame'.const.TEAM_NONE
 	Health=1
 	HealthMax=1000
