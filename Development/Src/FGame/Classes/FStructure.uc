@@ -477,6 +477,7 @@ defaultproperties
 	Mesh=StructureMesh
 	Components.Add(StructureMesh)
 
+	TickGroup=TG_PostAsyncWork
 	CollisionType=COLLIDE_BlockAll
 	bCollideActors=True
 	bBlockActors=True
