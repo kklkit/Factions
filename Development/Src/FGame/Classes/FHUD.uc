@@ -142,12 +142,12 @@ function AddConsoleMessage(string M, class<LocalMessage> InMessageClass, PlayerR
 	{
 	case 0:
 		ColorCode = 0;
-		if (PRI == FTeamInfo(WorldInfo.Game.GameReplicationInfo.Teams[0]).Commander.PlayerReplicationInfo)
+		if (PRI == FTeamInfo(GetALocalPlayerController().WorldInfo.GRI.Teams[0]).Commander.PlayerReplicationInfo)
 			ColorCode = 3;
 		break;
 	case 1:
 		ColorCode = 1;
-		if (PRI == FTeamInfo(WorldInfo.Game.GameReplicationInfo.Teams[1]).Commander.PlayerReplicationInfo)
+		if (PRI == FTeamInfo(GetALocalPlayerController().WorldInfo.GRI.Teams[1]).Commander.PlayerReplicationInfo)
 			ColorCode = 4;
 		break;
 	default:
