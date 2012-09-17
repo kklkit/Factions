@@ -216,9 +216,7 @@ function float RatePlayerStart(PlayerStart P, byte Team, Controller Player)
 
 	// Return closest team spawn point
 	if (UDKTeamPlayerStart(P) != None && Team == UDKTeamPlayerStart(P).TeamNumber)
-	{
 		return FMapInfo(WorldInfo.GetMapInfo()).MapLength - VSize(Player.Location - P.Location);
-	}
 
 	return -1.0;
 }

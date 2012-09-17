@@ -9,8 +9,8 @@ class FMapInfo extends UDKMapInfo;
 var(Map) Vector MapOrigin;
 var(Map) float MapLength;
 
-var() int StartingResources;
-var() int StartingReinforcements;
+var(Map) int StartingResources;
+var(Map) int StartingReinforcements;
 
 var(Game) array<FInfantryClass> InfantryClasses;
 var(Game) array<FStructure> Structures;
