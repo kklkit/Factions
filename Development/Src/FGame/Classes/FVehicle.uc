@@ -86,6 +86,7 @@ var Emitter DeathExplosion;
 var ParticleSystem SecondaryExplosion;
 var name BigExplosionSocket;
 var class<UDKExplosionLight> ExplosionLightClass;
+var SoundCue ExplosionSound;
 
 var float ExplosionDamage, ExplosionRadius, ExplosionMomentum;
 var float ExplosionInAirAngVel;
@@ -836,8 +837,14 @@ simulated state DyingVehicle
 			}
 		}
 
+		if (ExplosionSound != None)
+		{
+			PlaySound(ExplosionSound, true);
+		}
+		
 		HurtRadius(ExplosionDamage, ExplosionRadius, class'UTDmgType_VehicleExplosion', ExplosionMomentum, Location,, GetCollisionDamageInstigator());
 		AddVelocity((ExplosionMomentum / Mass) * Vect(0,0,1), Location, class'UTDmgType_VehicleExplosion');
+
 
 		// If in air, add some anglar spin.
 		if (Role == ROLE_Authority && !bVehicleOnGround)
@@ -852,14 +859,18 @@ simulated state DyingVehicle
 	simulated function PlayVehicleExplosionEffect(ParticleSystem TheExplosionTemplate, optional bool bSpawnLight = True)
 	{
 		local UDKExplosionLight L;
-
+		
 		if (TheExplosionTemplate != None)
 		{
 			DeathExplosion = Spawn(class'UTEmitter', Self);
+			DeathExplosion.LifeSpan = 3.0;
+			DeathExplosion.SetDrawScale(4.0);
+			DeathExplosion.ParticleSystemComponent.bAutoActivate = false;
 			if (BigExplosionSocket != 'None')
 			{
 				DeathExplosion.SetBase(Self,, Mesh, BigExplosionSocket);
 			}
+			
 			DeathExplosion.SetTemplate(TheExplosionTemplate, True);
 			DeathExplosion.ParticleSystemComponent.SetFloatParameter('Velocity', VSize(Velocity) / GroundSpeed);
 
@@ -868,6 +879,7 @@ simulated state DyingVehicle
 				L = new(DeathExplosion) ExplosionLightClass;
 				DeathExplosion.AttachComponent(L);
 			}
+			DeathExplosion.ParticleSystemComponent.ActivateSystem();
 		}
 	}
 }
@@ -910,12 +922,12 @@ defaultproperties
 
 	// Explosions
 	ExplosionDamage=100.0
-	ExplosionRadius=300.0
+	ExplosionRadius=1200.0
 	ExplosionMomentum=60000.0
 	ExplosionInAirAngVel=1.5
 	ExplosionLightClass=class'UTGame.UTRocketExplosionLight'
 	ExplosionTemplate=ParticleSystem'FX_VehicleExplosions.Effects.P_FX_GeneralExplosion'
-	BigExplosionTemplates[0]=(Template=ParticleSystem'FX_VehicleExplosions.Effects.P_FX_VehicleDeathExplosion')
+	BigExplosionTemplates[0]=(Template=ParticleSystem'Factions_Assets.FStandardExp')
 	SecondaryExplosion=ParticleSystem'Envy_Effects.VH_Deaths.P_VH_Death_Dust_Secondary'
 	
 	// Default vehicle sounds
@@ -928,6 +940,7 @@ defaultproperties
 	CollisionSound=SoundCue'A_Vehicle_Scorpion.SoundCues.A_Vehicle_Scorpion_Collide'
 	EnterVehicleSound=SoundCue'A_Vehicle_Scorpion.SoundCues.A_Vehicle_Scorpion_Start'
 	ExitVehicleSound=SoundCue'A_Vehicle_Scorpion.SoundCues.A_Vehicle_Scorpion_Stop'
+	ExplosionSound=SoundCue'Factions_Assets.FStandardExpSFX_SoundCue'
 
 	// Tire effects
 	WheelParticleEffects[0]=(MaterialType=Generic,ParticleTemplate=ParticleSystem'Envy_Level_Effects_2.Vehicle_Dust_Effects.P_Scorpion_Wheel_Dust')
