@@ -55,7 +55,7 @@
 		public var bTeamChat = false;	
 		public var htmlLineBreak:String = "<br />"; // HTML code for line break
 		public var msgAliveDuration:int = 10000;   // How long the chat message stays before decay
-		public var definedColor:Array = new Array("#FF2500", "#2500FF", "#CCCCCC", "#E08ECD","#25FFFF");
+		public var definedColor:Array = new Array("#CD2323", "#0161ff", "#CCCCCC", "#FF9898","#86EAF6");
 		
 			// definedColor[0] is red (Red team)
 			// definedColor[1] is blue (Blue team)
