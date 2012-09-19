@@ -864,7 +864,7 @@ simulated state DyingVehicle
 		{
 			DeathExplosion = Spawn(class'UTEmitter', Self);
 			DeathExplosion.LifeSpan = 3.0;
-			DeathExplosion.SetDrawScale(4.0);
+			DeathExplosion.SetDrawScale(3.0);
 			DeathExplosion.ParticleSystemComponent.bAutoActivate = false;
 			if (BigExplosionSocket != 'None')
 			{
@@ -922,7 +922,7 @@ defaultproperties
 
 	// Explosions
 	ExplosionDamage=100.0
-	ExplosionRadius=1200.0
+	ExplosionRadius=600.0
 	ExplosionMomentum=60000.0
 	ExplosionInAirAngVel=1.5
 	ExplosionLightClass=class'UTGame.UTRocketExplosionLight'
