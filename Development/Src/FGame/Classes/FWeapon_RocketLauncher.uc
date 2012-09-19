@@ -27,16 +27,6 @@ simulated function FireAmmunition()
 }
 
 /**
- * @extends
- */
-reliable server function ServerReload()
-{
-	Super.ServerReload();
-	if (AmmoCount > 0)
-		AttachRocket();
-}
-
-/**
  * Attach rocket to the weapon's mesh
  */
 simulated function AttachRocket()
@@ -52,6 +42,20 @@ simulated function DetachRocket()
 {
 	if (RocketSkeletalMesh != none)
 		UDKSkeletalMeshComponent(Mesh).DetachComponent(RocketSkeletalMesh);
+}
+
+/**
+ * @extends
+ */
+simulated event ReplicatedEvent(name VarName)
+{
+	Super.ReplicatedEvent(VarName);
+
+	if (VarName == 'AmmoCount')
+	{
+		if (AmmoCount>0)
+			attachRocket();
+	}	
 }
 
 DefaultProperties
