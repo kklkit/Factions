@@ -226,12 +226,15 @@
 			var historyChatLogContainer:MovieClip = ChatContainer.getChildByName("historyChatLog") as MovieClip;
 			var historyChatLogTextArea:TextArea = historyChatLogContainer.getChildByName("historyChatLogTextArea") as TextArea;
 			historyChatLogTextArea.htmlText += tempString;		
+			var scrollTimer:Timer = new Timer(50, 1);
+			scrollTimer.addEventListener(TimerEvent.TIMER, onScrollTimerTick);
+			scrollTimer.start();			
 			historyChatLogTextArea.position =  10000; // Scroll to the bottom
 			
 			// Apply chatline decay timer for current chatlog
 			var chatLogDecayTimer:Timer = new Timer(msgAliveDuration, 1);
-			chatLogDecayTimer.start();
 			chatLogDecayTimer.addEventListener(TimerEvent.TIMER, onChatLogDecay);	
+			chatLogDecayTimer.start();
 			
 		}
 		
@@ -256,6 +259,12 @@
 				else			
 					currentChatLogTextArea.htmlText = "";
 			}		
+		}
+		
+		function onScrollTimerTick(e:TimerEvent):void {
+			var historyChatLogContainer:MovieClip = ChatContainer.getChildByName("historyChatLog") as MovieClip;
+			var historyChatLogTextArea:TextArea = historyChatLogContainer.getChildByName("historyChatLogTextArea") as TextArea;
+			historyChatLogTextArea.position =  10000; // Scroll to the bottom
 		}
 	}
 }
