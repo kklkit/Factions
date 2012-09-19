@@ -121,6 +121,10 @@ simulated event ReplicatedEvent(name VarName)
 	{
 		WeaponEffectLocationUpdated(True);
 	}
+	else if (Varname == 'bDeadVehicle')
+	{
+		BlowUpVehicle();
+	}
 }
 
 /**
