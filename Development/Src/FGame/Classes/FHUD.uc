@@ -173,6 +173,7 @@ function DrawHud()
 {
 	Super.DrawHud();
 
+	DrawPlayerNames();
 	DrawMinimap();
 }
 
@@ -225,6 +226,33 @@ function DrawMinimap()
 				Canvas.SetPos(UnitPosition.X, UnitPosition.Y);
 				Canvas.DrawText(FStructure_Refinery(LevelActor).Resources);
 			}
+		}
+	}
+}
+
+function DrawPlayerNames()
+{
+	local FPawn LevelPawn;
+	local Vector LocalCoords;
+	local Vector ProjectLocation;
+	local string PlayerString;
+	local float XL, YL;
+
+	Canvas.SetDrawColor(0, 255, 0);
+	
+	foreach VisibleActors(class'FPawn', LevelPawn)
+	{
+		if (LevelPawn != PlayerOwner.Pawn)
+		{
+			PlayerString = LevelPawn.GetHumanReadableName();
+			Canvas.StrLen(PlayerString, XL, YL);
+
+			ProjectLocation = LevelPawn.Location;
+			ProjectLocation.Z += LevelPawn.EyeHeight + (LevelPawn.EyeHeight / 2);
+
+			LocalCoords = Canvas.Project(ProjectLocation);
+			Canvas.SetPos(LocalCoords.X - (XL / 2), LocalCoords.Y);
+			Canvas.DrawText(PlayerString);
 		}
 	}
 }
