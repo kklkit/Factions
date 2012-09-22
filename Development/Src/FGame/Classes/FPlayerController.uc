@@ -21,6 +21,7 @@ var FStructure PlacingStructure;
 var Vector NextPlacingStructureLocation;
 var Rotator NextPlacingStructureRotation;
 
+
 // Minimap
 var SceneCapture2DComponent MinimapCaptureComponent;
 var Vector MinimapCaptureLocation;
@@ -76,12 +77,12 @@ simulated event PlayerTick(float DeltaTime)
 	{
 		if (PlacingStructure.Location != NextPlacingStructureLocation)
 		{
-			ServerUpdateStructureLocation(NextPlacingStructureLocation);
+			UpdatePlacingStructureLocation(NextPlacingStructureLocation);
 		}
 
 		if (PlacingStructure.Rotation != NextPlacingStructureRotation)
 		{
-			ServerUpdateStructureRotation(NextPlacingStructureRotation);
+			UpdatePlacingStructureRotation(NextPlacingStructureRotation);
 		}
 	}
 }
@@ -243,7 +244,7 @@ simulated function bool GetTargetStatus(out int TargetHealth, out int TargetHeal
 /**
  * Begins structure placement.
  */
-reliable server function ServerBeginStructurePlacement(byte StructureIndex, Vector WorldLocation)
+simulated function BeginStructurePlacement(byte StructureIndex, Vector WorldLocation)
 {
 	local FStructure PlacingStructureArchetype;
 
@@ -252,16 +253,16 @@ reliable server function ServerBeginStructurePlacement(byte StructureIndex, Vect
 	// Remove the old structure preview if it exists
 	if (PlacingStructure != None)
 		PlacingStructure.Destroy();
-
-	// Spawn a structure preview for the requested structure
+		
+	// Spawn a client-side structure preview for the requested structure
 	PlacingStructure = Spawn(PlacingStructureArchetype.Class, Self,, WorldLocation, rot(0,0,0), PlacingStructureArchetype, True);
-	PlacingStructure.Team = GetTeamNum();
+	PlacingStructure.Team = GetTeamNum();	
 }
 
 /**
  * Updates the location of the current structure preview.
  */
-unreliable server function ServerUpdateStructureLocation(Vector NewLocation)
+simulated function UpdatePlacingStructureLocation(Vector NewLocation)
 {
 	if (PlacingStructure != None)
 	{
@@ -272,7 +273,7 @@ unreliable server function ServerUpdateStructureLocation(Vector NewLocation)
 /**
  * Updates the rotation of the current structure preview.
  */
-unreliable server function ServerUpdateStructureRotation(Rotator NewRotation)
+simulated function UpdatePlacingStructureRotation(Rotator NewRotation)
 {
 	if (PlacingStructure != None)
 	{
@@ -282,31 +283,11 @@ unreliable server function ServerUpdateStructureRotation(Rotator NewRotation)
 }
 
 /**
- * Spawns the requested structure at the location of the structure preview.
- */
-reliable server function ServerPlaceStructure()
-{
-	if (FTeamInfo(PlayerReplicationInfo.Team).Resources >= PlacingStructure.ResourceCost)
-	{
-		if (PlacingStructure.checkPlaceable())
-		{
-			FTeamInfo(PlayerReplicationInfo.Team).Resources -= PlacingStructure.ResourceCost;
-			PlacingStructure.GotoState('Preview');
-			EndStructurePlacement();
-		}
-		else
-			`log("Unable to place structure at required location" @ PlacingStructure);
-	}
-	else
-		`log("Not enough resources to place" @ PlacingStructure);
-}
-
-/**
  * Clears the placing structure info and deletes the structure preview.
  * 
  * This should always be called when exiting structure placement mode.
  */
-function EndStructurePlacement()
+simulated function EndStructurePlacement()
 {
 	if (PlacingStructure != None && PlacingStructure.IsInState('Placing'))
 	{
@@ -359,6 +340,16 @@ exec function ReloadWeapon()
 		`log("Failed to find weapon to reload!");
 	}
 }
+
+/**
+  * Send a request to server to place a structure
+  */
+simulated function PlaceStructure();
+
+/**
+ * Spawns the requested structure at the requested location
+ */
+reliable server function ServerPlaceStructure(byte StructureIndex , Vector DesiredLocation, Rotator DesiredRotation);
 
 /**
  * Toggles command view mode.
@@ -453,7 +444,7 @@ simulated state Commanding
 	 */
 	simulated event EndState(name NextStateName)
 	{
-		if (Role == ROLE_Authority)
+		if (Role == ROLE_AutonomousProxy && PlacingStructure != None)
 			EndStructurePlacement();
 
 		if (WorldInfo.NetMode == NM_DedicatedServer)
@@ -604,6 +595,46 @@ simulated state Commanding
 	/**
 	 * @extends
 	 */
+	simulated function PlaceStructure()
+	{
+		ServerPlaceStructure(PlacingStructure.GetStructureIndex(), PlacingStructure.Location, PlacingStructure.Rotation);
+		EndStructurePlacement();
+	}
+
+	/**
+	 * @extends
+	 */
+	reliable server function ServerPlaceStructure(byte StructureIndex , Vector DesiredLocation, Rotator DesiredRotation)
+	{
+		local FStructure PlacingStructureArchetype, RequestedStructure;
+
+		PlacingStructureArchetype = FMapInfo(WorldInfo.GetMapInfo()).Structures[StructureIndex];
+
+		if (FTeamInfo(PlayerReplicationInfo.Team).Resources >= PlacingStructureArchetype.ResourceCost)
+		{
+			RequestedStructure = Spawn(PlacingStructureArchetype.Class, Self,, DesiredLocation, DesiredRotation, PlacingStructureArchetype, True);
+			RequestedStructure.Team = GetTeamNum();
+
+			
+			if (RequestedStructure.checkPlaceable())
+			{
+				FTeamInfo(PlayerReplicationInfo.Team).Resources -= PlacingStructureArchetype.ResourceCost;
+				RequestedStructure.GotoState('Preview');				
+			}
+			else
+			{
+				`log("Unable to place structure at required location" @ RequestedStructure.Location);
+				RequestedStructure.Destroy();
+			}
+			
+		}
+		else
+			`log("Not enough resources to place" @ PlacingStructureArchetype);
+	}
+
+	/**
+	 * @extends
+	 */
 	exec function StartFire(optional byte FireModeNum)
 	{
 		bIsFiring = True;
@@ -618,7 +649,7 @@ simulated state Commanding
 
 		// Place the structure if in structure placement mode
 		if (PlacingStructure != None)
-			ServerPlaceStructure();
+			PlaceStructure();
 	}
 
 	/**
@@ -626,7 +657,7 @@ simulated state Commanding
 	 */
 	exec function SelectStructure(byte StructureIndex)
 	{
-		ServerBeginStructurePlacement(StructureIndex, LastMouseWorldLocation);
+		BeginStructurePlacement(StructureIndex, LastMouseWorldLocation);
 	}	
 
 	/**

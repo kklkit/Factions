@@ -7,13 +7,13 @@ class FStructure extends Vehicle
 	perobjectlocalized
 	notplaceable;
 
-var() bool bPermanent; // If the structure goes back to preview state when dead
+var() bool bPermanent;          // If the structure goes back to preview state when dead
 var() repnotify name CurrentState;
-var() repnotify byte Team; // Team index
+var() repnotify byte Team;      // Team index
 var() int ResourceCost;
 var array<MaterialInterface> OriginalMaterials;
 
-var protected bool bPlaceable; // Internal variable to show if this FStructure can be placed on its world location during last player's tick
+var protected bool bPlaceable;  // Internal variable to show if this FStructure can be placed on its world location during last player's tick
 
 replication
 {
@@ -93,6 +93,24 @@ function bool AnySeatAvailable()
 	return False;
 }
 
+
+/**
+ * 
+ */
+simulated function byte GetStructureIndex()
+{
+	local int i;
+
+	do
+	{
+		if (self.Class == FMapInfo(WorldInfo.GetMapInfo()).Structures[i].Class)
+			return i;
+		i++;
+	}until (i >= FMapInfo(WorldInfo.GetMapInfo()).Structures.Length);
+
+	return -1;	
+}
+
 /**
  * Puts the structure in a preview state.
  */
@@ -139,19 +157,7 @@ function bool CheckForErrors()
 }
 
 /**
- *  Hide the structure mesh from non-commander players and enemy players.
- */
-simulated function HidePlacingStructurePreview()
-{
-	if (WorldInfo.NetMode != NM_DedicatedServer && (!GetALocalPlayerController().IsInState('Commanding') ||
-		(!WorldInfo.GRI.OnSameTeam(Self, GetALocalPlayerController()) && Team != class'FTeamGame'.const.TEAM_NONE)))
-	{
-		Mesh.SetHidden(True);
-	}
-}
-
-/**
- * Hide the structure mesh if being viewed by opposing team.
+ * Hide the structure mesh if local player controller is on a different team
  */
 simulated function HideEnemyStructurePreview()
 {
@@ -162,7 +168,7 @@ simulated function HideEnemyStructurePreview()
 }
 
 /**
- * Show the structure mesh if being viewed by same team.
+ * Show the structure mesh if local player controller is on the same team
  */
 simulated function UnhideFriendlyStructurePreview()
 {
@@ -331,7 +337,7 @@ auto simulated state Placing
 	simulated event ReplicatedEvent(name VarName)
 	{
 		if (VarName == 'Team')
-			HidePlacingStructurePreview();
+			HideEnemyStructurePreview();
 
 		Super.ReplicatedEvent(VarName);
 	}
