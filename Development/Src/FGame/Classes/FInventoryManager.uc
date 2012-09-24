@@ -27,17 +27,12 @@ function EquipLoadout()
 	local FPlayerController PlayerController;
 	local FWeapon SpawnedWeapon;
 	local FWeapon WeaponArchetype;
-	local Inventory Inv;
-	local array<Inventory> OldInventory;
 	local int i;
 
 	PlayerController = FPlayerController(Pawn(Owner).Controller);
-
-	// Track old equipment
-	foreach InventoryActors(class'Inventory', Inv)
-	{
-		OldInventory.AddItem(Inv);
-	}
+	
+	// Remove old equipment
+	DiscardInventory();
 
 	// Equip each requested equipment
 	for (i = 0; i < class'FPlayerController'.const.MaxLoadoutSlots; i++)
@@ -49,13 +44,7 @@ function EquipLoadout()
 			SpawnedWeapon = Spawn(WeaponArchetype.Class, Owner,,,, WeaponArchetype);
 			AddInventory(SpawnedWeapon);
 		}
-	}
-
-	// Remove old equipment
-	foreach OldInventory(Inv)
-	{
-		RemoveFromInventory(Inv);
-	}
+	}	
 }
 
 defaultproperties
