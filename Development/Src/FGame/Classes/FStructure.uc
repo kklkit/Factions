@@ -161,10 +161,8 @@ function bool CheckForErrors()
  */
 simulated function HideEnemyStructurePreview()
 {
-	if (WorldInfo.NetMode != NM_DedicatedServer && !WorldInfo.GRI.OnSameTeam(Self, GetALocalPlayerController()) && Team != class'FTeamGame'.const.TEAM_NONE)
-	{
+	if(WorldInfo.GRI != none && WorldInfo.NetMode != NM_DedicatedServer && !WorldInfo.GRI.OnSameTeam(Self, GetALocalPlayerController()) && Team != class'FTeamGame'.const.TEAM_NONE)
 		Mesh.SetHidden(True);
-	}
 }
 
 /**
@@ -172,10 +170,8 @@ simulated function HideEnemyStructurePreview()
  */
 simulated function UnhideFriendlyStructurePreview()
 {
-	if (WorldInfo.NetMode != NM_DedicatedServer && Mesh.HiddenGame && WorldInfo.GRI.OnSameTeam(Self, GetALocalPlayerController()))
-	{
-		Mesh.SetHidden(False);
-	}
+	if (WorldInfo.GRI != none && WorldInfo.NetMode != NM_DedicatedServer && Mesh.HiddenGame && WorldInfo.GRI.OnSameTeam(Self, GetALocalPlayerController()))
+		Mesh.SetHidden(False);		
 }
 
 /**
