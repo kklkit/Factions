@@ -23,6 +23,8 @@ var Color LineColor;
 // Mouse cursor
 var bool bIsDisplayingMouseCursor;
 var bool bUpdateMouseCursorOnNextTick;
+var bool bDragging;
+var Vector2D DragStart;
 
 /**
  * @extends
@@ -175,6 +177,7 @@ function DrawHud()
 
 	DrawPlayerNames();
 	DrawMinimap();
+	DrawSelectionBox();
 }
 
 /**
@@ -258,6 +261,23 @@ function DrawPlayerNames()
 }
 
 /**
+ * Draws the unit selection box.
+ */
+function DrawSelectionBox()
+{
+	local Vector2D MousePosition;
+
+	if (!bDragging) return;
+
+	MousePosition = GetMousePosition();
+
+	Canvas.SetDrawColor(0, 255, 0);
+
+	Canvas.SetPos(Min(DragStart.X, MousePosition.X), Min(DragStart.Y, MousePosition.Y));
+	Canvas.DrawBox(Max(DragStart.X, MousePosition.X) - Min(DragStart.X, MousePosition.X), Max(DragStart.Y, MousePosition.Y) - Min(DragStart.Y, MousePosition.Y));
+}
+
+/**
  * Returns the screen coordinates for the mouse cursor.
  */
 function Vector2D GetMousePosition()
@@ -315,6 +335,27 @@ exec function ToggleOmniMenu()
 			GFxOmniMenu.GotoPanel("Team");
 		}
 	}
+}
+
+/**
+ * Begins drag selection on the HUD.
+ */
+exec function BeginDragging()
+{
+	// Only allow drag selection in command state
+	if (FPlayerController(PlayerOwner).IsInState('Commanding'))
+	{
+		bDragging = True;
+		DragStart = GetMousePosition();
+	}
+}
+
+/**
+ * Ends drag selection on the HUD.
+ */
+exec function EndDragging()
+{
+	bDragging = False;
 }
 
 defaultproperties
