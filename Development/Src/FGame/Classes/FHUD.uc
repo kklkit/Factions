@@ -23,8 +23,11 @@ var Color LineColor;
 // Mouse cursor
 var bool bIsDisplayingMouseCursor;
 var bool bUpdateMouseCursorOnNextTick;
-var bool bDragging;
-var Vector2D DragStart;
+
+// Unit selection
+var bool bSelectingUnits;
+var array<Actor> UnitSelection;
+var Vector2D UnitSelectionDragStart;
 
 /**
  * @extends
@@ -176,8 +179,9 @@ function DrawHud()
 	Super.DrawHud();
 
 	DrawPlayerNames();
-	DrawMinimap();
+	DrawUnitSelection();
 	DrawSelectionBox();
+	DrawMinimap();
 }
 
 /**
@@ -261,20 +265,244 @@ function DrawPlayerNames()
 }
 
 /**
- * Draws the unit selection box.
+ * Draws the selection box on the screen.
  */
 function DrawSelectionBox()
 {
 	local Vector2D MousePosition;
 
-	if (!bDragging) return;
+	if (!bSelectingUnits) return;
 
 	MousePosition = GetMousePosition();
 
 	Canvas.SetDrawColor(0, 255, 0);
 
-	Canvas.SetPos(Min(DragStart.X, MousePosition.X), Min(DragStart.Y, MousePosition.Y));
-	Canvas.DrawBox(Max(DragStart.X, MousePosition.X) - Min(DragStart.X, MousePosition.X), Max(DragStart.Y, MousePosition.Y) - Min(DragStart.Y, MousePosition.Y));
+	Canvas.SetPos(Min(UnitSelectionDragStart.X, MousePosition.X), Min(UnitSelectionDragStart.Y, MousePosition.Y));
+	Canvas.DrawBox(Max(UnitSelectionDragStart.X, MousePosition.X) - Min(UnitSelectionDragStart.X, MousePosition.X), Max(UnitSelectionDragStart.Y, MousePosition.Y) - Min(UnitSelectionDragStart.Y, MousePosition.Y));
+}
+
+function DrawUnitSelection()
+{
+	local Actor SelectedActor;
+
+	UpdateUnitSelection();
+
+	foreach UnitSelection(SelectedActor) RenderSelectionBracket(SelectedActor);
+}
+
+function UpdateUnitSelection()
+{
+	local Actor A;
+	local Pawn P;
+
+	if (!bSelectingUnits) return;
+
+	foreach UnitSelection(A)
+		if (!IsActorSelected(A))
+			UnitSelection.RemoveItem(A);
+
+	foreach PlayerOwner.VisibleCollidingActors(class'Pawn', P, 65535.0)
+		if (IsActorSelected(P) && UnitSelection.Find(P) == INDEX_NONE)
+			UnitSelection.AddItem(P);
+}
+
+function bool IsActorSelected(Actor CheckActor)
+{
+	local Vector2D MousePosition;
+	local Vector2D StartPosition;
+	local Vector2D EndPosition;
+	local Vector ActorScreenPosition;
+
+	if (!bSelectingUnits) return false;
+
+	MousePosition = GetMousePosition();
+	ActorScreenPosition = Canvas.Project(CheckActor.Location);
+
+	StartPosition.X = Min(UnitSelectionDragStart.X, MousePosition.X);
+	StartPosition.Y = Min(UnitSelectionDragStart.Y, MousePosition.Y);
+	EndPosition.X = Max(UnitSelectionDragStart.X, MousePosition.X);
+	EndPosition.Y = Max(UnitSelectionDragStart.Y, MousePosition.Y);
+
+	return ActorScreenPosition.X > StartPosition.X &&
+		ActorScreenPosition.X < EndPosition.X &&
+		ActorScreenPosition.Y > StartPosition.Y &&
+		ActorScreenPosition.Y < EndPosition.Y;
+}
+
+
+/**
+ * Draws 3D brackets around an actor.
+ * From: http://udn.epicgames.com/Three/DevelopmentKitGemsCreatingActorSelectionBoxesOrBrackets.html#3D%20selection%20bracket
+ */
+function RenderSelectionBracket(Actor Actor)
+{
+	local Box ComponentsBoundingBox;
+	local Vector BoundingBoxCoordinates[8], InnerBoxCoordinates[8];
+	local int i;
+	local float f;
+
+	if (Actor == None) return;
+
+	Actor.GetComponentsBoundingBox(ComponentsBoundingBox);
+
+	// Z1
+	// X1, Y1
+	BoundingBoxCoordinates[0].X = ComponentsBoundingBox.Min.X;
+	BoundingBoxCoordinates[0].Y = ComponentsBoundingBox.Min.Y;
+	BoundingBoxCoordinates[0].Z = ComponentsBoundingBox.Min.Z;
+	// X2, Y1
+	BoundingBoxCoordinates[1].X = ComponentsBoundingBox.Max.X;
+	BoundingBoxCoordinates[1].Y = ComponentsBoundingBox.Min.Y;
+	BoundingBoxCoordinates[1].Z = ComponentsBoundingBox.Min.Z;
+	// X2, Y2
+	BoundingBoxCoordinates[2].X = ComponentsBoundingBox.Max.X;
+	BoundingBoxCoordinates[2].Y = ComponentsBoundingBox.Max.Y;
+	BoundingBoxCoordinates[2].Z = ComponentsBoundingBox.Min.Z;
+	// X1, Y2
+	BoundingBoxCoordinates[3].X = ComponentsBoundingBox.Min.X;
+	BoundingBoxCoordinates[3].Y = ComponentsBoundingBox.Max.Y;
+	BoundingBoxCoordinates[3].Z = ComponentsBoundingBox.Min.Z;
+
+	// Z2
+	// X1, Y1
+	BoundingBoxCoordinates[4].X = ComponentsBoundingBox.Min.X;
+	BoundingBoxCoordinates[4].Y = ComponentsBoundingBox.Min.Y;
+	BoundingBoxCoordinates[4].Z = ComponentsBoundingBox.Max.Z;
+	// X2, Y1
+	BoundingBoxCoordinates[5].X = ComponentsBoundingBox.Max.X;
+	BoundingBoxCoordinates[5].Y = ComponentsBoundingBox.Min.Y;
+	BoundingBoxCoordinates[5].Z = ComponentsBoundingBox.Max.Z;
+	// X2, Y2
+	BoundingBoxCoordinates[6].X = ComponentsBoundingBox.Max.X;
+	BoundingBoxCoordinates[6].Y = ComponentsBoundingBox.Max.Y;
+	BoundingBoxCoordinates[6].Z = ComponentsBoundingBox.Max.Z;
+	// X1, Y2
+	BoundingBoxCoordinates[7].X = ComponentsBoundingBox.Min.X;
+	BoundingBoxCoordinates[7].Y = ComponentsBoundingBox.Max.Y;
+	BoundingBoxCoordinates[7].Z = ComponentsBoundingBox.Max.Z;
+
+	// Calc inner X
+	f = VSize(BoundingBoxCoordinates[4] - BoundingBoxCoordinates[5]) * 0.3f;
+   
+	// Z1
+	// X1, Y1
+	InnerBoxCoordinates[0].X = ComponentsBoundingBox.Min.X + f;
+	InnerBoxCoordinates[0].Y = ComponentsBoundingBox.Min.Y;
+	InnerBoxCoordinates[0].Z = ComponentsBoundingBox.Min.Z;
+	// X2, Y1
+	InnerBoxCoordinates[1].X = ComponentsBoundingBox.Max.X - f;
+	InnerBoxCoordinates[1].Y = ComponentsBoundingBox.Min.Y;
+	InnerBoxCoordinates[1].Z = ComponentsBoundingBox.Min.Z;
+	// X2, Y2
+	InnerBoxCoordinates[2].X = ComponentsBoundingBox.Max.X - f;
+	InnerBoxCoordinates[2].Y = ComponentsBoundingBox.Max.Y;
+	InnerBoxCoordinates[2].Z = ComponentsBoundingBox.Min.Z;
+	// X1, Y2
+	InnerBoxCoordinates[3].X = ComponentsBoundingBox.Min.X + f;
+	InnerBoxCoordinates[3].Y = ComponentsBoundingBox.Max.Y;
+	InnerBoxCoordinates[3].Z = ComponentsBoundingBox.Min.Z;
+
+	// Z2
+	// X1, Y1
+	InnerBoxCoordinates[4].X = ComponentsBoundingBox.Min.X + f;
+	InnerBoxCoordinates[4].Y = ComponentsBoundingBox.Min.Y;
+	InnerBoxCoordinates[4].Z = ComponentsBoundingBox.Max.Z;
+	// X2, Y1
+	InnerBoxCoordinates[5].X = ComponentsBoundingBox.Max.X - f;
+	InnerBoxCoordinates[5].Y = ComponentsBoundingBox.Min.Y;
+	InnerBoxCoordinates[5].Z = ComponentsBoundingBox.Max.Z;
+	// X2, Y2
+	InnerBoxCoordinates[6].X = ComponentsBoundingBox.Max.X - f;
+	InnerBoxCoordinates[6].Y = ComponentsBoundingBox.Max.Y;
+	InnerBoxCoordinates[6].Z = ComponentsBoundingBox.Max.Z;
+	// X1, Y2
+	InnerBoxCoordinates[7].X = ComponentsBoundingBox.Min.X + f;
+	InnerBoxCoordinates[7].Y = ComponentsBoundingBox.Max.Y;
+	InnerBoxCoordinates[7].Z = ComponentsBoundingBox.Max.Z;
+
+	for (i = 0; i < 8; ++i) Draw3DLine(BoundingBoxCoordinates[i], InnerBoxCoordinates[i], class'HUD'.default.GreenColor);
+
+	// Calc inner Y
+	f = VSize(BoundingBoxCoordinates[4] - BoundingBoxCoordinates[7]) * 0.3f;
+
+	// Z1
+	// X1, Y1
+	InnerBoxCoordinates[0].X = ComponentsBoundingBox.Min.X;
+	InnerBoxCoordinates[0].Y = ComponentsBoundingBox.Min.Y + f;
+	InnerBoxCoordinates[0].Z = ComponentsBoundingBox.Min.Z;
+	// X2, Y1
+	InnerBoxCoordinates[1].X = ComponentsBoundingBox.Max.X;
+	InnerBoxCoordinates[1].Y = ComponentsBoundingBox.Min.Y + f;
+	InnerBoxCoordinates[1].Z = ComponentsBoundingBox.Min.Z;
+	// X2, Y2
+	InnerBoxCoordinates[2].X = ComponentsBoundingBox.Max.X;
+	InnerBoxCoordinates[2].Y = ComponentsBoundingBox.Max.Y - f;
+	InnerBoxCoordinates[2].Z = ComponentsBoundingBox.Min.Z;
+	// X1, Y2
+	InnerBoxCoordinates[3].X = ComponentsBoundingBox.Min.X;
+	InnerBoxCoordinates[3].Y = ComponentsBoundingBox.Max.Y - f;
+	InnerBoxCoordinates[3].Z = ComponentsBoundingBox.Min.Z;
+
+	// Z2
+	// X1, Y1
+	InnerBoxCoordinates[4].X = ComponentsBoundingBox.Min.X;
+	InnerBoxCoordinates[4].Y = ComponentsBoundingBox.Min.Y + f;
+	InnerBoxCoordinates[4].Z = ComponentsBoundingBox.Max.Z;
+	// X2, Y1
+	InnerBoxCoordinates[5].X = ComponentsBoundingBox.Max.X;
+	InnerBoxCoordinates[5].Y = ComponentsBoundingBox.Min.Y + f;
+	InnerBoxCoordinates[5].Z = ComponentsBoundingBox.Max.Z;
+	// X2, Y2
+	InnerBoxCoordinates[6].X = ComponentsBoundingBox.Max.X;
+	InnerBoxCoordinates[6].Y = ComponentsBoundingBox.Max.Y - f;
+	InnerBoxCoordinates[6].Z = ComponentsBoundingBox.Max.Z;
+	// X1, Y2
+	InnerBoxCoordinates[7].X = ComponentsBoundingBox.Min.X;
+	InnerBoxCoordinates[7].Y = ComponentsBoundingBox.Max.Y - f;
+	InnerBoxCoordinates[7].Z = ComponentsBoundingBox.Max.Z;
+
+	for (i = 0; i < 8; ++i) Draw3DLine(BoundingBoxCoordinates[i], InnerBoxCoordinates[i], class'HUD'.default.GreenColor);
+
+	// Calc inner Z
+	f = VSize(BoundingBoxCoordinates[0] - BoundingBoxCoordinates[4]) * 0.3f;
+
+	// Z1
+	// X1, Y1
+	InnerBoxCoordinates[0].X = ComponentsBoundingBox.Min.X;
+	InnerBoxCoordinates[0].Y = ComponentsBoundingBox.Min.Y;
+	InnerBoxCoordinates[0].Z = ComponentsBoundingBox.Min.Z + f;
+	// X2, Y1
+	InnerBoxCoordinates[1].X = ComponentsBoundingBox.Max.X;
+	InnerBoxCoordinates[1].Y = ComponentsBoundingBox.Min.Y;
+	InnerBoxCoordinates[1].Z = ComponentsBoundingBox.Min.Z + f;
+	// X2, Y2
+	InnerBoxCoordinates[2].X = ComponentsBoundingBox.Max.X;
+	InnerBoxCoordinates[2].Y = ComponentsBoundingBox.Max.Y;
+	InnerBoxCoordinates[2].Z = ComponentsBoundingBox.Min.Z + f;
+	// X1, Y2
+	InnerBoxCoordinates[3].X = ComponentsBoundingBox.Min.X;
+	InnerBoxCoordinates[3].Y = ComponentsBoundingBox.Max.Y;
+	InnerBoxCoordinates[3].Z = ComponentsBoundingBox.Min.Z + f;
+
+	// Z2
+	// X1, Y1
+	InnerBoxCoordinates[4].X = ComponentsBoundingBox.Min.X;
+	InnerBoxCoordinates[4].Y = ComponentsBoundingBox.Min.Y;
+	InnerBoxCoordinates[4].Z = ComponentsBoundingBox.Max.Z - f;
+	// X2, Y1
+	InnerBoxCoordinates[5].X = ComponentsBoundingBox.Max.X;
+	InnerBoxCoordinates[5].Y = ComponentsBoundingBox.Min.Y;
+	InnerBoxCoordinates[5].Z = ComponentsBoundingBox.Max.Z - f;
+	// X2, Y2
+	InnerBoxCoordinates[6].X = ComponentsBoundingBox.Max.X;
+	InnerBoxCoordinates[6].Y = ComponentsBoundingBox.Max.Y;
+	InnerBoxCoordinates[6].Z = ComponentsBoundingBox.Max.Z - f;
+	// X1, Y2
+	InnerBoxCoordinates[7].X = ComponentsBoundingBox.Min.X;
+	InnerBoxCoordinates[7].Y = ComponentsBoundingBox.Max.Y;
+	InnerBoxCoordinates[7].Z = ComponentsBoundingBox.Max.Z - f;
+
+	for (i = 0; i < 8; ++i) Draw3DLine(BoundingBoxCoordinates[i], InnerBoxCoordinates[i], class'HUD'.default.GreenColor);
 }
 
 /**
@@ -338,24 +566,24 @@ exec function ToggleOmniMenu()
 }
 
 /**
- * Begins drag selection on the HUD.
+ * Begins unit selection.
  */
-exec function BeginDragging()
+exec function BeginUnitSelection()
 {
 	// Only allow drag selection in command state
 	if (FPlayerController(PlayerOwner).IsInState('Commanding'))
 	{
-		bDragging = True;
-		DragStart = GetMousePosition();
+		bSelectingUnits = True;
+		UnitSelectionDragStart = GetMousePosition();
 	}
 }
 
 /**
- * Ends drag selection on the HUD.
+ * Ends unit selection.
  */
-exec function EndDragging()
+exec function EndUnitSelection()
 {
-	bDragging = False;
+	bSelectingUnits = False;
 }
 
 defaultproperties
