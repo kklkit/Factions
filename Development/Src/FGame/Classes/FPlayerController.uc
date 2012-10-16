@@ -21,7 +21,6 @@ var FStructure PlacingStructure;
 var Vector NextPlacingStructureLocation;
 var Rotator NextPlacingStructureRotation;
 
-
 // Minimap
 var SceneCapture2DComponent MinimapCaptureComponent;
 var Vector MinimapCaptureLocation;
@@ -31,13 +30,16 @@ var Rotator MinimapCaptureRotation;
 var FInfantryClass CurrentInfantryClassArchetype;
 var FWeapon CurrentWeaponArchetypes[MaxLoadoutSlots];
 
+// Orders
+var Vector OrderLocation;
+
 replication
 {
 	if (bNetDirty)
 		PlacingStructure;
 
 	if (bNetOwner)
-		CurrentInfantryClassArchetype, CurrentWeaponArchetypes;
+		CurrentInfantryClassArchetype, CurrentWeaponArchetypes, OrderLocation;
 }
 
 /**
@@ -237,6 +239,17 @@ simulated function bool GetTargetStatus(out int TargetHealth, out int TargetHeal
 		return True;
 	}
 	return False;
+}
+
+/**
+ * Issues an order given by the current player to the specified pawn.
+ */
+unreliable server function ServerIssueOrder(Pawn IssuedTo, Vector IssueOrderLocation)
+{
+	if (FPlayerController(IssuedTo.Controller) != None)
+	{
+		FPlayerController(IssuedTo.Controller).OrderLocation = IssueOrderLocation;
+	}
 }
 
 // Structure placement

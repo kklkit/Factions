@@ -26,7 +26,7 @@ var bool bUpdateMouseCursorOnNextTick;
 
 // Unit selection
 var bool bSelectingUnits;
-var array<Actor> UnitSelection;
+var array<Pawn> UnitSelection;
 var Vector2D UnitSelectionDragStart;
 
 /**
@@ -178,6 +178,7 @@ function DrawHud()
 {
 	Super.DrawHud();
 
+	DrawOrders();
 	DrawPlayerNames();
 	DrawUnitSelection();
 	DrawSelectionBox();
@@ -264,6 +265,23 @@ function DrawPlayerNames()
 	}
 }
 
+function DrawOrders()
+{
+	local FPlayerController PC;
+	local Vector ScreenCoords;
+
+	PC = FPlayerController(PlayerOwner);
+
+	if (PC.OrderLocation != vect(0,0,0))
+	{
+		ScreenCoords = Canvas.Project(PC.OrderLocation);
+		Canvas.SetPos(ScreenCoords.X, ScreenCoords.Y);
+		Canvas.SetDrawColor(0, 255, 0);
+		Canvas.DrawText("Move");
+		Canvas.DrawBox(50, 50);
+	}
+}
+
 /**
  * Draws the selection box on the screen.
  */
@@ -283,23 +301,25 @@ function DrawSelectionBox()
 
 function DrawUnitSelection()
 {
-	local Actor SelectedActor;
+	local Pawn SelectedUnit;
 
 	UpdateUnitSelection();
 
-	foreach UnitSelection(SelectedActor) RenderSelectionBracket(SelectedActor);
+	foreach UnitSelection(SelectedUnit)
+	{
+		RenderSelectionBracket(SelectedUnit);
+	}
 }
 
 function UpdateUnitSelection()
 {
-	local Actor A;
 	local Pawn P;
 
 	if (!bSelectingUnits) return;
 
-	foreach UnitSelection(A)
-		if (!IsActorSelected(A))
-			UnitSelection.RemoveItem(A);
+	foreach UnitSelection(P)
+		if (!IsActorSelected(P))
+			UnitSelection.RemoveItem(P);
 
 	foreach PlayerOwner.VisibleCollidingActors(class'Pawn', P, 65535.0)
 		if (IsActorSelected(P) && UnitSelection.Find(P) == INDEX_NONE)
@@ -584,6 +604,19 @@ exec function BeginUnitSelection()
 exec function EndUnitSelection()
 {
 	bSelectingUnits = False;
+}
+
+/**
+ * Issues the default order to the selected units.
+ */
+exec function IssueOrder()
+{
+	local Pawn SelectedUnit;
+
+	foreach UnitSelection(SelectedUnit)
+	{
+		FPlayerController(PlayerOwner).ServerIssueOrder(SelectedUnit, FPlayerController(PlayerOwner).LastMouseWorldLocation);
+	}
 }
 
 defaultproperties
