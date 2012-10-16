@@ -267,14 +267,21 @@ function DrawPlayerNames()
 
 function DrawOrders()
 {
-	local FPlayerController PC;
+	local PlayerReplicationInfo PRI;
+
+	foreach WorldInfo.GRI.PRIArray(PRI)
+	{
+		DrawOrder(FPlayerReplicationInfo(PRI).OrderLocation);
+	}
+}
+
+function DrawOrder(Vector OrderLocation)
+{
 	local Vector ScreenCoords;
 
-	PC = FPlayerController(PlayerOwner);
-
-	if (PC.OrderLocation != vect(0,0,0))
+	if (OrderLocation != vect(0,0,0))
 	{
-		ScreenCoords = Canvas.Project(PC.OrderLocation);
+		ScreenCoords = Canvas.Project(OrderLocation);
 		Canvas.SetPos(ScreenCoords.X, ScreenCoords.Y);
 		Canvas.SetDrawColor(0, 255, 0);
 		Canvas.DrawText("Move");

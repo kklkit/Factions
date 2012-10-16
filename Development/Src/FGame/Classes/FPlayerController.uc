@@ -30,16 +30,13 @@ var Rotator MinimapCaptureRotation;
 var FInfantryClass CurrentInfantryClassArchetype;
 var FWeapon CurrentWeaponArchetypes[MaxLoadoutSlots];
 
-// Orders
-var Vector OrderLocation;
-
 replication
 {
 	if (bNetDirty)
 		PlacingStructure;
 
 	if (bNetOwner)
-		CurrentInfantryClassArchetype, CurrentWeaponArchetypes, OrderLocation;
+		CurrentInfantryClassArchetype, CurrentWeaponArchetypes;
 }
 
 /**
@@ -248,7 +245,7 @@ unreliable server function ServerIssueOrder(Pawn IssuedTo, Vector IssueOrderLoca
 {
 	if (FPlayerController(IssuedTo.Controller) != None)
 	{
-		FPlayerController(IssuedTo.Controller).OrderLocation = IssueOrderLocation;
+		FPlayerReplicationInfo(FPlayerController(IssuedTo.Controller).PlayerReplicationInfo).OrderLocation = IssueOrderLocation;
 	}
 }
 
