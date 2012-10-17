@@ -1,6 +1,4 @@
 /**
- * Base for 8-wheeled vehicles.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FVehicle_Car8 extends FVehicle;

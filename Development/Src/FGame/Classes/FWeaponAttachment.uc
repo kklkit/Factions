@@ -1,6 +1,4 @@
 /**
- * Physical equipment attachment used for viewing equipment on other pawns.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FWeaponAttachment extends Actor;

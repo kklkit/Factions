@@ -1,6 +1,4 @@
 /**
- * Updates the omnimenu GUI.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FGFxOmniMenu extends FGFxMoviePlayer

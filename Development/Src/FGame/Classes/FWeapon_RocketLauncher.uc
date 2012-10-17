@@ -1,6 +1,4 @@
 /**
- * Base class for rocket-launcher-type infantry weapons.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FWeapon_RocketLauncher extends FWeapon;

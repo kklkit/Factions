@@ -1,6 +1,4 @@
 /**
- * Updates the infantry and vehicle HUD.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FGFxHUD extends FGFxMoviePlayer;

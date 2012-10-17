@@ -1,6 +1,4 @@
 /**
- * Heals friendlies it shoots at.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FWeapon_Healer extends FWeapon;

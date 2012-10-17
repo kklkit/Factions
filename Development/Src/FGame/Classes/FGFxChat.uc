@@ -1,6 +1,4 @@
 /**
- * Interacts with chat input box and chatlog box.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FGFxChat extends FGFxMoviePlayer;

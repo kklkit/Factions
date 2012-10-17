@@ -1,6 +1,4 @@
 /**
- * Defines debugging commands for Factions.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FCheatManager extends GameCheatManager within GamePlayerController;

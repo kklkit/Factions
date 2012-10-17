@@ -1,6 +1,4 @@
 /**
- * Handles updating the infantry/vehicle HUD.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FHUD extends UDKHUD;

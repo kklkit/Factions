@@ -1,6 +1,4 @@
 /**
- * Updates the command view interface.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FGFxCommanderHUD extends FGFxMoviePlayer;

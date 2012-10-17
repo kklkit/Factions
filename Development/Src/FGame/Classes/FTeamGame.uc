@@ -1,6 +1,4 @@
 /**
- * Manages the gameplay for team-based games.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FTeamGame extends FGame;

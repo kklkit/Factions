@@ -1,6 +1,4 @@
 /**
- * Manages the player's equipment.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FInventoryManager extends InventoryManager;

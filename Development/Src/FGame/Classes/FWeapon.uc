@@ -1,6 +1,4 @@
 /**
- * Equippable inventory items such as rifles or repair tools.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FWeapon extends UDKWeapon

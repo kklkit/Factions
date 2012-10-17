@@ -1,6 +1,4 @@
 /**
- * Base class for all game GUIs.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FGFxMoviePlayer extends GFxMoviePlayer;

@@ -1,6 +1,4 @@
 /**
- * Vehicle inventory manager.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FVehicleInventoryManager extends InventoryManager;

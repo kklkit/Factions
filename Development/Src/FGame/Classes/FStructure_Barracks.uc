@@ -1,6 +1,4 @@
 /**
- * Class for structures that can spawn infantry.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FStructure_Barracks extends FStructure;

@@ -1,6 +1,4 @@
 /**
- * Handles updating the game info HUD (resources, commander, etc.)
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FGFxMainHUD extends FGFxMoviePlayer;

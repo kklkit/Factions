@@ -1,6 +1,4 @@
 /**
- * Base class for aircraft.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FVehicle_Aircraft extends FVehicle;

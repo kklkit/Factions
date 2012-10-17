@@ -1,6 +1,4 @@
 /**
- * Class for structures that can build vehicles.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FStructure_VehicleFactory extends FStructure;

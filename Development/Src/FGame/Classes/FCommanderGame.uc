@@ -1,6 +1,4 @@
 /**
- * The objective of the game is to destroy the enemy command vehicle while protecting your own.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FCommanderGame extends FTeamGame;

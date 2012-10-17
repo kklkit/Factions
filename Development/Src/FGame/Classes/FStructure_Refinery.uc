@@ -1,6 +1,4 @@
 /**
- * Transfers resources from a resource point to the team.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FStructure_Refinery extends FStructure;

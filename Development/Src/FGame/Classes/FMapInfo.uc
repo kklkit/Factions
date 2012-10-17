@@ -1,6 +1,4 @@
 /**
- * Contains game information specific to the current map.
- * 
  * Copyright 2012 Factions Team. All Rights Reserved.
  */
 class FMapInfo extends UDKMapInfo;
