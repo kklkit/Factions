@@ -277,9 +277,12 @@ function DrawOrders()
 
 function DrawOrder(Vector OrderLocation)
 {
-	local Vector ScreenCoords;
+	local Vector ScreenCoords, CameraLoc;
+	local Rotator CameraRot;
 
-	if (OrderLocation != vect(0,0,0))
+	PlayerOwner.GetPlayerViewPoint(CameraLoc, CameraRot);
+
+	if ((OrderLocation - CameraLoc) dot Vector(CameraRot) > 0.0 && OrderLocation != vect(0,0,0))
 	{
 		ScreenCoords = Canvas.Project(OrderLocation);
 		Canvas.SetPos(ScreenCoords.X, ScreenCoords.Y);
