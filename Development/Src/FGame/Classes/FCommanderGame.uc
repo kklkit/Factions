@@ -12,10 +12,14 @@ function SetEndGameFocus(PlayerReplicationInfo Winner)
 	local Actor EndGameFocus;
 
 	if (Winner != None)
+	{
 		EndGameFocus = Controller(Winner.Owner).Pawn;
+	}
 
 	if (EndGameFocus != None)
+	{
 		EndGameFocus.bAlwaysRelevant = True;
+	}
 
 	foreach WorldInfo.AllControllers(class'Controller', P)
 	{
