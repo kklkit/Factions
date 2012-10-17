@@ -4,14 +4,14 @@
 class FCheatManager extends GameCheatManager within GamePlayerController;
 
 /**
- * Kills the pawn the player is looking at.
+ * Kills the pawn that the player is looking at.
  */
 exec function KillTarget()
 {
-	local Actor HitActor;
-	local Vector HitNormal, HitLocation;
 	local Vector ViewLocation;
 	local Rotator ViewRotation;
+	local Actor HitActor;
+	local Vector HitNormal, HitLocation;
 
 	GetPlayerViewPoint(ViewLocation, ViewRotation);
 
@@ -19,7 +19,7 @@ exec function KillTarget()
 
 	if (Pawn(HitActor) != None)
 	{
-		Pawn(HitActor).Died(None, class'DmgType_Suicided', Pawn(HitActor).Location);
+		Pawn(HitActor).Died(Outer, class'DmgType_Suicided', Pawn(HitActor).Location);
 	}
 }
 
