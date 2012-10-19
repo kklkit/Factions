@@ -363,6 +363,10 @@ simulated function UpdateWeaponAttachment()
 				`log("Failed to spawn weapon attachment for archetype" @ WeaponAttachmentArchetype);
 			}
 		}
+		else
+		{
+			`log(WeaponAttachmentArchetype @ " is missing a weapon attachment!");
+		}
 	}
 }
 
