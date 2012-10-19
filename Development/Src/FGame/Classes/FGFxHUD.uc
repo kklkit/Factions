@@ -178,7 +178,6 @@ function UpdateWeaponName(int Slot, string WeaponName, bool bActive = false)
 		ActionScriptVoid("_root.updateWeaponName");
 }
 
-
 function UpdateAmmo(int Ammo, int AmmoMax)
 {
 	if (bMovieIsOpen)
@@ -213,6 +212,13 @@ function UpdateVehicleRotation(int Rotation)
 {
 	if (bMovieIsOpen)
 		ActionScriptVoid("_root.updateVehicleRotation");
+}
+
+//TODO: Implement hit indicators in Scaleform
+function DisplayHit(float HitDirection)
+{
+	if (bMovieIsOpen)
+		ActionScriptVoid("_root.displayHit");
 }
 
 defaultproperties

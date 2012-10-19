@@ -215,6 +215,35 @@ reliable client function ClientNotifyTeamCountChanged()
 }
 
 /**
+ * @extends
+ */
+function NotifyTakeHit(Controller InstigatedBy, Vector HitLocation, int Damage, class<DamageType> DamageType, Vector Momentum)
+{
+	local int DamageByte;
+
+	Super.NotifyTakeHit(InstigatedBy, HitLocation, Damage, DamageType, Momentum);
+
+	DamageByte = Clamp(Damage, 0, 250);
+	if ((DamageByte > 0 || bGodMode) && (Pawn != None))
+	{
+		ClientPlayTakeHit(HitLocation - Pawn.Location, DamageByte, DamageType);
+	}
+}
+
+/**
+ * Displays a hit indicator on the client.
+ */
+unreliable client function ClientPlayTakeHit(Vector HitLoc, byte Damage, class<DamageType> DamageType)
+{
+	HitLoc += Pawn.Location;
+
+	if (FHUD(MyHUD) != None)
+	{
+		FHUD(MyHUD).DisplayHit(HitLoc, Damage, DamageType);
+	}
+}
+
+/**
  * Returns the status of the actor the player is looking at.
  */
 simulated function bool GetTargetStatus(out int TargetHealth, out int TargetHealthMax)

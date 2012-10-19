@@ -534,6 +534,44 @@ function RenderSelectionBracket(Actor Actor)
 }
 
 /**
+ * Displays a hit indicator on the HUD.
+ */
+function DisplayHit(Vector HitDir, int Damage, class<DamageType> DamageType)
+{
+	local Vector Loc;
+	local Rotator Rot;
+	local float DirOfHit;
+	local Vector AxisX, AxisY, AxisZ;
+	local Vector ShotDirection;
+	local bool bIsInFront;
+	local Vector2D	AngularDist;
+
+	// Figure out the directional based on the victims current view
+	PlayerOwner.GetPlayerViewPoint(Loc, Rot);
+	GetAxes(Rot, AxisX, AxisY, AxisZ);
+
+	ShotDirection = Normal(HitDir - Loc);
+	bIsInFront = GetAngularDistance(AngularDist, ShotDirection, AxisX, AxisY, AxisZ);
+	GetAngularDegreesFromRadians(AngularDist);
+	DirOfHit = AngularDist.X;
+
+	if (bIsInFront)
+	{
+		DirOfHit = AngularDist.X;
+		if (DirOfHit < 0)
+		{
+			DirOfHit += 360;
+		}
+	}
+	else
+	{
+		DirOfHit = 180 + AngularDist.X;
+	}
+
+	GFxHUD.DisplayHit(DirOfHit);
+}
+
+/**
  * Returns the screen coordinates for the mouse cursor.
  */
 function Vector2D GetMousePosition()
