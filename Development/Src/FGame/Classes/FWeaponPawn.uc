@@ -104,6 +104,17 @@ function PossessedBy(Controller C, bool bVehicleTransition)
 /**
  * @extends
  */
+reliable server function ServerChangeSeat(int RequestedSeat)
+{
+	if (MyVehicle != None)
+	{
+		FVehicle(MyVehicle).ChangeSeat(Controller, RequestedSeat);
+	}
+}
+
+/**
+ * @extends
+ */
 function DriverLeft()
 {
 	Super.DriverLeft();

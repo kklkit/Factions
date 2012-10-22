@@ -389,6 +389,17 @@ simulated function PlaceStructure();
 reliable server function ServerPlaceStructure(byte StructureIndex , Vector DesiredLocation, Rotator DesiredRotation);
 
 /**
+ * Switches the player's weapon to the specified index.
+ */
+exec function SwitchWeapon(byte T)
+{
+	if (UDKVehicleBase(Pawn) != None)
+	{
+		UDKVehicleBase(Pawn).SwitchWeapon(T);
+	}
+}
+
+/**
  * Toggles command view mode.
  */
 exec function ToggleCommandView()

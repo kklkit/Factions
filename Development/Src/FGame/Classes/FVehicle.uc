@@ -462,6 +462,40 @@ function InitializeSeats()
 }
 
 /**
+ * Returns the vehicle seat index of the specified controller.
+ */
+simulated function int GetSeatIndexForController(Controller ControllerToMove)
+{
+	local int i;
+
+	for (i = 0; i < Seats.Length; i++)
+	{
+		if (Seats[i].SeatPawn.Controller != None && Seats[i].SeatPawn.Controller == ControllerToMove)
+		{
+			return i;
+		}
+	}
+
+	return INDEX_NONE;
+}
+
+/**
+ * Returns the controller for the given vehicle seat index.
+ */
+function Controller GetControllerForSeatIndex(int SeatIndex)
+{
+	return Seats[SeatIndex].SeatPawn.Controller;
+}
+
+/**
+ * Returns true if the seat of the specified seat index is empty.
+ */
+function bool SeatAvailable(int SeatIndex)
+{
+	return Seats[SeatIndex].SeatPawn == None || Seats[SeatIndex].SeatPawn.Controller == None;
+}
+
+/**
  * @extends
  */
 simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out rotator out_CamRot, out float out_FOV)
@@ -617,6 +651,63 @@ function bool PassengerEnter(Pawn P, int SeatIndex)
 function PassengerLeave(int SeatIndex)
 {
 	SetSeatStoragePawn(SeatIndex, None);
+}
+
+/**
+ * @extends
+ */
+reliable server function ServerChangeSeat(int RequestedSeat)
+{
+	if (RequestedSeat == INDEX_NONE)
+	{
+		DriverLeave(False);
+	}
+	else
+	{
+		ChangeSeat(Controller, RequestedSeat);
+	}
+}
+
+/**
+ * Changes seat to the given seat index.
+ */
+function bool ChangeSeat(Controller ControllerToMove, int RequestedSeat)
+{
+	local int OldSeatIndex;
+	local Pawn OldPawn;
+
+	if ((RequestedSeat >= Seats.Length) || (RequestedSeat < 0))
+	{
+		return False;
+	}
+
+	OldSeatIndex = GetSeatIndexForController(ControllerToMove);
+
+	if (OldSeatIndex == INDEX_NONE)
+	{
+		`Warn("[Vehicles] Attempted to switch" @ ControllerToMove @ "to a seat in" @ Self @ " when they are not already in the vehicle!");
+		return False;
+	}
+
+	if (!SeatAvailable(RequestedSeat))
+	{
+		return False;
+	}
+
+	OldPawn = Seats[OldSeatIndex].StoragePawn;
+
+	Seats[OldSeatIndex].SeatPawn.DriverLeave(True);
+
+	if (RequestedSeat == 0)
+	{
+		DriverEnter(OldPawn);
+	}
+	else
+	{
+		PassengerEnter(OldPawn, RequestedSeat);
+	}
+
+	return True;
 }
 
 /**

@@ -192,7 +192,14 @@ function DrawVehiclePassengerList()
 	
 	Canvas.SetDrawColor(0, 255, 0);
 
-	V = FVehicle(PlayerOwner.Pawn);
+	if (FVehicle(PlayerOwner.Pawn) != None)
+	{
+		V = FVehicle(PlayerOwner.Pawn);
+	}
+	else if (FWeaponPawn(PlayerOwner.Pawn) != None)
+	{
+		V = FVehicle(FWeaponPawn(PlayerOwner.Pawn).MyVehicle);
+	}
 
 	if (V != None)
 	{
