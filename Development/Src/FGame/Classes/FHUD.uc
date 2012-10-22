@@ -283,7 +283,7 @@ function DrawOrder(Vector OrderLocation)
 	if ((OrderLocation - CameraLoc) dot Vector(CameraRot) > 0.0 && OrderLocation != vect(0,0,0))
 	{
 		ScreenCoords = Canvas.Project(OrderLocation);
-		Canvas.SetPos(ScreenCoords.X, ScreenCoords.Y);
+		Canvas.SetPos(ScreenCoords.X - 25, ScreenCoords.Y - 25);
 		Canvas.SetDrawColor(0, 255, 0);
 		Canvas.DrawText("Move");
 		Canvas.DrawBox(50, 50);
