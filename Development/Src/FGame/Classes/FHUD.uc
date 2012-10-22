@@ -189,19 +189,26 @@ function DrawVehiclePassengerList()
 	local FVehicle V;
 	local PlayerReplicationInfo PRI;
 	local int i;
+	
+	Canvas.SetDrawColor(0, 255, 0);
 
 	V = FVehicle(PlayerOwner.Pawn);
 
 	if (V != None)
 	{
-		for (i = 0; i < class'FVehicle'.const.NumSeats; i++)
+		for (i = 0; i < V.Seats.Length; i++)
 		{
+			Canvas.SetPos(10, 100 + i * 15);
+
 			PRI = V.PassengerPRIs[i];
+
 			if (PRI != None)
 			{
-				Canvas.SetDrawColor(0, 255, 0);
-				Canvas.SetPos(10, 100 + i * 15);
 				Canvas.DrawText(i + 1 $ ":" @ PRI.PlayerName);
+			}
+			else
+			{
+				Canvas.DrawText(i + 1 $ ": Empty");
 			}
 		}
 	}
