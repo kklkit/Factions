@@ -9,6 +9,9 @@ class FVehicle extends UDKVehicle
 // Maximum active vehicle weapons
 const NumVehicleWeapons=2;
 
+// Maximum number of seats in a vehicle
+const NumSeats=8;
+
 enum ESeatCamera
 {
 	SC_Fixed,
@@ -89,10 +92,13 @@ var SoundCue ExplosionSound;
 var float ExplosionDamage, ExplosionRadius, ExplosionMomentum;
 var float ExplosionInAirAngVel;
 
+// Seats
+var PlayerReplicationInfo PassengerPRIs[NumSeats];
+
 replication
 {
 	if (bNetDirty)
-		WeaponEffect, VehicleWeaponAttachments;
+		WeaponEffect, VehicleWeaponAttachments, PassengerPRIs;
 
 	if (bNetDirty && bNetOwner)
 		VehicleWeapons;
@@ -285,6 +291,11 @@ function SetSeatStoragePawn(int SeatIndex, Pawn PawnToSit)
 	local int Mask;
 
 	Seats[SeatIndex].StoragePawn = PawnToSit;
+
+	if (Role == ROLE_Authority)
+	{
+		PassengerPRIs[SeatIndex] = PawnToSit == None ? None : Seats[SeatIndex].SeatPawn.PlayerReplicationInfo;
+	}
 
 	Mask = 1 << SeatIndex;
 

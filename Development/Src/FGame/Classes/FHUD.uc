@@ -178,9 +178,33 @@ function DrawHud()
 
 	DrawOrders();
 	DrawPlayerNames();
+	DrawVehiclePassengerList();
 	DrawUnitSelection();
 	DrawSelectionBox();
 	DrawMinimap();
+}
+
+function DrawVehiclePassengerList()
+{
+	local FVehicle V;
+	local PlayerReplicationInfo PRI;
+	local int i;
+
+	V = FVehicle(PlayerOwner.Pawn);
+
+	if (V != None)
+	{
+		for (i = 0; i < class'FVehicle'.const.NumSeats; i++)
+		{
+			PRI = V.PassengerPRIs[i];
+			if (PRI != None)
+			{
+				Canvas.SetDrawColor(0, 255, 0);
+				Canvas.SetPos(10, 100 + i * 15);
+				Canvas.DrawText(i + 1 $ ":" @ PRI.PlayerName);
+			}
+		}
+	}
 }
 
 /**
