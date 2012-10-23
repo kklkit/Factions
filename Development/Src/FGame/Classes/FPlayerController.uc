@@ -434,12 +434,17 @@ state PlayerDriving
 
 		Super.UpdateRotation(DeltaTime);
 
+		InputRotation.Yaw = PlayerInput.aTurn;
+		InputRotation.Pitch = PlayerInput.aLookUp;
+
 		// Rotate vehicle turret
 		if (FVehicle(Pawn) != None)
 		{
-			InputRotation.Yaw = PlayerInput.aTurn;
-			InputRotation.Pitch = PlayerInput.aLookUp;
 			FVehicle(Pawn).RotateTurret(0, InputRotation);
+		}
+		else if (FWeaponPawn(Pawn) != None)
+		{
+			FVehicle(FWeaponPawn(Pawn).MyVehicle).RotateTurret(FWeaponPawn(Pawn).MySeatIndex, InputRotation);
 		}
 	}
 }
