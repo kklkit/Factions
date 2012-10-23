@@ -624,17 +624,20 @@ function DriverLeft()
  */
 function bool PassengerEnter(Pawn P, int SeatIndex)
 {
-	if (WorldInfo.Game.bTeamGame && !WorldInfo.GRI.OnSameTeam(P, self))
+	// Passenger must be on the same team in team games
+	if (WorldInfo.Game.bTeamGame && !WorldInfo.GRI.OnSameTeam(P, Self))
 	{
 		return False;
 	}
 
+	// Seat index must be valid
 	if (SeatIndex <= 0 || SeatIndex >= Seats.Length)
 	{
 		`warn("Attempted to add a passenger to unavailable passenger seat" @ SeatIndex);
 		return False;
 	}
 
+	// Place the passenger in the seat
 	if (!Seats[SeatIndex].SeatPawn.DriverEnter(P))
 	{
 		return False;
