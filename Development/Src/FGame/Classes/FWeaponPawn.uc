@@ -26,6 +26,22 @@ simulated event ReplicatedEvent(name VarName)
 /**
  * @extends
  */
+simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out rotator out_CamRot, out float out_FOV)
+{
+	if (MyVehicle != None && MySeatIndex > 0 && MySeatIndex < MyVehicle.Seats.Length)
+	{
+		FVehicle(MyVehicle).VehicleCalcCamera(fDeltaTime, MySeatIndex, out_CamLoc, out_CamRot, out_FOV);
+		return True;
+	}
+	else
+	{
+		return Super.CalcCamera(fDeltaTime, out_CamLoc, out_CamRot, out_FOV);
+	}
+}
+
+/**
+ * @extends
+ */
 simulated function DisplayDebug(HUD HUD, out float out_YL, out float out_YPos)
 {
 	local Canvas Canvas;

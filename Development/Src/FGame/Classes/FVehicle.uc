@@ -498,15 +498,20 @@ function bool SeatAvailable(int SeatIndex)
 /**
  * @extends
  */
-simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out rotator out_CamRot, out float out_FOV)
+simulated function bool CalcCamera(float DeltaTime, out Vector out_CamLoc, out Rotator out_CamRot, out float out_FOV)
 {
-	local int SeatIndex;
+	VehicleCalcCamera(DeltaTime, 0, out_CamLoc, out_CamRot, out_FOV);
+	return True;
+}
 
-	SeatIndex = 0;
-
+/**
+ * Calculates the camera for the specified seat.
+ */
+simulated function VehicleCalcCamera(float fDeltaTime, int SeatIndex, out Vector out_CamLoc, out Rotator out_CamRot, out float out_FOV)
+{
 	if (Seats[SeatIndex].CameraTag != '')
 	{
-		Mesh.GetSocketWorldLocationAndRotation(Seats[0].CameraTag, out_CamLoc, out_CamRot);
+		Mesh.GetSocketWorldLocationAndRotation(Seats[SeatIndex].CameraTag, out_CamLoc, out_CamRot);
 		if (SeatIndex < SeatCameras.Length)
 		{
 			if (SeatCameras[SeatIndex] == SC_Free)
@@ -523,10 +528,8 @@ simulated function bool CalcCamera(float fDeltaTime, out vector out_CamLoc, out 
 	}
 	else
 	{
-		return Super.CalcCamera(fDeltaTime, out_CamLoc, out_CamRot, out_FOV);
+		Super.CalcCamera(fDeltaTime, out_CamLoc, out_CamRot, out_FOV);
 	}
-
-	return True;
 }
 
 /**
