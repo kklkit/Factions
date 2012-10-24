@@ -6,6 +6,8 @@ class FVehicle extends UDKVehicle
 	perobjectlocalized
 	notplaceable;
 
+const MAX_VEHICLE_ROTATE_CONTROLS = 2;
+
 const MAX_VEHICLE_WEAPONS = 2;
 
 const MAX_VEHICLE_SEATS = 8;
@@ -70,7 +72,7 @@ var(Weapons) array<TurretControl> TurretControls;
 var(Weapons) array<VehicleHardpoint> VehicleHardpoints;
 var(Seats) array<ESeatCamera> SeatCameras;
 
-var repnotify Rotator TurretRotations[MAX_VEHICLE_WEAPONS];
+var repnotify Rotator TurretRotations[MAX_VEHICLE_ROTATE_CONTROLS];
 var repnotify WeaponFireEffect WeaponEffect;
 
 // Active vehicle weapons
