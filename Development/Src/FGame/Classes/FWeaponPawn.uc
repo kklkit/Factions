@@ -227,7 +227,6 @@ defaultproperties
 {
 	Physics=PHYS_None
 	bProjTarget=False
-	InventoryManagerClass=class'UTInventoryManager'
 	bOnlyRelevantToOwner=True
 
 	bCollideActors=False
