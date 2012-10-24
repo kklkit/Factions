@@ -1,6 +1,3 @@
-/**
- * Copyright 2012 Factions Team. All Rights Reserved.
- */
 class FStructure_Refinery extends FStructure;
 
 var() float TransferRate; // Resources transferred per second

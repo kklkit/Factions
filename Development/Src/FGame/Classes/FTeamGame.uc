@@ -1,6 +1,3 @@
-/**
- * Copyright 2012 Factions Team. All Rights Reserved.
- */
 class FTeamGame extends FGame;
 
 var float FriendlyFireScale;

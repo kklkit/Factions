@@ -1,6 +1,3 @@
-/**
- * Copyright 2012 Factions Team. All Rights Reserved.
- */
 class FStructure_Barracks extends FStructure;
 
 // List of socket names where players can spawn

@@ -1,6 +1,3 @@
-/**
- * Copyright 2012 Factions Team. All Rights Reserved.
- */
 class FWeapon_Healer extends FWeapon;
 
 var(Weapon) float AmmoRegenRate;

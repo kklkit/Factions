@@ -1,6 +1,3 @@
-/**
- * Copyright 2012 Factions Team. All Rights Reserved.
- */
 class FWeapon_RocketLauncher extends FWeapon;
 
 var SkeletalMeshComponent RocketSkeletalMesh;

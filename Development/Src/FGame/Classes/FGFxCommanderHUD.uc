@@ -1,6 +1,3 @@
-/**
- * Copyright 2012 Factions Team. All Rights Reserved.
- */
 class FGFxCommanderHUD extends FGFxMoviePlayer;
 
 // Shown at the top of the screen to show the current action (e.g. what building class is selected for placement)

@@ -1,6 +1,3 @@
-/**
- * Copyright 2012 Factions Team. All Rights Reserved.
- */
 class FStructure_VehicleFactory extends FStructure;
 
 // Socket name for positioning the built vehicle in the world
