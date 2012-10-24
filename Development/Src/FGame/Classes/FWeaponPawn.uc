@@ -178,6 +178,51 @@ function bool Died(Controller Killer, class<DamageType> DamageType, Vector HitLo
 	}
 }
 
+/**
+ * Rotates the turret by the given amount.
+ */
+simulated function RotateTurret(Rotator RotationAmount)
+{
+	local int i;
+	local TurretControl TC;
+	local FVehicle V;
+
+	V = FVehicle(MyVehicle);
+	
+	foreach V.TurretControls(TC, i)
+	{
+		if (TC.SeatIndex == MySeatIndex)
+		{
+			// Only update rotation if there is any rotation amount
+			if (RotationAmount.Pitch != 0 || RotationAmount.Roll != 0 || RotationAmount.Yaw != 0)
+			{
+				TC.RotateController.DesiredBoneRotation += RotationAmount;
+				V.ApplyTurretConstraints(TC);
+				V.TurretRotations[i] = TC.RotateController.DesiredBoneRotation;
+
+				if (Role < ROLE_Authority)
+					ServerSetTurretRotation(i, TC.RotateController.DesiredBoneRotation);
+			}
+		}
+	}
+}
+
+/**
+ * Sets the weapon rotation on the server.
+ */
+unreliable server function ServerSetTurretRotation(int ControlIndex, Rotator NewTurretRotation)
+{
+	local FVehicle V;
+
+	V = FVehicle(MyVehicle);
+
+	V.TurretControls[ControlIndex].RotateController.DesiredBoneRotation = NewTurretRotation;
+	V.TurretRotations[ControlIndex] = V.TurretControls[ControlIndex].RotateController.DesiredBoneRotation;
+
+	//TODO: Figure out why bNetDirty has to be manually set for turret rotation to replicate
+	V.bNetDirty = True;
+}
+
 defaultproperties
 {
 	Physics=PHYS_None

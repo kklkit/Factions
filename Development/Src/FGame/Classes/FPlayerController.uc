@@ -444,7 +444,7 @@ state PlayerDriving
 		}
 		else if (FWeaponPawn(Pawn) != None)
 		{
-			FVehicle(FWeaponPawn(Pawn).MyVehicle).RotateTurret(FWeaponPawn(Pawn).MySeatIndex, InputRotation);
+			FWeaponPawn(Pawn).RotateTurret(InputRotation);
 		}
 	}
 }

@@ -96,13 +96,10 @@ var PlayerReplicationInfo PassengerPRIs[MAX_VEHICLE_SEATS];
 replication
 {
 	if (bNetDirty)
-		WeaponEffect, VehicleWeaponAttachments, PassengerPRIs;
+		WeaponEffect, VehicleWeaponAttachments, PassengerPRIs, TurretRotations;
 
 	if (bNetDirty && bNetOwner)
 		VehicleWeapons;
-
-	if (bNetDirty && !bNetOwner)
-		TurretRotations;
 }
 
 /**
