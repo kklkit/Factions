@@ -169,7 +169,7 @@ function BuildVehicle(string ChassisName, array<string> WeaponNames)
 {
 	local FMapInfo MapInfo;
 	local FVehicleWeapon VehicleWeaponArchetype;
-	local FVehicleWeapon VehicleWeaponArchetypes[2]; // class'FVehicle'.const.NumVehicleWeapons
+	local FVehicleWeapon VehicleWeaponArchetypes[2]; // class'FVehicle'.const.MAX_VEHICLE_WEAPONS
 	local string WeaponName;
 	local int i;
 

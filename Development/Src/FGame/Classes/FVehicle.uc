@@ -6,11 +6,9 @@ class FVehicle extends UDKVehicle
 	perobjectlocalized
 	notplaceable;
 
-// Maximum active vehicle weapons
-const NumVehicleWeapons=2;
+const MAX_VEHICLE_WEAPONS = 2;
 
-// Maximum number of seats in a vehicle
-const NumSeats=8;
+const MAX_VEHICLE_SEATS = 8;
 
 enum ESeatCamera
 {
@@ -72,12 +70,12 @@ var(Weapons) array<TurretControl> TurretControls;
 var(Weapons) array<VehicleHardpoint> VehicleHardpoints;
 var(Seats) array<ESeatCamera> SeatCameras;
 
-var repnotify Rotator TurretRotations[NumVehicleWeapons];
+var repnotify Rotator TurretRotations[MAX_VEHICLE_WEAPONS];
 var repnotify WeaponFireEffect WeaponEffect;
 
 // Active vehicle weapons
-var FVehicleWeapon VehicleWeapons[NumVehicleWeapons];
-var VehicleWeaponAttachment VehicleWeaponAttachments[NumVehicleWeapons];
+var FVehicleWeapon VehicleWeapons[MAX_VEHICLE_WEAPONS];
+var VehicleWeaponAttachment VehicleWeaponAttachments[MAX_VEHICLE_WEAPONS];
 
 // Explosion effects
 var ParticleSystem ExplosionTemplate;
@@ -93,7 +91,7 @@ var float ExplosionDamage, ExplosionRadius, ExplosionMomentum;
 var float ExplosionInAirAngVel;
 
 // Seats
-var PlayerReplicationInfo PassengerPRIs[NumSeats];
+var PlayerReplicationInfo PassengerPRIs[MAX_VEHICLE_SEATS];
 
 replication
 {
@@ -614,7 +612,7 @@ function DriverLeft()
 
 	Super.DriverLeft();
 
-	for (i = 0; i < NumVehicleWeapons; i++)
+	for (i = 0; i < MAX_VEHICLE_WEAPONS; i++)
 	{
 		VehicleWeapon = VehicleWeapons[i];
 		if (VehicleWeapon != None)
