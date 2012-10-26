@@ -20,6 +20,27 @@ exec function KillTarget()
 	}
 }
 
+exec function SpawnCrawler()
+{
+	local Vector ViewLocation;
+	local Rotator ViewRotation;
+	local Vector HitNormal, HitLocation;
+	local FCrawler Crawler;
+	local FBot Bot;
+
+	GetPlayerViewPoint(ViewLocation, ViewRotation);
+
+	Trace(HitLocation, HitNormal, ViewLocation + 1000000 * Vector(ViewRotation), ViewLocation, True);
+	
+	Crawler = Spawn(class'FCrawler',,, HitLocation + vect(0,0,1));
+	Bot = Crawler.Spawn(class'FBot',,, Crawler.Location, Crawler.Rotation);
+	Bot.SetTeam(Crawler.GetTeamNum());
+	Bot.Possess(Crawler, False);
+
+	Bot.ScriptedMoveTarget = Outer.Pawn;
+	Bot.PushState('ScriptedMove');
+}
+
 defaultproperties
 {
 }
