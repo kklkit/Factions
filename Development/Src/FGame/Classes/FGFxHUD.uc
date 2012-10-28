@@ -51,6 +51,11 @@ function TickHud()
 			PlayerVehicle = FVehicle(GetPC().Pawn);
 			UpdateVehicleWeaponNames(PlayerVehicle);
 		}
+		else if (FWeaponPawn(GetPC().Pawn) != None)
+		{
+			PlayerVehicle = FVehicle(FWeaponPawn(GetPC().Pawn).MyVehicle);
+			UpdateWeaponPawnWeaponNames(FWeaponPawn(GetPC().Pawn));
+		}
 		else
 		{
 			UpdateInfantryWeaponNames(PlayerPawn);
@@ -94,6 +99,22 @@ function UpdateVehicleWeaponNames(FVehicle PlayerVehicle)
 
 	if (PlayerVehicle.VehicleWeapons[1] != None)
 		UpdateWeaponName(1, PlayerVehicle.VehicleWeapons[1].ItemName, True);
+	else
+		UpdateWeaponName(1, "");
+
+	UpdateWeaponName(2, "");
+	UpdateWeaponName(3, "");
+}
+
+function UpdateWeaponPawnWeaponNames(FWeaponPawn WeaponPawn)
+{
+	if (WeaponPawn.MyVehicleWeapons[0] != None)
+		UpdateWeaponName(0, WeaponPawn.MyVehicleWeapons[0].ItemName, True);
+	else
+		UpdateWeaponName(0, "");
+
+	if (WeaponPawn.MyVehicleWeapons[1] != None)
+		UpdateWeaponName(1, WeaponPawn.MyVehicleWeapons[1].ItemName, True);
 	else
 		UpdateWeaponName(1, "");
 
