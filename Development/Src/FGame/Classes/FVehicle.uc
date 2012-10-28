@@ -406,9 +406,9 @@ simulated function TurretRotationChanged()
  */
 simulated function GetBarrelLocationAndRotation(int SeatIndex, int WeaponIndex, out Vector SocketLocation, optional out Rotator SocketRotation)
 {
-	if (VehicleWeaponAttachments[SeatIndex * 2 + WeaponIndex].SocketName != '')
+	if (VehicleWeaponAttachments[SeatIndex * MAX_VEHICLE_WEAPONS + WeaponIndex].SocketName != '')
 	{
-		Mesh.GetSocketWorldLocationAndRotation(VehicleWeaponAttachments[SeatIndex * 2 + WeaponIndex].SocketName, SocketLocation, SocketRotation);
+		Mesh.GetSocketWorldLocationAndRotation(VehicleWeaponAttachments[SeatIndex * MAX_VEHICLE_WEAPONS + WeaponIndex].SocketName, SocketLocation, SocketRotation);
 	}
 	else
 	{
@@ -812,7 +812,7 @@ simulated function VehicleWeaponFired(bool bViaReplication)
 	if (WorldInfo.NetMode != NM_DedicatedServer && (Role == ROLE_Authority || bViaReplication))
 	{
 		GetBarrelLocationAndRotation(WeaponEffect.SeatIndex, WeaponEffect.WeaponIndex, StartLocation);
-		E = WorldInfo.MyEmitterPool.SpawnEmitter(VehicleWeaponAttachments[WeaponEffect.SeatIndex * 2 + WeaponEffect.WeaponIndex].EffectParticleSystem, StartLocation);
+		E = WorldInfo.MyEmitterPool.SpawnEmitter(VehicleWeaponAttachments[WeaponEffect.SeatIndex * MAX_VEHICLE_WEAPONS + WeaponEffect.WeaponIndex].EffectParticleSystem, StartLocation);
 		E.SetVectorParameter('ShockBeamEnd', WeaponEffect.EndLocation);
 	}
 }
