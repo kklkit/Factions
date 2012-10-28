@@ -1,6 +1,7 @@
 class FVehicleWeapon extends FWeapon
 	perobjectlocalized;
 
+var int SeatIndex;
 var int WeaponIndex;
 var FVehicle MyVehicle;
 
@@ -14,7 +15,7 @@ var() enum EHardpointTypes
 replication
 {
 	if (bNetInitial && bNetOwner)
-		WeaponIndex, MyVehicle;
+		SeatIndex, WeaponIndex, MyVehicle;
 }
 
 /**

@@ -1,16 +1,25 @@
 class FWeaponPawn extends UDKWeaponPawn;
 
+const MaxVehicleWeapons=2;
+
+var repnotify FVehicleWeapon MyVehicleWeapons[MaxVehicleWeapons];
+
+replication
+{
+	if (bNetDirty)
+		MyVehicleWeapons;
+}
+
 /**
  * @extends
  */
 simulated event ReplicatedEvent(name VarName)
 {
-	if (VarName == 'MyVehicle' || VarName == 'MyVehicleWeapon' || VarName == 'MySeatIndex')
+	if (VarName == 'MyVehicle' || VarName == 'MySeatIndex')
 	{
 		if (MySeatIndex > 0 && MyVehicle != None && MySeatIndex < MyVehicle.Seats.Length)
 		{
 			MyVehicle.Seats[MySeatIndex].SeatPawn = Self;
-			MyVehicle.Seats[MySeatIndex].Gun = MyVehicleWeapon;
 			SetBase(MyVehicle);
 		}
 	}
@@ -54,7 +63,7 @@ simulated function DisplayDebug(HUD HUD, out float out_YL, out float out_YPos)
 	Canvas.DrawText("Owner:" @ Owner);
 	out_YPos += out_YL;
 	Canvas.SetPos(4, out_YPos);
-	Canvas.DrawText("Vehicle:" @ MyVehicleWeapon @ MyVehicle);
+	Canvas.DrawText("Vehicle:" @ MyVehicleWeapons[0] @ MyVehicleWeapons[1] @ MyVehicle);
 	out_YPos += out_YL;
 	Canvas.SetPos(4, out_YPos);
 	Canvas.DrawText("Rotation/Location:" @ Rotation @ Location);
@@ -109,7 +118,6 @@ simulated function SetFiringMode(Weapon Weap, byte FiringModeNum)
 function PossessedBy(Controller C, bool bVehicleTransition)
 {
 	Super.PossessedBy(C, bVehicleTransition);
-	MyVehicleWeapon.ClientWeaponSet(False);
 	SetBaseEyeHeight();
 	EyeHeight = BaseEyeHeight;
 }
@@ -176,6 +184,59 @@ function bool Died(Controller Killer, class<DamageType> DamageType, Vector HitLo
 }
 
 /**
+ * @extends
+ */
+simulated function SetFlashLocation(Weapon InWeapon, byte InFiringMode, Vector NewLoc)
+{
+	MyVehicle.SetFlashLocation(InWeapon, InFiringMode, NewLoc);
+}
+
+/**
+ * @extends
+ */
+simulated function StartFire(byte FireModeNum)
+{
+	if (bNoWeaponFiring)
+		return;
+
+	if (MyVehicleWeapons[FireModeNum] != None)
+	{
+		MyVehicleWeapons[FireModeNum].StartFire(FireModeNum);
+	}
+}
+
+/**
+ * @extends
+ */
+simulated function StopFire(byte FireModeNum)
+{
+	if (MyVehicleWeapons[FireModeNum] != None)
+	{
+		MyVehicleWeapons[FireModeNum].StopFire(FireModeNum);
+	}
+}
+
+function SetWeapon(int WeaponSlot, FVehicleWeapon WeaponArchetype)
+{
+	local FVehicleWeapon VehicleWeapon;
+
+	VehicleWeapon = Spawn(WeaponArchetype.Class, InvManager.Owner,,,, WeaponArchetype);
+
+	if (InvManager.AddInventory(VehicleWeapon))
+	{
+		// Remove old weapon
+		InvManager.RemoveFromInventory(MyVehicleWeapons[WeaponSlot]);
+
+		VehicleWeapon.SeatIndex = MySeatIndex;
+		VehicleWeapon.WeaponIndex = WeaponSlot;
+		VehicleWeapon.MyVehicle = FVehicle(MyVehicle);
+		VehicleWeapon.SetBase(MyVehicle);
+
+		MyVehicleWeapons[WeaponSlot] = VehicleWeapon;
+	}
+}
+
+/**
  * Rotates the turret by the given amount.
  */
 simulated function RotateTurret(Rotator RotationAmount)
@@ -216,7 +277,7 @@ unreliable server function ServerSetTurretRotation(int ControlIndex, Rotator New
 	V.TurretControls[ControlIndex].RotateController.DesiredBoneRotation = NewTurretRotation;
 	V.TurretRotations[ControlIndex] = V.TurretControls[ControlIndex].RotateController.DesiredBoneRotation;
 
-	//TODO: Figure out why bNetDirty has to be manually set for turret rotation to replicate
+	//TODO: Figure out why bNetDirty has to be manually set for turret rotation to replicate (maybe bForceNetUpdate = True; would be better)
 	V.bNetDirty = True;
 }
 
@@ -225,6 +286,8 @@ defaultproperties
 	Physics=PHYS_None
 	bProjTarget=False
 	bOnlyRelevantToOwner=True
+
+	InventoryManagerClass=class'FVehicleInventoryManager'
 
 	bCollideActors=False
 	bCollideWorld=False

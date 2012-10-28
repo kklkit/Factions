@@ -45,6 +45,13 @@ state Active
 				if (VehicleWeaponArchetype != None)
 					SpawnedVehicle.SetWeapon(i, VehicleWeaponArchetype);
 
+			//Hack: Add weapons for main battle tank turret
+			if (SpawnedVehicle.Seats.Length == 2)
+			{
+				FWeaponPawn(SpawnedVehicle.Seats[1].SeatPawn).SetWeapon(0, FMapInfo(WorldInfo.GetMapInfo()).VehicleWeapons[0]);
+				FWeaponpawn(SpawnedVehicle.Seats[1].SeatPawn).SetWeapon(1, FMapInfo(WorldInfo.GetMapInfo()).VehicleWeapons[1]);
+			}
+
 			SpawnedVehicle.TryToDrive(Player.Pawn);
 		}
 	}
