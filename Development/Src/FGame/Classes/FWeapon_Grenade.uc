@@ -4,7 +4,8 @@ defaultproperties
 {
 	WeaponFireTypes(0)=EWFT_Projectile
 	WeaponProjectiles(0)=class'UTProj_Grenade'
-	AmmoCount=1
-	MaxAmmoCount=1
-	AmmoPool=5
+	FireInterval(0)=1.0
+	AmmoCount=4
+	MaxAmmoCount=4
+	AmmoPool=0
 }
