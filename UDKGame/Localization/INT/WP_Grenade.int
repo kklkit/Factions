@@ -1,0 +1,4 @@
+[Archetypes.WP_Grenade FWeapon_Grenade]
+ItemName="Grenade"
+PickupMessage="Snagged an item."
+
