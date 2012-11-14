@@ -968,8 +968,8 @@ simulated state DyingVehicle
 		if (TheExplosionTemplate != None)
 		{
 			DeathExplosion = Spawn(class'UTEmitter', Self);
-			DeathExplosion.LifeSpan = 3.0;
-			DeathExplosion.SetDrawScale(3.0);
+			DeathExplosion.LifeSpan = 5.2;
+			DeathExplosion.SetDrawScale(4.0);
 			DeathExplosion.ParticleSystemComponent.bAutoActivate = false;
 			if (BigExplosionSocket != 'None')
 			{
