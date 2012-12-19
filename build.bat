@@ -1,32 +1,35 @@
-set build_bat=%0
-set build_zip=UDKInstall-Factions.zip
-set build_dir="D:\Servers\Misc\Apache 2.2\subdomains\factions"
-set build_progress=buildprogress.txt
-set build_queue=buildqueue.txt
+rem This script is used in automated build systems to build and deploy the game
+rem This script depends on: git, 7zip
 
-rem Queue build if already in progress
+set build_bat_path=%0
+set build_output_path=%1
+set build_zip_path=UDKInstall-Factions.zip
+set build_progress_path=buildprogress.txt
+set build_queue_path=buildqueue.txt
 
-if exist %build_progress% (
-echo Build queued at: >> %build_queue%
-call date /t >> %build_queue%
-call time /t >> %build_queue%
+rem Queue another build if already in progress
+
+if exist %build_progress_path% (
+echo Build queued at: >> %build_queue_path%
+call date /t >> %build_queue_path%
+call time /t >> %build_queue_path%
 exit /b
 )
 
 rem Set build in progress
 
-echo Build started at: >> %build_progress%
-call date /t >> %build_progress%
-call time /t >> %build_progress%
+echo Build started at: >> %build_progress_path%
+call date /t >> %build_progress_path%
+call time /t >> %build_progress_path%
 
 rem Delete old build files
 
-if exist %build_zip% (
-del %build_zip% /q
+if exist %build_zip_path% (
+del %build_zip_path% /q
 )
 
-if exist %build_dir% (
-rmdir %build_dir% /s /q
+if exist %build_output_path% (
+rmdir %build_output_path% /s /q
 )
 
 rem Get latest game code
@@ -55,28 +58,23 @@ if errorlevel 1 goto error
 
 rem Extract zip into build directory
 
-call 7z x %build_zip% -o%build_dir%
+call 7z x %build_zip_path% -o%build_output_path%
 if errorlevel 1 goto error
 
-copy Binaries\Win32\UserCode\clipboard.dll %build_dir%\Binaries\Win32\UserCode\clipboard.dll
-if errorlevel 1 goto error
-
-rem Generate manifest
-
-call ..\tools\generate.bat
+copy Binaries\Win32\UserCode\clipboard.dll %build_output_path%\Binaries\Win32\UserCode\clipboard.dll
 if errorlevel 1 goto error
 
 rem Build complete
 
 :end
 
-del %build_progress% /q
+del %build_progress_path% /q
 
 rem Execute next build if queued
 
-if exist %build_queue% (
-del %build_queue% /q
-call %build_bat%
+if exist %build_queue_path% (
+del %build_queue_path% /q
+call %build_bat_path%
 )
 
 exit /b
@@ -85,6 +83,6 @@ rem Build error
 
 :error
 
-del %build_progress% /q
+del %build_progress_path% /q
 
 exit /b 1
