@@ -1,6 +1,7 @@
 rem This script is used in automated build systems to build and deploy the game
-rem This script depends on: git, 7zip
+rem This script depends on: msbuild, git, 7zip
 
+set msbuild_path=%windir%\Microsoft.Net\Framework\v4.0\MSBuild.exe
 set build_bat_path=%0
 set build_output_path=%1
 set build_zip_path=UDKInstall-Factions.zip
@@ -39,6 +40,10 @@ if errorlevel 1 goto error
 
 call git pull
 if errorlevel 1 goto error
+
+rem Compile clipboard dll
+
+%msbuild_path% Development\Dll\clipboard\clipboard.sln /p:configuration=Release
 
 rem Compile source code and cook packages
 

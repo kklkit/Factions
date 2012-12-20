@@ -57,6 +57,7 @@ Development/Src/*.sln
 *.filters
 *.obj
 *.manifest
+*.dll
 Engine/
 UDKGame/Autosaves/
 UDKGame/Build/
