@@ -49,11 +49,12 @@ Development/Src/WinDrv/
 *.tlog
 *.lastbuildstate
 *.log
-*.suo
 *.sln
 *.ucproj
-*.ucproj.user
 *.udkproj
+*.user
+*.suo
+*.filters
 *.obj
 *.manifest
 Engine/
