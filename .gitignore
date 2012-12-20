@@ -49,7 +49,7 @@ Development/Src/WinDrv/
 *.tlog
 *.lastbuildstate
 *.log
-*.sln
+Development/Src/*.sln
 *.ucproj
 *.udkproj
 *.user

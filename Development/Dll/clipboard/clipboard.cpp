@@ -1,4 +1,5 @@
-#include "stdafx.h"
+#include <string>
+#include <Windows.h>
 
 using namespace std;
 
