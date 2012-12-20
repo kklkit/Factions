@@ -1,11 +1,11 @@
 # Factions
 
-Factions is a strategic multiplayer first-person shooter built on the [Unreal Development Kit](http://www.unrealengine.com/en/udk/).
+Factions is a multiplayer strategic first-person shooter built with the [Unreal Development Kit](http://www.unrealengine.com/en/udk/).
 
 ## Getting Started
 
 1. Install the [July 2012 UDK Beta](http://www.unrealengine.com/en/udk/downloads/).
-2. Clone this repository to your UDK installation.
+2. Clone this repository to the UDK installation.
 3. Open the files listed in the configuration section below and change the specified properties.
 
 ## Configuration

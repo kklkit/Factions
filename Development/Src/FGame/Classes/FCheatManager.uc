@@ -20,6 +20,9 @@ exec function KillTarget()
 	}
 }
 
+/**
+ * Spawns a crawler at the location where the player is looking.
+ */
 exec function SpawnCrawler()
 {
 	local Vector ViewLocation;
@@ -32,7 +35,7 @@ exec function SpawnCrawler()
 
 	Trace(HitLocation, HitNormal, ViewLocation + 1000000 * Vector(ViewRotation), ViewLocation, True);
 	
-	Crawler = Spawn(class'FCrawler',,, HitLocation + vect(0,0,1));
+	Crawler = Spawn(class'FCrawler',,, HitLocation + vect(0, 0, 1));
 	Bot = Crawler.Spawn(class'FBot',,, Crawler.Location, Crawler.Rotation);
 	Bot.SetTeam(Crawler.GetTeamNum());
 	Bot.Possess(Crawler, False);
