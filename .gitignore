@@ -50,6 +50,8 @@ Development/Src/WinDrv/
 *.lastbuildstate
 *.log
 *.suo
+*.sln
+*.ucproj
 *.ucproj.user
 *.udkproj
 *.obj
