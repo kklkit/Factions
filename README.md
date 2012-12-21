@@ -1,5 +1,7 @@
 # Factions
 
+![Banner](http://i.minus.com/iSnovmsDGNMFI.png)
+
 Factions is a multiplayer strategic first-person shooter built with the [Unreal Development Kit](http://www.unrealengine.com/en/udk/).
 
 ## Getting Started
