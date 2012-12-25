@@ -27,13 +27,15 @@ Factions is a multiplayer strategic first-person shooter built with the [Unreal 
   * `PlayerControllerClassName=FGame.FPlayerController`
   * `DefaultGameType=FGame.FCommanderGame`
   
-## License
+## Copying
 
 Copyright (c) 2012 "Jephir" and individual contributors (see credits).
 
-Files under the UDKGame directory are copyright of their respective authors.
+Files under the UDKGame directory (game assets such as art, sounds, models, and maps) are copyright of their respective authors.
 
-Files under the Development directory are released under the MIT license:
+Files under the Development directory (game source code) are released under the MIT license.
+
+### Source Code License
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
