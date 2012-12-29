@@ -40,6 +40,7 @@ defaultproperties
 	Vehicles(3)=FVehicle_Car8'VH_APC.Archetype.VH_APC'
 	Vehicles(4)=FVehicle_Tank'VH_SuperTank.Archetypes.VH_SuperTank'
 	Vehicles(5)=FVehicle_Hover'VH_Adjutant.Archetype.VH_Adjutant'
+	Vehicles(6)=FVehicle_Hover'VH_Hedonist.Archetypes.VH_Hedonist'
 
 	Weapons(0)=FWeapon_Firearm'WP_Pistol.Archetypes.WP_Pistol'
 	Weapons(1)=FWeapon_Firearm'WP_Rifle.Archetypes.WP_Rifle'
