@@ -67,6 +67,8 @@
 
 * CH_Crawler.upk
 * VH_Adjutant.upk
+* VH_Hedonist.upk
+* VH_ScienceAdjutant.upk
 
 ## Programming
 
