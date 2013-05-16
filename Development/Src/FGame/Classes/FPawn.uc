@@ -415,9 +415,9 @@ defaultproperties
 	BaseTranslationOffset=6.0
 	WalkingPct=0.7
 	CrouchedPct=0.4
-	BaseEyeHeight=38.0
-	EyeHeight=38.0
-	GroundSpeed=240.0
+	BaseEyeHeight=50.0
+	EyeHeight=50.0
+	GroundSpeed=290.0
 	AirSpeed=440.0
 	WaterSpeed=220.0
 	AccelRate=2048.0
