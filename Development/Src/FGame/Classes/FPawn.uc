@@ -351,14 +351,14 @@ simulated function UpdateWeaponAttachment()
 
 			if (WeaponAttachment != None)
 			{
-				WeaponAttachment.Instigator = Self;
+				WeaponAttachment.Instigator = Self;				
 				WeaponAttachment.AttachTo(Self);
 				WeaponAttachment.ChangeVisibility(True);
 			}
 			else
 			{
 				`log("Failed to spawn weapon attachment for archetype" @ WeaponAttachmentArchetype);
-			}
+			}			
 		}
 	}
 }
@@ -369,7 +369,7 @@ defaultproperties
 
 	Begin Object Name=CollisionCylinder
 		CollisionRadius=21.0
-		CollisionHeight=44.0
+		CollisionHeight=40.0
 	End Object
 	CylinderComponent=CollisionCylinder
 
@@ -384,12 +384,12 @@ defaultproperties
 	LightEnvironment=LightEnvironment0
 
 	Begin Object Class=SkeletalMeshComponent Name=SkeletalMesh0
-		SkeletalMesh=SkeletalMesh'CH_IronGuard_Male.Mesh.SK_CH_IronGuard_MaleA'
-		AnimTreeTemplate=AnimTree'CH_AnimHuman_Tree.AT_CH_Human'
-		PhysicsAsset=PhysicsAsset'CH_AnimCorrupt.Mesh.SK_CH_Corrupt_Male_Physics'
-		AnimSets(0)=AnimSet'CH_AnimHuman.Anims.K_AnimHuman_BaseMale'
-		Translation=(Z=8.0)
-		Scale=1.075
+		SkeletalMesh=SkeletalMesh'r_character.SK_CH_Character'
+		AnimTreeTemplate=AnimTree'r_character.AT_CH_Character'		
+		//PhysicsAsset=PhysicsAsset'CH_AnimCorrupt.Mesh.SK_CH_Corrupt_Male_Physics'
+		AnimSets(0)=AnimSet'r_character.AS_CH_Character_1'
+		Translation=(Z=0.0)
+		Scale=0.700		
 		LightEnvironment=LightEnvironment0
 		RBChannel=RBCC_Untitled3
 		RBCollideWithChannels=(Untitled3=True)
@@ -417,7 +417,7 @@ defaultproperties
 	CrouchedPct=0.4
 	BaseEyeHeight=38.0
 	EyeHeight=38.0
-	GroundSpeed=440.0
+	GroundSpeed=240.0
 	AirSpeed=440.0
 	WaterSpeed=220.0
 	AccelRate=2048.0
