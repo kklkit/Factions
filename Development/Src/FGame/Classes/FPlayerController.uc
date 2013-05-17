@@ -81,6 +81,18 @@ simulated event PlayerTick(float DeltaTime)
 	}
 }
 
+
+/**
+ *  DEBUG Thrid person
+ */
+exec function EnableDebugThirdPersonMode()
+{
+	FPawn(Pawn).SetMeshVisibility(true);
+	PlayerCamera.CameraStyle = 'ThirdPerson';	
+}
+
+
+
 /**
  * @extends
  */
@@ -173,6 +185,7 @@ reliable server function ServerSetLoadout(FInfantryClass InfantryClassArchetype,
 
 	SetLoadout(InfantryClassArchetype, WeaponArchetypes);
 }
+
 
 /**
  * Sets and equips the player's loadout.

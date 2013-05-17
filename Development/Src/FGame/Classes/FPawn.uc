@@ -261,6 +261,20 @@ simulated function PlayDying(class<DamageType> DamageType, Vector HitLoc)
 	Mesh.WakeRigidBody();
 }
 
+
+/** sets whether or not the owner of this pawn can see it */
+simulated function SetMeshVisibility(bool bVisible)
+{
+	
+	// Handle the main player mesh
+	if (Mesh != None)
+	{
+		Mesh.SetOwnerNoSee(!bVisible);
+	}	
+	
+}
+
+
 /**
  * @extends
  */
@@ -272,7 +286,7 @@ simulated function bool CalcCamera(float fDeltaTime, out Vector out_CamLoc, out 
 
 	if (!IsFirstPerson())
 	{
-		Pos = out_CamLoc - Vector(out_CamRot) * 512.0;
+		Pos = out_CamLoc - Vector(out_CamRot) * 256.0;
 		if (Trace(HitLocation, HitNormal, Pos, out_CamLoc, False, Vect(0,0,0)) != None)
 		{
 			out_CamLoc = HitLocation + HitNormal * 2;
